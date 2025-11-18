@@ -1,14 +1,34 @@
 {
-  "name": "@chr33s/pdf-lib-monorepo",
-  "version": "2.5.3",
-  "packageManager": "npm@10.0.0+",
-  "engines": {
-    "node": ">=22.18.0"
+  "name": "@pdf-lib/brotli",
+  "version": "0.0.0",
+  "description": "A port of the Brotli compression algorithm as used in WOFF2",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "dependencies": {
+    "base64-js": "^1.1.2"
+  },
+  "devDependencies": {
+    "mocha": "^2.2.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Hopding/brotli.js.git"
+  },
+  "keywords": [
+    "compress",
+    "decompress",
+    "encode",
+    "decode"
+  ],
+  "author": "Andrew Dillon <andrew.dillon.j@gmail.com>",
+  "contributors": [
+    "Devon Govett <devongovett@gmail.com> (http://badassjs.com/)"
+  ],
+  "bugs": {
+    "url": "https://github.com/Hopding/brotli.js/issues"
   },
   "license": "MIT",
-  "private": true,
-  "type": "module",
-  "workspaces": [
-     "packages/*"
-  ]
+  "homepage": "https://github.com/Hopding/brotli.js"
 }
