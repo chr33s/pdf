@@ -1,0 +1,9 @@
+.DS_Store
+node_modules/
+dist/
+es/
+lib/
+unicode-properties.js
+unicode-properties.min.js
+src/data.json
+src/trie.json

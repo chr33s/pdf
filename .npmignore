@@ -1,0 +1,9 @@
+node_modules/
+.DS_Store
+src/
+test/
+.gitignore
+babel.config.js
+Makefile.js
+rollup.config.js
+yarn.lock
