@@ -1,0 +1,54 @@
+{
+  "name": "@pdf-lib/restructure",
+  "version": "0.0.1",
+  "description": "Declaratively encode and decode binary data",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha",
+    "cover": "mocha --require coverage.js --reporter html-cov > coverage.html",
+    "coveralls": "mocha --require coverage.js --reporter mocha-lcov-reporter | coveralls",
+    "prepublish": "coffee -c src/ index.coffee",
+    "postpublish": "rm -rf index.js src/*.js"
+  },
+  "dependencies": {
+    "browserify-optional": "^1.0.0"
+  },
+  "devDependencies": {
+    "chai": "~1.9.1",
+    "coffee-coverage": "~0.4.2",
+    "coffee-script": "~1.7.1",
+    "concat-stream": "~1.4.5",
+    "coveralls": "^2.10.0",
+    "iconv-lite": "^0.4.7",
+    "mocha": "~1.18.2",
+    "mocha-lcov-reporter": "0.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Hopding/restructure.git"
+  },
+  "keywords": [
+    "binary",
+    "struct",
+    "encode",
+    "decode"
+  ],
+  "author": "Andrew Dillon <andrew.dillon.j@gmail.com>",
+  "contributors": [
+    "Devon Govett <devongovett@gmail.com> (http://badassjs.com/)"
+  ],
+  "bugs": {
+    "url": "https://github.com/Hopding/png-ts/issues"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/Hopding/restructure",
+  "browserify": {
+    "transform": [
+      "browserify-optional"
+    ]
+  },
+  "private": false,
+  "directories": {
+    "test": "test"
+  }
+}
