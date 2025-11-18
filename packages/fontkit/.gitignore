@@ -4,7 +4,7 @@ playground/
 coverage/
 coverage.html
 .nyc_output
-yarn-error.log
+npm-error.log
 dist/
 /**/trie.json
 /**/trieIndic.json

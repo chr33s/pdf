@@ -1,7 +1,8 @@
 {
-  "name": "@pdf-lib/standard-fonts",
+  "name": "@chr33s/standard-fonts",
   "version": "1.0.0",
   "description": "Metrics for the Standard 14 PDF fonts and their encodings",
+  "type": "module",
   "main": "lib/index.js",
   "unpkg": "dist/standard-fonts.min.js",
   "module": "es/index.js",

@@ -3,4 +3,4 @@ dist
 es
 cjs
 *.zip
-yarn-error.log
+npm-error.log

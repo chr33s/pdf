@@ -1,15 +1,14 @@
 // https://github.com/shelljs/shelljs#command-reference
 // https://devhints.io/shelljs
 // https://github.com/shelljs/shelljs/wiki/The-make-utility
-require('shelljs/make');
+import('shelljs/make');
 
 config.fatal = true;
 config.verbose = true;
 
-const readline = require('readline');
-const { execFileSync } = require('child_process');
-
-const packageJson = require('./package.json');
+import readline from 'readline';
+import { execFileSync } from 'node:child_process';
+import packageJson from './package.json' with { type: 'json' };
 
 target.all = () => {
   target.clean();

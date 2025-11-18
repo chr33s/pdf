@@ -1,8 +1,9 @@
 {
-  "name": "@pdf-lib/upng",
+  "name": "@chr33s/upng",
   "license": "MIT",
   "version": "1.0.1",
   "description": "Small, fast and advanced PNG / APNG encoder and decoder",
+  "type": "module",
   "main": "cjs/UPNG.js",
   "unpkg": "dist/UPNG.min.js",
   "module": "UPNG.js",
@@ -15,10 +16,10 @@
     "LICENSE.md",
     "package.json",
     "README.md",
-    "yarn.lock"
+    "package-lock.json"
   ],
   "scripts": {
-    "build": "yarn build:cjs && yarn build:umd && yarn build:umd:min",
+    "build": "npm run build:cjs && npm run build:umd && npm run build:umd:min",
     "build:cjs": "babel --plugins @babel/plugin-transform-modules-commonjs --out-dir cjs UPNG.js",
     "build:umd": "rollup --config rollup.config.js --file dist/UPNG.js",
     "build:umd:min": "rollup --config rollup.config.js --file dist/UPNG.min.js --environment MINIFY"

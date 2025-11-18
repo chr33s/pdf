@@ -3,7 +3,7 @@ node_modules
 font_metrics/*.json
 encoding_metrics/*.json
 src/*.json
-yarn-error.log
+npm-error.log
 lib
 es
 dist

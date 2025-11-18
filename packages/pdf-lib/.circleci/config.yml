@@ -19,7 +19,7 @@ jobs:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
 
-      - run: yarn install
+      - run: npm install
 
       - save_cache:
           paths:
@@ -27,6 +27,6 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
 
       # Run tsc, linter, and unit tests
-      - run: yarn typecheck
-      - run: yarn lint
-      - run: yarn test
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run test

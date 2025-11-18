@@ -10,7 +10,7 @@ es/
 
 tsBuildInfo.json
 flamegraph.html
-yarn-error.log
+npm-error.log
 isolate*.log
 .DS_Store
 out.pdf
