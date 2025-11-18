@@ -15,22 +15,22 @@
    Collection of static dictionary words.
 */
 
-var data = require('./dictionary-data-compressed');
-exports.init = function(BrotliDecompressBuffer) {
-  exports.dictionary = data.init(BrotliDecompressBuffer);
+import data from './dictionary-data-compressed';
+export const init = function(BrotliDecompressBuffer) {
+  export const dictionary = data.init(BrotliDecompressBuffer);
 };
 
-exports.offsetsByLength = new Uint32Array([
+export const offsetsByLength = new Uint32Array([
      0,     0,     0,     0,     0,  4096,  9216, 21504, 35840, 44032,
  53248, 63488, 74752, 87040, 93696, 100864, 104704, 106752, 108928, 113536,
  115968, 118528, 119872, 121280, 122016,
 ]);
 
-exports.sizeBitsByLength = new Uint8Array([
+export const sizeBitsByLength = new Uint8Array([
   0,  0,  0,  0, 10, 10, 11, 11, 10, 10,
  10, 10, 10,  9,  9,  8,  7,  7,  8,  7,
   7,  6,  6,  5,  5,
 ]);
 
-exports.minDictionaryWordLength = 4;
-exports.maxDictionaryWordLength = 24;
+export const minDictionaryWordLength = 4;
+export const maxDictionaryWordLength = 24;

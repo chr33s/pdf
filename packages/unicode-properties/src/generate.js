@@ -1,8 +1,8 @@
-const codePoints = require('codepoints');
-const fs = require('fs');
-const UnicodeTrieBuilder = require('unicode-trie/builder');
-const pako = require('pako');
-const base64 = require('base64-arraybuffer');
+import codePoints from 'codepoints';
+import fs from 'fs';
+import UnicodeTrieBuilder from 'unicode-trie/builder';
+import pako from 'pako';
+import base64 from 'base64-arraybuffer';
 
 const log2 = Math.log2 || (n => Math.log(n) / Math.LN2);
 

@@ -1,7 +1,7 @@
 // https://github.com/shelljs/shelljs#command-reference
 // https://devhints.io/shelljs
 // https://github.com/shelljs/shelljs/wiki/The-make-utility
-require('shelljs/make');
+await import('shelljs/make');
 
 config.fatal = true;
 config.verbose = true;

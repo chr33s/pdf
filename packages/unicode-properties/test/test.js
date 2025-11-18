@@ -1,5 +1,5 @@
-const unicode = require('../src/index.js');
-const assert = require('assert');
+import unicode from '../src/index.js';
+import assert from 'assert';
 
 describe('unicode-properties', () => {
   it('getCategory', () => {

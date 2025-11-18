@@ -39,7 +39,6 @@
   },
   "include": ["src/**/*", "tests/**/*"],
   "exclude": [
-    ".circleci",
     ".github",
     ".vscode",
     "apps",

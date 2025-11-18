@@ -1,8 +1,8 @@
-var fs = require('fs');
-var assert = require('assert');
-var brotli = require('../');
-var decompress = require('../decompress');
-var compress = require('../compress');
+import fs from 'fs';
+import assert from 'assert';
+import brotli from '../';
+import decompress from '../decompress';
+import compress from '../compress';
 
 describe('brotli', function() {
   describe('compress', function() {

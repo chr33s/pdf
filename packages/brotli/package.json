@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "description": "A port of the Brotli compression algorithm as used in WOFF2",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "mocha"
   },

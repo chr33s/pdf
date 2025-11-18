@@ -1,2 +1,2 @@
-exports.compress = require('./compress');
-exports.decompress = require('./dec/decode').BrotliDecompressBuffer;
+export { compress } from './compress';
+export { BrotliDecompressBuffer } from './dec/decode';

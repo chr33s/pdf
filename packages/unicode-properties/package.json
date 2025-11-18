@@ -2,6 +2,7 @@
   "name": "@chr33s/unicode-properties",
   "version": "0.0.1",
   "description": "Provides fast access to unicode character properties",
+  "type": "module",
   "main": "lib/index.js",
   "unpkg": "dist/unicode-properties.min.js",
   "module": "es/index.js",

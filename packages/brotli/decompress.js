@@ -1,1 +1,1 @@
-module.exports = require('./dec/decode').BrotliDecompressBuffer;
+export { BrotliDecompressBuffer } from './dec/decode';

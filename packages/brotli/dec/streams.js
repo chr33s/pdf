@@ -15,7 +15,7 @@ BrotliInput.prototype.read = function(buf, i, count) {
   return count;
 }
 
-exports.BrotliInput = BrotliInput;
+export const BrotliInput = BrotliInput;
 
 function BrotliOutput(buf) {
   this.buffer = buf;
@@ -31,4 +31,4 @@ BrotliOutput.prototype.write = function(buf, count) {
   return count;
 };
 
-exports.BrotliOutput = BrotliOutput;
+export const BrotliOutput = BrotliOutput;
