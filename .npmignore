@@ -1,0 +1,13 @@
+encoding_metrics
+font_metrics
+scripts
+src
+.gitignore
+.npmignore
+.prettierrc.json
+Makefile.js
+rollup.config.js
+tsconfig.json
+tslint.json
+yarn.lock
+*.zip
