@@ -1,5 +1,5 @@
-import fontkit from '@pdf-lib/fontkit';
-import { FontNames } from '@pdf-lib/standard-fonts';
+import fontkit from '@chr33s/fontkit';
+import { FontNames } from '@chr33s/standard-fonts';
 import fs from 'fs';
 
 import { CustomFontEmbedder, StandardFontEmbedder } from '../../src/core';

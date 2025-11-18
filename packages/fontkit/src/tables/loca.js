@@ -1,4 +1,4 @@
-import r from '@pdf-lib/restructure';
+import r from '@chr33s/restructure';
 
 let loca = new r.VersionedStruct('head.indexToLocFormat', {
   0: {

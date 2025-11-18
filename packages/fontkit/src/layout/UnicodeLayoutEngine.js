@@ -1,4 +1,4 @@
-import unicode from '@pdf-lib/unicode-properties';
+import unicode from '@chr33s/unicode-properties';
 
 /**
  * This class is used when GPOS does not define 'mark' or 'mkmk' features

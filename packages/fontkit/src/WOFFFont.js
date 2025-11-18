@@ -2,7 +2,7 @@ import TTFFont from './TTFFont';
 import WOFFDirectory from './tables/WOFFDirectory';
 import tables from './tables';
 import inflate from 'tiny-inflate';
-import r from '@pdf-lib/restructure';
+import r from '@chr33s/restructure';
 
 export default class WOFFFont extends TTFFont {
   static probe(buffer) {

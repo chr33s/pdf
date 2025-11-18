@@ -4,7 +4,7 @@
   <br />
 
   <!-- NPM Version -->
-  <a href="https://www.npmjs.com/package/@pdf-lib/upng">
+  <a href="https://www.npmjs.com/package/@chr33s/upng">
     <img
       src="https://img.shields.io/npm/v/png-ts.svg?style=flat-square"
       alt="NPM Version"
@@ -19,7 +19,7 @@ This project is a fork of [`UPNG.js`](https://github.com/photopea/UPNG.js) and w
 ## Example of `UPNG.toRGBA8`
 ```javascript
 // Import the UPNG class
-import UPNG from '@pdf-lib/upng';
+import UPNG from '@chr33s/upng';
 
 // Create a UPNG object
 const pngImage = UPNG.decode(/* Uint8Array containing bytes of PNG image */);
@@ -33,26 +33,26 @@ const pixels = pngImage.UPNG.toRGBA8();
 To install the latest stable version:
 ```bash
 # With npm
-npm install --save @pdf-lib/upng
+npm install --save @chr33s/upng
 
 # With yarn
-yarn add @pdf-lib/upng
+yarn add @chr33s/upng
 ```
 This assumes you're using [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/lang/en/) as your package manager.
 
 ### UMD Module
-You can also download `@pdf-lib/upng` as a UMD module from [unpkg](https://unpkg.com/#/). The UMD builds have been compiled to ES5, so they should work [in any modern browser](https://caniuse.com/#feat=es5). UMD builds are useful if you aren't using a package manager or module bundler. For example, you can use them directly in the `<script>` tag of an HTML page.
+You can also download `@chr33s/upng` as a UMD module from [unpkg](https://unpkg.com/#/). The UMD builds have been compiled to ES5, so they should work [in any modern browser](https://caniuse.com/#feat=es5). UMD builds are useful if you aren't using a package manager or module bundler. For example, you can use them directly in the `<script>` tag of an HTML page.
 
 The following builds are available:
 
-* https://unpkg.com/@pdf-lib/upng/dist/UPNG.js
-* https://unpkg.com/@pdf-lib/upng/dist/UPNG.min.js
+* https://unpkg.com/@chr33s/upng/dist/UPNG.js
+* https://unpkg.com/@chr33s/upng/dist/UPNG.min.js
 
-When using a UMD build, you will have access to a global `window.UPNG` variable. This variable contains the `UPNG` class exported by `@pdf-lib/upng`. For example:
+When using a UMD build, you will have access to a global `window.UPNG` variable. This variable contains the `UPNG` class exported by `@chr33s/upng`. For example:
 
 ```javascript
 // NPM module
-import UPNG from '@pdf-lib/upng';
+import UPNG from '@chr33s/upng';
 const pngImage = UPNG.decode(/* ... */)
 
 // UMD module

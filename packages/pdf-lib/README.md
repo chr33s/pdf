@@ -653,9 +653,9 @@ const pdfBytes = await pdfDoc.save()
 
 ### Embed Font and Measure Text
 
-`pdf-lib` relies on a sister module to support embedding custom fonts: [`@pdf-lib/fontkit`](https://www.npmjs.com/package/@pdf-lib/fontkit). You must add the `@pdf-lib/fontkit` module to your project and register it using `pdfDoc.registerFontkit(...)` before embedding custom fonts.
+`pdf-lib` relies on a sister module to support embedding custom fonts: [`@chr33s/fontkit`](https://www.npmjs.com/package/@chr33s/fontkit). You must add the `@chr33s/fontkit` module to your project and register it using `pdfDoc.registerFontkit(...)` before embedding custom fonts.
 
-> **[See below for detailed installation instructions on installing `@pdf-lib/fontkit` as a UMD or NPM module.](#fontkit-installation)**
+> **[See below for detailed installation instructions on installing `@chr33s/fontkit` as a UMD or NPM module.](#fontkit-installation)**
 
 _This example produces [this PDF](assets/pdfs/examples/embed_font_and_measure_text.pdf)_ (when [this font](assets/fonts/ubuntu/Ubuntu-R.ttf) is used for the `fontBytes` variable).
 
@@ -664,7 +664,7 @@ _This example produces [this PDF](assets/pdfs/examples/embed_font_and_measure_te
 <!-- prettier-ignore -->
 ```js
 import { PDFDocument, rgb } from 'pdf-lib'
-import fontkit from '@pdf-lib/fontkit'
+import fontkit from '@chr33s/fontkit'
 
 // This should be a Uint8Array or ArrayBuffer
 // This data can be obtained in a number of different ways
@@ -1034,37 +1034,38 @@ const pdfBytes = await pdfDoc.save()
 ### Draw SVG
 
 ```js
-import { PDFDocument, rgb } from 'pdf-lib'
+import { PDFDocument, rgb } from 'pdf-lib';
 
 // SVG of a square inside a square
 const svg = `<svg width="100" height="100">
   <rect y="0" x="0" width="100" height="100" fill="none" stroke="black"/>
   <rect y="25" x="25" width="50" height="50" fill="black"/>
 </svg>`;
-const svg2 = '<svg><image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII="/></svg>'
+const svg2 =
+  '<svg><image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII="/></svg>';
 
 // Create a new PDFDocument
-const pdfDoc = await PDFDocument.create()
+const pdfDoc = await PDFDocument.create();
 
 // Add a blank page to the document
-const page = pdfDoc.addPage()
+const page = pdfDoc.addPage();
 
 // drawSvg can accept the svg as a string, as long as there are no images in it
-page.moveTo(100, 10)
-page.drawSvg(svg)
+page.moveTo(100, 10);
+page.drawSvg(svg);
 
 // If the svg has images, or if you don't know if it does, you should call embedSVG first
-page.moveTo(200, 10)
-const pdfSvg = await pdfDoc.embedSvg(svg2)
-page.drawSvg(pdfSvg)
+page.moveTo(200, 10);
+const pdfSvg = await pdfDoc.embedSvg(svg2);
+page.drawSvg(pdfSvg);
 
 // Serialize the PDFDocument to bytes (a Uint8Array)
-const pdfBytes = await pdfDoc.save()
+const pdfBytes = await pdfDoc.save();
 ```
 
 ## Deno Usage
 
-`pdf-lib` fully supports the exciting new [Deno](https://deno.land/) runtime! All of the [usage examples](#usage-examples) work in Deno. The only thing you need to do is change the imports for `pdf-lib` and `@pdf-lib/fontkit` to use the [Skypack](https://www.skypack.dev/) CDN, because Deno requires all modules to be referenced via URLs.
+`pdf-lib` fully supports the exciting new [Deno](https://deno.land/) runtime! All of the [usage examples](#usage-examples) work in Deno. The only thing you need to do is change the imports for `pdf-lib` and `@chr33s/fontkit` to use the [Skypack](https://www.skypack.dev/) CDN, because Deno requires all modules to be referenced via URLs.
 
 > **See also [How to Create and Modify PDF Files in Deno With pdf-lib](https://medium.com/swlh/how-to-create-and-modify-pdf-files-in-deno-ffaad7099b0?source=friends_link&sk=3da183bb776d059df428eaea52102f19)**
 
@@ -1117,7 +1118,7 @@ import {
   rgb,
   StandardFonts,
 } from 'https://cdn.skypack.dev/pdf-lib@^1.11.1?dts';
-import fontkit from 'https://cdn.skypack.dev/@pdf-lib/fontkit@^1.0.0?dts';
+import fontkit from 'https://cdn.skypack.dev/@chr33s/fontkit@^1.0.0?dts';
 
 const url = 'https://pdf-lib.js.org/assets/ubuntu/Ubuntu-R.ttf';
 const fontBytes = await fetch(url).then((res) => res.arrayBuffer());
@@ -1219,18 +1220,18 @@ var rgb = PDFLib.rgb;
 
 ## Fontkit Installation
 
-`pdf-lib` relies upon a sister module to support embedding custom fonts: [`@pdf-lib/fontkit`](https://www.npmjs.com/package/@pdf-lib/fontkit). You must add the `@pdf-lib/fontkit` module to your project and register it using `pdfDoc.registerFontkit(...)` before embedding custom fonts (see the [font embedding example](#embed-font-and-measure-text)). This module is not included by default because not all users need it, and it increases bundle size.
+`pdf-lib` relies upon a sister module to support embedding custom fonts: [`@chr33s/fontkit`](https://www.npmjs.com/package/@chr33s/fontkit). You must add the `@chr33s/fontkit` module to your project and register it using `pdfDoc.registerFontkit(...)` before embedding custom fonts (see the [font embedding example](#embed-font-and-measure-text)). This module is not included by default because not all users need it, and it increases bundle size.
 
-Installing this module is easy. Just like `pdf-lib` itself, `@pdf-lib/fontkit` can be installed with `npm`/`yarn` or as a UMD module.
+Installing this module is easy. Just like `pdf-lib` itself, `@chr33s/fontkit` can be installed with `npm`/`yarn` or as a UMD module.
 
 ### Fontkit NPM Module
 
 ```bash
 # With npm
-npm install --save @pdf-lib/fontkit
+npm install --save @chr33s/fontkit
 
 # With yarn
-yarn add @pdf-lib/fontkit
+yarn add @chr33s/fontkit
 ```
 
 To register the `fontkit` instance:
@@ -1238,7 +1239,7 @@ To register the `fontkit` instance:
 <!-- prettier-ignore -->
 ```js
 import { PDFDocument } from 'pdf-lib'
-import fontkit from '@pdf-lib/fontkit'
+import fontkit from '@chr33s/fontkit'
 
 const pdfDoc = await PDFDocument.create()
 pdfDoc.registerFontkit(fontkit)
@@ -1248,15 +1249,15 @@ pdfDoc.registerFontkit(fontkit)
 
 The following builds are available:
 
-- https://unpkg.com/@pdf-lib/fontkit/dist/fontkit.umd.js
-- https://unpkg.com/@pdf-lib/fontkit/dist/fontkit.umd.min.js
-- https://cdn.jsdelivr.net/npm/@pdf-lib/fontkit/dist/fontkit.umd.js
-- https://cdn.jsdelivr.net/npm/@pdf-lib/fontkit/dist/fontkit.umd.min.js
+- https://unpkg.com/@chr33s/fontkit/dist/fontkit.umd.js
+- https://unpkg.com/@chr33s/fontkit/dist/fontkit.umd.min.js
+- https://cdn.jsdelivr.net/npm/@chr33s/fontkit/dist/fontkit.umd.js
+- https://cdn.jsdelivr.net/npm/@chr33s/fontkit/dist/fontkit.umd.min.js
 
 > **NOTE:** if you are using the CDN scripts in production, you should include a specific version number in the URL, for example:
 >
-> - https://unpkg.com/@pdf-lib/fontkit@0.0.4/dist/fontkit.umd.min.js
-> - https://cdn.jsdelivr.net/npm/@pdf-lib/fontkit@0.0.4/dist/fontkit.umd.min.js
+> - https://unpkg.com/@chr33s/fontkit@0.0.4/dist/fontkit.umd.min.js
+> - https://cdn.jsdelivr.net/npm/@chr33s/fontkit@0.0.4/dist/fontkit.umd.min.js
 
 When using a UMD build, you will have access to a global `window.fontkit` variable. To register the `fontkit` instance:
 
@@ -1295,7 +1296,7 @@ When working with PDFs, you will frequently come across the terms "character enc
   <!-- prettier-ignore -->
   ```js
   import { PDFDocument } from 'pdf-lib'
-  import fontkit from '@pdf-lib/fontkit'
+  import fontkit from '@chr33s/fontkit'
 
   const url = 'https://pdf-lib.js.org/assets/ubuntu/Ubuntu-R.ttf'
   const fontBytes = await fetch(url).then((res) => res.arrayBuffer())
@@ -1347,7 +1348,7 @@ You can use an embedded font when filling form fields as follows:
 
 ```js
 import { PDFDocument } from 'pdf-lib';
-import fontkit from '@pdf-lib/fontkit';
+import fontkit from '@chr33s/fontkit';
 
 // Fetch the PDF with form fields
 const formUrl = 'https://pdf-lib.js.org/assets/dod_character.pdf';
@@ -1469,9 +1470,9 @@ To load a document, use this:
 
 ```js
 // Load a random document you know nothing about:
-const doc = PDFDocument.load(content, { ignoreEncryption: true })
+const doc = PDFDocument.load(content, { ignoreEncryption: true });
 // Check if the document is encrypted:
-const isEncrypted = doc.isEncrypted
+const isEncrypted = doc.isEncrypted;
 // If isEncrypted is true, you know the you need to ask the user for the password.
 ```
 
@@ -1479,8 +1480,8 @@ If you know the password of the document, or if it was provided by the user, you
 
 ```js
 // Load an encrypted document with its password:
-const password = "The password"
-const doc = PDFDocument.load(content, { ignoreEncryption: true, password })
+const password = 'The password';
+const doc = PDFDocument.load(content, { ignoreEncryption: true, password });
 ```
 
 ## Contributing

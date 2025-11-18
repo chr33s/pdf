@@ -1,4 +1,4 @@
-import unicode from '@pdf-lib/unicode-properties';
+import unicode from '@chr33s/unicode-properties';
 
 const VARIATION_FEATURES = ['rvrn'];
 const COMMON_FEATURES = ['ccmp', 'locl', 'rlig', 'mark', 'mkmk'];

@@ -1,4 +1,4 @@
-import r from '@pdf-lib/restructure';
+import r from '@chr33s/restructure';
 import { cache } from './decorators';
 import fontkit from './base';
 import Directory from './tables/directory';

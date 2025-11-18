@@ -1,4 +1,4 @@
-import r from '@pdf-lib/restructure';
+import r from '@chr33s/restructure';
 
 let ColorRecord = new r.Struct({
   blue: r.uint8,

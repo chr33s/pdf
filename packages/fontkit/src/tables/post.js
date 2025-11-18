@@ -1,4 +1,4 @@
-import r from '@pdf-lib/restructure';
+import r from '@chr33s/restructure';
 
 // PostScript information
 export default new r.VersionedStruct(r.fixed32, {

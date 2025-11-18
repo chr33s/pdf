@@ -29,7 +29,7 @@ Listed below are changes that have been made in this fork:
   * [b0241e7](https://github.com/Hopding/fontkit/commit/b0241e7c30cdb83bda6867aa8c9229c1ab1cb8e3)
 * Remove calls to `new Function()` to allow usage on CSP sites:
   * [e3dcc8a](https://github.com/Hopding/fontkit/commit/e3dcc8aad014081b8106c47d89049ba9e6f3dd48)
-* Released to NPM as `@pdf-lib/fontkit`
+* Released to NPM as `@chr33s/fontkit`
   * [873b05d](https://github.com/Hopding/fontkit/commit/873b05d23aecb9f0142fc3ebda593fd2a7d81c17)
 
 Also see
@@ -58,7 +58,7 @@ Fontkit is an advanced font engine for Node and the browser, used by [PDFKit](ht
 ## Example
 
 ```js
-import fontkit from '@pdf-lib/fontkit';
+import fontkit from '@chr33s/fontkit';
 import fs from 'fs';
 
 // open a font synchronously
@@ -87,26 +87,26 @@ subset.encodeStream()
 To install the latest stable version:
 ```bash
 # With npm
-npm install --save @pdf-lib/fontkit
+npm install --save @chr33s/fontkit
 
 # With yarn
-yarn add  @pdf-lib/fontkit
+yarn add  @chr33s/fontkit
 ```
 This assumes you're using [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/lang/en/) as your package manager.
 
 ### UMD Module
-You can also download `@pdf-lib/fontkit` as a UMD module from [unpkg](https://unpkg.com/#/). The UMD builds have been compiled to ES5, so they should work [in any modern browser](https://caniuse.com/#feat=es5). UMD builds are useful if you aren't using a package manager or module bundler. For example, you can use them directly in the `<script>` tag of an HTML page.
+You can also download `@chr33s/fontkit` as a UMD module from [unpkg](https://unpkg.com/#/). The UMD builds have been compiled to ES5, so they should work [in any modern browser](https://caniuse.com/#feat=es5). UMD builds are useful if you aren't using a package manager or module bundler. For example, you can use them directly in the `<script>` tag of an HTML page.
 
 The following builds are available:
 
-* https://unpkg.com/@pdf-lib/fontkit/dist/fontkit.umd.js
-* https://unpkg.com/@pdf-lib/fontkit/dist/fontkit.umd.min.js
+* https://unpkg.com/@chr33s/fontkit/dist/fontkit.umd.js
+* https://unpkg.com/@chr33s/fontkit/dist/fontkit.umd.min.js
 
-When using a UMD build, you will have access to a global `window.fontkit` variable. This variable contains the object exported by `@pdf-lib/fontkit`. For example:
+When using a UMD build, you will have access to a global `window.fontkit` variable. This variable contains the object exported by `@chr33s/fontkit`. For example:
 
 ```javascript
 // NPM module
-import fontkit from '@pdf-lib/fontkit';
+import fontkit from '@chr33s/fontkit';
 
 // UMD module
 var fontkit = window.fontkit;

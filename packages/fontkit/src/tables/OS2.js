@@ -1,4 +1,4 @@
-import r from '@pdf-lib/restructure';
+import r from '@chr33s/restructure';
 
 var OS2 = new r.VersionedStruct(r.uint16, {
   header: {

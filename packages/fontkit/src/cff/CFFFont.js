@@ -1,4 +1,4 @@
-import r from '@pdf-lib/restructure';
+import r from '@chr33s/restructure';
 import CFFIndex from './CFFIndex';
 import CFFTop from './CFFTop';
 import CFFPrivateDict from './CFFPrivateDict';

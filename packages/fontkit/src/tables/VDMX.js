@@ -1,4 +1,4 @@
-import r from '@pdf-lib/restructure';
+import r from '@chr33s/restructure';
 
 // VDMX tables contain ascender/descender overrides for certain (usually small)
 // sizes. This is needed in order to match font metrics on Windows.

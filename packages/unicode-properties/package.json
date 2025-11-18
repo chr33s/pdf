@@ -1,5 +1,5 @@
 {
-  "name": "@pdf-lib/unicode-properties",
+  "name": "@chr33s/unicode-properties",
   "version": "0.0.1",
   "description": "Provides fast access to unicode character properties",
   "main": "lib/index.js",

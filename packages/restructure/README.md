@@ -5,7 +5,7 @@ Listed below are changes that have been made in this fork:
 
 * Remove calls to `new Function()` to allow usage on CSP sites:
   * [0596e95](https://github.com/Hopding/restructure/commit/0596e9597801ed8a63f0af7e6f2f858d1aff5304)
-* Released to NPM as `@pdf-lib/restructure`
+* Released to NPM as `@chr33s/restructure`
   * [819fd2d](https://github.com/Hopding/restructure/commit/819fd2d1140cf06f4ebc5bfc3f1adbda0b2b5ec1)
 
 Also see
@@ -30,7 +30,7 @@ This is just a small example of what Restructure can do. Check out the API docum
 below for more information.
 
 ```javascript
-var r = require('@pdf-lib/restructure');
+var r = require('@chr33s/restructure');
 
 var Person = new r.Struct({
   name: new r.String(r.uint8, 'utf8'),

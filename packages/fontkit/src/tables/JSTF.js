@@ -1,4 +1,4 @@
-import r from '@pdf-lib/restructure';
+import r from '@chr33s/restructure';
 import { ScriptList, FeatureList, LookupList, Coverage, ClassDef, Device } from './opentype';
 import { GPOSLookup } from './GPOS';
 

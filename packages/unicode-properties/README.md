@@ -11,7 +11,7 @@ Listed below are changes that have been made in this fork:
   * [3db56ad](https://github.com/Hopding/unicode-properties/commit/3db56ad605cb1517e64874f80a0f915c64538707)
 * Build non-rolled-up ES6 and CommonJS in `es/` and `lib/` directories:
   * [cae7a5b](https://github.com/Hopding/unicode-properties/commit/cae7a5b0ca4f8f0a95b2f1f0592f55c93057166d)
-* Released to NPM as `@pdf-lib/unicode-properties`
+* Released to NPM as `@chr33s/unicode-properties`
   * [a2d46c4](https://github.com/Hopding/unicode-properties/commit/a2d46c4f8cb837e24fdc8d298a8bff756e58bef3)
 
 Also see
@@ -28,7 +28,7 @@ properties for all code points into just 12KB.
 ## Usage
 
 ```js
-import unicode from '@pdf-lib/unicode-properties';
+import unicode from '@chr33s/unicode-properties';
 
 unicode.getCategory('2'.charCodeAt()) //=> 'Nd'
 unicode.getNumericValue('2'.charCodeAt()) //=> 2
@@ -39,26 +39,26 @@ unicode.getNumericValue('2'.charCodeAt()) //=> 2
 To install the latest stable version:
 ```bash
 # With npm
-npm install --save @pdf-lib/unicode-properties
+npm install --save @chr33s/unicode-properties
 
 # With yarn
-yarn add  @pdf-lib/unicode-properties
+yarn add  @chr33s/unicode-properties
 ```
 This assumes you're using [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/lang/en/) as your package manager.
 
 ### UMD Module
-You can also download `@pdf-lib/unicode-properties` as a UMD module from [unpkg](https://unpkg.com/#/). The UMD builds have been compiled to ES5, so they should work [in any modern browser](https://caniuse.com/#feat=es5). UMD builds are useful if you aren't using a package manager or module bundler. For example, you can use them directly in the `<script>` tag of an HTML page.
+You can also download `@chr33s/unicode-properties` as a UMD module from [unpkg](https://unpkg.com/#/). The UMD builds have been compiled to ES5, so they should work [in any modern browser](https://caniuse.com/#feat=es5). UMD builds are useful if you aren't using a package manager or module bundler. For example, you can use them directly in the `<script>` tag of an HTML page.
 
 The following builds are available:
 
-* https://unpkg.com/@pdf-lib/unicode-properties/dist/unicode-properties.js
-* https://unpkg.com/@pdf-lib/unicode-properties/dist/unicode-properties.min.js
+* https://unpkg.com/@chr33s/unicode-properties/dist/unicode-properties.js
+* https://unpkg.com/@chr33s/unicode-properties/dist/unicode-properties.min.js
 
-When using a UMD build, you will have access to a global `window.UnicodeProperties` variable. This variable contains the object exported by `@pdf-lib/unicode-properties`. For example:
+When using a UMD build, you will have access to a global `window.UnicodeProperties` variable. This variable contains the object exported by `@chr33s/unicode-properties`. For example:
 
 ```javascript
 // NPM module
-import unicode from '@pdf-lib/unicode-properties';
+import unicode from '@chr33s/unicode-properties';
 
 // UMD module
 var unicode = window.UnicodeProperties;

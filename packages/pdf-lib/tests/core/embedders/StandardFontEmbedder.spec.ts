@@ -1,4 +1,4 @@
-import { FontNames } from '@pdf-lib/standard-fonts';
+import { FontNames } from '@chr33s/standard-fonts';
 import {
   PDFContext,
   PDFDict,

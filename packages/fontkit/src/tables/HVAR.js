@@ -1,5 +1,5 @@
-import r from '@pdf-lib/restructure';
-import {resolveLength} from '@pdf-lib/restructure/src/utils';
+import r from '@chr33s/restructure';
+import {resolveLength} from '@chr33s/restructure/src/utils';
 import {ItemVariationStore} from './variations';
 
 // TODO: add this to restructure

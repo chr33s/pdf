@@ -1,4 +1,4 @@
-import r from '@pdf-lib/restructure';
+import r from '@chr33s/restructure';
 
 let GaspRange = new r.Struct({
   rangeMaxPPEM:       r.uint16,                  // Upper limit of range, in ppem

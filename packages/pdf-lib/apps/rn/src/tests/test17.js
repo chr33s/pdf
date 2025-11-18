@@ -8,7 +8,7 @@ import {
   drawEllipse,
   PDFWidgetAnnotation,
 } from 'pdf-lib';
-import fontkit from '@pdf-lib/fontkit';
+import fontkit from '@chr33s/fontkit';
 
 import { fetchAsset } from './assets';
 

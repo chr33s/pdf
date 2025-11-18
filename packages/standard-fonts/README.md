@@ -6,7 +6,7 @@
   <!-- NPM Version -->
   <a href="https://www.npmjs.com/package/standard-fonts">
     <img
-      src="https://img.shields.io/npm/v/@pdf-lib/standard-fonts.svg?style=flat-square"
+      src="https://img.shields.io/npm/v/@chr33s/standard-fonts.svg?style=flat-square"
       alt="NPM Version"
     />
   </a>
@@ -29,7 +29,7 @@ This project is a fork of [`afm`](https://github.com/chbrown/afm) and was create
 
 ## Usage
 ```js
-import { Font, FontNames, Encodings } from '@pdf-lib/standard-fonts';
+import { Font, FontNames, Encodings } from '@chr33s/standard-fonts';
 
 const codePoint = '∑'.charCodeAt(0);
 
@@ -46,26 +46,26 @@ width // => 713
 To install the latest stable version:
 ```bash
 # With npm
-npm install --save @pdf-lib/standard-fonts
+npm install --save @chr33s/standard-fonts
 
 # With yarn
-yarn add @pdf-lib/standard-fonts
+yarn add @chr33s/standard-fonts
 ```
 This assumes you're using [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/lang/en/) as your package manager.
 
 ### UMD Module
-You can also download `@pdf-lib/standard-fonts` as a UMD module from [unpkg](https://unpkg.com/#/). The UMD builds have been compiled to ES5, so they should work [in any modern browser](https://caniuse.com/#feat=es5). UMD builds are useful if you aren't using a package manager or module bundler. For example, you can use them directly in the `<script>` tag of an HTML page.
+You can also download `@chr33s/standard-fonts` as a UMD module from [unpkg](https://unpkg.com/#/). The UMD builds have been compiled to ES5, so they should work [in any modern browser](https://caniuse.com/#feat=es5). UMD builds are useful if you aren't using a package manager or module bundler. For example, you can use them directly in the `<script>` tag of an HTML page.
 
 The following builds are available:
 
-* https://unpkg.com/@pdf-lib/standard-fonts/dist/standard-fonts.js
-* https://unpkg.com/@pdf-lib/standard-fonts/dist/standard-fonts.min.js
+* https://unpkg.com/@chr33s/standard-fonts/dist/standard-fonts.js
+* https://unpkg.com/@chr33s/standard-fonts/dist/standard-fonts.min.js
 
-When using a UMD build, you will have access to a global `window.StandardFonts` variable. This variable contains the classes and enums exported by `@pdf-lib/standard-fonts`. For example:
+When using a UMD build, you will have access to a global `window.StandardFonts` variable. This variable contains the classes and enums exported by `@chr33s/standard-fonts`. For example:
 
 ```javascript
 // NPM module
-import { Font, FontNames, Encodings } from '@pdf-lib/standard-fonts';
+import { Font, FontNames, Encodings } from '@chr33s/standard-fonts';
 const font = Font.load(FontNames.HelveticaBold);
 const encoding = Encodings.WinAnsi;
 

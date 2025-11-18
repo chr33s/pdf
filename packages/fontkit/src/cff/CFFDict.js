@@ -1,7 +1,7 @@
 import isEqual from 'deep-equal';
-import r from '@pdf-lib/restructure';
+import r from '@chr33s/restructure';
 import CFFOperand from './CFFOperand';
-import { PropertyDescriptor } from '@pdf-lib/restructure/src/utils';
+import { PropertyDescriptor } from '@chr33s/restructure/src/utils';
 
 export default class CFFDict {
   constructor(ops = []) {

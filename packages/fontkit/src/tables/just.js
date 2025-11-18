@@ -1,4 +1,4 @@
-import r from '@pdf-lib/restructure';
+import r from '@chr33s/restructure';
 import { LookupTable, StateTable1 } from './aat';
 
 let ClassTable = new r.Struct({

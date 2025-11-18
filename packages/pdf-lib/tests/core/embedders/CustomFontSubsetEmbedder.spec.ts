@@ -1,4 +1,4 @@
-import fontkit from '@pdf-lib/fontkit';
+import fontkit from '@chr33s/fontkit';
 import fs from 'fs';
 
 import {

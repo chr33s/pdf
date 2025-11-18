@@ -3,7 +3,7 @@ import {
   Font,
   FontNames,
   EncodingType,
-} from '@pdf-lib/standard-fonts';
+} from '@chr33s/standard-fonts';
 
 import PDFHexString from '../objects/PDFHexString';
 import PDFRef from '../objects/PDFRef';

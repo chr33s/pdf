@@ -1,4 +1,4 @@
-import r from '@pdf-lib/restructure';
+import r from '@chr33s/restructure';
 import TTFFont from './TTFFont';
 import Directory from './tables/directory';
 import tables from './tables';

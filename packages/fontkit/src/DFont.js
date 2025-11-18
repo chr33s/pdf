@@ -1,4 +1,4 @@
-import r from '@pdf-lib/restructure';
+import r from '@chr33s/restructure';
 import TTFFont from './TTFFont';
 
 let DFontName = new r.String(r.uint8);

@@ -1,4 +1,4 @@
-import r from '@pdf-lib/restructure';
+import r from '@chr33s/restructure';
 import tables from './';
 
 let WOFFDirectoryEntry = new r.Struct({

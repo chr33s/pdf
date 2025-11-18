@@ -1,4 +1,4 @@
-import r from '@pdf-lib/restructure';
+import r from '@chr33s/restructure';
 import {getEncoding, LANGUAGES} from '../encodings';
 
 let NameRecord = new r.Struct({

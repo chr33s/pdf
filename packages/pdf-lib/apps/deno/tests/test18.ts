@@ -1,4 +1,4 @@
-import fontkit from 'https://cdn.skypack.dev/@pdf-lib/fontkit@^1.0.0?dts';
+import fontkit from 'https://cdn.skypack.dev/@chr33s/fontkit@^1.0.0?dts';
 
 import { Assets } from '../index.ts';
 

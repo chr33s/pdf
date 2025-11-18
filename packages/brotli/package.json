@@ -1,5 +1,5 @@
 {
-  "name": "@pdf-lib/brotli",
+  "name": "@chr33s/brotli",
   "version": "0.0.0",
   "description": "A port of the Brotli compression algorithm as used in WOFF2",
   "main": "index.js",

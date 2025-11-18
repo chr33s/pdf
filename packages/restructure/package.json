@@ -1,5 +1,5 @@
 {
-  "name": "@pdf-lib/restructure",
+  "name": "@chr33s/restructure",
   "version": "0.0.1",
   "description": "Declaratively encode and decode binary data",
   "main": "index.js",

@@ -1,4 +1,4 @@
-import fontkit from '@pdf-lib/fontkit';
+import fontkit from '@chr33s/fontkit';
 import { Assets } from '..';
 import { degrees, ParseSpeeds, PDFDocument, rgb } from '../../..';
 

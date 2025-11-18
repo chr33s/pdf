@@ -1,4 +1,4 @@
-import r from '@pdf-lib/restructure';
+import r from '@chr33s/restructure';
 
 let shortFrac = new r.Fixed(16, 'BE', 14);
 class Offset {

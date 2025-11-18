@@ -1,5 +1,5 @@
-import r from '@pdf-lib/restructure';
-import { resolveLength } from '@pdf-lib/restructure/src/utils';
+import r from '@chr33s/restructure';
+import { resolveLength } from '@chr33s/restructure/src/utils';
 import CFFDict from './CFFDict';
 import CFFIndex from './CFFIndex';
 import CFFPointer from './CFFPointer';
