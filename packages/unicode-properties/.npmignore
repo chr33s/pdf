@@ -6,4 +6,3 @@ test/
 babel.config.js
 Makefile.js
 rollup.config.js
-yarn.lock
