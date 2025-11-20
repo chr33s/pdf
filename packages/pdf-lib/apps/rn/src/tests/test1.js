@@ -1,4 +1,4 @@
-import fontkit from '@chr33s/fontkit';
+import fontkit from "@chr33s/fontkit";
 import {
   clip,
   clipEvenOdd,
@@ -20,14 +20,14 @@ import {
   setLineJoin,
   StandardFonts,
   AFRelationship,
-} from 'pdf-lib';
+} from "pdf-lib";
 
-import { fetchAsset } from './assets';
+import { fetchAsset } from "./assets";
 
 const ipsumLines = [
-  'Eligendi est pariatur quidem in non excepturi et.',
-  'Consectetur non tenetur magnam est corporis tempor.',
-  'Labore nisi officiis quia ipsum qui voluptatem omnis.',
+  "Eligendi est pariatur quidem in non excepturi et.",
+  "Consectetur non tenetur magnam est corporis tempor.",
+  "Labore nisi officiis quia ipsum qui voluptatem omnis.",
 ];
 
 // This test creates a new PDF document and inserts pages to it.
@@ -35,39 +35,39 @@ const ipsumLines = [
 export default async () => {
   const pdfDoc = await PDFDocument.create();
 
-  pdfDoc.setTitle('🥚 The Life of an Egg 🍳', { showInWindowTitleBar: true });
-  pdfDoc.setAuthor('Humpty Dumpty');
-  pdfDoc.setSubject('📘 An Epic Tale of Woe 📖');
-  pdfDoc.setKeywords(['eggs', 'wall', 'fall', 'king', 'horses', 'men']);
-  pdfDoc.setProducer('PDF App 9000 🤖');
-  pdfDoc.setCreator('PDF App 9000 🤖');
-  pdfDoc.setCreationDate(new Date('2018-06-24T01:58:37.228Z'));
-  pdfDoc.setModificationDate(new Date('2018-12-21T07:00:11.000Z'));
+  pdfDoc.setTitle("🥚 The Life of an Egg 🍳", { showInWindowTitleBar: true });
+  pdfDoc.setAuthor("Humpty Dumpty");
+  pdfDoc.setSubject("📘 An Epic Tale of Woe 📖");
+  pdfDoc.setKeywords(["eggs", "wall", "fall", "king", "horses", "men"]);
+  pdfDoc.setProducer("PDF App 9000 🤖");
+  pdfDoc.setCreator("PDF App 9000 🤖");
+  pdfDoc.setCreationDate(new Date("2018-06-24T01:58:37.228Z"));
+  pdfDoc.setModificationDate(new Date("2018-12-21T07:00:11.000Z"));
 
   pdfDoc.registerFontkit(fontkit);
 
   await pdfDoc.attach(
-    await fetchAsset('images/greyscale_bird.png'),
-    'bird.png',
+    await fetchAsset("images/greyscale_bird.png"),
+    "bird.png",
     {
-      mimeType: 'image/png',
-      description: 'A bird in greyscale 🐦',
-      creationDate: new Date('2006/06/06'),
-      modificationDate: new Date('2007/07/07'),
+      mimeType: "image/png",
+      description: "A bird in greyscale 🐦",
+      creationDate: new Date("2006/06/06"),
+      modificationDate: new Date("2007/07/07"),
       afRelationship: AFRelationship.Data,
     },
   );
 
   const csvString = [
-    'Year,Make,Model',
-    '1997,Ford,E350',
-    '2000,Mercury,Cougar',
-  ].join('\n');
-  await pdfDoc.attach(typedArrayFor(csvString), 'cars.csv', {
-    mimeType: 'text/csv',
-    description: 'Some car info 🚗',
-    creationDate: new Date('2000/01/13'),
-    modificationDate: new Date('2012/12/12'),
+    "Year,Make,Model",
+    "1997,Ford,E350",
+    "2000,Mercury,Cougar",
+  ].join("\n");
+  await pdfDoc.attach(typedArrayFor(csvString), "cars.csv", {
+    mimeType: "text/csv",
+    description: "Some car info 🚗",
+    creationDate: new Date("2000/01/13"),
+    modificationDate: new Date("2012/12/12"),
     afRelationship: AFRelationship.Unspecified,
   });
 
@@ -76,7 +76,7 @@ export default async () => {
   const size = 750;
 
   pdfDoc.addJavaScript(
-    'main',
+    "main",
     'console.show(); console.println("Hello World!")',
   );
 
@@ -148,7 +148,7 @@ export default async () => {
   page1.setLineHeight(32);
   page1.moveTo(size / 2 + 5, size - 5 - 25);
   page1.drawText(
-    [...ipsumLines, ...ipsumLines, ...ipsumLines, ...ipsumLines].join('\n'),
+    [...ipsumLines, ...ipsumLines, ...ipsumLines, ...ipsumLines].join("\n"),
   );
   page1.pushOperators(popGraphicsState());
 
@@ -249,18 +249,18 @@ export default async () => {
     pressStart2PBytes,
     hussar3DBytes,
   ] = await Promise.all([
-    fetchAsset('fonts/ubuntu/Ubuntu-R.ttf'),
-    fetchAsset('fonts/fantasque/OTF/FantasqueSansMono-BoldItalic.otf'),
-    fetchAsset('fonts/indie_flower/IndieFlower.ttf'),
-    fetchAsset('fonts/great_vibes/GreatVibes-Regular.ttf'),
-    fetchAsset('fonts/apple_storm/AppleStormCBo.otf'),
-    fetchAsset('fonts/bio_rhyme/BioRhymeExpanded-Regular.ttf'),
-    fetchAsset('fonts/press_start_2p/PressStart2P-Regular.ttf'),
-    fetchAsset('fonts/hussar_3d/Hussar3DFour.otf'),
+    fetchAsset("fonts/ubuntu/Ubuntu-R.ttf"),
+    fetchAsset("fonts/fantasque/OTF/FantasqueSansMono-BoldItalic.otf"),
+    fetchAsset("fonts/indie_flower/IndieFlower.ttf"),
+    fetchAsset("fonts/great_vibes/GreatVibes-Regular.ttf"),
+    fetchAsset("fonts/apple_storm/AppleStormCBo.otf"),
+    fetchAsset("fonts/bio_rhyme/BioRhymeExpanded-Regular.ttf"),
+    fetchAsset("fonts/press_start_2p/PressStart2P-Regular.ttf"),
+    fetchAsset("fonts/hussar_3d/Hussar3DFour.otf"),
   ]);
 
   const ubuntuFont = await pdfDoc.embedFont(ubuntuBytes, { subset: true });
-  page2.drawText(ipsumLines.join('\n'), {
+  page2.drawText(ipsumLines.join("\n"), {
     y: size - 20,
     size: 20,
     font: ubuntuFont,
@@ -268,7 +268,7 @@ export default async () => {
   });
 
   const fantasqueFont = await pdfDoc.embedFont(fantasqueBytes);
-  page2.drawText(ipsumLines.join('\n'), {
+  page2.drawText(ipsumLines.join("\n"), {
     y: size - 105,
     size: 25,
     font: fantasqueFont,
@@ -278,7 +278,7 @@ export default async () => {
   const indieFlowerFont = await pdfDoc.embedFont(indieFlowerBytes, {
     subset: true,
   });
-  page2.drawText(ipsumLines.join('\n'), {
+  page2.drawText(ipsumLines.join("\n"), {
     y: size - 200,
     size: 25,
     font: indieFlowerFont,
@@ -288,7 +288,7 @@ export default async () => {
   const greatVibesFont = await pdfDoc.embedFont(greatVibesBytes, {
     subset: true,
   });
-  page2.drawText(ipsumLines.join('\n'), {
+  page2.drawText(ipsumLines.join("\n"), {
     y: size - 300,
     size: 30,
     font: greatVibesFont,
@@ -296,7 +296,7 @@ export default async () => {
   });
 
   const appleStormFont = await pdfDoc.embedFont(appleStormBytes);
-  page2.drawText(ipsumLines.join('\n'), {
+  page2.drawText(ipsumLines.join("\n"), {
     y: size - 425,
     size: 25,
     font: appleStormFont,
@@ -306,7 +306,7 @@ export default async () => {
   const bioRhymeFont = await pdfDoc.embedFont(bioRhymeBytes, {
     subset: true,
   });
-  page2.drawText(ipsumLines.join('\n'), {
+  page2.drawText(ipsumLines.join("\n"), {
     y: size - 500,
     size: 15,
     font: bioRhymeFont,
@@ -316,7 +316,7 @@ export default async () => {
   const pressStart2PFont = await pdfDoc.embedFont(pressStart2PBytes, {
     subset: true,
   });
-  page2.drawText(ipsumLines.join('\n'), {
+  page2.drawText(ipsumLines.join("\n"), {
     y: size - 575,
     size: 15,
     font: pressStart2PFont,
@@ -324,7 +324,7 @@ export default async () => {
   });
 
   const hussar3DFont = await pdfDoc.embedFont(hussar3DBytes);
-  page2.drawText(ipsumLines.join('\n'), {
+  page2.drawText(ipsumLines.join("\n"), {
     y: size - 650,
     size: 25,
     font: hussar3DFont,
@@ -346,12 +346,12 @@ export default async () => {
     minionsBananaNoAlphaBytes,
     smallMarioBytes,
   ] = await Promise.all([
-    fetchAsset('images/cat_riding_unicorn_resized.jpg'),
-    fetchAsset('images/minions_laughing.jpg'),
-    fetchAsset('images/greyscale_bird.png'),
-    fetchAsset('images/minions_banana_alpha.png'),
-    fetchAsset('images/minions_banana_no_alpha_resized.png'),
-    fetchAsset('images/small_mario_resized.png'),
+    fetchAsset("images/cat_riding_unicorn_resized.jpg"),
+    fetchAsset("images/minions_laughing.jpg"),
+    fetchAsset("images/greyscale_bird.png"),
+    fetchAsset("images/minions_banana_alpha.png"),
+    fetchAsset("images/minions_banana_no_alpha_resized.png"),
+    fetchAsset("images/small_mario_resized.png"),
   ]);
 
   const catRidingUnicornImage = await pdfDoc.embedJpg(catRidingUnicornBytes);
@@ -435,7 +435,7 @@ export default async () => {
     rotate: degrees(-90),
   });
 
-  const [normalPdfBytes] = await Promise.all([fetchAsset('pdfs/normal.pdf')]);
+  const [normalPdfBytes] = await Promise.all([fetchAsset("pdfs/normal.pdf")]);
 
   const [embeddedPage1, embeddedPage2] = await pdfDoc.embedPdf(
     normalPdfBytes,
@@ -483,10 +483,10 @@ export default async () => {
 
   // Text Fields
   [
-    { name: 'moi.text.field[0]', text: 'Foo', font: ubuntuFont },
-    { name: 'moi.text.field[1]', text: 'Bar' },
-    { name: 'moi.text.field[2]', text: 'Qux', font: ubuntuFont },
-    { name: 'moi.text.field[3]', text: 'Baz' },
+    { name: "moi.text.field[0]", text: "Foo", font: ubuntuFont },
+    { name: "moi.text.field[1]", text: "Bar" },
+    { name: "moi.text.field[2]", text: "Qux", font: ubuntuFont },
+    { name: "moi.text.field[3]", text: "Baz" },
   ].forEach(({ name, text, font }, idx) => {
     const textField = form.createTextField(name);
     textField.setText(text);
@@ -507,10 +507,10 @@ export default async () => {
 
   // Buttons
   [
-    { name: 'moi.button.field[0]', text: 'Earth', font: ubuntuFont },
-    { name: 'moi.button.field[1]', text: 'Mars', font: timesRomanFont },
-    { name: 'moi.button.field[2]', text: 'Venus', font: ubuntuFont },
-    { name: 'moi.button.field[3]', text: 'Saturn', font: timesRomanFont },
+    { name: "moi.button.field[0]", text: "Earth", font: ubuntuFont },
+    { name: "moi.button.field[1]", text: "Mars", font: timesRomanFont },
+    { name: "moi.button.field[2]", text: "Venus", font: ubuntuFont },
+    { name: "moi.button.field[3]", text: "Saturn", font: timesRomanFont },
   ].forEach(({ name, text, font }, idx) => {
     const button = form.createButton(name);
     button.addToPage(text, page5, {
@@ -529,13 +529,13 @@ export default async () => {
 
   // Dropdowns
   [
-    { name: 'moi.dropdown.field[0]', choice: 'Exia', font: ubuntuFont },
-    { name: 'moi.dropdown.field[1]', choice: 'Kyrios', font: timesRomanFont },
-    { name: 'moi.dropdown.field[2]', choice: 'Dynames', font: ubuntuFont },
-    { name: 'moi.dropdown.field[3]', choice: 'Virtue', font: timesRomanFont },
+    { name: "moi.dropdown.field[0]", choice: "Exia", font: ubuntuFont },
+    { name: "moi.dropdown.field[1]", choice: "Kyrios", font: timesRomanFont },
+    { name: "moi.dropdown.field[2]", choice: "Dynames", font: ubuntuFont },
+    { name: "moi.dropdown.field[3]", choice: "Virtue", font: timesRomanFont },
   ].forEach(({ name, choice, font }, idx) => {
     const dropdown = form.createDropdown(name);
-    dropdown.addOptions(['Exia', 'Dynames', 'Kyrios', 'Virtue']);
+    dropdown.addOptions(["Exia", "Dynames", "Kyrios", "Virtue"]);
     dropdown.select(choice);
     dropdown.addToPage(page5, {
       x: fPadding * 3 + fWidth * 5,
@@ -553,10 +553,10 @@ export default async () => {
 
   // Check Boxes
   [
-    { name: 'moi.checkBox.field[0]' },
-    { name: 'moi.checkBox.field[1]' },
-    { name: 'moi.checkBox.field[2]' },
-    { name: 'moi.checkBox.field[3]' },
+    { name: "moi.checkBox.field[0]" },
+    { name: "moi.checkBox.field[1]" },
+    { name: "moi.checkBox.field[2]" },
+    { name: "moi.checkBox.field[3]" },
   ].forEach(({ name }, idx) => {
     const checkBox = form.createCheckBox(name);
     checkBox.check();
@@ -575,13 +575,13 @@ export default async () => {
 
   // Option Lists
   [
-    { name: 'moi.optionList.field[0]', choice: 'TypeScript', font: ubuntuFont },
-    { name: 'moi.optionList.field[1]', choice: 'Kotlin', font: timesRomanFont },
-    { name: 'moi.optionList.field[2]', choice: 'Python', font: ubuntuFont },
-    { name: 'moi.optionList.field[3]', choice: 'Swift', font: timesRomanFont },
+    { name: "moi.optionList.field[0]", choice: "TypeScript", font: ubuntuFont },
+    { name: "moi.optionList.field[1]", choice: "Kotlin", font: timesRomanFont },
+    { name: "moi.optionList.field[2]", choice: "Python", font: ubuntuFont },
+    { name: "moi.optionList.field[3]", choice: "Swift", font: timesRomanFont },
   ].forEach(({ name, choice, font }, idx) => {
     const optionList = form.createOptionList(name);
-    optionList.addOptions(['TypeScript', 'Kotlin', 'Python', 'Swift']);
+    optionList.addOptions(["TypeScript", "Kotlin", "Python", "Swift"]);
     optionList.select(choice);
     optionList.addToPage(page5, {
       x: fPadding * 2 + fWidth * 3,
@@ -598,13 +598,13 @@ export default async () => {
   });
 
   // Radio Group
-  const radioGroup = form.createRadioGroup('moi.radioGroup.field[0]');
+  const radioGroup = form.createRadioGroup("moi.radioGroup.field[0]");
 
   [
-    { option: 'Bing' },
-    { option: 'Boing' },
-    { option: 'Bang' },
-    { option: 'Bloop' },
+    { option: "Bing" },
+    { option: "Boing" },
+    { option: "Bang" },
+    { option: "Bloop" },
   ].forEach(({ option }, idx) => {
     radioGroup.addOptionToPage(option, page5, {
       x: fPadding * 3 + fWidth * 5,
@@ -619,13 +619,13 @@ export default async () => {
     });
   });
 
-  radioGroup.select('Bing');
+  radioGroup.select("Bing");
 
   // Combed Text Field
-  const combedTf = form.createTextField('moi.combed.text.field');
+  const combedTf = form.createTextField("moi.combed.text.field");
   combedTf.setMaxLength(7);
   combedTf.enableCombing();
-  combedTf.setText('ABC-123');
+  combedTf.setText("ABC-123");
   combedTf.addToPage(page5, {
     x: fPadding + fWidth / 2,
     y: size - fMax * 5 - fPadding * 3,
@@ -639,7 +639,7 @@ export default async () => {
   });
 
   // Multiline Text Field
-  const multilineTf = form.createTextField('moi.multiline.text.field');
+  const multilineTf = form.createTextField("moi.multiline.text.field");
   multilineTf.enableMultiline();
   multilineTf.setText(
     'In the morning, when you can\'t get out of bed, tell yourself: "I\'m getting up to do the work only a man can do. How can I possibly hesitate or complain when I\'m about to accomplish the task for which I was born? Was I made for lying warm in bed under a pile of blankets?"\n\n"But I enjoy it here."\n\nWas it for enjoyment you were born? Are you designed to act or to be acted upon?\n\n\t\t\t\t\t\t\t\t\t\t - Marcus Aurelius',
@@ -656,15 +656,15 @@ export default async () => {
     font: ubuntuFont,
   });
 
-  page5.drawText('There should be no remnant of a field\nbelow this text!!', {
+  page5.drawText("There should be no remnant of a field\nbelow this text!!", {
     y: size - fMax * 5 - fPadding * 0 - fHeight * 3,
     x: fPadding,
     size: 18,
     font: indieFlowerFont,
     lineHeight: 18,
   });
-  const textField = form.createTextField('a.new.text.field');
-  textField.setText('This Should Not Be Visible');
+  const textField = form.createTextField("a.new.text.field");
+  textField.setText("This Should Not Be Visible");
   textField.addToPage(page5, {
     x: fPadding,
     y: size - fMax * 5 - fPadding * 3.5 - fHeight * 3,
@@ -681,14 +681,14 @@ export default async () => {
 
   /********************** Print Metadata **********************/
 
-  console.log('Title:', pdfDoc.getTitle());
-  console.log('Author:', pdfDoc.getAuthor());
-  console.log('Subject:', pdfDoc.getSubject());
-  console.log('Creator:', pdfDoc.getCreator());
-  console.log('Keywords:', pdfDoc.getKeywords());
-  console.log('Producer:', pdfDoc.getProducer());
-  console.log('Creation Date:', pdfDoc.getCreationDate());
-  console.log('Modification Date:', pdfDoc.getModificationDate());
+  console.log("Title:", pdfDoc.getTitle());
+  console.log("Author:", pdfDoc.getAuthor());
+  console.log("Subject:", pdfDoc.getSubject());
+  console.log("Creator:", pdfDoc.getCreator());
+  console.log("Keywords:", pdfDoc.getKeywords());
+  console.log("Producer:", pdfDoc.getProducer());
+  console.log("Creation Date:", pdfDoc.getCreationDate());
+  console.log("Modification Date:", pdfDoc.getModificationDate());
 
   /********************** Export PDF **********************/
 

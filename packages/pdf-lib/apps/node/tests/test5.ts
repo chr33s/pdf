@@ -1,5 +1,5 @@
-import { Assets } from '..';
-import { ParseSpeeds, PDFDocument, rgb, StandardFonts } from '../../..';
+import { Assets } from "..";
+import { ParseSpeeds, PDFDocument, rgb, StandardFonts } from "../../..";
 
 export default async (assets: Assets) => {
   const { pdfs, images } = assets;
@@ -37,7 +37,7 @@ export default async (assets: Assets) => {
     newPage.setFont(timesRomanFont);
     newPage.setFontSize(fontSize);
 
-    const text = 'This page was interleaved by pdf-lib!';
+    const text = "This page was interleaved by pdf-lib!";
     const textWidth = timesRomanFont.widthOfTextAtSize(text, fontSize);
     const textHeight = timesRomanFont.heightAtSize(fontSize);
 

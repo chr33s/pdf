@@ -2,16 +2,39 @@
   "name": "@chr33s/brotli",
   "version": "0.0.0",
   "description": "A port of the Brotli compression algorithm as used in WOFF2",
-  "main": "index.js",
   "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./compress": {
+      "types": "./dist/compress.d.ts",
+      "import": "./dist/compress.js",
+      "default": "./dist/compress.js"
+    },
+    "./decompress": {
+      "types": "./dist/decompress.d.ts",
+      "import": "./dist/decompress.js",
+      "default": "./dist/decompress.js"
+    }
+  },
   "scripts": {
-    "test": "mocha"
+    "build": "make && tsc",
+    "clean": "rm -rf dist",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "base64-js": "^1.1.2"
+    "base64-js": "^1.5.1"
   },
   "devDependencies": {
-    "mocha": "^2.2.1"
+    "@types/node": "^24.10.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.12"
   },
   "repository": {
     "type": "git",

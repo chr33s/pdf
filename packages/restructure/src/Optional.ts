@@ -1,13 +1,16 @@
-import type DecodeStream from './DecodeStream';
-import type EncodeStream from './EncodeStream';
+import type DecodeStream from "./DecodeStream.js";
+import type EncodeStream from "./EncodeStream.js";
 
 type Condition = boolean | ((this: any, parent?: any) => boolean);
 
 export default class Optional<T = unknown> {
-  constructor(public type: any, public condition: Condition = true) {}
+  constructor(
+    public type: any,
+    public condition: Condition = true,
+  ) {}
 
   private evaluateCondition(parent?: any): boolean {
-    if (typeof this.condition === 'function') {
+    if (typeof this.condition === "function") {
       return this.condition.call(parent, parent);
     }
 

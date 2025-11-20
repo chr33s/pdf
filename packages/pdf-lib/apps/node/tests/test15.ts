@@ -1,5 +1,5 @@
-import { Assets } from '..';
-import { PDFDocument, rgb, TextAlignment } from '../../..';
+import { Assets } from "..";
+import { PDFDocument, rgb, TextAlignment } from "../../..";
 
 export default async (assets: Assets) => {
   const pdfDoc = await PDFDocument.load(assets.pdfs.dod_character);
@@ -9,67 +9,67 @@ export default async (assets: Assets) => {
 
   const form = pdfDoc.getForm();
 
-  form.getTextField('CharacterName 2').setText('Mario');
-  form.getTextField('Age').setText('24 years');
-  form.getTextField('Height').setText('5\' 1"');
-  form.getTextField('Weight').setText('196 lbs');
-  form.getTextField('Eyes').setText('blue');
-  form.getTextField('Skin').setText('white');
-  form.getTextField('Hair').setText('brown');
+  form.getTextField("CharacterName 2").setText("Mario");
+  form.getTextField("Age").setText("24 years");
+  form.getTextField("Height").setText("5' 1\"");
+  form.getTextField("Weight").setText("196 lbs");
+  form.getTextField("Eyes").setText("blue");
+  form.getTextField("Skin").setText("white");
+  form.getTextField("Hair").setText("brown");
 
-  form.getButton('CHARACTER IMAGE').setImage(marioImage);
+  form.getButton("CHARACTER IMAGE").setImage(marioImage);
 
   form
-    .getTextField('Allies')
+    .getTextField("Allies")
     .setText(
       [
-        'Allies:',
-        '  • Princess Daisy',
-        '  • Princess Peach',
-        '  • Rosalina',
-        '  • Geno',
-        '  • Luigi',
-        '  • Donkey Kong',
-        '  • Yoshi',
-        '  • Diddy Kong',
-        '',
-        'Organizations:',
-        '  • Italian Plumbers Association',
-      ].join('\n'),
+        "Allies:",
+        "  • Princess Daisy",
+        "  • Princess Peach",
+        "  • Rosalina",
+        "  • Geno",
+        "  • Luigi",
+        "  • Donkey Kong",
+        "  • Yoshi",
+        "  • Diddy Kong",
+        "",
+        "Organizations:",
+        "  • Italian Plumbers Association",
+      ].join("\n"),
     );
 
-  form.getTextField('FactionName').setText("Mario's Emblem");
-  form.getTextField('Faction Symbol Image').setImage(emblemImage);
+  form.getTextField("FactionName").setText("Mario's Emblem");
+  form.getTextField("Faction Symbol Image").setImage(emblemImage);
 
   form
-    .getTextField('Backstory')
+    .getTextField("Backstory")
     .setText(
       "Mario is a fictional character in the Mario video game franchise, owned by Nintendo and created by Japanese video game designer Shigeru Miyamoto. Serving as the company's mascot and the eponymous protagonist of the series, Mario has appeared in over 200 video games since his creation. Depicted as a short, pudgy, Italian plumber who resides in the Mushroom Kingdom, his adventures generally center upon rescuing Princess Peach from the Koopa villain Bowser. His younger brother and sidekick is Luigi.",
     );
 
   form
-    .getTextField('Feat+Traits')
+    .getTextField("Feat+Traits")
     .setText(
       [
-        'Mario can use three basic three power-ups:',
-        '  • the Super Mushroom, which causes Mario to grow larger',
-        '  • the Fire Flower, which allows Mario to throw fireballs',
-        '  • the Starman, which gives Mario temporary invincibility',
-      ].join('\n'),
+        "Mario can use three basic three power-ups:",
+        "  • the Super Mushroom, which causes Mario to grow larger",
+        "  • the Fire Flower, which allows Mario to throw fireballs",
+        "  • the Starman, which gives Mario temporary invincibility",
+      ].join("\n"),
     );
 
   form
-    .getTextField('Treasure')
-    .setText(['• Gold coins', '• Treasure chests'].join('\n'));
+    .getTextField("Treasure")
+    .setText(["• Gold coins", "• Treasure chests"].join("\n"));
 
   // Add new page with custom form fields to exercise options not used in test1
   const { width, height } = pdfDoc.getPage(0).getSize();
   const page2 = pdfDoc.addPage([width, height]);
 
   // Singleline, centered
-  const singlelineCenteredTf = form.createTextField('singleline.centered.tf');
+  const singlelineCenteredTf = form.createTextField("singleline.centered.tf");
   singlelineCenteredTf.setAlignment(TextAlignment.Center);
-  singlelineCenteredTf.setText('Sum centered text yo');
+  singlelineCenteredTf.setText("Sum centered text yo");
   singlelineCenteredTf.addToPage(page2, {
     y: height - 50,
     width: 250,
@@ -79,10 +79,10 @@ export default async (assets: Assets) => {
   });
 
   // Multiline, centered
-  const multilineCenteredTf = form.createTextField('multiline.centered.tf');
+  const multilineCenteredTf = form.createTextField("multiline.centered.tf");
   multilineCenteredTf.enableMultiline();
   multilineCenteredTf.setAlignment(TextAlignment.Center);
-  multilineCenteredTf.setText('Sum\ncentered\rtext\nyo');
+  multilineCenteredTf.setText("Sum\ncentered\rtext\nyo");
   multilineCenteredTf.addToPage(page2, {
     y: height - 50 - 150,
     width: 250,
@@ -92,9 +92,9 @@ export default async (assets: Assets) => {
   });
 
   // Singleline, right justified
-  const singlelineRightTf = form.createTextField('singleline.right.tf');
+  const singlelineRightTf = form.createTextField("singleline.right.tf");
   singlelineRightTf.setAlignment(TextAlignment.Right);
-  singlelineRightTf.setText('Sum right justified text yo');
+  singlelineRightTf.setText("Sum right justified text yo");
   singlelineRightTf.addToPage(page2, {
     y: height - 50,
     x: 300,
@@ -105,10 +105,10 @@ export default async (assets: Assets) => {
   });
 
   // Multiline, right justified
-  const multilineRightTf = form.createTextField('multiline.right.tf');
+  const multilineRightTf = form.createTextField("multiline.right.tf");
   multilineRightTf.enableMultiline();
   multilineRightTf.setAlignment(TextAlignment.Right);
-  multilineRightTf.setText('Sum\nright justified\rtext\nyo');
+  multilineRightTf.setText("Sum\nright justified\rtext\nyo");
   multilineRightTf.addToPage(page2, {
     y: height - 50 - 150,
     x: 300,
@@ -119,7 +119,7 @@ export default async (assets: Assets) => {
   });
 
   // Multiselect Option List
-  const optionList = form.createOptionList('option.list');
+  const optionList = form.createOptionList("option.list");
   optionList.addToPage(page2, {
     y: height - 50 - 150 - 250,
     width: 250,
@@ -129,14 +129,14 @@ export default async (assets: Assets) => {
     borderColor: rgb(1, 0, 1),
   });
   optionList.setOptions([
-    'Sojourner',
-    'Spirit',
-    'Opportunity',
-    'Curiosity',
-    'Perseverance',
+    "Sojourner",
+    "Spirit",
+    "Opportunity",
+    "Curiosity",
+    "Perseverance",
   ]);
   optionList.enableMultiselect();
-  optionList.select(['Sojourner', 'Curiosity', 'Perseverance']);
+  optionList.select(["Sojourner", "Curiosity", "Perseverance"]);
 
   const pdfBytes = await pdfDoc.save();
   return pdfBytes;

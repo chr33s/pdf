@@ -1,0 +1,16 @@
+{
+	"editor.codeActionsOnSave": {
+		"source.fixAll": "always",
+		"source.organizeImports": "always"
+	},
+	"editor.defaultFormatter": "oxc.oxc-vscode",
+	"editor.formatOnSave": true,
+	"files.insertFinalNewline": true,
+	"oxc.enable": true,
+	"oxc.fmt.experimental": true,
+	"oxc.lint.run": "onType",
+	"oxc.typeAware": false,
+	"typescript.enablePromptUseWorkspaceTsdk": true,
+	"typescript.suggest.autoImports": false,
+	"typescript.tsdk": "node_modules/typescript/lib"
+}

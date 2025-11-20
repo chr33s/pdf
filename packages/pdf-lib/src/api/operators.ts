@@ -1,12 +1,12 @@
-import { asNumber, asPDFName, asPDFNumber } from './objects';
-import { degreesToRadians } from './rotations';
+import { asNumber, asPDFName, asPDFNumber } from "./objects";
+import { degreesToRadians } from "./rotations";
 import {
   PDFHexString,
   PDFName,
   PDFNumber,
   PDFOperator,
   PDFOperatorNames as Ops,
-} from '../core';
+} from "../core";
 
 /* ==================== Clipping Path Operators ==================== */
 
@@ -80,7 +80,7 @@ export const setDashPattern = (
   dashPhase: number | PDFNumber,
 ) =>
   PDFOperator.of(Ops.SetLineDashPattern, [
-    `[${dashArray.map(asPDFNumber).join(' ')}]`,
+    `[${dashArray.map(asPDFNumber).join(" ")}]`,
     asPDFNumber(dashPhase),
   ]);
 
@@ -186,8 +186,8 @@ export const square = (xPos: number, yPos: number, size: number) =>
 export const stroke = () => PDFOperator.of(Ops.StrokePath);
 
 export enum FillRule {
-  NonZero = 'f',
-  EvenOdd = 'f*',
+  NonZero = "f",
+  EvenOdd = "f*",
 }
 
 export const fill = () => PDFOperator.of(Ops.FillNonZero);

@@ -1,9 +1,9 @@
-import { inspect } from 'util';
-import type DecodeStream from './DecodeStream';
-import type EncodeStream from './EncodeStream';
-import ArrayT from './Array';
-import { Number as NumberT } from './Number';
-import { resolveLength } from './utils';
+import { inspect } from "util";
+import type DecodeStream from "./DecodeStream.js";
+import type EncodeStream from "./EncodeStream.js";
+import ArrayT from "./Array.js";
+import { Number as NumberT } from "./Number.js";
+import { resolveLength } from "./utils.js";
 
 export class LazyArray<T = unknown> {
   private base: number;
@@ -23,7 +23,7 @@ export class LazyArray<T = unknown> {
       return undefined;
     }
 
-    if (typeof this.items[index] === 'undefined') {
+    if (typeof this.items[index] === "undefined") {
       const pos = this.stream.pos;
       this.stream.pos = this.base + this.type.size(null, this.ctx) * index;
       this.items[index] = this.type.decode(this.stream, this.ctx);
@@ -37,7 +37,7 @@ export class LazyArray<T = unknown> {
     const values: T[] = [];
     for (let i = 0; i < this.length; i += 1) {
       const value = this.get(i);
-      if (typeof value !== 'undefined') {
+      if (typeof value !== "undefined") {
         values.push(value);
       }
     }

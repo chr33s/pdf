@@ -1,5 +1,5 @@
-import fontkit from 'https://cdn.skypack.dev/@chr33s/fontkit@^1.0.0?dts';
-import { Assets } from '../index.ts';
+import fontkit from "https://cdn.skypack.dev/@chr33s/fontkit@^1.0.0?dts";
+import { Assets } from "../index.ts";
 
 // @deno-types="../dummy.d.ts"
 import {
@@ -8,7 +8,7 @@ import {
   PDFFont,
   StandardFonts,
   charAtIndex,
-} from '../../../dist/pdf-lib.esm.js';
+} from "../../../dist/pdf-lib.js";
 
 const breakTextIntoLines = (
   text: string,
@@ -19,12 +19,12 @@ const breakTextIntoLines = (
   const lines: string[] = [];
   let textIdx = 0;
   while (textIdx < text.length) {
-    let line = '';
+    let line = "";
     while (textIdx < text.length) {
-      if (text.charAt(textIdx) === '\n') {
+      if (text.charAt(textIdx) === "\n") {
         lines.push(line);
         textIdx += 1;
-        line = '';
+        line = "";
         continue;
       }
       const [glyph] = charAtIndex(text, textIdx);
@@ -65,7 +65,7 @@ export default async (assets: Assets) => {
   const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const helveticaBoldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
-  const title = 'Embedded UTF-16 Font Demo';
+  const title = "Embedded UTF-16 Font Demo";
   const description = `
     In addition to the standard 14 fonts provided by PDF readers, the PDF
     specification allows PDF documents to embed their own fonts. The standard
@@ -95,7 +95,7 @@ export default async (assets: Assets) => {
     y: 700 - 100,
     x: 650 / 2 - helveticaBoldFont.widthOfTextAtSize(title, 35) / 2,
   });
-  titlePage.drawText(descriptionLines.join('\n'), {
+  titlePage.drawText(descriptionLines.join("\n"), {
     font: helveticaFont,
     size: 16,
     y: 525,
@@ -122,7 +122,7 @@ export default async (assets: Assets) => {
 
   sourceHanLineGroups.forEach((lines) => {
     const page = pdfDoc.addPage([650, 700]);
-    page.drawText(lines.join('\n'), {
+    page.drawText(lines.join("\n"), {
       font: sourceHanFont,
       size: sourceHanFontSize,
       x: 25,

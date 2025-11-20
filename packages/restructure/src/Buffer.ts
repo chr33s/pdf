@@ -1,7 +1,7 @@
-import type DecodeStream from './DecodeStream';
-import type EncodeStream from './EncodeStream';
-import { Number as NumberT } from './Number';
-import { resolveLength, type LengthLike } from './utils';
+import type DecodeStream from "./DecodeStream.js";
+import type EncodeStream from "./EncodeStream.js";
+import { Number as NumberT } from "./Number.js";
+import { resolveLength, type LengthLike } from "./utils.js";
 
 export default class BufferT {
   constructor(public length: LengthLike) {}

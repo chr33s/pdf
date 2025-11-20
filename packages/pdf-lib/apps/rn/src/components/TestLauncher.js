@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {
   StyleSheet,
   SafeAreaView,
@@ -7,38 +7,38 @@ import {
   Button,
   Platform,
   ScrollView,
-} from 'react-native';
+} from "react-native";
 
-import test1 from '../tests/test1';
-import test2 from '../tests/test2';
-import test3 from '../tests/test3';
-import test4 from '../tests/test4';
-import test5 from '../tests/test5';
-import test6 from '../tests/test6';
-import test7 from '../tests/test7';
-import test8 from '../tests/test8';
-import test9 from '../tests/test9';
-import test10 from '../tests/test10';
-import test11 from '../tests/test11';
-import test12 from '../tests/test12';
-import test13 from '../tests/test13';
-import test14 from '../tests/test14';
-import test15 from '../tests/test15';
-import test16 from '../tests/test16';
-import test17 from '../tests/test17';
-import test18 from '../tests/test18';
+import test1 from "../tests/test1";
+import test2 from "../tests/test2";
+import test3 from "../tests/test3";
+import test4 from "../tests/test4";
+import test5 from "../tests/test5";
+import test6 from "../tests/test6";
+import test7 from "../tests/test7";
+import test8 from "../tests/test8";
+import test9 from "../tests/test9";
+import test10 from "../tests/test10";
+import test11 from "../tests/test11";
+import test12 from "../tests/test12";
+import test13 from "../tests/test13";
+import test14 from "../tests/test14";
+import test15 from "../tests/test15";
+import test16 from "../tests/test16";
+import test17 from "../tests/test17";
+import test18 from "../tests/test18";
 
-const red = '#FF0000';
+const red = "#FF0000";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   text: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     // marginBottom: -50,
     // marginBottom: 50,
   },
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   button: {
-    marginVertical: Platform.OS === 'android' ? 5 : 0,
+    marginVertical: Platform.OS === "android" ? 5 : 0,
   },
 });
 

@@ -1,4 +1,4 @@
-import { Size } from '../../types';
+import { Size } from "../../types";
 import {
   angle,
   distance,
@@ -8,11 +8,11 @@ import {
   times,
   unitVector,
   vector,
-} from '../maths';
+} from "../maths";
 
-import GraphElement from './GraphElement';
-import Point from './Point';
-import Segment from './Segment';
+import GraphElement from "./GraphElement";
+import Point from "./Point";
+import Segment from "./Segment";
 
 export default class Ellipse extends GraphElement {
   A: Point;

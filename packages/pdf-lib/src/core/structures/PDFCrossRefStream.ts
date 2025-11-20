@@ -1,9 +1,9 @@
-import PDFDict from '../objects/PDFDict';
-import PDFName from '../objects/PDFName';
-import PDFRef from '../objects/PDFRef';
-import PDFContext from '../PDFContext';
-import PDFFlateStream from './PDFFlateStream';
-import { bytesFor, Cache, reverseArray, sizeInBytes, sum } from '../../utils';
+import PDFDict from "../objects/PDFDict";
+import PDFName from "../objects/PDFName";
+import PDFRef from "../objects/PDFRef";
+import PDFContext from "../PDFContext";
+import PDFFlateStream from "./PDFFlateStream";
+import { bytesFor, Cache, reverseArray, sizeInBytes, sum } from "../../utils";
 
 export enum EntryType {
   Deleted = 0,
@@ -62,7 +62,7 @@ class PDFCrossRefStream extends PDFFlateStream {
     this.maxByteWidthsCache = Cache.populatedBy(this.computeMaxEntryByteWidths);
     this.indexCache = Cache.populatedBy(this.computeIndex);
 
-    dict.set(PDFName.of('Type'), PDFName.of('XRef'));
+    dict.set(PDFName.of("Type"), PDFName.of("XRef"));
   }
 
   addDeletedEntry(ref: PDFRef, nextFreeObjectNumber: number) {
@@ -100,7 +100,7 @@ class PDFCrossRefStream extends PDFFlateStream {
   getContentsString(): string {
     const entryTuples = this.entryTuplesCache.access();
     const byteWidths = this.maxByteWidthsCache.access();
-    let value = '';
+    let value = "";
 
     for (
       let entryIdx = 0, entriesLen = entryTuples.length;
@@ -171,8 +171,8 @@ class PDFCrossRefStream extends PDFFlateStream {
     const index = this.indexCache.access();
 
     const { context } = this.dict;
-    this.dict.set(PDFName.of('W'), context.obj(byteWidths));
-    this.dict.set(PDFName.of('Index'), context.obj(index));
+    this.dict.set(PDFName.of("W"), context.obj(byteWidths));
+    this.dict.set(PDFName.of("Index"), context.obj(index));
   }
 
   // Returns an array of integer pairs for each subsection of the cross ref

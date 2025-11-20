@@ -1,7 +1,7 @@
-import fontkit from '@chr33s/fontkit';
-import { PDFDocument, rgb } from 'pdf-lib';
+import fontkit from "@chr33s/fontkit";
+import { PDFDocument, rgb } from "pdf-lib";
 
-import { fetchAsset } from './assets';
+import { fetchAsset } from "./assets";
 
 // This test loads an existing PDF document with many pages.
 // It inserts data for every page (images, rectangles, texts, embedded PDFs).
@@ -9,10 +9,10 @@ import { fetchAsset } from './assets';
 export default async () => {
   const [ubuntuBytes, smallMarioBytes, inputPdfBytes, largePageCountPdfBytes] =
     await Promise.all([
-      fetchAsset('fonts/ubuntu/Ubuntu-R.ttf'),
-      fetchAsset('images/small_mario_resized.png'),
-      fetchAsset('pdfs/linearized_with_object_streams.pdf'),
-      fetchAsset('pdfs/with_large_page_count.pdf'),
+      fetchAsset("fonts/ubuntu/Ubuntu-R.ttf"),
+      fetchAsset("images/small_mario_resized.png"),
+      fetchAsset("pdfs/linearized_with_object_streams.pdf"),
+      fetchAsset("pdfs/with_large_page_count.pdf"),
     ]);
 
   const pdfDoc = await PDFDocument.load(inputPdfBytes, {
@@ -45,9 +45,9 @@ export default async () => {
   const embeddedPageDims = embeddedPage.scale(0.5);
 
   const lines = [
-    'This is an image of Mario running.',
-    'This image and text was drawn on',
-    'top of an existing PDF using pdf-lib!',
+    "This is an image of Mario running.",
+    "This image and text was drawn on",
+    "top of an existing PDF using pdf-lib!",
   ];
   const fontSize = 24;
   const solarizedWhite = rgb(253 / 255, 246 / 255, 227 / 255);
@@ -77,7 +77,7 @@ export default async () => {
     });
     page.setFont(ubuntuFont);
     page.setFontColor(solarizedGray);
-    page.drawText(lines.join('\n'), {
+    page.drawText(lines.join("\n"), {
       x: centerX - textWidth / 2,
       y: centerY - 15,
     });
@@ -103,14 +103,14 @@ export default async () => {
   // These will all be undefined since the source document's metadata is
   // stored in a metadata stream, not the more widely used info dictionary.
   // pdf-lib does not currently support reading metadata streams.
-  console.log('Title:', pdfDoc.getTitle());
-  console.log('Author:', pdfDoc.getAuthor());
-  console.log('Subject:', pdfDoc.getSubject());
-  console.log('Creator:', pdfDoc.getCreator());
-  console.log('Keywords:', pdfDoc.getKeywords());
-  console.log('Producer:', pdfDoc.getProducer());
-  console.log('Creation Date:', pdfDoc.getCreationDate());
-  console.log('Modification Date:', pdfDoc.getModificationDate());
+  console.log("Title:", pdfDoc.getTitle());
+  console.log("Author:", pdfDoc.getAuthor());
+  console.log("Subject:", pdfDoc.getSubject());
+  console.log("Creator:", pdfDoc.getCreator());
+  console.log("Keywords:", pdfDoc.getKeywords());
+  console.log("Producer:", pdfDoc.getProducer());
+  console.log("Creation Date:", pdfDoc.getCreationDate());
+  console.log("Modification Date:", pdfDoc.getModificationDate());
 
   // const pdfBytes = await pdfDoc.save({ objectsPerTick: Infinity });
 

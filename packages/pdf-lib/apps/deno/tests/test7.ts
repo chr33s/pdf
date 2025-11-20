@@ -1,4 +1,4 @@
-import { Assets } from '../index.ts';
+import { Assets } from "../index.ts";
 
 // @deno-types="../dummy.d.ts"
 import {
@@ -6,7 +6,7 @@ import {
   ParseSpeeds,
   PDFDocument,
   StandardFonts,
-} from '../../../dist/pdf-lib.esm.js';
+} from "../../../dist/pdf-lib.js";
 
 const createDonorPdf = async () => {
   const pdfDoc = await PDFDocument.create();
@@ -17,7 +17,7 @@ const createDonorPdf = async () => {
   page.moveTo(50, 225);
   page.setFont(helveticaFont);
   page.setFontSize(50);
-  page.drawText('I am upside down!');
+  page.drawText("I am upside down!");
   page.setRotation(degrees(180));
 
   return pdfDoc;
@@ -59,11 +59,11 @@ export default async (assets: Assets) => {
 
   console.log();
   console.log(
-    'Since pdf-lib only copies the minimum necessary resources from a donor PDF needed to show a copied page, the size of the PDF we create from copied pages should be smaller than the size of all the donor PDFs added together:',
+    "Since pdf-lib only copies the minimum necessary resources from a donor PDF needed to show a copied page, the size of the PDF we create from copied pages should be smaller than the size of all the donor PDFs added together:",
   );
   console.log();
   console.log(
-    '  sizeOfRecipientPdf / sizeOfAllDonorPdfs = ',
+    "  sizeOfRecipientPdf / sizeOfAllDonorPdfs = ",
     (sizeOfCreatedPdf / sizeOfAllDonorPdfs).toFixed(2),
   );
 

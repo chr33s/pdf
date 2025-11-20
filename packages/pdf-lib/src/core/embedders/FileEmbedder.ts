@@ -1,7 +1,7 @@
-import PDFString from '../objects/PDFString';
-import PDFHexString from '../objects/PDFHexString';
-import PDFContext from '../PDFContext';
-import PDFRef from '../objects/PDFRef';
+import PDFString from "../objects/PDFString";
+import PDFHexString from "../objects/PDFHexString";
+import PDFContext from "../PDFContext";
+import PDFRef from "../objects/PDFRef";
 
 /**
  * From the PDF-A3 specification, section **3.1. Requirements - General**.
@@ -9,14 +9,14 @@ import PDFRef from '../objects/PDFRef';
  * * https://www.pdfa.org/wp-content/uploads/2018/10/PDF20_AN002-AF.pdf
  */
 export enum AFRelationship {
-  Source = 'Source',
-  Data = 'Data',
-  Alternative = 'Alternative',
-  Supplement = 'Supplement',
-  EncryptedPayload = 'EncryptedPayload',
-  FormData = 'EncryptedPayload',
-  Schema = 'Schema',
-  Unspecified = 'Unspecified',
+  Source = "Source",
+  Data = "Data",
+  Alternative = "Alternative",
+  Supplement = "Supplement",
+  EncryptedPayload = "EncryptedPayload",
+  FormData = "EncryptedPayload",
+  Schema = "Schema",
+  Unspecified = "Unspecified",
 }
 
 export interface EmbeddedFileOptions {
@@ -60,7 +60,7 @@ class FileEmbedder {
     } = this.options;
 
     const embeddedFileStream = context.flateStream(this.fileData, {
-      Type: 'EmbeddedFile',
+      Type: "EmbeddedFile",
       Subtype: mimeType ?? undefined,
       Params: {
         Size: this.fileData.length,
@@ -75,7 +75,7 @@ class FileEmbedder {
     const embeddedFileStreamRef = context.register(embeddedFileStream);
 
     const fileSpecDict = context.obj({
-      Type: 'Filespec',
+      Type: "Filespec",
       F: PDFString.of(this.fileName), // TODO: Assert that this is plain ASCII
       UF: PDFHexString.fromText(this.fileName),
       EF: { F: embeddedFileStreamRef },

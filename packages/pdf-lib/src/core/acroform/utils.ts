@@ -1,23 +1,23 @@
-import PDFObject from '../objects/PDFObject';
-import PDFNumber from '../objects/PDFNumber';
-import PDFDict from '../objects/PDFDict';
-import PDFName from '../objects/PDFName';
-import PDFArray from '../objects/PDFArray';
-import PDFRef from '../objects/PDFRef';
+import PDFObject from "../objects/PDFObject";
+import PDFNumber from "../objects/PDFNumber";
+import PDFDict from "../objects/PDFDict";
+import PDFName from "../objects/PDFName";
+import PDFArray from "../objects/PDFArray";
+import PDFRef from "../objects/PDFRef";
 
-import PDFAcroField from './PDFAcroField';
-import PDFAcroTerminal from './PDFAcroTerminal';
-import PDFAcroNonTerminal from './PDFAcroNonTerminal';
-import PDFAcroButton from './PDFAcroButton';
-import PDFAcroSignature from './PDFAcroSignature';
-import PDFAcroChoice from './PDFAcroChoice';
-import PDFAcroText from './PDFAcroText';
-import PDFAcroPushButton from './PDFAcroPushButton';
-import PDFAcroRadioButton from './PDFAcroRadioButton';
-import PDFAcroCheckBox from './PDFAcroCheckBox';
-import PDFAcroComboBox from './PDFAcroComboBox';
-import PDFAcroListBox from './PDFAcroListBox';
-import { AcroButtonFlags, AcroChoiceFlags } from './flags';
+import PDFAcroField from "./PDFAcroField";
+import PDFAcroTerminal from "./PDFAcroTerminal";
+import PDFAcroNonTerminal from "./PDFAcroNonTerminal";
+import PDFAcroButton from "./PDFAcroButton";
+import PDFAcroSignature from "./PDFAcroSignature";
+import PDFAcroChoice from "./PDFAcroChoice";
+import PDFAcroText from "./PDFAcroText";
+import PDFAcroPushButton from "./PDFAcroPushButton";
+import PDFAcroRadioButton from "./PDFAcroRadioButton";
+import PDFAcroCheckBox from "./PDFAcroCheckBox";
+import PDFAcroComboBox from "./PDFAcroComboBox";
+import PDFAcroListBox from "./PDFAcroListBox";
+import { AcroButtonFlags, AcroChoiceFlags } from "./flags";
 
 export const createPDFAcroFields = (
   kidDicts?: PDFArray,
@@ -63,12 +63,12 @@ export const createPDFAcroField = (
 // optional for acrofields by the PDF spec. But in practice all acrofields seem
 // to have a `/T` entry defined.
 const isNonTerminalAcroField = (dict: PDFDict): boolean => {
-  const kids = dict.lookup(PDFName.of('Kids'));
+  const kids = dict.lookup(PDFName.of("Kids"));
 
   if (kids instanceof PDFArray) {
     for (let idx = 0, len = kids.size(); idx < len; idx++) {
       const kid = kids.lookup(idx);
-      const kidIsField = kid instanceof PDFDict && kid.has(PDFName.of('T'));
+      const kidIsField = kid instanceof PDFDict && kid.has(PDFName.of("T"));
       if (kidIsField) return true;
     }
   }
@@ -77,13 +77,13 @@ const isNonTerminalAcroField = (dict: PDFDict): boolean => {
 };
 
 const createPDFAcroTerminal = (dict: PDFDict, ref: PDFRef): PDFAcroTerminal => {
-  const ftNameOrRef = getInheritableAttribute(dict, PDFName.of('FT'));
+  const ftNameOrRef = getInheritableAttribute(dict, PDFName.of("FT"));
   const type = dict.context.lookup(ftNameOrRef, PDFName);
 
-  if (type === PDFName.of('Btn')) return createPDFAcroButton(dict, ref);
-  if (type === PDFName.of('Ch')) return createPDFAcroChoice(dict, ref);
-  if (type === PDFName.of('Tx')) return PDFAcroText.fromDict(dict, ref);
-  if (type === PDFName.of('Sig')) return PDFAcroSignature.fromDict(dict, ref);
+  if (type === PDFName.of("Btn")) return createPDFAcroButton(dict, ref);
+  if (type === PDFName.of("Ch")) return createPDFAcroChoice(dict, ref);
+  if (type === PDFName.of("Tx")) return PDFAcroText.fromDict(dict, ref);
+  if (type === PDFName.of("Sig")) return PDFAcroSignature.fromDict(dict, ref);
 
   // We should never reach this line. But there are a lot of weird PDFs out
   // there. So, just to be safe, we'll try to handle things gracefully instead
@@ -92,7 +92,7 @@ const createPDFAcroTerminal = (dict: PDFDict, ref: PDFRef): PDFAcroTerminal => {
 };
 
 const createPDFAcroButton = (dict: PDFDict, ref: PDFRef): PDFAcroButton => {
-  const ffNumberOrRef = getInheritableAttribute(dict, PDFName.of('Ff'));
+  const ffNumberOrRef = getInheritableAttribute(dict, PDFName.of("Ff"));
   const ffNumber = dict.context.lookupMaybe(ffNumberOrRef, PDFNumber);
   const flags = ffNumber?.asNumber() ?? 0;
 
@@ -106,7 +106,7 @@ const createPDFAcroButton = (dict: PDFDict, ref: PDFRef): PDFAcroButton => {
 };
 
 const createPDFAcroChoice = (dict: PDFDict, ref: PDFRef): PDFAcroChoice => {
-  const ffNumberOrRef = getInheritableAttribute(dict, PDFName.of('Ff'));
+  const ffNumberOrRef = getInheritableAttribute(dict, PDFName.of("Ff"));
   const ffNumber = dict.context.lookupMaybe(ffNumberOrRef, PDFNumber);
   const flags = ffNumber?.asNumber() ?? 0;
 
@@ -130,6 +130,6 @@ const getInheritableAttribute = (startNode: PDFDict, name: PDFName) => {
 
 const ascend = (startNode: PDFDict, visitor: (node: PDFDict) => any) => {
   visitor(startNode);
-  const Parent = startNode.lookupMaybe(PDFName.of('Parent'), PDFDict);
+  const Parent = startNode.lookupMaybe(PDFName.of("Parent"), PDFDict);
   if (Parent) ascend(Parent, visitor);
 };

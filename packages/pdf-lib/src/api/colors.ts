@@ -1,3 +1,5 @@
+import ColorParser from "color";
+import { assertIs, assertRange, error } from "../utils";
 import {
   setFillingCmykColor,
   setFillingGrayscaleColor,
@@ -5,14 +7,12 @@ import {
   setStrokingCmykColor,
   setStrokingGrayscaleColor,
   setStrokingRgbColor,
-} from './operators';
-import { assertRange, assertIs, error } from '../utils';
-import ColorParser from 'color';
+} from "./operators";
 
 export enum ColorTypes {
-  Grayscale = 'Grayscale',
-  RGB = 'RGB',
-  CMYK = 'CMYK',
+  Grayscale = "Grayscale",
+  RGB = "RGB",
+  CMYK = "CMYK",
 }
 
 export interface Grayscale {
@@ -38,14 +38,14 @@ export interface CMYK {
 export type Color = Grayscale | RGB | CMYK;
 
 export const grayscale = (gray: number): Grayscale => {
-  assertRange(gray, 'gray', 0.0, 1.0);
+  assertRange(gray, "gray", 0.0, 1.0);
   return { type: ColorTypes.Grayscale, gray };
 };
 
 export const rgb = (red: number, green: number, blue: number): RGB => {
-  assertRange(red, 'red', 0, 1);
-  assertRange(green, 'green', 0, 1);
-  assertRange(blue, 'blue', 0, 1);
+  assertRange(red, "red", 0, 1);
+  assertRange(green, "green", 0, 1);
+  assertRange(blue, "blue", 0, 1);
   return { type: ColorTypes.RGB, red, green, blue };
 };
 
@@ -55,15 +55,15 @@ export const cmyk = (
   yellow: number,
   key: number,
 ): CMYK => {
-  assertRange(cyan, 'cyan', 0, 1);
-  assertRange(magenta, 'magenta', 0, 1);
-  assertRange(yellow, 'yellow', 0, 1);
-  assertRange(key, 'key', 0, 1);
+  assertRange(cyan, "cyan", 0, 1);
+  assertRange(magenta, "magenta", 0, 1);
+  assertRange(yellow, "yellow", 0, 1);
+  assertRange(key, "key", 0, 1);
   return { type: ColorTypes.CMYK, cyan, magenta, yellow, key };
 };
 
 export const colorString = (color: string): { rgb: Color; alpha?: number } => {
-  assertIs(color, 'color', ['string']);
+  assertIs(color, "color", ["string"]);
   const colorDescription = ColorParser(color).unitObject();
   return {
     rgb: rgb(colorDescription.r, colorDescription.g, colorDescription.b),
@@ -71,19 +71,33 @@ export const colorString = (color: string): { rgb: Color; alpha?: number } => {
   };
 };
 
-// prettier-ignore
 export const setFillingColor = (color: Color) =>
-    color.type === ColorTypes.Grayscale ? setFillingGrayscaleColor(color.gray)
-  : color.type === ColorTypes.RGB       ? setFillingRgbColor(color.red, color.green, color.blue)
-  : color.type === ColorTypes.CMYK      ? setFillingCmykColor(color.cyan, color.magenta, color.yellow, color.key)
-  : error(`Invalid color: ${JSON.stringify(color)}`);
+  color.type === ColorTypes.Grayscale
+    ? setFillingGrayscaleColor(color.gray)
+    : color.type === ColorTypes.RGB
+      ? setFillingRgbColor(color.red, color.green, color.blue)
+      : color.type === ColorTypes.CMYK
+        ? setFillingCmykColor(
+            color.cyan,
+            color.magenta,
+            color.yellow,
+            color.key,
+          )
+        : error(`Invalid color: ${JSON.stringify(color)}`);
 
-// prettier-ignore
 export const setStrokingColor = (color: Color) =>
-    color.type === ColorTypes.Grayscale ? setStrokingGrayscaleColor(color.gray)
-  : color.type === ColorTypes.RGB       ? setStrokingRgbColor(color.red, color.green, color.blue)
-  : color.type === ColorTypes.CMYK      ? setStrokingCmykColor(color.cyan, color.magenta, color.yellow, color.key)
-  : error(`Invalid color: ${JSON.stringify(color)}`);
+  color.type === ColorTypes.Grayscale
+    ? setStrokingGrayscaleColor(color.gray)
+    : color.type === ColorTypes.RGB
+      ? setStrokingRgbColor(color.red, color.green, color.blue)
+      : color.type === ColorTypes.CMYK
+        ? setStrokingCmykColor(
+            color.cyan,
+            color.magenta,
+            color.yellow,
+            color.key,
+          )
+        : error(`Invalid color: ${JSON.stringify(color)}`);
 
 // prettier-ignore
 export const componentsToColor = (comps?: number[], scale = 1) => (

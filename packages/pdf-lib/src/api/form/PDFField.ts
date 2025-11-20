@@ -1,31 +1,35 @@
-import PDFDocument from '../PDFDocument';
-import PDFFont from '../PDFFont';
-import { AppearanceMapping } from './appearances';
-import { Color, colorToComponents, setFillingColor } from '../colors';
+import { Color, colorToComponents, setFillingColor } from "../colors.js";
+import PDFDocument from "../PDFDocument.js";
+import PDFFont from "../PDFFont.js";
 import {
-  Rotation,
-  toDegrees,
-  rotateRectangle,
-  reduceRotation,
   adjustDimsForRotation,
   degrees,
-} from '../rotations';
+  reduceRotation,
+  rotateRectangle,
+  Rotation,
+  toDegrees,
+} from "../rotations.js";
+import { AppearanceMapping } from "./appearances.js";
 
 import {
+  AcroFieldFlags,
+  AnnotationFlags,
+  MethodNotImplementedError,
+  PDFAcroTerminal,
+  PDFDict,
+  PDFName,
+  PDFOperator,
   PDFRef,
   PDFWidgetAnnotation,
-  PDFOperator,
-  PDFName,
-  PDFDict,
-  MethodNotImplementedError,
-  AcroFieldFlags,
-  PDFAcroTerminal,
-  AnnotationFlags,
-} from '../../core';
-import { assertIs, assertMultiple, assertOrUndefined } from '../../utils';
-import { ImageAlignment } from '../image';
-import PDFImage from '../PDFImage';
-import { drawImage, rotateInPlace } from '../operations';
+} from "../../core/index.js";
+import {
+  assertIs,
+  assertMultiple,
+  assertOrUndefined,
+} from "../../utils/index.js";
+import { ImageAlignment } from "../image/index.js";
+import { drawImage, rotateInPlace } from "../operations.js";
+import PDFImage from "../PDFImage.js";
 
 export interface FieldAppearanceOptions {
   x?: number;
@@ -44,21 +48,21 @@ export interface FieldAppearanceOptions {
 export const assertFieldAppearanceOptions = (
   options?: FieldAppearanceOptions,
 ) => {
-  assertOrUndefined(options?.x, 'options.x', ['number']);
-  assertOrUndefined(options?.y, 'options.y', ['number']);
-  assertOrUndefined(options?.width, 'options.width', ['number']);
-  assertOrUndefined(options?.height, 'options.height', ['number']);
-  assertOrUndefined(options?.textColor, 'options.textColor', [
-    [Object, 'Color'],
+  assertOrUndefined(options?.x, "options.x", ["number"]);
+  assertOrUndefined(options?.y, "options.y", ["number"]);
+  assertOrUndefined(options?.width, "options.width", ["number"]);
+  assertOrUndefined(options?.height, "options.height", ["number"]);
+  assertOrUndefined(options?.textColor, "options.textColor", [
+    [Object, "Color"],
   ]);
-  assertOrUndefined(options?.backgroundColor, 'options.backgroundColor', [
-    [Object, 'Color'],
+  assertOrUndefined(options?.backgroundColor, "options.backgroundColor", [
+    [Object, "Color"],
   ]);
-  assertOrUndefined(options?.borderColor, 'options.borderColor', [
-    [Object, 'Color'],
+  assertOrUndefined(options?.borderColor, "options.borderColor", [
+    [Object, "Color"],
   ]);
-  assertOrUndefined(options?.borderWidth, 'options.borderWidth', ['number']);
-  assertOrUndefined(options?.rotate, 'options.rotate', [[Object, 'Rotation']]);
+  assertOrUndefined(options?.borderWidth, "options.borderWidth", ["number"]);
+  assertOrUndefined(options?.rotate, "options.rotate", [[Object, "Rotation"]]);
 };
 
 /**
@@ -96,9 +100,9 @@ export default class PDFField {
     ref: PDFRef,
     doc: PDFDocument,
   ) {
-    assertIs(acroField, 'acroField', [[PDFAcroTerminal, 'PDFAcroTerminal']]);
-    assertIs(ref, 'ref', [[PDFRef, 'PDFRef']]);
-    assertIs(doc, 'doc', [[PDFDocument, 'PDFDocument']]);
+    assertIs(acroField, "acroField", [[PDFAcroTerminal, "PDFAcroTerminal"]]);
+    assertIs(ref, "ref", [[PDFRef, "PDFRef"]]);
+    assertIs(doc, "doc", [[PDFDocument, "PDFDocument"]]);
 
     this.acroField = acroField;
     this.ref = ref;
@@ -126,7 +130,7 @@ export default class PDFField {
    * @returns The fully qualified name of this field.
    */
   getName(): string {
-    return this.acroField.getFullyQualifiedName() ?? '';
+    return this.acroField.getFullyQualifiedName() ?? "";
   }
 
   /**
@@ -252,7 +256,7 @@ export default class PDFField {
   needsAppearancesUpdate(): boolean {
     throw new MethodNotImplementedError(
       this.constructor.name,
-      'needsAppearancesUpdate',
+      "needsAppearancesUpdate",
     );
   }
 
@@ -260,7 +264,7 @@ export default class PDFField {
   defaultUpdateAppearances(_font: PDFFont) {
     throw new MethodNotImplementedError(
       this.constructor.name,
-      'defaultUpdateAppearances',
+      "defaultUpdateAppearances",
     );
   }
 
@@ -303,7 +307,7 @@ export default class PDFField {
     const hidden = Boolean(options.hidden);
     const pageRef = options.page;
 
-    assertMultiple(degreesAngle, 'degreesAngle', 90);
+    assertMultiple(degreesAngle, "degreesAngle", 90);
 
     // Create a widget for this field
     const widget = PDFWidgetAnnotation.create(this.doc.context, this.ref);
@@ -335,8 +339,8 @@ export default class PDFField {
 
     // Set acrofield properties
     if (textColor) {
-      const da = this.acroField.getDefaultAppearance() ?? '';
-      const newDa = da + '\n' + setFillingColor(textColor).toString();
+      const da = this.acroField.getDefaultAppearance() ?? "";
+      const newDa = da + "\n" + setFillingColor(textColor).toString();
       this.acroField.setDefaultAppearance(newDa);
     }
 
@@ -488,7 +492,7 @@ export default class PDFField {
       options.y = adj.height - borderWidth - imageDims.height;
     }
 
-    const imageName = this.doc.context.addRandomSuffix('Image', 10);
+    const imageName = this.doc.context.addRandomSuffix("Image", 10);
     const appearance = [...rotate, ...drawImage(imageName, options)];
     ////////////
 
@@ -514,7 +518,7 @@ export default class PDFField {
 
     const appearanceDict = context.obj({});
     appearanceDict.set(onValue, onStreamRef);
-    appearanceDict.set(PDFName.of('Off'), offStreamRef);
+    appearanceDict.set(PDFName.of("Off"), offStreamRef);
 
     return appearanceDict;
   }

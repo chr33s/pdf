@@ -1,9 +1,9 @@
-vendor/
+node_modules/
+scripts/
 test/
+vendor/
 *.o
 *.c
 Makefile
-.DS_Store
-build/all*
-build/decode*
-.gitmodules
+tsconfig.json
+vitest.config.ts

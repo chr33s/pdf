@@ -1,5 +1,5 @@
-import { decodeFromBase64DataUri } from './base64';
-import { charFromCode } from './strings';
+import { decodeFromBase64DataUri } from "./base64";
+import { charFromCode } from "./strings";
 
 export const last = <T>(array: T[]): T => array[array.length - 1];
 
@@ -61,7 +61,7 @@ export const mergeUint8Arrays = (arrays: Uint8Array[]): Uint8Array => {
 };
 
 export const arrayAsString = (array: Uint8Array | number[]): string => {
-  let str = '';
+  let str = "";
   for (let idx = 0, len = array.length; idx < len; idx++) {
     str += charFromCode(array[idx]);
   }
@@ -141,10 +141,10 @@ export const canBeConvertedToUint8Array = (
 ): input is string | ArrayBuffer | Uint8Array =>
   input instanceof Uint8Array ||
   input instanceof ArrayBuffer ||
-  typeof input === 'string';
+  typeof input === "string";
 
 export const toUint8Array = (input: string | ArrayBuffer | Uint8Array) => {
-  if (typeof input === 'string') {
+  if (typeof input === "string") {
     return decodeFromBase64DataUri(input);
   } else if (input instanceof ArrayBuffer) {
     return new Uint8Array(input);
@@ -152,7 +152,7 @@ export const toUint8Array = (input: string | ArrayBuffer | Uint8Array) => {
     return input;
   } else {
     throw new TypeError(
-      '`input` must be one of `string | ArrayBuffer | Uint8Array`',
+      "`input` must be one of `string | ArrayBuffer | Uint8Array`",
     );
   }
 };
@@ -163,7 +163,7 @@ export const toUint8Array = (input: string | ArrayBuffer | Uint8Array) => {
 const byteToHex: string[] = [];
 
 for (let byte = 0x00; byte <= 0xff; ++byte) {
-  byteToHex[byte] = byte.toString(16).padStart(2, '0');
+  byteToHex[byte] = byte.toString(16).padStart(2, "0");
 }
 
 export const byteArrayToHexString = (array: Uint8Array) => {
@@ -173,5 +173,5 @@ export const byteArrayToHexString = (array: Uint8Array) => {
     hexOctets[idx] = byteToHex[array[idx]];
   }
 
-  return hexOctets.join('');
+  return hexOctets.join("");
 };

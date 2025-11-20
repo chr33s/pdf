@@ -1,7 +1,7 @@
-import Embeddable from './Embeddable';
-import PDFDocument from './PDFDocument';
-import { JpegEmbedder, PDFRef, PngEmbedder } from '../core';
-import { assertIs } from '../utils';
+import Embeddable from "./Embeddable";
+import PDFDocument from "./PDFDocument";
+import { JpegEmbedder, PDFRef, PngEmbedder } from "../core";
+import { assertIs } from "../utils";
 
 export type ImageEmbedder = JpegEmbedder | PngEmbedder;
 
@@ -39,11 +39,11 @@ export default class PDFImage implements Embeddable {
   private embedTask: Promise<PDFRef> | undefined;
 
   private constructor(ref: PDFRef, doc: PDFDocument, embedder: ImageEmbedder) {
-    assertIs(ref, 'ref', [[PDFRef, 'PDFRef']]);
-    assertIs(doc, 'doc', [[PDFDocument, 'PDFDocument']]);
-    assertIs(embedder, 'embedder', [
-      [JpegEmbedder, 'JpegEmbedder'],
-      [PngEmbedder, 'PngEmbedder'],
+    assertIs(ref, "ref", [[PDFRef, "PDFRef"]]);
+    assertIs(doc, "doc", [[PDFDocument, "PDFDocument"]]);
+    assertIs(embedder, "embedder", [
+      [JpegEmbedder, "JpegEmbedder"],
+      [PngEmbedder, "PngEmbedder"],
     ]);
 
     this.ref = ref;
@@ -71,7 +71,7 @@ export default class PDFImage implements Embeddable {
    * @returns The width and height of the image after being scaled.
    */
   scale(factor: number) {
-    assertIs(factor, 'factor', ['number']);
+    assertIs(factor, "factor", ["number"]);
     return { width: this.width * factor, height: this.height * factor };
   }
 
@@ -94,8 +94,8 @@ export default class PDFImage implements Embeddable {
    * @returns The width and height of the image after being scaled.
    */
   scaleToFit(width: number, height: number) {
-    assertIs(width, 'width', ['number']);
-    assertIs(height, 'height', ['number']);
+    assertIs(width, "width", ["number"]);
+    assertIs(height, "height", ["number"]);
 
     const imgWidthScale = width / this.width;
     const imgHeightScale = height / this.height;

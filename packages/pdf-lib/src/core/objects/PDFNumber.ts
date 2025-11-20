@@ -1,6 +1,6 @@
-import { copyStringIntoBuffer, numberToString } from '../../utils/index';
+import { copyStringIntoBuffer, numberToString } from "../../utils/index";
 
-import PDFObject from './PDFObject';
+import PDFObject from "./PDFObject";
 
 class PDFNumber extends PDFObject {
   static of = (value: number) => new PDFNumber(value);

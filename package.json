@@ -1,9 +1,10 @@
 {
-  "name": "@chr33s/pdf-lib-monorepo",
-  "version": "2.5.3",
-	"scripts": {
-		"check": "echo '...'"
-	},
+  "name": "@chr33s/pdf",
+  "version": "3.0.0",
+  "scripts": {
+    "check": "oxfmt --check && oxlint --type-aware",
+    "fix": "oxfmt && oxlint --type-aware --fix"
+  },
   "packageManager": "npm@10.0.0+",
   "engines": {
     "node": ">=22.18.0"
@@ -12,6 +13,11 @@
   "private": true,
   "type": "module",
   "workspaces": [
-     "packages/*"
-  ]
+    "packages/*"
+  ],
+  "devDependencies": {
+    "oxfmt": "^0.14.0",
+    "oxlint": "^1.29.0",
+    "oxlint-tsgolint": "^0.8.0"
+  }
 }

@@ -1,17 +1,8 @@
 {
+	"extends": "../../tsconfig.json",
   "compilerOptions": {
-    "module": "commonjs",
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "target": "es5",
-    "lib": ["es2017"],
-    "moduleResolution": "node",
-    "declaration": true,
-    "baseUrl": ".",
-    "paths": {
-      "*": ["node_modules/*"]
-    }
+    "rootDir": "src",
+    "outDir": "dist"
   },
-  "include": ["src/**/*.ts", "src/**/*.json"]
+  "include": ["src/**/*"]
 }

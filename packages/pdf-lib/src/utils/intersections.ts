@@ -1,12 +1,12 @@
-import Arc from './elements/Arc';
-import Circle from './elements/Circle';
-import Ellipse from './elements/Ellipse';
-import Line from './elements/Line';
-import Plot from './elements/Plot';
-import Point from './elements/Point';
-import Rectangle from './elements/Rectangle';
-import Segment from './elements/Segment';
-import { Coordinates, GraphicElement } from '../types';
+import Arc from "./elements/Arc";
+import Circle from "./elements/Circle";
+import Ellipse from "./elements/Ellipse";
+import Line from "./elements/Line";
+import Plot from "./elements/Plot";
+import Point from "./elements/Point";
+import Rectangle from "./elements/Rectangle";
+import Segment from "./elements/Segment";
+import { Coordinates, GraphicElement } from "../types";
 import {
   distance,
   isColinear,
@@ -17,7 +17,7 @@ import {
   unitVector,
   vector,
   rotate,
-} from './maths';
+} from "./maths";
 
 export const intersections = (
   A: GraphicElement,

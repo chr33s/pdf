@@ -1,6 +1,6 @@
-import fontkit from '@chr33s/fontkit';
-import { Assets } from '..';
-import { degrees, ParseSpeeds, PDFDocument, rgb } from '../../..';
+import fontkit from "@chr33s/fontkit";
+import { Assets } from "..";
+import { degrees, ParseSpeeds, PDFDocument, rgb } from "../../..";
 
 export default async (assets: Assets) => {
   const { pdfs, images, fonts } = assets;
@@ -12,21 +12,21 @@ export default async (assets: Assets) => {
 
   pdfDoc.registerFontkit(fontkit);
 
-  await pdfDoc.attach(pdfs.us_constitution, 'us_constitution.pdf', {
-    mimeType: 'application/pdf',
-    description: 'Constitution of the United States 🇺🇸🦅',
-    creationDate: new Date('1787/09/17'),
-    modificationDate: new Date('1992/05/07'),
+  await pdfDoc.attach(pdfs.us_constitution, "us_constitution.pdf", {
+    mimeType: "application/pdf",
+    description: "Constitution of the United States 🇺🇸🦅",
+    creationDate: new Date("1787/09/17"),
+    modificationDate: new Date("1992/05/07"),
   });
 
   await pdfDoc.attach(
     images.jpg.cat_riding_unicorn_base64,
-    'cat_riding_unicorn.jpg',
+    "cat_riding_unicorn.jpg",
     {
-      mimeType: 'image/jpeg',
-      description: 'Cool cat riding a unicorn! 🦄🐈🕶️',
-      creationDate: new Date('2019/12/01'),
-      modificationDate: new Date('2020/04/19'),
+      mimeType: "image/jpeg",
+      description: "Cool cat riding a unicorn! 🦄🐈🕶️",
+      creationDate: new Date("2019/12/01"),
+      modificationDate: new Date("2020/04/19"),
     },
   );
 
@@ -44,7 +44,7 @@ export default async (assets: Assets) => {
   const page1 = pdfDoc.getPage(0);
 
   const text =
-    'This is an image of Mario running. This image and text was drawn on top of an existing PDF using pdf-lib!';
+    "This is an image of Mario running. This image and text was drawn on top of an existing PDF using pdf-lib!";
   const fontSize = 24;
   const solarizedWhite = rgb(253 / 255, 246 / 255, 227 / 255);
   const solarizedGray = rgb(101 / 255, 123 / 255, 131 / 255);
@@ -93,13 +93,13 @@ export default async (assets: Assets) => {
   page1.translateContent(100, 100);
 
   page1.setFont(nunitoLigaFont);
-  page1.drawText('This text is shifted - fi', {
+  page1.drawText("This text is shifted - fi", {
     color: rgb(1, 0, 0),
     size: 50,
   });
   page1.resetPosition();
   page1.setFont(nunitoNoLigaFont);
-  page1.drawText('This text is not shifted - fi', {
+  page1.drawText("This text is not shifted - fi", {
     color: rgb(0, 0, 1),
     size: 50,
   });

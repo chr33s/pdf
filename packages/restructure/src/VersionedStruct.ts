@@ -1,22 +1,39 @@
-import type DecodeStream from './DecodeStream';
-import type EncodeStream from './EncodeStream';
-import Struct from './Struct';
+import type DecodeStream from "./DecodeStream.js";
+import type EncodeStream from "./EncodeStream.js";
+import Struct from "./Struct.js";
 
 type FieldMap = Record<string, any>;
 
 type VersionDefinitions = {
   header?: FieldMap;
-  [version: string]: FieldMap | VersionedStruct;
+  [version: string]: FieldMap | VersionedStruct | undefined;
+};
+
+type PointerContext = {
+  pointers: Array<{ type: any; val: any; parent: any }>;
+  startOffset: number;
+  pointerOffset: number;
+  pointerSize: number;
+  parent?: any;
+  val?: any;
 };
 
 export default class VersionedStruct extends Struct {
-  constructor(public type: any, public versions: VersionDefinitions = {}) {
+  constructor(
+    public type: any,
+    public versions: VersionDefinitions = {},
+  ) {
     super();
   }
 
   private versionGetter(parent: any): any {
-    if (typeof this.type === 'string') {
-      return this.type.split('.').reduce((obj, prop) => (typeof obj !== 'undefined' ? obj[prop] : undefined), parent);
+    if (typeof this.type === "string") {
+      return this.type
+        .split(".")
+        .reduce(
+          (obj, prop) => (typeof obj !== "undefined" ? obj[prop] : undefined),
+          parent,
+        );
     }
     return undefined;
   }
@@ -24,7 +41,7 @@ export default class VersionedStruct extends Struct {
   decode(stream: DecodeStream, parent?: any, length = 0): any {
     const result = this._setup(stream, parent, length);
 
-    if (typeof this.type === 'string') {
+    if (typeof this.type === "string") {
       result.version = this.versionGetter(parent);
     } else {
       result.version = this.type.decode(stream);
@@ -54,7 +71,7 @@ export default class VersionedStruct extends Struct {
 
   size(val: any, parent?: any, includePointers = true): number {
     if (!val) {
-      throw new Error('Not a fixed size');
+      throw new Error("Not a fixed size");
     }
 
     const ctx = {
@@ -65,7 +82,7 @@ export default class VersionedStruct extends Struct {
 
     let total = 0;
 
-    if (typeof this.type !== 'string') {
+    if (typeof this.type !== "string") {
       total += this.type.size(val.version, ctx);
     }
 
@@ -105,7 +122,7 @@ export default class VersionedStruct extends Struct {
       this.preEncode.call(val, stream);
     }
 
-    const ctx = {
+    const ctx: PointerContext = {
       pointers: [],
       startOffset: stream.pos,
       pointerOffset: 0,
@@ -116,7 +133,7 @@ export default class VersionedStruct extends Struct {
 
     ctx.pointerOffset = stream.pos + this.size(val, ctx, false);
 
-    if (typeof this.type !== 'string') {
+    if (typeof this.type !== "string") {
       this.type.encode(stream, val.version);
     }
 

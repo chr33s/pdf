@@ -1,27 +1,31 @@
-import PDFDocument from '../PDFDocument';
-import PDFPage from '../PDFPage';
+import PDFDocument from "../PDFDocument.js";
+import PDFPage from "../PDFPage.js";
+import { rgb } from "../colors.js";
+import { degrees } from "../rotations.js";
 import PDFField, {
   FieldAppearanceOptions,
   assertFieldAppearanceOptions,
-} from './PDFField';
+} from "./PDFField.js";
 import {
   AppearanceProviderFor,
-  normalizeAppearance,
   defaultRadioGroupAppearanceProvider,
-} from './appearances';
-import { rgb } from '../colors';
-import { degrees } from '../rotations';
+  normalizeAppearance,
+} from "./appearances.js";
 
 import {
+  AcroButtonFlags,
+  PDFAcroRadioButton,
+  PDFDict,
+  PDFHexString,
   PDFName,
   PDFRef,
-  PDFHexString,
-  PDFDict,
   PDFWidgetAnnotation,
-  PDFAcroRadioButton,
-  AcroButtonFlags,
-} from '../../core';
-import { assertIs, assertOrUndefined, assertIsOneOf } from '../../utils';
+} from "../../core/index.js";
+import {
+  assertIs,
+  assertIsOneOf,
+  assertOrUndefined,
+} from "../../utils/index.js";
 
 /**
  * Represents a radio group field of a [[PDFForm]].
@@ -70,8 +74,8 @@ export default class PDFRadioGroup extends PDFField {
   ) {
     super(acroRadioButton, ref, doc);
 
-    assertIs(acroRadioButton, 'acroRadioButton', [
-      [PDFAcroRadioButton, 'PDFAcroRadioButton'],
+    assertIs(acroRadioButton, "acroRadioButton", [
+      [PDFAcroRadioButton, "PDFAcroRadioButton"],
     ]);
 
     this.acroField = acroRadioButton;
@@ -123,7 +127,7 @@ export default class PDFRadioGroup extends PDFField {
    */
   getSelected(): string | undefined {
     const value = this.acroField.getValue();
-    if (value === PDFName.of('Off')) return undefined;
+    if (value === PDFName.of("Off")) return undefined;
     const exportValues = this.acroField.getExportValues();
     if (exportValues) {
       const onValues = this.acroField.getOnValues();
@@ -183,10 +187,10 @@ export default class PDFRadioGroup extends PDFField {
    * @param option The option to be selected.
    */
   select(option: string) {
-    assertIs(option, 'option', ['string']);
+    assertIs(option, "option", ["string"]);
 
     const validOptions = this.getOptions();
-    assertIsOneOf(option, 'option', validOptions);
+    assertIsOneOf(option, "option", validOptions);
 
     this.markAsDirty();
 
@@ -221,7 +225,7 @@ export default class PDFRadioGroup extends PDFField {
    */
   clear() {
     this.markAsDirty();
-    this.acroField.setValue(PDFName.of('Off'));
+    this.acroField.setValue(PDFName.of("Off"));
   }
 
   /**
@@ -354,8 +358,8 @@ export default class PDFRadioGroup extends PDFField {
     page: PDFPage,
     options?: FieldAppearanceOptions,
   ) {
-    assertIs(option, 'option', ['string']);
-    assertIs(page, 'page', [[PDFPage, 'PDFPage']]);
+    assertIs(option, "option", ["string"]);
+    assertIs(page, "page", [[PDFPage, "PDFPage"]]);
     assertFieldAppearanceOptions(options);
 
     // Create a widget for this radio button
@@ -382,7 +386,7 @@ export default class PDFRadioGroup extends PDFField {
     );
 
     // Set appearance streams for widget
-    widget.setAppearanceState(PDFName.of('Off'));
+    widget.setAppearanceState(PDFName.of("Off"));
     this.updateWidgetAppearance(widget, apStateValue);
 
     // Add widget to the given page
@@ -448,7 +452,7 @@ export default class PDFRadioGroup extends PDFField {
    *                 generating the contents of the appearance streams.
    */
   updateAppearances(provider?: AppearanceProviderFor<PDFRadioGroup>) {
-    assertOrUndefined(provider, 'provider', [Function]);
+    assertOrUndefined(provider, "provider", [Function]);
 
     const widgets = this.acroField.getWidgets();
     for (let idx = 0, len = widgets.length; idx < len; idx++) {

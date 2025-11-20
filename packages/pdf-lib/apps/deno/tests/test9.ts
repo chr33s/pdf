@@ -1,5 +1,5 @@
-import fontkit from 'https://cdn.skypack.dev/@chr33s/fontkit@^1.0.0?dts';
-import { Assets } from '../index.ts';
+import fontkit from "https://cdn.skypack.dev/@chr33s/fontkit@^1.0.0?dts";
+import { Assets } from "../index.ts";
 
 // @deno-types="../dummy.d.ts"
 import {
@@ -7,7 +7,7 @@ import {
   PDFDocument,
   rgb,
   PDFPage,
-} from '../../../dist/pdf-lib.esm.js';
+} from "../../../dist/pdf-lib.js";
 
 export default async (assets: Assets) => {
   const { pdfs, fonts, images } = assets;
@@ -27,9 +27,9 @@ export default async (assets: Assets) => {
   const pages = pdfDoc.getPages();
 
   const lines = [
-    'This is an image of Mario running.',
-    'This image and text was drawn on',
-    'top of an existing PDF using pdf-lib!',
+    "This is an image of Mario running.",
+    "This image and text was drawn on",
+    "top of an existing PDF using pdf-lib!",
   ];
   const fontSize = 24;
   const solarizedWhite = rgb(253 / 255, 246 / 255, 227 / 255);
@@ -58,7 +58,7 @@ export default async (assets: Assets) => {
     });
     page.setFont(ubuntuFont);
     page.setFontColor(solarizedGray);
-    page.drawText(lines.join('\n'), {
+    page.drawText(lines.join("\n"), {
       x: centerX - textWidth / 2,
       y: centerY - 15,
     });

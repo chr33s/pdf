@@ -1,7 +1,7 @@
-import fontkit from '@chr33s/fontkit';
-import { degrees, PDFDocument, rgb } from 'pdf-lib';
+import fontkit from "@chr33s/fontkit";
+import { degrees, PDFDocument, rgb } from "pdf-lib";
 
-import { fetchAsset } from './assets';
+import { fetchAsset } from "./assets";
 
 export default async () => {
   const [
@@ -12,30 +12,30 @@ export default async () => {
     usConstitutionPdfBytes,
     catRidingUnicornJpgBytes,
   ] = await Promise.all([
-    fetchAsset('pdfs/with_missing_endstream_eol_and_polluted_ctm.pdf'),
-    fetchAsset('fonts/nunito/Nunito-Regular.ttf'),
-    fetchAsset('images/small_mario_resized.png'),
-    fetchAsset('pdfs/with_cropbox.pdf'),
-    fetchAsset('pdfs/us_constitution.pdf'),
-    fetchAsset('images/cat_riding_unicorn_resized.jpg'),
+    fetchAsset("pdfs/with_missing_endstream_eol_and_polluted_ctm.pdf"),
+    fetchAsset("fonts/nunito/Nunito-Regular.ttf"),
+    fetchAsset("images/small_mario_resized.png"),
+    fetchAsset("pdfs/with_cropbox.pdf"),
+    fetchAsset("pdfs/us_constitution.pdf"),
+    fetchAsset("images/cat_riding_unicorn_resized.jpg"),
   ]);
 
   const pdfDoc = await PDFDocument.load(inputPdfBytes);
 
   pdfDoc.registerFontkit(fontkit);
 
-  await pdfDoc.attach(usConstitutionPdfBytes, 'us_constitution.pdf', {
-    mimeType: 'application/pdf',
-    description: 'Constitution of the United States 🇺🇸🦅',
-    creationDate: new Date('1787/09/17'),
-    modificationDate: new Date('1992/05/07'),
+  await pdfDoc.attach(usConstitutionPdfBytes, "us_constitution.pdf", {
+    mimeType: "application/pdf",
+    description: "Constitution of the United States 🇺🇸🦅",
+    creationDate: new Date("1787/09/17"),
+    modificationDate: new Date("1992/05/07"),
   });
 
-  await pdfDoc.attach(catRidingUnicornJpgBytes, 'cat_riding_unicorn.jpg', {
-    mimeType: 'image/jpeg',
-    description: 'Cool cat riding a unicorn! 🦄🐈🕶️',
-    creationDate: new Date('2019/12/01'),
-    modificationDate: new Date('2020/04/19'),
+  await pdfDoc.attach(catRidingUnicornJpgBytes, "cat_riding_unicorn.jpg", {
+    mimeType: "image/jpeg",
+    description: "Cool cat riding a unicorn! 🦄🐈🕶️",
+    creationDate: new Date("2019/12/01"),
+    modificationDate: new Date("2020/04/19"),
   });
 
   const nunitoLigaFont = await pdfDoc.embedFont(nunitoBytes, {
@@ -52,7 +52,7 @@ export default async () => {
   const page1 = pdfDoc.getPage(0);
 
   const text =
-    'This is an image of Mario running. This image and text was drawn on top of an existing PDF using pdf-lib!';
+    "This is an image of Mario running. This image and text was drawn on top of an existing PDF using pdf-lib!";
   const fontSize = 24;
   const solarizedWhite = rgb(253 / 255, 246 / 255, 227 / 255);
   const solarizedGray = rgb(101 / 255, 123 / 255, 131 / 255);
@@ -101,13 +101,13 @@ export default async () => {
   page1.translateContent(100, 100);
 
   page1.setFont(nunitoLigaFont);
-  page1.drawText('This text is shifted - fi', {
+  page1.drawText("This text is shifted - fi", {
     color: rgb(1, 0, 0),
     size: 50,
   });
   page1.resetPosition();
   page1.setFont(nunitoNoLigaFont);
-  page1.drawText('This text is not shifted - fi', {
+  page1.drawText("This text is not shifted - fi", {
     color: rgb(0, 0, 1),
     size: 50,
   });

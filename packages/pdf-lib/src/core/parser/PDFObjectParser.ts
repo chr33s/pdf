@@ -3,32 +3,32 @@ import {
   PDFStreamParsingError,
   Position,
   UnbalancedParenthesisError,
-} from '../errors';
-import PDFArray from '../objects/PDFArray';
-import PDFBool from '../objects/PDFBool';
-import PDFDict, { DictMap } from '../objects/PDFDict';
-import PDFHexString from '../objects/PDFHexString';
-import PDFName from '../objects/PDFName';
-import PDFNull from '../objects/PDFNull';
-import PDFNumber from '../objects/PDFNumber';
-import PDFObject from '../objects/PDFObject';
-import PDFRawStream from '../objects/PDFRawStream';
-import PDFRef from '../objects/PDFRef';
-import PDFStream from '../objects/PDFStream';
-import PDFString from '../objects/PDFString';
-import BaseParser from './BaseParser';
-import ByteStream from './ByteStream';
-import PDFContext from '../PDFContext';
-import PDFCatalog from '../structures/PDFCatalog';
-import PDFPageLeaf from '../structures/PDFPageLeaf';
-import PDFPageTree from '../structures/PDFPageTree';
-import CharCodes from '../syntax/CharCodes';
-import { IsDelimiter } from '../syntax/Delimiters';
-import { Keywords } from '../syntax/Keywords';
-import { IsDigit, IsNumeric } from '../syntax/Numeric';
-import { IsWhitespace } from '../syntax/Whitespace';
-import { charFromCode } from '../../utils';
-import { CipherTransformFactory } from '../crypto';
+} from "../errors";
+import PDFArray from "../objects/PDFArray";
+import PDFBool from "../objects/PDFBool";
+import PDFDict, { DictMap } from "../objects/PDFDict";
+import PDFHexString from "../objects/PDFHexString";
+import PDFName from "../objects/PDFName";
+import PDFNull from "../objects/PDFNull";
+import PDFNumber from "../objects/PDFNumber";
+import PDFObject from "../objects/PDFObject";
+import PDFRawStream from "../objects/PDFRawStream";
+import PDFRef from "../objects/PDFRef";
+import PDFStream from "../objects/PDFStream";
+import PDFString from "../objects/PDFString";
+import BaseParser from "./BaseParser";
+import ByteStream from "./ByteStream";
+import PDFContext from "../PDFContext";
+import PDFCatalog from "../structures/PDFCatalog";
+import PDFPageLeaf from "../structures/PDFPageLeaf";
+import PDFPageTree from "../structures/PDFPageTree";
+import CharCodes from "../syntax/CharCodes";
+import { IsDelimiter } from "../syntax/Delimiters";
+import { Keywords } from "../syntax/Keywords";
+import { IsDigit, IsNumeric } from "../syntax/Numeric";
+import { IsWhitespace } from "../syntax/Whitespace";
+import { charFromCode } from "../../utils";
+import { CipherTransformFactory } from "../crypto";
 
 // TODO: Throw error if eof is reached before finishing object parse...
 class PDFObjectParser extends BaseParser {
@@ -103,7 +103,7 @@ class PDFObjectParser extends BaseParser {
 
   // TODO: Maybe update PDFHexString.of() logic to remove whitespace and validate input?
   protected parseHexString(ref?: PDFRef): PDFHexString {
-    let value = '';
+    let value = "";
 
     this.bytes.assertNext(CharCodes.LessThan);
     while (!this.bytes.done() && this.bytes.peek() !== CharCodes.GreaterThan) {
@@ -118,8 +118,8 @@ class PDFObjectParser extends BaseParser {
       );
       const arr = transformer.decryptBytes(PDFHexString.of(value).asBytes());
       value = arr.reduce(
-        (str: string, byte: number) => str + byte.toString(16).padStart(2, '0'),
-        '',
+        (str: string, byte: number) => str + byte.toString(16).padStart(2, "0"),
+        "",
       );
     }
 
@@ -129,7 +129,7 @@ class PDFObjectParser extends BaseParser {
   protected parseString(ref?: PDFRef): PDFString {
     let nestingLvl = 0;
     let isEscaped = false;
-    let value = '';
+    let value = "";
 
     while (!this.bytes.done()) {
       const byte = this.bytes.next();
@@ -172,7 +172,7 @@ class PDFObjectParser extends BaseParser {
   protected parseName(): PDFName {
     this.bytes.assertNext(CharCodes.ForwardSlash);
 
-    let name = '';
+    let name = "";
     while (!this.bytes.done()) {
       const byte = this.bytes.peek();
       if (IsWhitespace[byte] || IsDelimiter[byte]) break;
@@ -219,13 +219,13 @@ class PDFObjectParser extends BaseParser {
     this.bytes.assertNext(CharCodes.GreaterThan);
     this.bytes.assertNext(CharCodes.GreaterThan);
 
-    const Type = dict.get(PDFName.of('Type'));
+    const Type = dict.get(PDFName.of("Type"));
 
-    if (Type === PDFName.of('Catalog')) {
+    if (Type === PDFName.of("Catalog")) {
       return PDFCatalog.fromMapWithContext(dict, this.context);
-    } else if (Type === PDFName.of('Pages')) {
+    } else if (Type === PDFName.of("Pages")) {
       return PDFPageTree.fromMapWithContext(dict, this.context);
-    } else if (Type === PDFName.of('Page')) {
+    } else if (Type === PDFName.of("Page")) {
       return PDFPageLeaf.fromMapWithContext(dict, this.context);
     } else {
       return PDFDict.fromMapWithContext(dict, this.context);
@@ -252,7 +252,7 @@ class PDFObjectParser extends BaseParser {
     const start = this.bytes.offset();
     let end: number;
 
-    const Length = dict.get(PDFName.of('Length'));
+    const Length = dict.get(PDFName.of("Length"));
     if (Length instanceof PDFNumber) {
       end = start + Length.asNumber();
       this.bytes.moveTo(end);

@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-let iconv: typeof import('iconv-lite') | null = null;
+let iconv: typeof import("iconv-lite") | null = null;
 try {
-  iconv = require('iconv-lite');
+  iconv = require("iconv-lite");
 } catch {
   iconv = null;
 }
@@ -28,21 +28,24 @@ export default class DecodeStream {
     this.length = buffer.length;
   }
 
-  readString(length: number, encoding: BufferEncoding | string = 'ascii'): string | Buffer {
+  readString(
+    length: number,
+    encoding: BufferEncoding | string = "ascii",
+  ): string | Buffer {
     switch (encoding) {
-      case 'utf16le':
-      case 'ucs2':
-      case 'utf8':
-      case 'ascii':
+      case "utf16le":
+      case "ucs2":
+      case "utf8":
+      case "ascii":
         return this.buffer.toString(encoding, this.pos, (this.pos += length));
-      case 'utf16be': {
+      case "utf16be": {
         const buf = Buffer.from(this.readBuffer(length));
         for (let i = 0; i < buf.length - 1; i += 2) {
           const byte = buf[i];
           buf[i] = buf[i + 1];
           buf[i + 1] = byte;
         }
-        return buf.toString('utf16le');
+        return buf.toString("utf16le");
       }
       default: {
         const buf = this.readBuffer(length);
@@ -81,12 +84,12 @@ export default class DecodeStream {
   }
 }
 
-const readMethodNames = Object.getOwnPropertyNames(Buffer.prototype).filter((key) =>
-  key.startsWith('read'),
+const readMethodNames = Object.getOwnPropertyNames(Buffer.prototype).filter(
+  (key) => key.startsWith("read"),
 );
 
 for (const key of readMethodNames) {
-  const baseName = key.replace(/read|[BL]E/g, '');
+  const baseName = key.replace(/read|[BL]E/g, "");
   const bytes = DecodeStream.TYPES[baseName as keyof typeof DecodeStream.TYPES];
   if (!bytes) {
     continue;

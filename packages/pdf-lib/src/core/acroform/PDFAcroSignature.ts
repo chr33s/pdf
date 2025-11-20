@@ -1,6 +1,6 @@
-import PDFDict from '../objects/PDFDict';
-import PDFRef from '../objects/PDFRef';
-import PDFAcroTerminal from './PDFAcroTerminal';
+import PDFDict from "../objects/PDFDict";
+import PDFRef from "../objects/PDFRef";
+import PDFAcroTerminal from "./PDFAcroTerminal";
 
 class PDFAcroSignature extends PDFAcroTerminal {
   static fromDict = (dict: PDFDict, ref: PDFRef) =>

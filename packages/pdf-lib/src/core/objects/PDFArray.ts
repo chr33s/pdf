@@ -1,17 +1,17 @@
-import PDFBool from './PDFBool';
-import PDFDict from './PDFDict';
-import PDFHexString from './PDFHexString';
-import PDFName from './PDFName';
-import PDFNull from './PDFNull';
-import PDFNumber from './PDFNumber';
-import PDFObject from './PDFObject';
-import PDFRef from './PDFRef';
-import PDFStream from './PDFStream';
-import PDFString from './PDFString';
-import PDFContext from '../PDFContext';
-import CharCodes from '../syntax/CharCodes';
-import { PDFArrayIsNotRectangleError } from '../errors';
-import PDFRawStream from './PDFRawStream';
+import PDFBool from "./PDFBool";
+import PDFDict from "./PDFDict";
+import PDFHexString from "./PDFHexString";
+import PDFName from "./PDFName";
+import PDFNull from "./PDFNull";
+import PDFNumber from "./PDFNumber";
+import PDFObject from "./PDFObject";
+import PDFRef from "./PDFRef";
+import PDFStream from "./PDFStream";
+import PDFString from "./PDFString";
+import PDFContext from "../PDFContext";
+import CharCodes from "../syntax/CharCodes";
+import { PDFArrayIsNotRectangleError } from "../errors";
+import PDFRawStream from "./PDFRawStream";
 
 class PDFArray extends PDFObject {
   static withContext = (context: PDFContext) => new PDFArray(context);
@@ -140,12 +140,12 @@ class PDFArray extends PDFObject {
   }
 
   toString(): string {
-    let arrayString = '[ ';
+    let arrayString = "[ ";
     for (let idx = 0, len = this.size(); idx < len; idx++) {
       arrayString += this.get(idx).toString();
-      arrayString += ' ';
+      arrayString += " ";
     }
-    arrayString += ']';
+    arrayString += "]";
     return arrayString;
   }
 

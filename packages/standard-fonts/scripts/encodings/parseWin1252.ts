@@ -83,17 +83,17 @@ udieresis     yacute         thorn          ydieresis
 
 export const parseWin1252 = (data: string) => {
   return data
-    .split('\n')
-    .filter((line) => line[0] !== '#')
+    .split("\n")
+    .filter((line) => line[0] !== "#")
     .filter(Boolean)
-    .map((line) => line.split('\t'))
+    .map((line) => line.split("\t"))
     .map(([postscriptCode, unicodeCode, unicodeName]) => [
       Number(unicodeCode), // Convert hex string to number
       Number(postscriptCode), // Convert hex string to Number
       unicodeName.substring(1), // Remove '#' prefix
       WinAnsiCharNames[Number(postscriptCode)], // Add postscript name
     ])
-    .filter(([, , , postscriptName]) => postscriptName !== '.notdef')
+    .filter(([, , , postscriptName]) => postscriptName !== ".notdef")
     .reduce((acc, [unicodeCode, postscriptCode, , postscriptName]) => {
       acc[unicodeCode] = [postscriptCode, postscriptName];
       return acc;

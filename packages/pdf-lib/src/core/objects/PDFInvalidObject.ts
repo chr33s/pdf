@@ -1,4 +1,4 @@
-import PDFObject from './PDFObject';
+import PDFObject from "./PDFObject";
 
 class PDFInvalidObject extends PDFObject {
   static of = (data: Uint8Array) => new PDFInvalidObject(data);

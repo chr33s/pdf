@@ -1,28 +1,32 @@
-import PDFDocument from '../PDFDocument';
-import PDFPage from '../PDFPage';
-import PDFFont from '../PDFFont';
+import PDFDocument from "../PDFDocument.js";
+import PDFFont from "../PDFFont.js";
+import PDFPage from "../PDFPage.js";
+import { rgb } from "../colors.js";
+import { degrees } from "../rotations.js";
 import PDFField, {
   FieldAppearanceOptions,
   assertFieldAppearanceOptions,
-} from './PDFField';
+} from "./PDFField.js";
 import {
   AppearanceProviderFor,
-  normalizeAppearance,
   defaultDropdownAppearanceProvider,
-} from './appearances';
-import { rgb } from '../colors';
-import { degrees } from '../rotations';
+  normalizeAppearance,
+} from "./appearances.js";
 
 import {
+  AcroChoiceFlags,
+  PDFAcroComboBox,
   PDFHexString,
   PDFRef,
-  PDFString,
   PDFStream,
+  PDFString,
   PDFWidgetAnnotation,
-  PDFAcroComboBox,
-  AcroChoiceFlags,
-} from '../../core';
-import { assertIs, assertOrUndefined, assertPositive } from '../../utils';
+} from "../../core/index.js";
+import {
+  assertIs,
+  assertOrUndefined,
+  assertPositive,
+} from "../../utils/index.js";
 
 /**
  * Represents a dropdown field of a [[PDFForm]].
@@ -61,8 +65,8 @@ export default class PDFDropdown extends PDFField {
   ) {
     super(acroComboBox, ref, doc);
 
-    assertIs(acroComboBox, 'acroComboBox', [
-      [PDFAcroComboBox, 'PDFAcroComboBox'],
+    assertIs(acroComboBox, "acroComboBox", [
+      [PDFAcroComboBox, "PDFAcroComboBox"],
     ]);
 
     this.acroField = acroComboBox;
@@ -133,7 +137,7 @@ export default class PDFDropdown extends PDFField {
    * @param options The options that should be available in this dropdown.
    */
   setOptions(options: string[]) {
-    assertIs(options, 'options', [Array]);
+    assertIs(options, "options", [Array]);
 
     const optionObjects = new Array<{ value: PDFHexString }>(options.length);
     for (let idx = 0, len = options.length; idx < len; idx++) {
@@ -155,7 +159,7 @@ export default class PDFDropdown extends PDFField {
    * @param options New options that should be available in this dropdown.
    */
   addOptions(options: string | string[]) {
-    assertIs(options, 'options', ['string', Array]);
+    assertIs(options, "options", ["string", Array]);
 
     const optionsArr = Array.isArray(options) ? options : [options];
 
@@ -216,8 +220,8 @@ export default class PDFDropdown extends PDFField {
    * @param merge Whether or not existing selections should be preserved.
    */
   select(options: string | string[], merge = false) {
-    assertIs(options, 'options', ['string', Array]);
-    assertIs(merge, 'merge', ['boolean']);
+    assertIs(options, "options", ["string", Array]);
+    assertIs(merge, "merge", ["boolean"]);
 
     const optionsArr = Array.isArray(options) ? options : [options];
 
@@ -284,7 +288,7 @@ export default class PDFDropdown extends PDFField {
    * @param fontSize The font size to be used when rendering text in this field.
    */
   setFontSize(fontSize: number) {
-    assertPositive(fontSize, 'fontSize');
+    assertPositive(fontSize, "fontSize");
     this.acroField.setFontSize(fontSize);
     this.markAsDirty();
   }
@@ -527,15 +531,15 @@ export default class PDFDropdown extends PDFField {
    * @param options The options to be used when adding this dropdown widget.
    */
   addToPage(page: PDFPage, options?: FieldAppearanceOptions) {
-    assertIs(page, 'page', [[PDFPage, 'PDFPage']]);
+    assertIs(page, "page", [[PDFPage, "PDFPage"]]);
     assertFieldAppearanceOptions(options);
 
     if (!options) options = {};
 
-    if (!('textColor' in options)) options.textColor = rgb(0, 0, 0);
-    if (!('backgroundColor' in options)) options.backgroundColor = rgb(1, 1, 1);
-    if (!('borderColor' in options)) options.borderColor = rgb(0, 0, 0);
-    if (!('borderWidth' in options)) options.borderWidth = 1;
+    if (!("textColor" in options)) options.textColor = rgb(0, 0, 0);
+    if (!("backgroundColor" in options)) options.backgroundColor = rgb(1, 1, 1);
+    if (!("borderColor" in options)) options.borderColor = rgb(0, 0, 0);
+    if (!("borderWidth" in options)) options.borderWidth = 1;
 
     // Create a widget for this dropdown
     const widget = this.createWidget({
@@ -598,7 +602,7 @@ export default class PDFDropdown extends PDFField {
    * @param font The font to be used for creating the appearance streams.
    */
   defaultUpdateAppearances(font: PDFFont) {
-    assertIs(font, 'font', [[PDFFont, 'PDFFont']]);
+    assertIs(font, "font", [[PDFFont, "PDFFont"]]);
     this.updateAppearances(font);
   }
 
@@ -622,8 +626,8 @@ export default class PDFDropdown extends PDFField {
     font: PDFFont,
     provider?: AppearanceProviderFor<PDFDropdown>,
   ) {
-    assertIs(font, 'font', [[PDFFont, 'PDFFont']]);
-    assertOrUndefined(provider, 'provider', [Function]);
+    assertIs(font, "font", [[PDFFont, "PDFFont"]]);
+    assertOrUndefined(provider, "provider", [Function]);
 
     const widgets = this.acroField.getWidgets();
     for (let idx = 0, len = widgets.length; idx < len; idx++) {

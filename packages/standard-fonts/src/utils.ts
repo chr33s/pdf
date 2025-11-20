@@ -9,10 +9,10 @@
  *     Licensed under the MIT license.
  *
  */
-import pako from 'pako';
+import pako from "pako";
 
 const chars =
-  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
 // Use a lookup table to find the index.
 const lookup = new Uint8Array(256);
@@ -30,9 +30,9 @@ export const decodeFromBase64 = (base64: string): Uint8Array => {
   let encoded3;
   let encoded4;
 
-  if (base64[base64.length - 1] === '=') {
+  if (base64[base64.length - 1] === "=") {
     bufferLength--;
-    if (base64[base64.length - 2] === '=') {
+    if (base64[base64.length - 2] === "=") {
       bufferLength--;
     }
   }
@@ -54,7 +54,7 @@ export const decodeFromBase64 = (base64: string): Uint8Array => {
 };
 
 const arrayToString = (array: Uint8Array) => {
-  let str = '';
+  let str = "";
   for (let i = 0; i < array.length; i++) {
     str += String.fromCharCode(array[i]);
   }
@@ -65,7 +65,7 @@ export const decompressJson = (compressedJson: string): string =>
   arrayToString(pako.inflate(decodeFromBase64(compressedJson)));
 
 export const padStart = (value: string, length: number, padChar: string) => {
-  let padding = '';
+  let padding = "";
   for (let idx = 0, len = length - value.length; idx < len; idx++) {
     padding += padChar;
   }

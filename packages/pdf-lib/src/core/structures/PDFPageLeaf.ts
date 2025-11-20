@@ -1,19 +1,19 @@
-import PDFArray from '../objects/PDFArray';
-import PDFDict, { DictMap } from '../objects/PDFDict';
-import PDFName from '../objects/PDFName';
-import PDFNumber from '../objects/PDFNumber';
-import PDFObject from '../objects/PDFObject';
-import PDFRef from '../objects/PDFRef';
-import PDFStream from '../objects/PDFStream';
-import PDFContext from '../PDFContext';
-import PDFPageTree from './PDFPageTree';
+import PDFArray from "../objects/PDFArray";
+import PDFDict, { DictMap } from "../objects/PDFDict";
+import PDFName from "../objects/PDFName";
+import PDFNumber from "../objects/PDFNumber";
+import PDFObject from "../objects/PDFObject";
+import PDFRef from "../objects/PDFRef";
+import PDFStream from "../objects/PDFStream";
+import PDFContext from "../PDFContext";
+import PDFPageTree from "./PDFPageTree";
 
 class PDFPageLeaf extends PDFDict {
   static readonly InheritableEntries = [
-    'Resources',
-    'MediaBox',
-    'CropBox',
-    'Rotate',
+    "Resources",
+    "MediaBox",
+    "CropBox",
+    "Rotate",
   ];
 
   static withContextAndParent = (context: PDFContext, parent: PDFRef) => {
@@ -62,7 +62,7 @@ class PDFPageLeaf extends PDFDict {
   }
 
   Contents(): PDFStream | PDFArray | undefined {
-    return this.lookup(PDFName.of('Contents')) as
+    return this.lookup(PDFName.of("Contents")) as
       | PDFStream
       | PDFArray
       | undefined;

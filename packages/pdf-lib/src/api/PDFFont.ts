@@ -1,12 +1,12 @@
-import Embeddable from './Embeddable';
-import PDFDocument from './PDFDocument';
+import Embeddable from "./Embeddable";
+import PDFDocument from "./PDFDocument";
 import {
   CustomFontEmbedder,
   PDFHexString,
   PDFRef,
   StandardFontEmbedder,
-} from '../core';
-import { assertIs, assertOrUndefined } from '../utils';
+} from "../core";
+import { assertIs, assertOrUndefined } from "../utils";
 
 export type FontEmbedder = CustomFontEmbedder | StandardFontEmbedder;
 
@@ -42,11 +42,11 @@ export default class PDFFont implements Embeddable {
   private readonly embedder: FontEmbedder;
 
   private constructor(ref: PDFRef, doc: PDFDocument, embedder: FontEmbedder) {
-    assertIs(ref, 'ref', [[PDFRef, 'PDFRef']]);
-    assertIs(doc, 'doc', [[PDFDocument, 'PDFDocument']]);
-    assertIs(embedder, 'embedder', [
-      [CustomFontEmbedder, 'CustomFontEmbedder'],
-      [StandardFontEmbedder, 'StandardFontEmbedder'],
+    assertIs(ref, "ref", [[PDFRef, "PDFRef"]]);
+    assertIs(doc, "doc", [[PDFDocument, "PDFDocument"]]);
+    assertIs(embedder, "embedder", [
+      [CustomFontEmbedder, "CustomFontEmbedder"],
+      [StandardFontEmbedder, "StandardFontEmbedder"],
     ]);
 
     this.ref = ref;
@@ -67,7 +67,7 @@ export default class PDFFont implements Embeddable {
    * @returns The encoded text as a hex string.
    */
   encodeText(text: string): PDFHexString {
-    assertIs(text, 'text', ['string']);
+    assertIs(text, "text", ["string"]);
     this.modified = true;
     return this.embedder.encodeText(text);
   }
@@ -84,8 +84,8 @@ export default class PDFFont implements Embeddable {
    *          given size.
    */
   widthOfTextAtSize(text: string, size: number): number {
-    assertIs(text, 'text', ['string']);
-    assertIs(size, 'size', ['number']);
+    assertIs(text, "text", ["string"]);
+    assertIs(size, "size", ["number"]);
     return this.embedder.widthOfTextAtSize(text, size);
   }
 
@@ -103,8 +103,8 @@ export default class PDFFont implements Embeddable {
    * @returns The height of this font at the given size.
    */
   heightAtSize(size: number, options?: { descender?: boolean }): number {
-    assertIs(size, 'size', ['number']);
-    assertOrUndefined(options?.descender, 'options.descender', ['boolean']);
+    assertIs(size, "size", ["number"]);
+    assertOrUndefined(options?.descender, "options.descender", ["boolean"]);
     return this.embedder.heightOfFontAtSize(size, {
       descender: options?.descender ?? true,
     });
@@ -119,7 +119,7 @@ export default class PDFFont implements Embeddable {
    * @returns The font size at which this font is the given height.
    */
   sizeAtHeight(height: number): number {
-    assertIs(height, 'height', ['number']);
+    assertIs(height, "height", ["number"]);
     return this.embedder.sizeOfFontAtHeight(height);
   }
 

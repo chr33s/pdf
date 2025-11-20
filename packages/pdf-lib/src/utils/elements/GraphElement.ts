@@ -1,6 +1,6 @@
-import { distance } from '../maths';
+import { distance } from "../maths";
 
-import Point from './Point';
+import Point from "./Point";
 
 export default abstract class GraphElement {
   abstract isEqual(element: GraphElement): boolean;

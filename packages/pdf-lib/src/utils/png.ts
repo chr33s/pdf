@@ -1,4 +1,4 @@
-import UPNG from '@chr33s/upng';
+import UPNG from "@chr33s/upng";
 
 const getImageType = (ctype: number) => {
   if (ctype === 0) return PngType.Greyscale;
@@ -30,11 +30,11 @@ const splitAlphaChannel = (rgbaChannel: Uint8Array) => {
 };
 
 export enum PngType {
-  Greyscale = 'Greyscale',
-  Truecolour = 'Truecolour',
-  IndexedColour = 'IndexedColour',
-  GreyscaleWithAlpha = 'GreyscaleWithAlpha',
-  TruecolourWithAlpha = 'TruecolourWithAlpha',
+  Greyscale = "Greyscale",
+  Truecolour = "Truecolour",
+  IndexedColour = "IndexedColour",
+  GreyscaleWithAlpha = "GreyscaleWithAlpha",
+  TruecolourWithAlpha = "TruecolourWithAlpha",
 }
 
 export class PNG {
@@ -55,7 +55,7 @@ export class PNG {
     const upng = UPNGmod.decode(pngData);
     const frames = UPNGmod.toRGBA8(upng);
 
-    if (frames.length > 1) throw new Error('Animated PNGs are not supported');
+    if (frames.length > 1) throw new Error("Animated PNGs are not supported");
 
     const frame = new Uint8Array(frames[0]);
     const { rgbChannel, alphaChannel } = splitAlphaChannel(frame);

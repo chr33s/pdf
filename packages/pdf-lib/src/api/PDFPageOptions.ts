@@ -1,8 +1,8 @@
-import { Color } from './colors';
-import PDFFont from './PDFFont';
-import { Rotation } from './rotations';
-import { FillRule, LineCapStyle, TextRenderingMode } from './operators';
-import type { Space, TransformationMatrix } from '../types';
+import { Color } from "./colors";
+import PDFFont from "./PDFFont";
+import { Rotation } from "./rotations";
+import { FillRule, LineCapStyle, TextRenderingMode } from "./operators";
+import type { Space, TransformationMatrix } from "../types";
 
 interface SvgOptions {
   matrix?: TransformationMatrix;
@@ -10,18 +10,18 @@ interface SvgOptions {
 }
 
 export enum BlendMode {
-  Normal = 'Normal',
-  Multiply = 'Multiply',
-  Screen = 'Screen',
-  Overlay = 'Overlay',
-  Darken = 'Darken',
-  Lighten = 'Lighten',
-  ColorDodge = 'ColorDodge',
-  ColorBurn = 'ColorBurn',
-  HardLight = 'HardLight',
-  SoftLight = 'SoftLight',
-  Difference = 'Difference',
-  Exclusion = 'Exclusion',
+  Normal = "Normal",
+  Multiply = "Multiply",
+  Screen = "Screen",
+  Overlay = "Overlay",
+  Darken = "Darken",
+  Lighten = "Lighten",
+  ColorDodge = "ColorDodge",
+  ColorBurn = "ColorBurn",
+  HardLight = "HardLight",
+  SoftLight = "SoftLight",
+  Difference = "Difference",
+  Exclusion = "Exclusion",
 }
 
 export interface PDFPageDrawTextOptions extends SvgOptions {

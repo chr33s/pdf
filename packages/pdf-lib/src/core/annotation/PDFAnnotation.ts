@@ -1,9 +1,9 @@
-import PDFDict from '../objects/PDFDict';
-import PDFName from '../objects/PDFName';
-import PDFStream from '../objects/PDFStream';
-import PDFArray from '../objects/PDFArray';
-import PDFRef from '../objects/PDFRef';
-import PDFNumber from '../objects/PDFNumber';
+import PDFDict from "../objects/PDFDict";
+import PDFName from "../objects/PDFName";
+import PDFStream from "../objects/PDFStream";
+import PDFArray from "../objects/PDFArray";
+import PDFRef from "../objects/PDFRef";
+import PDFNumber from "../objects/PDFNumber";
 
 class PDFAnnotation {
   readonly dict: PDFDict;
@@ -16,15 +16,15 @@ class PDFAnnotation {
 
   // This is technically required by the PDF spec
   Rect(): PDFArray | undefined {
-    return this.dict.lookup(PDFName.of('Rect'), PDFArray);
+    return this.dict.lookup(PDFName.of("Rect"), PDFArray);
   }
 
   AP(): PDFDict | undefined {
-    return this.dict.lookupMaybe(PDFName.of('AP'), PDFDict);
+    return this.dict.lookupMaybe(PDFName.of("AP"), PDFDict);
   }
 
   F(): PDFNumber | undefined {
-    const numberOrRef = this.dict.lookup(PDFName.of('F'));
+    const numberOrRef = this.dict.lookup(PDFName.of("F"));
     return this.dict.context.lookupMaybe(numberOrRef, PDFNumber);
   }
 
@@ -36,35 +36,35 @@ class PDFAnnotation {
   setRectangle(rect: { x: number; y: number; width: number; height: number }) {
     const { x, y, width, height } = rect;
     const Rect = this.dict.context.obj([x, y, x + width, y + height]);
-    this.dict.set(PDFName.of('Rect'), Rect);
+    this.dict.set(PDFName.of("Rect"), Rect);
   }
 
   getAppearanceState(): PDFName | undefined {
-    const AS = this.dict.lookup(PDFName.of('AS'));
+    const AS = this.dict.lookup(PDFName.of("AS"));
     if (AS instanceof PDFName) return AS;
     return undefined;
   }
 
   setAppearanceState(state: PDFName) {
-    this.dict.set(PDFName.of('AS'), state);
+    this.dict.set(PDFName.of("AS"), state);
   }
 
   setAppearances(appearances: PDFDict) {
-    this.dict.set(PDFName.of('AP'), appearances);
+    this.dict.set(PDFName.of("AP"), appearances);
   }
 
   ensureAP(): PDFDict {
     let AP = this.AP();
     if (!AP) {
       AP = this.dict.context.obj({});
-      this.dict.set(PDFName.of('AP'), AP);
+      this.dict.set(PDFName.of("AP"), AP);
     }
     return AP;
   }
 
   getNormalAppearance(): PDFRef | PDFDict {
     const AP = this.ensureAP();
-    const N = AP.get(PDFName.of('N'));
+    const N = AP.get(PDFName.of("N"));
     if (N instanceof PDFRef || N instanceof PDFDict) return N;
 
     throw new Error(`Unexpected N type: ${N?.constructor.name}`);
@@ -73,29 +73,29 @@ class PDFAnnotation {
   /** @param appearance A PDFDict or PDFStream (direct or ref) */
   setNormalAppearance(appearance: PDFRef | PDFDict) {
     const AP = this.ensureAP();
-    AP.set(PDFName.of('N'), appearance);
+    AP.set(PDFName.of("N"), appearance);
   }
 
   /** @param appearance A PDFDict or PDFStream (direct or ref) */
   setRolloverAppearance(appearance: PDFRef | PDFDict) {
     const AP = this.ensureAP();
-    AP.set(PDFName.of('R'), appearance);
+    AP.set(PDFName.of("R"), appearance);
   }
 
   /** @param appearance A PDFDict or PDFStream (direct or ref) */
   setDownAppearance(appearance: PDFRef | PDFDict) {
     const AP = this.ensureAP();
-    AP.set(PDFName.of('D'), appearance);
+    AP.set(PDFName.of("D"), appearance);
   }
 
   removeRolloverAppearance() {
     const AP = this.AP();
-    AP?.delete(PDFName.of('R'));
+    AP?.delete(PDFName.of("R"));
   }
 
   removeDownAppearance() {
     const AP = this.AP();
-    AP?.delete(PDFName.of('D'));
+    AP?.delete(PDFName.of("D"));
   }
 
   getAppearances():
@@ -109,9 +109,9 @@ class PDFAnnotation {
 
     if (!AP) return undefined;
 
-    const N = AP.lookup(PDFName.of('N'), PDFDict, PDFStream);
-    const R = AP.lookupMaybe(PDFName.of('R'), PDFDict, PDFStream);
-    const D = AP.lookupMaybe(PDFName.of('D'), PDFDict, PDFStream);
+    const N = AP.lookup(PDFName.of("N"), PDFDict, PDFStream);
+    const R = AP.lookupMaybe(PDFName.of("R"), PDFDict, PDFStream);
+    const D = AP.lookupMaybe(PDFName.of("D"), PDFDict, PDFStream);
 
     return { normal: N, rollover: R, down: D };
   }
@@ -121,7 +121,7 @@ class PDFAnnotation {
   }
 
   setFlags(flags: number) {
-    this.dict.set(PDFName.of('F'), PDFNumber.of(flags));
+    this.dict.set(PDFName.of("F"), PDFNumber.of(flags));
   }
 
   hasFlag(flag: number): boolean {

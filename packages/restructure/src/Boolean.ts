@@ -1,5 +1,5 @@
-import type DecodeStream from './DecodeStream';
-import type EncodeStream from './EncodeStream';
+import type DecodeStream from "./DecodeStream.js";
+import type EncodeStream from "./EncodeStream.js";
 
 export default class BooleanT {
   constructor(public type: any) {}

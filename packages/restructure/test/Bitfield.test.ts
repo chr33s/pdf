@@ -1,21 +1,32 @@
-import { expect } from 'chai';
-import { Bitfield, uint8, DecodeStream, EncodeStream } from '../src';
-import { expectStream } from './helpers';
+import { describe, expect, it } from "vitest";
+import { Bitfield, DecodeStream, EncodeStream, uint8 } from "../src";
+import { expectStream } from "./helpers";
 
-describe('Bitfield', () => {
-  const bitfield = new Bitfield(uint8, ['Jack', 'Kack', 'Lack', 'Mack', 'Nack', 'Oack', 'Pack', 'Quack']);
+describe("Bitfield", () => {
+  const bitfield = new Bitfield(uint8, [
+    "Jack",
+    "Kack",
+    "Lack",
+    "Mack",
+    "Nack",
+    "Oack",
+    "Pack",
+    "Quack",
+  ]);
   const JACK = 1 << 0;
   const MACK = 1 << 3;
   const NACK = 1 << 4;
   const PACK = 1 << 6;
   const QUACK = 1 << 7;
 
-  it('should have the right size', () => {
+  it("should have the right size", () => {
     expect(bitfield.size()).to.equal(1);
   });
 
-  it('should decode', () => {
-    const stream = new DecodeStream(Buffer.from([JACK | MACK | PACK | NACK | QUACK]));
+  it("should decode", () => {
+    const stream = new DecodeStream(
+      Buffer.from([JACK | MACK | PACK | NACK | QUACK]),
+    );
     expect(bitfield.decode(stream)).to.deep.equal({
       Jack: true,
       Kack: false,
@@ -28,10 +39,12 @@ describe('Bitfield', () => {
     });
   });
 
-  it('should encode', (done) => {
+  it("should encode", async () => {
     const stream = new EncodeStream();
-    expectStream(stream, done, (buf) => {
-      expect(buf).to.deep.equal(Buffer.from([JACK | MACK | PACK | NACK | QUACK]));
+    const expectation = expectStream(stream, (buf) => {
+      expect(buf).to.deep.equal(
+        Buffer.from([JACK | MACK | PACK | NACK | QUACK]),
+      );
     });
 
     bitfield.encode(stream, {
@@ -45,5 +58,6 @@ describe('Bitfield', () => {
       Quack: true,
     });
     stream.end();
+    await expectation;
   });
 });

@@ -1,11 +1,11 @@
-import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
+import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 
-import { fetchAsset } from './assets';
+import { fetchAsset } from "./assets";
 
 export default async () => {
   const [inputPdfBytes, minionsBananaAlphaBytes] = await Promise.all([
-    fetchAsset('pdfs/with_large_page_count.pdf'),
-    fetchAsset('images/minions_banana_alpha.png'),
+    fetchAsset("pdfs/with_large_page_count.pdf"),
+    fetchAsset("images/minions_banana_alpha.png"),
   ]);
 
   const pdfDoc = await PDFDocument.load(inputPdfBytes);
@@ -37,7 +37,7 @@ export default async () => {
     newPage.setFont(timesRomanFont);
     newPage.setFontSize(fontSize);
 
-    const text = 'This page was interleaved by pdf-lib!';
+    const text = "This page was interleaved by pdf-lib!";
     const textWidth = timesRomanFont.widthOfTextAtSize(text, fontSize);
     const textHeight = timesRomanFont.heightAtSize(fontSize);
 

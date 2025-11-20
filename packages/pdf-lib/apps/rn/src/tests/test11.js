@@ -1,17 +1,17 @@
-import fontkit from '@chr33s/fontkit';
-import { PDFDocument, StandardFonts, last, charAtIndex } from 'pdf-lib';
+import fontkit from "@chr33s/fontkit";
+import { PDFDocument, StandardFonts, last, charAtIndex } from "pdf-lib";
 
-import { fetchAsset } from './assets';
+import { fetchAsset } from "./assets";
 const breakTextIntoLines = (text, size, font, maxWidth) => {
   const lines = [];
   let textIdx = 0;
   while (textIdx < text.length) {
-    let line = '';
+    let line = "";
     while (textIdx < text.length) {
-      if (text.charAt(textIdx) === '\n') {
+      if (text.charAt(textIdx) === "\n") {
         lines.push(line);
         textIdx += 1;
-        line = '';
+        line = "";
         continue;
       }
       const [glyph] = charAtIndex(text, textIdx);
@@ -40,7 +40,7 @@ const breakLinesIntoGroups = (lines, lineHeight, maxHeight) => {
 
 export default async () => {
   const [sourceHanBytes] = await Promise.all([
-    fetchAsset('fonts/source_hans_jp/SourceHanSerifJP-Regular.otf'),
+    fetchAsset("fonts/source_hans_jp/SourceHanSerifJP-Regular.otf"),
   ]);
 
   const pdfDoc = await PDFDocument.create();
@@ -50,7 +50,7 @@ export default async () => {
   const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const helveticaBoldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
-  const title = 'Embedded UTF-16 Font Demo';
+  const title = "Embedded UTF-16 Font Demo";
   const description = `
         In addition to the standard 14 fonts provided by PDF readers, the PDF
         specification allows PDF documents to embed their own fonts. The standard
@@ -81,7 +81,7 @@ export default async () => {
     y: 700 - 100,
     x: 650 / 2 - helveticaBoldFont.widthOfTextAtSize(title, 35) / 2,
   });
-  titlePage.drawText(descriptionLines.join('\n'), {
+  titlePage.drawText(descriptionLines.join("\n"), {
     font: helveticaFont,
     size: 16,
     y: 525,
@@ -108,7 +108,7 @@ export default async () => {
 
   sourceHanLineGroups.forEach((lines) => {
     const page = pdfDoc.addPage([650, 700]);
-    page.drawText(lines.join('\n'), {
+    page.drawText(lines.join("\n"), {
       font: sourceHanFont,
       size: sourceHanFontSize,
       x: 25,

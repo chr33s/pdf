@@ -1,9 +1,12 @@
-import type DecodeStream from './DecodeStream';
-import type EncodeStream from './EncodeStream';
-import { resolveLength, type LengthLike } from './utils';
+import type DecodeStream from "./DecodeStream.js";
+import type EncodeStream from "./EncodeStream.js";
+import { resolveLength, type LengthLike } from "./utils.js";
 
 export default class Reserved {
-  constructor(public type: any, public count: LengthLike | number = 1) {}
+  constructor(
+    public type: any,
+    public count: LengthLike | number = 1,
+  ) {}
 
   decode(stream: DecodeStream, parent?: any): undefined {
     stream.pos += this.size(undefined, parent);

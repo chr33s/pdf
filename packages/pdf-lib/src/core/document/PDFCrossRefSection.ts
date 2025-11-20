@@ -1,6 +1,6 @@
-import PDFRef from '../objects/PDFRef';
-import CharCodes from '../syntax/CharCodes';
-import { copyStringIntoBuffer, padStart } from '../../utils';
+import PDFRef from "../objects/PDFRef";
+import CharCodes from "../syntax/CharCodes";
+import { copyStringIntoBuffer, padStart } from "../../utils";
 
 export interface Entry {
   ref: PDFRef;
@@ -41,7 +41,7 @@ class PDFCrossRefSection {
   }
 
   toString(): string {
-    let section = 'xref\n';
+    let section = "xref\n";
 
     for (
       let rangeIdx = 0, rangeLen = this.subsections.length;
@@ -56,12 +56,12 @@ class PDFCrossRefSection {
         entryIdx++
       ) {
         const entry = range[entryIdx];
-        section += padStart(String(entry.offset), 10, '0');
-        section += ' ';
-        section += padStart(String(entry.ref.generationNumber), 5, '0');
-        section += ' ';
-        section += entry.deleted ? 'f' : 'n';
-        section += ' \n';
+        section += padStart(String(entry.offset), 10, "0");
+        section += " ";
+        section += padStart(String(entry.ref.generationNumber), 5, "0");
+        section += " ";
+        section += entry.deleted ? "f" : "n";
+        section += " \n";
       }
     }
 
@@ -131,11 +131,11 @@ class PDFCrossRefSection {
     for (let idx = 0; idx < length; idx++) {
       const entry = entries[idx];
 
-      const entryOffset = padStart(String(entry.offset), 10, '0');
+      const entryOffset = padStart(String(entry.offset), 10, "0");
       offset += copyStringIntoBuffer(entryOffset, buffer, offset);
       buffer[offset++] = CharCodes.Space;
 
-      const entryGen = padStart(String(entry.ref.generationNumber), 5, '0');
+      const entryGen = padStart(String(entry.ref.generationNumber), 5, "0");
       offset += copyStringIntoBuffer(entryGen, buffer, offset);
       buffer[offset++] = CharCodes.Space;
 

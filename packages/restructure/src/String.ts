@@ -1,26 +1,35 @@
-import type DecodeStream from './DecodeStream';
-import type EncodeStream from './EncodeStream';
-import { Number as NumberT } from './Number';
-import { resolveLength, type LengthLike } from './utils';
+import type DecodeStream from "./DecodeStream.js";
+import type EncodeStream from "./EncodeStream.js";
+import { Number as NumberT } from "./Number.js";
+import { resolveLength, type LengthLike } from "./utils.js";
 
-type EncodingResolver = BufferEncoding | string | ((this: any, parent?: any) => string);
+type EncodingResolver =
+  | BufferEncoding
+  | string
+  | ((this: any, parent?: any) => string);
 
-function resolveEncodingValue(resolver: EncodingResolver, parent?: any): string {
-  if (typeof resolver === 'function') {
+function resolveEncodingValue(
+  resolver: EncodingResolver,
+  parent?: any,
+): string {
+  if (typeof resolver === "function") {
     const ctx = parent?.val ?? parent;
-    return resolver.call(ctx, ctx) || 'ascii';
+    return resolver.call(ctx, ctx) || "ascii";
   }
 
   return resolver;
 }
 
 export default class StringT {
-  constructor(public length?: LengthLike, public encoding: EncodingResolver = 'ascii') {}
+  constructor(
+    public length?: LengthLike,
+    public encoding: EncodingResolver = "ascii",
+  ) {}
 
   decode(stream: DecodeStream, parent?: any): string | Buffer {
     let length: number;
 
-    if (typeof this.length !== 'undefined') {
+    if (typeof this.length !== "undefined") {
       length = resolveLength(this.length, stream, parent);
     } else {
       const { buffer } = stream;
@@ -34,7 +43,7 @@ export default class StringT {
     const encoding = resolveEncodingValue(this.encoding, parent);
     const value = stream.readString(length, encoding);
 
-    if (typeof this.length === 'undefined' && stream.pos < stream.length) {
+    if (typeof this.length === "undefined" && stream.pos < stream.length) {
       stream.pos += 1;
     }
 
@@ -47,8 +56,8 @@ export default class StringT {
     }
 
     let encoding = resolveEncodingValue(this.encoding, parent);
-    if (encoding === 'utf16be') {
-      encoding = 'utf16le';
+    if (encoding === "utf16be") {
+      encoding = "utf16le";
     }
 
     let size = Buffer.byteLength(value, encoding as BufferEncoding);
@@ -57,7 +66,7 @@ export default class StringT {
       size += this.length.size();
     }
 
-    if (typeof this.length === 'undefined') {
+    if (typeof this.length === "undefined") {
       size += 1;
     }
 
@@ -65,16 +74,20 @@ export default class StringT {
   }
 
   encode(stream: EncodeStream, value: string, parent?: any): void {
-    const encoding = resolveEncodingValue(this.encoding, parent) as BufferEncoding | string;
+    const encoding = resolveEncodingValue(this.encoding, parent) as
+      | BufferEncoding
+      | string;
 
     if (this.length instanceof NumberT) {
-      const normalizedEncoding = (encoding === 'utf16be' ? 'utf16le' : encoding) as BufferEncoding;
+      const normalizedEncoding = (
+        encoding === "utf16be" ? "utf16le" : encoding
+      ) as BufferEncoding;
       this.length.encode(stream, Buffer.byteLength(value, normalizedEncoding));
     }
 
     stream.writeString(value, encoding);
 
-    if (typeof this.length === 'undefined') {
+    if (typeof this.length === "undefined") {
       stream.writeUInt8(0x00);
     }
   }

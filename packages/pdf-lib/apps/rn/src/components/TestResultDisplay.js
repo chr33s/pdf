@@ -1,26 +1,26 @@
-import React, { Component } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, Button } from 'react-native';
-import PdfView from 'react-native-pdf';
+import React, { Component } from "react";
+import { StyleSheet, Text, View, SafeAreaView, Button } from "react-native";
+import PdfView from "react-native-pdf";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#e6e6e6',
+    backgroundColor: "#e6e6e6",
   },
   topContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   text: {
     flex: 1,
     fontSize: 20,
-    textAlign: 'center',
+    textAlign: "center",
   },
   pdf: {
     flex: 1,
     paddingHorizontal: 10,
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
   },
 });
 
@@ -40,7 +40,7 @@ export default class TestResultDisplay extends Component {
   };
 
   handleError = (e) => {
-    console.warn('Failed to render PDF', e);
+    console.warn("Failed to render PDF", e);
   };
 
   render() {

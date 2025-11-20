@@ -1,16 +1,20 @@
-import type { Done } from 'mocha';
-import concat from 'concat-stream';
-import EncodeStream from '../src/EncodeStream';
+import concat from "concat-stream";
+import EncodeStream from "../src/EncodeStream";
 
-export function expectStream(stream: EncodeStream, done: Done, assert: (buf: Buffer) => void): void {
-  const sink = concat({ encoding: 'buffer' }, (buf: Buffer) => {
-    try {
-      assert(buf);
-      done();
-    } catch (error) {
-      done(error as Error);
-    }
+export function expectStream(
+  stream: EncodeStream,
+  assert: (buf: Buffer) => void | Promise<void>,
+): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const sink = concat({ encoding: "buffer" }, async (buf: Buffer) => {
+      try {
+        await assert(buf);
+        resolve();
+      } catch (error) {
+        reject(error);
+      }
+    });
+
+    stream.pipe(sink as unknown as NodeJS.WritableStream);
   });
-
-  stream.pipe(sink as unknown as NodeJS.WritableStream);
 }

@@ -1,21 +1,21 @@
-import PDFArray from '../objects/PDFArray';
-import PDFDict, { DictMap } from '../objects/PDFDict';
-import PDFName from '../objects/PDFName';
-import PDFNumber from '../objects/PDFNumber';
-import PDFRef from '../objects/PDFRef';
-import PDFContext from '../PDFContext';
-import PDFPageLeaf from './PDFPageLeaf';
-import { InvalidTargetIndexError, CorruptPageTreeError } from '../errors';
+import PDFArray from "../objects/PDFArray";
+import PDFDict, { DictMap } from "../objects/PDFDict";
+import PDFName from "../objects/PDFName";
+import PDFNumber from "../objects/PDFNumber";
+import PDFRef from "../objects/PDFRef";
+import PDFContext from "../PDFContext";
+import PDFPageLeaf from "./PDFPageLeaf";
+import { InvalidTargetIndexError, CorruptPageTreeError } from "../errors";
 
 export type TreeNode = PDFPageTree | PDFPageLeaf;
 
 class PDFPageTree extends PDFDict {
   static withContext = (context: PDFContext, parent?: PDFRef) => {
     const dict = new Map();
-    dict.set(PDFName.of('Type'), PDFName.of('Pages'));
-    dict.set(PDFName.of('Kids'), context.obj([]));
-    dict.set(PDFName.of('Count'), context.obj(0));
-    if (parent) dict.set(PDFName.of('Parent'), parent);
+    dict.set(PDFName.of("Type"), PDFName.of("Pages"));
+    dict.set(PDFName.of("Kids"), context.obj([]));
+    dict.set(PDFName.of("Count"), context.obj(0));
+    if (parent) dict.set(PDFName.of("Parent"), parent);
     return new PDFPageTree(dict, context);
   };
 
@@ -23,15 +23,15 @@ class PDFPageTree extends PDFDict {
     new PDFPageTree(map, context);
 
   Parent(): PDFPageTree | undefined {
-    return this.lookup(PDFName.of('Parent')) as PDFPageTree | undefined;
+    return this.lookup(PDFName.of("Parent")) as PDFPageTree | undefined;
   }
 
   Kids(): PDFArray {
-    return this.lookup(PDFName.of('Kids'), PDFArray);
+    return this.lookup(PDFName.of("Kids"), PDFArray);
   }
 
   Count(): PDFNumber {
-    return this.lookup(PDFName.of('Count'), PDFNumber);
+    return this.lookup(PDFName.of("Count"), PDFNumber);
   }
 
   pushTreeNode(treeRef: PDFRef): void {
@@ -97,7 +97,7 @@ class PDFPageTree extends PDFDict {
     }
 
     // Should never get here if `targetIndex` is valid
-    throw new CorruptPageTreeError(targetIndex, 'insertLeafNode');
+    throw new CorruptPageTreeError(targetIndex, "insertLeafNode");
   }
 
   /**
@@ -146,7 +146,7 @@ class PDFPageTree extends PDFDict {
     }
 
     // Should never get here if `targetIndex` is valid
-    throw new CorruptPageTreeError(targetIndex, 'removeLeafNode');
+    throw new CorruptPageTreeError(targetIndex, "removeLeafNode");
   }
 
   ascend(visitor: (node: PDFPageTree) => any): void {
@@ -171,7 +171,7 @@ class PDFPageTree extends PDFDict {
 
     this.ascend((node) => {
       const newCount = node.Count().asNumber() + 1;
-      node.set(PDFName.of('Count'), PDFNumber.of(newCount));
+      node.set(PDFName.of("Count"), PDFNumber.of(newCount));
     });
 
     Kids.insert(kidIdx, leafRef);
@@ -184,7 +184,7 @@ class PDFPageTree extends PDFDict {
     if (kid instanceof PDFPageLeaf) {
       this.ascend((node) => {
         const newCount = node.Count().asNumber() - 1;
-        node.set(PDFName.of('Count'), PDFNumber.of(newCount));
+        node.set(PDFName.of("Count"), PDFNumber.of(newCount));
       });
     }
 

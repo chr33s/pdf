@@ -1,22 +1,22 @@
-import { decompressJson } from './utils';
+import { decompressJson } from "./utils.js";
 
-import CourierBoldCompressed from './Courier-Bold.compressed.json';
-import CourierBoldObliqueCompressed from './Courier-BoldOblique.compressed.json';
-import CourierObliqueCompressed from './Courier-Oblique.compressed.json';
-import CourierCompressed from './Courier.compressed.json';
+import CourierBoldCompressed from "./Courier-Bold.compressed.json" with { type: "json" };
+import CourierBoldObliqueCompressed from "./Courier-BoldOblique.compressed.json" with { type: "json" };
+import CourierObliqueCompressed from "./Courier-Oblique.compressed.json" with { type: "json" };
+import CourierCompressed from "./Courier.compressed.json" with { type: "json" };
 
-import HelveticaBoldCompressed from './Helvetica-Bold.compressed.json';
-import HelveticaBoldObliqueCompressed from './Helvetica-BoldOblique.compressed.json';
-import HelveticaObliqueCompressed from './Helvetica-Oblique.compressed.json';
-import HelveticaCompressed from './Helvetica.compressed.json';
+import HelveticaBoldCompressed from "./Helvetica-Bold.compressed.json" with { type: "json" };
+import HelveticaBoldObliqueCompressed from "./Helvetica-BoldOblique.compressed.json" with { type: "json" };
+import HelveticaObliqueCompressed from "./Helvetica-Oblique.compressed.json" with { type: "json" };
+import HelveticaCompressed from "./Helvetica.compressed.json" with { type: "json" };
 
-import TimesBoldCompressed from './Times-Bold.compressed.json';
-import TimesBoldItalicCompressed from './Times-BoldItalic.compressed.json';
-import TimesItalicCompressed from './Times-Italic.compressed.json';
-import TimesRomanCompressed from './Times-Roman.compressed.json';
+import TimesBoldCompressed from "./Times-Bold.compressed.json" with { type: "json" };
+import TimesBoldItalicCompressed from "./Times-BoldItalic.compressed.json" with { type: "json" };
+import TimesItalicCompressed from "./Times-Italic.compressed.json" with { type: "json" };
+import TimesRomanCompressed from "./Times-Roman.compressed.json" with { type: "json" };
 
-import SymbolCompressed from './Symbol.compressed.json';
-import ZapfDingbatsCompressed from './ZapfDingbats.compressed.json';
+import SymbolCompressed from "./Symbol.compressed.json" with { type: "json" };
+import ZapfDingbatsCompressed from "./ZapfDingbats.compressed.json" with { type: "json" };
 
 // prettier-ignore
 const compressedJsonForFontName = {
@@ -40,23 +40,23 @@ const compressedJsonForFontName = {
 };
 
 export enum FontNames {
-  Courier = 'Courier',
-  CourierBold = 'Courier-Bold',
-  CourierOblique = 'Courier-Oblique',
-  CourierBoldOblique = 'Courier-BoldOblique',
+  Courier = "Courier",
+  CourierBold = "Courier-Bold",
+  CourierOblique = "Courier-Oblique",
+  CourierBoldOblique = "Courier-BoldOblique",
 
-  Helvetica = 'Helvetica',
-  HelveticaBold = 'Helvetica-Bold',
-  HelveticaOblique = 'Helvetica-Oblique',
-  HelveticaBoldOblique = 'Helvetica-BoldOblique',
+  Helvetica = "Helvetica",
+  HelveticaBold = "Helvetica-Bold",
+  HelveticaOblique = "Helvetica-Oblique",
+  HelveticaBoldOblique = "Helvetica-BoldOblique",
 
-  TimesRoman = 'Times-Roman',
-  TimesRomanBold = 'Times-Bold',
-  TimesRomanItalic = 'Times-Italic',
-  TimesRomanBoldItalic = 'Times-BoldItalic',
+  TimesRoman = "Times-Roman",
+  TimesRomanBold = "Times-Bold",
+  TimesRomanItalic = "Times-Italic",
+  TimesRomanBoldItalic = "Times-BoldItalic",
 
-  Symbol = 'Symbol',
-  ZapfDingbats = 'ZapfDingbats',
+  Symbol = "Symbol",
+  ZapfDingbats = "ZapfDingbats",
 }
 
 export type IFontNames = FontNames | keyof typeof compressedJsonForFontName;
@@ -99,57 +99,57 @@ export class Font {
     if (cachedFont) return cachedFont;
 
     const json = decompressJson(compressedJsonForFontName[fontName]);
-    const font = Object.assign(new Font(), JSON.parse(json));
+    const font = Object.assign(new Font(), JSON.parse(json)) as Font;
 
-    font.CharWidths = font.CharMetrics.reduce((acc, metric) => {
-      acc[metric.N] = metric.WX;
-      return acc;
-    }, {});
-    font.KernPairXAmounts = font.KernPairs.reduce(
-      (acc, [name1, name2, width]) => {
-        if (!acc[name1]) acc[name1] = {};
-        acc[name1][name2] = width;
-        return acc;
-      },
-      {},
-    );
+    const charWidths: Record<string, number> = {};
+    for (const metric of font.CharMetrics) {
+      charWidths[metric.N] = metric.WX;
+    }
+    font.CharWidths = charWidths;
+
+    const kernPairXAmounts: Record<string, Record<string, number>> = {};
+    for (const [name1, name2, width] of font.KernPairs) {
+      if (!kernPairXAmounts[name1]) kernPairXAmounts[name1] = {};
+      kernPairXAmounts[name1][name2] = width;
+    }
+    font.KernPairXAmounts = kernPairXAmounts;
 
     fontCache[fontName] = font;
 
     return font;
   };
 
-  Comment: string;
-  FontName: string;
-  FullName: string;
-  FamilyName: string;
-  Weight: string;
-  CharacterSet: string;
-  Version: string;
-  Notice: string;
-  EncodingScheme: string;
-  ItalicAngle: number;
-  UnderlinePosition: number;
-  UnderlineThickness: number;
-  CapHeight: number | void;
-  XHeight: number | void;
-  Ascender: number | void;
-  Descender: number | void;
-  StdHW: number;
-  StdVW: number;
-  IsFixedPitch: boolean;
+  Comment!: string;
+  FontName!: string;
+  FullName!: string;
+  FamilyName!: string;
+  Weight!: string;
+  CharacterSet!: string;
+  Version!: string;
+  Notice!: string;
+  EncodingScheme!: string;
+  ItalicAngle!: number;
+  UnderlinePosition!: number;
+  UnderlineThickness!: number;
+  CapHeight!: number | void;
+  XHeight!: number | void;
+  Ascender!: number | void;
+  Descender!: number | void;
+  StdHW!: number;
+  StdVW!: number;
+  IsFixedPitch!: boolean;
 
   /**
    * [llx lly urx ury]:
    *   Font bounding box where llx, lly, urx, and ury are all numbers.
    */
-  FontBBox: [number, number, number, number];
+  FontBBox!: [number, number, number, number];
 
-  CharMetrics: ICharMetrics[];
-  KernPairs: IKernPair[];
+  CharMetrics!: ICharMetrics[];
+  KernPairs!: IKernPair[];
 
-  private CharWidths: { [charName: string]: number };
-  private KernPairXAmounts: { [name1: string]: { [name2: string]: number } };
+  private CharWidths!: { [charName: string]: number };
+  private KernPairXAmounts!: { [name1: string]: { [name2: string]: number } };
 
   private constructor() {}
 

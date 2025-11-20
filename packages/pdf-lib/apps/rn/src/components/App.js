@@ -1,16 +1,16 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import ErrorDisplay from './ErrorDisplay';
-import TestLauncher from './TestLauncher';
-import TestRunningSpinner from './TestRunningSpinner';
-import TestResultDisplay from './TestResultDisplay';
+import ErrorDisplay from "./ErrorDisplay";
+import TestLauncher from "./TestLauncher";
+import TestRunningSpinner from "./TestRunningSpinner";
+import TestResultDisplay from "./TestResultDisplay";
 
 export default class App extends Component {
   static States = {
-    TestLauncher: 'TestLauncher',
-    TestRunning: 'TestRunning',
-    TestDisplaying: 'TestDisplaying',
-    Error: 'Error',
+    TestLauncher: "TestLauncher",
+    TestRunning: "TestRunning",
+    TestDisplaying: "TestDisplaying",
+    Error: "Error",
   };
 
   state = {
@@ -22,7 +22,7 @@ export default class App extends Component {
     testLauncher()
       .then(({ base64Pdf }) => {
         if (!base64Pdf || base64Pdf.length < 1) {
-          throw new Error('Missing `base64Pdf`');
+          throw new Error("Missing `base64Pdf`");
         }
         const end = Date.now();
         const runtimeSecs = (end - start) / 1000;

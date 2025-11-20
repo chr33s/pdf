@@ -1,13 +1,13 @@
-import fontkit from '@chr33s/fontkit';
-import { PDFDocument, rgb } from 'pdf-lib';
+import fontkit from "@chr33s/fontkit";
+import { PDFDocument, rgb } from "pdf-lib";
 
-import { fetchAsset } from './assets';
+import { fetchAsset } from "./assets";
 
 export default async () => {
   const [inputPdfBytes, ubuntuBytes, smallMarioBytes] = await Promise.all([
-    fetchAsset('pdfs/with_comments.pdf'),
-    fetchAsset('fonts/ubuntu/Ubuntu-R.ttf'),
-    fetchAsset('images/small_mario_resized.png'),
+    fetchAsset("pdfs/with_comments.pdf"),
+    fetchAsset("fonts/ubuntu/Ubuntu-R.ttf"),
+    fetchAsset("images/small_mario_resized.png"),
   ]);
 
   const pdfDoc = await PDFDocument.load(inputPdfBytes);
@@ -21,9 +21,9 @@ export default async () => {
   const pages = pdfDoc.getPages();
 
   const lines = [
-    'This is an image of Mario running.',
-    'This image and text was drawn on',
-    'top of an existing PDF using pdf-lib!',
+    "This is an image of Mario running.",
+    "This image and text was drawn on",
+    "top of an existing PDF using pdf-lib!",
   ];
   const fontSize = 24;
   const solarizedWhite = rgb(253 / 255, 246 / 255, 227 / 255);
@@ -52,7 +52,7 @@ export default async () => {
     });
     page.setFont(ubuntuFont);
     page.setFontColor(solarizedGray);
-    page.drawText(lines.join('\n'), {
+    page.drawText(lines.join("\n"), {
       x: centerX - textWidth / 2,
       y: centerY - 15,
     });

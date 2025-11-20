@@ -1,7 +1,7 @@
-import fs from 'fs';
+import fs from "fs";
 
-import { Assets } from '..';
-import { PDFDocument, rgb } from '../../..';
+import { Assets } from "..";
+import { PDFDocument, rgb } from "../../..";
 
 // prettier-ignore
 const pngSuite = [

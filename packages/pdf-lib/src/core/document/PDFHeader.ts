@@ -1,5 +1,5 @@
-import CharCodes from '../syntax/CharCodes';
-import { charFromCode, copyStringIntoBuffer } from '../../utils';
+import CharCodes from "../syntax/CharCodes";
+import { charFromCode, copyStringIntoBuffer } from "../../utils";
 
 class PDFHeader {
   static forVersion = (major: number, minor: number) =>

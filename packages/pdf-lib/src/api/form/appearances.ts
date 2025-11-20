@@ -1,39 +1,39 @@
-import { PDFOperator, PDFWidgetAnnotation } from '../../core';
-import PDFFont from '../PDFFont';
-import PDFButton from '../form/PDFButton';
-import PDFCheckBox from '../form/PDFCheckBox';
-import PDFDropdown from '../form/PDFDropdown';
-import PDFField from '../form/PDFField';
-import PDFOptionList from '../form/PDFOptionList';
-import PDFRadioGroup from '../form/PDFRadioGroup';
-import PDFSignature from '../form/PDFSignature';
-import PDFTextField from '../form/PDFTextField';
+import { PDFOperator, PDFWidgetAnnotation } from "../../core/index.js";
+import { findLastMatch } from "../../utils/index.js";
+import PDFFont from "../PDFFont.js";
 import {
-  drawCheckBox,
-  rotateInPlace,
-  drawRadioButton,
-  drawButton,
-  drawTextField,
-  drawOptionList,
-} from '../operations';
-import {
-  rgb,
-  componentsToColor,
-  setFillingColor,
-  grayscale,
   cmyk,
   Color,
-} from '../colors';
-import { reduceRotation, adjustDimsForRotation } from '../rotations';
+  componentsToColor,
+  grayscale,
+  rgb,
+  setFillingColor,
+} from "../colors.js";
+import PDFButton from "../form/PDFButton.js";
+import PDFCheckBox from "../form/PDFCheckBox.js";
+import PDFDropdown from "../form/PDFDropdown.js";
+import PDFField from "../form/PDFField.js";
+import PDFOptionList from "../form/PDFOptionList.js";
+import PDFRadioGroup from "../form/PDFRadioGroup.js";
+import PDFSignature from "../form/PDFSignature.js";
+import PDFTextField from "../form/PDFTextField.js";
 import {
-  layoutMultilineText,
+  drawButton,
+  drawCheckBox,
+  drawOptionList,
+  drawRadioButton,
+  drawTextField,
+  rotateInPlace,
+} from "../operations.js";
+import { setFontAndSize } from "../operators.js";
+import { adjustDimsForRotation, reduceRotation } from "../rotations.js";
+import { TextAlignment } from "../text/alignment.js";
+import {
   layoutCombedText,
-  TextPosition,
+  layoutMultilineText,
   layoutSinglelineText,
-} from '../text/layout';
-import { TextAlignment } from '../text/alignment';
-import { setFontAndSize } from '../operators';
-import { findLastMatch } from '../../utils';
+  TextPosition,
+} from "../text/layout.js";
 
 /*********************** Appearance Provider Types ****************************/
 
@@ -105,7 +105,7 @@ export type AppearanceProviderFor<T extends PDFField> =
 export const normalizeAppearance = <T extends object>(
   appearance: T | AppearanceMapping<T>,
 ): AppearanceMapping<T> => {
-  if ('normal' in appearance) return appearance;
+  if ("normal" in appearance) return appearance;
   return { normal: appearance };
 };
 
@@ -118,7 +118,7 @@ const tfRegex =
 const getDefaultFontSize = (field: {
   getDefaultAppearance(): string | undefined;
 }) => {
-  const da = field.getDefaultAppearance() ?? '';
+  const da = field.getDefaultAppearance() ?? "";
   const daMatch = findLastMatch(da, tfRegex).match ?? [];
   const defaultFontSize = Number(daMatch[2]);
   return isFinite(defaultFontSize) ? defaultFontSize : undefined;
@@ -134,18 +134,18 @@ const colorRegex =
 const getDefaultColor = (field: {
   getDefaultAppearance(): string | undefined;
 }) => {
-  const da = field.getDefaultAppearance() ?? '';
+  const da = field.getDefaultAppearance() ?? "";
   const daMatch = findLastMatch(da, colorRegex).match;
 
   const [, c1, c2, c3, c4, colorSpace] = daMatch ?? [];
 
-  if (colorSpace === 'g' && c1) {
+  if (colorSpace === "g" && c1) {
     return grayscale(Number(c1));
   }
-  if (colorSpace === 'rg' && c1 && c2 && c3) {
+  if (colorSpace === "rg" && c1 && c2 && c3) {
     return rgb(Number(c1), Number(c2), Number(c3));
   }
-  if (colorSpace === 'k' && c1 && c2 && c3 && c4) {
+  if (colorSpace === "k" && c1 && c2 && c3 && c4) {
     return cmyk(Number(c1), Number(c2), Number(c3), Number(c4));
   }
 
@@ -160,8 +160,8 @@ const updateDefaultAppearance = (
 ) => {
   const da = [
     setFillingColor(color).toString(),
-    setFontAndSize(font?.name ?? 'dummy__noop', fontSize).toString(),
-  ].join('\n');
+    setFontAndSize(font?.name ?? "dummy__noop", fontSize).toString(),
+  ].join("\n");
   field.setDefaultAppearance(da);
 };
 
@@ -339,8 +339,8 @@ export const defaultButtonAppearanceProvider: AppearanceProviderFor<
   const ap = widget.getAppearanceCharacteristics();
   const bs = widget.getBorderStyle();
   const captions = ap?.getCaptions();
-  const normalText = captions?.normal ?? '';
-  const downText = captions?.down ?? normalText ?? '';
+  const normalText = captions?.normal ?? "";
+  const downText = captions?.down ?? normalText ?? "";
 
   const borderWidth = bs?.getWidth() ?? 0;
   const rotation = reduceRotation(ap?.getRotation());
@@ -426,7 +426,7 @@ export const defaultTextFieldAppearanceProvider: AppearanceProviderFor<
   const rectangle = widget.getRectangle();
   const ap = widget.getAppearanceCharacteristics();
   const bs = widget.getBorderStyle();
-  const text = textField.getText() ?? '';
+  const text = textField.getText() ?? "";
 
   const borderWidth = bs?.getWidth() ?? 0;
   const rotation = reduceRotation(ap?.getRotation());
@@ -516,7 +516,7 @@ export const defaultDropdownAppearanceProvider: AppearanceProviderFor<
   const rectangle = widget.getRectangle();
   const ap = widget.getAppearanceCharacteristics();
   const bs = widget.getBorderStyle();
-  const text = dropdown.getSelected()[0] ?? '';
+  const text = dropdown.getSelected()[0] ?? "";
 
   const borderWidth = bs?.getWidth() ?? 0;
   const rotation = reduceRotation(ap?.getRotation());
@@ -598,10 +598,10 @@ export const defaultOptionListAppearanceProvider: AppearanceProviderFor<
 
   if (optionList.isSorted()) options.sort();
 
-  let text = '';
+  let text = "";
   for (let idx = 0, len = options.length; idx < len; idx++) {
     text += options[idx];
-    if (idx < len - 1) text += '\n';
+    if (idx < len - 1) text += "\n";
   }
 
   const padding = 1;

@@ -1,6 +1,6 @@
-import { PDFDocument, StandardFonts, degrees } from 'pdf-lib';
+import { PDFDocument, StandardFonts, degrees } from "pdf-lib";
 
-import { fetchAsset } from './assets';
+import { fetchAsset } from "./assets";
 
 const createDonorPdf = async () => {
   const pdfDoc = await PDFDocument.create();
@@ -11,7 +11,7 @@ const createDonorPdf = async () => {
   page.moveTo(50, 225);
   page.setFont(helveticaFont);
   page.setFontSize(50);
-  page.drawText('I am upside down!');
+  page.drawText("I am upside down!");
   page.setRotation(degrees(180));
 
   return pdfDoc;
@@ -25,11 +25,11 @@ export default async () => {
     linearizedWithObjectStreamsBytes,
     withLargePageCountBytes,
   ] = await Promise.all([
-    fetchAsset('pdfs/with_missing_endstream_eol_and_polluted_ctm.pdf'),
-    fetchAsset('pdfs/normal.pdf'),
-    fetchAsset('pdfs/with_update_sections.pdf'),
-    fetchAsset('pdfs/linearized_with_object_streams.pdf'),
-    fetchAsset('pdfs/with_large_page_count.pdf'),
+    fetchAsset("pdfs/with_missing_endstream_eol_and_polluted_ctm.pdf"),
+    fetchAsset("pdfs/normal.pdf"),
+    fetchAsset("pdfs/with_update_sections.pdf"),
+    fetchAsset("pdfs/linearized_with_object_streams.pdf"),
+    fetchAsset("pdfs/with_large_page_count.pdf"),
   ]);
 
   const pdfDoc = await PDFDocument.load(

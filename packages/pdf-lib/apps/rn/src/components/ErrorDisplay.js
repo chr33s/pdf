@@ -1,21 +1,21 @@
-import React, { Component } from 'react';
-import { StyleSheet, SafeAreaView, Text, ScrollView } from 'react-native';
+import React, { Component } from "react";
+import { StyleSheet, SafeAreaView, Text, ScrollView } from "react-native";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   text: {
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 50,
   },
   stackText: {
     fontSize: 15,
-    textAlign: 'left',
+    textAlign: "left",
     margin: 10,
   },
 });

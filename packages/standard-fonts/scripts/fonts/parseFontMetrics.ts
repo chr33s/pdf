@@ -3,7 +3,7 @@ import {
   extractLinesFromSection,
   takeAfterFirstSpace,
   takeUntilFirstSpace,
-} from './utils';
+} from "./utils.ts";
 
 export interface IFontMetrics {
   Comment: string;
@@ -31,29 +31,29 @@ export interface IFontMetrics {
 export type IFontMetricKey = keyof IFontMetrics;
 
 const stringFontMetricKeys = [
-  'Comment',
-  'FontName',
-  'FullName',
-  'FamilyName',
-  'Weight',
-  'CharacterSet',
-  'Version',
-  'Notice',
-  'EncodingScheme',
+  "Comment",
+  "FontName",
+  "FullName",
+  "FamilyName",
+  "Weight",
+  "CharacterSet",
+  "Version",
+  "Notice",
+  "EncodingScheme",
 ];
 const numericFontMetricKeys = [
-  'ItalicAngle',
-  'UnderlinePosition',
-  'UnderlineThickness',
-  'CapHeight',
-  'XHeight',
-  'Ascender',
-  'Descender',
-  'StdHW',
-  'StdVW',
+  "ItalicAngle",
+  "UnderlinePosition",
+  "UnderlineThickness",
+  "CapHeight",
+  "XHeight",
+  "Ascender",
+  "Descender",
+  "StdHW",
+  "StdVW",
 ];
-const booleanFontMetricKeys = ['IsFixedPitch'];
-const arrayFontMetricKeys = ['FontBBox'];
+const booleanFontMetricKeys = ["IsFixedPitch"];
+const arrayFontMetricKeys = ["FontBBox"];
 
 // prettier-ignore
 const parseFontMetric = (
@@ -77,8 +77,8 @@ const parseFontMetric = (
 
 export const parseFontMetricsSection = (data: string): IFontMetrics => {
   const metrics = extractLinesFromSection(data, {
-    startAt: 'StartFontMetrics',
-    endAt: 'StartCharMetrics',
+    startAt: "StartFontMetrics",
+    endAt: "StartCharMetrics",
   }).map(parseFontMetric);
 
   return metrics.reduce((acc, curr) => {

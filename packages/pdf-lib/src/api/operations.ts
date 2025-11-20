@@ -1,4 +1,4 @@
-import { Color, setFillingColor, setStrokingColor } from './colors';
+import { Color, setFillingColor, setStrokingColor } from "./colors";
 import {
   beginText,
   closePath,
@@ -35,14 +35,14 @@ import {
   concatTransformationMatrix,
   TextRenderingMode,
   setTextRenderingMode,
-} from './operators';
-import { Rotation, degrees, toDegrees, toRadians } from './rotations';
-import { svgPathToOperators } from './svgPath';
-import { PDFHexString, PDFName, PDFNumber, PDFOperator } from '../core';
-import { asNumber } from './objects';
-import type { Space, TransformationMatrix } from '../types';
-import { transformationToMatrix, combineMatrix } from './svg';
-import { identityMatrix } from '../types/matrix';
+} from "./operators";
+import { Rotation, degrees, toDegrees, toRadians } from "./rotations";
+import { svgPathToOperators } from "./svgPath";
+import { PDFHexString, PDFName, PDFNumber, PDFOperator } from "../core";
+import { asNumber } from "./objects";
+import type { Space, TransformationMatrix } from "../types";
+import { transformationToMatrix, combineMatrix } from "./svg";
+import { identityMatrix } from "../types/matrix";
 
 export interface DrawTextOptions {
   color: Color;
@@ -237,10 +237,10 @@ export const drawRectangle = (options: {
   clipSpaces?: Space[];
 }) => {
   const { width, height, xSkew, ySkew, rotate, matrix } = options;
-  const w = typeof width === 'number' ? width : width.asNumber();
-  const h = typeof height === 'number' ? height : height.asNumber();
-  const x = typeof options.x === 'number' ? options.x : options.x.asNumber();
-  const y = typeof options.y === 'number' ? options.y : options.y.asNumber();
+  const w = typeof width === "number" ? width : width.asNumber();
+  const h = typeof height === "number" ? height : height.asNumber();
+  const x = typeof options.x === "number" ? options.x : options.x.asNumber();
+  const y = typeof options.y === "number" ? options.y : options.y.asNumber();
 
   // Ensure rx and ry are within bounds
   const rx = Math.max(0, Math.min(options.rx || 0, w / 2));
@@ -259,41 +259,41 @@ export const drawRectangle = (options: {
           `C ${rx * (1 - KAPPA)},${h} 0,${h - ry * (1 - KAPPA)} 0,${h - ry}`,
           `V ${ry}`,
           `C 0,${ry * (1 - KAPPA)} ${rx * (1 - KAPPA)},0 ${rx},0`,
-          'Z',
-        ].join(' ')
+          "Z",
+        ].join(" ")
       : `M 0,0 H ${w} V ${h} H 0 Z`;
 
   // the drawRectangle applies the rotation around its anchor point (bottom-left), it means that the translation should be applied before the rotation
   // invert the y parameter because transformationToMatrix expects parameters from an svg space. The same is valid for rotate and ySkew
   let fullMatrix = combineMatrix(
     matrix || identityMatrix,
-    transformationToMatrix('translate', [x, -y]),
+    transformationToMatrix("translate", [x, -y]),
   );
 
   // Transformation to apply rotation and skew
   if (rotate) {
     fullMatrix = combineMatrix(
       fullMatrix,
-      transformationToMatrix('rotate', [-toDegrees(rotate)]),
+      transformationToMatrix("rotate", [-toDegrees(rotate)]),
     );
   }
   if (xSkew) {
     fullMatrix = combineMatrix(
       fullMatrix,
-      transformationToMatrix('skewX', [toDegrees(xSkew)]),
+      transformationToMatrix("skewX", [toDegrees(xSkew)]),
     );
   }
   if (ySkew) {
     fullMatrix = combineMatrix(
       fullMatrix,
-      transformationToMatrix('skewY', [-toDegrees(ySkew)]),
+      transformationToMatrix("skewY", [-toDegrees(ySkew)]),
     );
   }
 
   // move the rectangle upward so that the (x, y) coord is bottom-left
   fullMatrix = combineMatrix(
     fullMatrix,
-    transformationToMatrix('translateY', [-h]),
+    transformationToMatrix("translateY", [-h]),
   );
 
   return drawSvgPath(d, {
@@ -338,17 +338,17 @@ export const drawEllipse = (options: {
     `C ${xScale},${-oy} ${ox},${-yScale} 0,${-yScale}`,
     `C ${-ox},${-yScale} ${-xScale},${-oy} ${-xScale},0`,
     `C ${-xScale},${oy} ${-ox},${yScale} 0,${yScale}`,
-    'Z',
-  ].join(' ');
+    "Z",
+  ].join(" ");
 
   let fullMatrix = combineMatrix(
     options.matrix || identityMatrix,
-    transformationToMatrix('translate', [x, -y]),
+    transformationToMatrix("translate", [x, -y]),
   );
   if (options.rotate) {
     fullMatrix = combineMatrix(
       fullMatrix,
-      transformationToMatrix('rotate', [-toDegrees(options.rotate)]),
+      transformationToMatrix("rotate", [-toDegrees(options.rotate)]),
     );
   }
 
@@ -719,7 +719,7 @@ export const drawTextField = (options: {
   });
 
   const markedContent = [
-    beginMarkedContent('Tx'),
+    beginMarkedContent("Tx"),
     pushGraphicsState(),
     ...lines,
     popGraphicsState(),
@@ -817,7 +817,7 @@ export const drawOptionList = (options: {
   });
 
   const markedContent = [
-    beginMarkedContent('Tx'),
+    beginMarkedContent("Tx"),
     pushGraphicsState(),
     ...lines,
     popGraphicsState(),

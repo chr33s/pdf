@@ -1,0 +1,13 @@
+{
+	"$schema": "./node_modules/oxlint/configuration_schema.json",
+	"ignorePatterns": [
+		"**/dist",
+		"packages/brotli/src/enc/encode.js",
+		"packages/brotli/src/enc/mem.js",
+		"packages/fontkit/src/opentype/shapers/indicData.js",
+		"packages/fontkit/src/opentype/shapers/trieData.js",
+		"packages/fontkit/src/opentype/shapers/trieIndicData.js",
+		"packages/fontkit/src/opentype/shapers/trieUseData.js",
+		"packages/fontkit/src/opentype/shapers/useData.js"
+	]
+}

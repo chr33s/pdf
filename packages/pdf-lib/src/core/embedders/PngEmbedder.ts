@@ -1,6 +1,6 @@
-import PDFRef from '../objects/PDFRef';
-import PDFContext from '../PDFContext';
-import { PNG } from '../../utils/png';
+import PDFRef from "../objects/PDFRef";
+import PDFContext from "../PDFContext";
+import { PNG } from "../../utils/png";
 
 /**
  * A note of thanks to the developers of https://github.com/foliojs/pdfkit, as
@@ -16,7 +16,7 @@ class PngEmbedder {
   readonly bitsPerComponent: number;
   readonly height: number;
   readonly width: number;
-  readonly colorSpace: 'DeviceRGB';
+  readonly colorSpace: "DeviceRGB";
 
   private readonly image: PNG;
 
@@ -25,15 +25,15 @@ class PngEmbedder {
     this.bitsPerComponent = png.bitsPerComponent;
     this.width = png.width;
     this.height = png.height;
-    this.colorSpace = 'DeviceRGB';
+    this.colorSpace = "DeviceRGB";
   }
 
   async embedIntoContext(context: PDFContext, ref?: PDFRef): Promise<PDFRef> {
     const SMask = this.embedAlphaChannel(context);
 
     const xObject = context.flateStream(this.image.rgbChannel, {
-      Type: 'XObject',
-      Subtype: 'Image',
+      Type: "XObject",
+      Subtype: "Image",
       BitsPerComponent: this.image.bitsPerComponent,
       Width: this.image.width,
       Height: this.image.height,
@@ -53,12 +53,12 @@ class PngEmbedder {
     if (!this.image.alphaChannel) return undefined;
 
     const xObject = context.flateStream(this.image.alphaChannel, {
-      Type: 'XObject',
-      Subtype: 'Image',
+      Type: "XObject",
+      Subtype: "Image",
       Height: this.image.height,
       Width: this.image.width,
       BitsPerComponent: this.image.bitsPerComponent,
-      ColorSpace: 'DeviceGray',
+      ColorSpace: "DeviceGray",
       Decode: [0, 1],
     });
 

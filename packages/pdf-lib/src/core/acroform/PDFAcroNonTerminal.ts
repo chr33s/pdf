@@ -1,8 +1,8 @@
-import PDFDict from '../objects/PDFDict';
-import PDFRef from '../objects/PDFRef';
-import PDFName from '../objects/PDFName';
-import PDFContext from '../PDFContext';
-import PDFAcroField from './PDFAcroField';
+import PDFDict from "../objects/PDFDict";
+import PDFRef from "../objects/PDFRef";
+import PDFName from "../objects/PDFName";
+import PDFContext from "../PDFContext";
+import PDFAcroField from "./PDFAcroField";
 
 class PDFAcroNonTerminal extends PDFAcroField {
   static fromDict = (dict: PDFDict, ref: PDFRef) =>
@@ -24,7 +24,7 @@ class PDFAcroNonTerminal extends PDFAcroField {
 
     if (!Kids) {
       Kids = this.dict.context.obj([]);
-      this.dict.set(PDFName.of('Kids'), Kids);
+      this.dict.set(PDFName.of("Kids"), Kids);
     }
 
     return { Kids };

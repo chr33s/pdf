@@ -1,6 +1,6 @@
-import type DecodeStream from './DecodeStream';
-import type EncodeStream from './EncodeStream';
-import { PropertyDescriptor } from './utils';
+import type DecodeStream from "./DecodeStream.js";
+import type EncodeStream from "./EncodeStream.js";
+import { PropertyDescriptor } from "./utils.js";
 
 type FieldMap = Record<string, any>;
 
@@ -13,7 +13,9 @@ type PointerContext = {
   val?: any;
 };
 
-export default class Struct<T extends Record<string, any> = Record<string, any>> {
+export default class Struct<
+  T extends Record<string, any> = Record<string, any>,
+> {
   public process?: (this: T, stream: DecodeStream) => void;
   public preEncode?: (this: T, stream: EncodeStream) => void;
 
@@ -28,7 +30,11 @@ export default class Struct<T extends Record<string, any> = Record<string, any>>
     return result;
   }
 
-  protected _setup(stream: DecodeStream, parent: any, length: number): Record<string, any> {
+  protected _setup(
+    stream: DecodeStream,
+    parent: any,
+    length: number,
+  ): Record<string, any> {
     const result: Record<string, any> = {};
 
     Object.defineProperties(result, {
@@ -41,17 +47,21 @@ export default class Struct<T extends Record<string, any> = Record<string, any>>
     return result;
   }
 
-  protected _parseFields(stream: DecodeStream, target: Record<string, any>, fields: FieldMap): void {
+  protected _parseFields(
+    stream: DecodeStream,
+    target: Record<string, any>,
+    fields: FieldMap,
+  ): void {
     for (const [key, type] of Object.entries(fields)) {
       let value;
 
-      if (typeof type === 'function' && typeof type.decode !== 'function') {
+      if (typeof type === "function" && typeof type.decode !== "function") {
         value = type.call(target, target);
-      } else if (type && typeof type.decode === 'function') {
+      } else if (type && typeof type.decode === "function") {
         value = type.decode(stream, target);
       }
 
-      if (typeof value !== 'undefined') {
+      if (typeof value !== "undefined") {
         if (value instanceof PropertyDescriptor) {
           Object.defineProperty(target, key, value);
         } else {
@@ -72,7 +82,7 @@ export default class Struct<T extends Record<string, any> = Record<string, any>>
 
     let total = 0;
     for (const [key, type] of Object.entries(this.fields)) {
-      if (type && typeof type.size === 'function') {
+      if (type && typeof type.size === "function") {
         total += type.size(val[key], ctx);
       }
     }
@@ -101,7 +111,7 @@ export default class Struct<T extends Record<string, any> = Record<string, any>>
     ctx.pointerOffset = stream.pos + this.size(val, ctx, false);
 
     for (const [key, type] of Object.entries(this.fields)) {
-      if (type && typeof type.encode === 'function') {
+      if (type && typeof type.encode === "function") {
         type.encode(stream, val[key], ctx);
       }
     }

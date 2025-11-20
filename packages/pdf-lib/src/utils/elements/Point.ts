@@ -1,10 +1,10 @@
-import type { Coordinates } from '../../types';
+import type { Coordinates } from "../../types";
 
-import { isEqual, plus } from '../maths';
-import GraphElement from './GraphElement';
+import { isEqual, plus } from "../maths";
+import GraphElement from "./GraphElement";
 
 export default class Point extends GraphElement {
-  static type = 'PointFixed';
+  static type = "PointFixed";
 
   x: number;
   y: number;

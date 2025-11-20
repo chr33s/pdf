@@ -1,8 +1,6 @@
 node_modules/
-.DS_Store
-src/
+scripts/
 test/
 .gitignore
-babel.config.js
-Makefile.js
-rollup.config.js
+tsconfig.json
+vitest.config.ts

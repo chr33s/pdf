@@ -1,4 +1,4 @@
-import CharCodes from './CharCodes';
+import CharCodes from "./CharCodes";
 
 const { Space, CarriageReturn, Newline } = CharCodes;
 

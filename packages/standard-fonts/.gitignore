@@ -4,7 +4,5 @@ font_metrics/*.json
 encoding_metrics/*.json
 src/*.json
 npm-error.log
-lib
-es
 dist
 *.zip

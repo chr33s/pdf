@@ -1,5 +1,5 @@
-import CryptoJS from 'crypto-js';
-import PDFContext from '../PDFContext';
+import CryptoJS from "crypto-js";
+import PDFContext from "../PDFContext";
 
 type WordArray = CryptoJS.lib.WordArray;
 type RandomWordArrayGenerator = (bytes: number) => WordArray;
@@ -15,7 +15,7 @@ interface UserPermissions {
    * For Security handlers of revision <= 2 : Boolean
    * For Security handlers of revision >= 3 : 'lowResolution' or 'highResolution'
    */
-  printing?: boolean | 'lowResolution' | 'highResolution';
+  printing?: boolean | "lowResolution" | "highResolution";
   /**
    * Modify Content Permission (Other than 'annotating', 'fillingForms' and 'documentAssembly')
    */
@@ -81,8 +81,8 @@ type Encryption = {
   Length?: number;
   CF?: {
     StdCF: {
-      AuthEvent: 'DocOpen';
-      CFM: 'AESV2' | 'AESV3';
+      AuthEvent: "DocOpen";
+      CFM: "AESV2" | "AESV3";
       Length: number;
     };
   };
@@ -109,7 +109,7 @@ class PDFSecurity {
   constructor(context: PDFContext, options: SecurityOptions) {
     if (!options.ownerPassword && !options.userPassword) {
       throw new Error(
-        'Either an owner password or a user password must be specified.',
+        "Either an owner password or a user password must be specified.",
       );
     }
 
@@ -123,15 +123,15 @@ class PDFSecurity {
 
     let v: Algorithm;
     switch (this.context.header.getVersionString()) {
-      case '1.4':
-      case '1.5':
+      case "1.4":
+      case "1.5":
         v = 2;
         break;
-      case '1.6':
-      case '1.7':
+      case "1.6":
+      case "1.7":
         v = 4;
         break;
-      case '1.7ext3':
+      case "1.7ext3":
         v = 5;
         break;
       default:
@@ -153,7 +153,7 @@ class PDFSecurity {
 
   private initializeV1V2V4(v: Algorithm, options: SecurityOptions): Encryption {
     const encryption = {
-      Filter: 'Standard',
+      Filter: "Standard",
     } as Encryption;
 
     let r: Revision;
@@ -217,13 +217,13 @@ class PDFSecurity {
     if (v === 4) {
       encryption.CF = {
         StdCF: {
-          AuthEvent: 'DocOpen',
-          CFM: 'AESV2',
+          AuthEvent: "DocOpen",
+          CFM: "AESV2",
           Length: this.keyBits / 8,
         },
       };
-      encryption.StmF = 'StdCF';
-      encryption.StrF = 'StdCF';
+      encryption.StmF = "StdCF";
+      encryption.StrF = "StdCF";
     }
 
     encryption.R = r;
@@ -237,7 +237,7 @@ class PDFSecurity {
 
   private initializeV5(options: SecurityOptions): Encryption {
     const encryption = {
-      Filter: 'Standard',
+      Filter: "Standard",
     } as Encryption;
 
     this.keyBits = 256;
@@ -289,13 +289,13 @@ class PDFSecurity {
     encryption.Length = this.keyBits;
     encryption.CF = {
       StdCF: {
-        AuthEvent: 'DocOpen',
-        CFM: 'AESV3',
+        AuthEvent: "DocOpen",
+        CFM: "AESV3",
         Length: this.keyBits / 8,
       },
     };
-    encryption.StmF = 'StdCF';
-    encryption.StrF = 'StdCF';
+    encryption.StmF = "StdCF";
+    encryption.StrF = "StdCF";
 
     encryption.R = 5;
 
@@ -435,10 +435,10 @@ const getPermissionsR2 = (permissions: UserPermissions = {}) => {
  */
 const getPermissionsR3 = (permissions: UserPermissions = {}) => {
   let flags = 0xfffff0c0 >> 0;
-  if (permissions.printing === 'lowResolution' || permissions.printing) {
+  if (permissions.printing === "lowResolution" || permissions.printing) {
     flags |= 0b000000000100;
   }
-  if (permissions.printing === 'highResolution') {
+  if (permissions.printing === "highResolution") {
     flags |= 0b100000000100;
   }
   if (permissions.modifying) {
@@ -619,14 +619,14 @@ const getEncryptedPermissionsR5 = (
   return CryptoJS.AES.encrypt(cipher, encryptionKey, options).ciphertext;
 };
 
-const processPasswordR2R3R4 = (password = '') => {
+const processPasswordR2R3R4 = (password = "") => {
   const out = new Uint8Array(32);
   const length = password.length;
   let index = 0;
   while (index < length && index < 32) {
     const code = password.charCodeAt(index);
     if (code > 0xff) {
-      throw new Error('Password contains one or more invalid characters.');
+      throw new Error("Password contains one or more invalid characters.");
     }
     out[index] = code;
     index++;
@@ -638,7 +638,7 @@ const processPasswordR2R3R4 = (password = '') => {
   return CryptoJS.lib.WordArray.create(out as unknown as number[]);
 };
 
-const processPasswordR5 = (password = '') => {
+const processPasswordR5 = (password = "") => {
   // NOTE: Removed this line to eliminate need for the saslprep dependency.
   // Probably worth investigating the cases that would be impacted by this.
   // password = unescape(encodeURIComponent(saslprep(password)));

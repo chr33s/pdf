@@ -1,10 +1,5 @@
 node_modules/
 playground/
-.DS_Store
-coverage/
-coverage.html
-.nyc_output
-npm-error.log
 dist/
 /**/trie.json
 /**/trieIndic.json

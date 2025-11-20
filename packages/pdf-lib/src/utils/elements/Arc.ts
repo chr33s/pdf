@@ -1,8 +1,8 @@
-import { angleABC, distance, distanceCoords, rotate, vector } from '../maths';
+import { angleABC, distance, distanceCoords, rotate, vector } from "../maths";
 
-import Circle from './Circle';
-import GraphElement from './GraphElement';
-import Point from './Point';
+import Circle from "./Circle";
+import GraphElement from "./GraphElement";
+import Point from "./Point";
 
 export default class Arc extends GraphElement {
   O: Point;

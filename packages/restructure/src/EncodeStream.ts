@@ -1,10 +1,10 @@
-import { Readable } from 'stream';
-import DecodeStream from './DecodeStream';
+import { Readable } from "stream";
+import DecodeStream from "./DecodeStream.js";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-let iconv: typeof import('iconv-lite') | null = null;
+let iconv: typeof import("iconv-lite") | null = null;
 try {
-  iconv = require('iconv-lite');
+  iconv = require("iconv-lite");
 } catch {
   iconv = null;
 }
@@ -42,16 +42,16 @@ export default class EncodeStream extends Readable {
     this.pos += buffer.length;
   }
 
-  writeString(value: string, encoding: string = 'ascii'): void {
+  writeString(value: string, encoding: string = "ascii"): void {
     switch (encoding) {
-      case 'utf16le':
-      case 'ucs2':
-      case 'utf8':
-      case 'ascii':
+      case "utf16le":
+      case "ucs2":
+      case "utf8":
+      case "ascii":
         this.writeBuffer(Buffer.from(value, encoding));
         break;
-      case 'utf16be': {
-        const buf = Buffer.from(value, 'utf16le');
+      case "utf16be": {
+        const buf = Buffer.from(value, "utf16le");
         for (let i = 0; i < buf.length - 1; i += 2) {
           const byte = buf[i];
           buf[i] = buf[i + 1];
@@ -65,7 +65,9 @@ export default class EncodeStream extends Readable {
           this.writeBuffer(iconv.encode(value, encoding));
           break;
         }
-        throw new Error('Install iconv-lite to enable additional string encodings.');
+        throw new Error(
+          "Install iconv-lite to enable additional string encodings.",
+        );
       }
     }
   }
@@ -121,12 +123,12 @@ export default class EncodeStream extends Readable {
   }
 }
 
-const writeMethodNames = Object.getOwnPropertyNames(Buffer.prototype).filter((key) =>
-  key.startsWith('write'),
+const writeMethodNames = Object.getOwnPropertyNames(Buffer.prototype).filter(
+  (key) => key.startsWith("write"),
 );
 
 for (const key of writeMethodNames) {
-  const baseName = key.replace(/write|[BL]E/g, '');
+  const baseName = key.replace(/write|[BL]E/g, "");
   const bytes = DecodeStream.TYPES[baseName as keyof typeof DecodeStream.TYPES];
   if (!bytes) {
     continue;

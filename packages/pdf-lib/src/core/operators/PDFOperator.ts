@@ -1,13 +1,13 @@
-import PDFArray from '../objects/PDFArray';
-import PDFHexString from '../objects/PDFHexString';
-import PDFName from '../objects/PDFName';
-import PDFNumber from '../objects/PDFNumber';
-import PDFObject from '../objects/PDFObject';
-import PDFString from '../objects/PDFString';
-import PDFOperatorNames from './PDFOperatorNames';
-import PDFContext from '../PDFContext';
-import CharCodes from '../syntax/CharCodes';
-import { copyStringIntoBuffer } from '../../utils';
+import PDFArray from "../objects/PDFArray";
+import PDFHexString from "../objects/PDFHexString";
+import PDFName from "../objects/PDFName";
+import PDFNumber from "../objects/PDFNumber";
+import PDFObject from "../objects/PDFObject";
+import PDFString from "../objects/PDFString";
+import PDFOperatorNames from "./PDFOperatorNames";
+import PDFContext from "../PDFContext";
+import CharCodes from "../syntax/CharCodes";
+import { copyStringIntoBuffer } from "../../utils";
 
 export type PDFOperatorArg =
   | string
@@ -39,9 +39,9 @@ class PDFOperator {
   }
 
   toString(): string {
-    let value = '';
+    let value = "";
     for (let idx = 0, len = this.args.length; idx < len; idx++) {
-      value += String(this.args[idx]) + ' ';
+      value += String(this.args[idx]) + " ";
     }
     value += this.name;
     return value;

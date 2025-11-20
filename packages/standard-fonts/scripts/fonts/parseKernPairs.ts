@@ -1,4 +1,4 @@
-import { extractLinesFromSection } from './utils';
+import { extractLinesFromSection } from "./utils.ts";
 
 export type IKernPair = [string, string, number];
 
@@ -18,13 +18,13 @@ const parseKernPair = (
   // E.g. 'KPX A G -50'
   line: string,
 ): IKernPair => {
-  const [, firstCharName, secondCharName, kernXAmount] = line.split(' ');
+  const [, firstCharName, secondCharName, kernXAmount] = line.split(" ");
   return [String(firstCharName), String(secondCharName), Number(kernXAmount)];
 };
 
 export const parseKernPairsSection = (data: string): IKernPair[] => {
   return extractLinesFromSection(data, {
-    startAt: 'StartKernPairs',
-    endAt: 'EndKernPairs',
+    startAt: "StartKernPairs",
+    endAt: "EndKernPairs",
   }).map(parseKernPair);
 };

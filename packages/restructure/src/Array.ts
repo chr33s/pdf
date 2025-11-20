@@ -1,15 +1,15 @@
-import type DecodeStream from './DecodeStream';
-import type EncodeStream from './EncodeStream';
-import { Number as NumberT } from './Number';
-import { resolveLength, type LengthLike } from './utils';
+import type DecodeStream from "./DecodeStream.js";
+import type EncodeStream from "./EncodeStream.js";
+import { Number as NumberT } from "./Number.js";
+import { resolveLength, type LengthLike } from "./utils.js";
 
-export type LengthType = 'count' | 'bytes';
+export type LengthType = "count" | "bytes";
 
 export default class ArrayT<T = unknown, TResult = T[]> {
   constructor(
     public type: any,
     public length?: LengthLike,
-    public lengthType: LengthType = 'count',
+    public lengthType: LengthType = "count",
   ) {}
 
   decode(stream: DecodeStream, parent?: any): TResult {
@@ -18,7 +18,7 @@ export default class ArrayT<T = unknown, TResult = T[]> {
     let ctx = parent;
     let length: number | undefined;
 
-    if (typeof this.length !== 'undefined') {
+    if (typeof this.length !== "undefined") {
       length = resolveLength(this.length, stream, parent);
     }
 
@@ -32,9 +32,9 @@ export default class ArrayT<T = unknown, TResult = T[]> {
       ctx = result;
     }
 
-    if (typeof length === 'undefined' || this.lengthType === 'bytes') {
+    if (typeof length === "undefined" || this.lengthType === "bytes") {
       let target: number;
-      if (typeof length === 'number') {
+      if (typeof length === "number") {
         target = stream.pos + length;
       } else if (parent?._length) {
         target = parent._startOffset + parent._length;
@@ -56,7 +56,9 @@ export default class ArrayT<T = unknown, TResult = T[]> {
 
   size(array?: T[], ctx?: any): number {
     if (!array) {
-      return this.type.size(null, ctx) * resolveLength(this.length, undefined, ctx);
+      return (
+        this.type.size(null, ctx) * resolveLength(this.length, undefined, ctx)
+      );
     }
 
     let total = 0;

@@ -1,4 +1,4 @@
-import { Assets } from '../index.ts';
+import { Assets } from "../index.ts";
 
 // @deno-types="../dummy.d.ts"
 import {
@@ -7,7 +7,7 @@ import {
   PDFDocument,
   rgb,
   StandardFonts,
-} from '../../../dist/pdf-lib.esm.js';
+} from "../../../dist/pdf-lib.js";
 
 export default async (assets: Assets) => {
   const { pdfs, images } = assets;
@@ -45,7 +45,7 @@ export default async (assets: Assets) => {
     newPage.setFont(timesRomanFont);
     newPage.setFontSize(fontSize);
 
-    const text = 'This page was interleaved by pdf-lib!';
+    const text = "This page was interleaved by pdf-lib!";
     const textWidth = timesRomanFont.widthOfTextAtSize(text, fontSize);
     const textHeight = timesRomanFont.heightAtSize(fontSize);
 

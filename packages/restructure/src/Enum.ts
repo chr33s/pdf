@@ -1,8 +1,11 @@
-import type DecodeStream from './DecodeStream';
-import type EncodeStream from './EncodeStream';
+import type DecodeStream from "./DecodeStream.js";
+import type EncodeStream from "./EncodeStream.js";
 
 export default class Enum<T = unknown> {
-  constructor(public type: any, public options: T[] = []) {}
+  constructor(
+    public type: any,
+    public options: T[] = [],
+  ) {}
 
   decode(stream: DecodeStream): T {
     const index = this.type.decode(stream);

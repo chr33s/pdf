@@ -1,6 +1,6 @@
-import { PrivateConstructorError } from '../errors';
-import PDFObject from '../objects/PDFObject';
-import { copyStringIntoBuffer } from '../../utils';
+import { PrivateConstructorError } from "../errors";
+import PDFObject from "../objects/PDFObject";
+import { copyStringIntoBuffer } from "../../utils";
 
 const ENFORCER = {};
 const pool = new Map<string, PDFRef>();
@@ -27,7 +27,7 @@ class PDFRef extends PDFObject {
     objectNumber: number,
     generationNumber: number,
   ) {
-    if (enforcer !== ENFORCER) throw new PrivateConstructorError('PDFRef');
+    if (enforcer !== ENFORCER) throw new PrivateConstructorError("PDFRef");
     super();
     this.objectNumber = objectNumber;
     this.generationNumber = generationNumber;

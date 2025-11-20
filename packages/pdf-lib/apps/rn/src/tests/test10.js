@@ -1,4 +1,4 @@
-import { PDFDocument, StandardFonts } from 'pdf-lib';
+import { PDFDocument, StandardFonts } from "pdf-lib";
 
 // prettier-ignore
 const winAnsiCodePoints = [
@@ -30,8 +30,8 @@ const winAnsiCodePoints = [
 ];
 
 const winAnsiString = String.fromCodePoint(...winAnsiCodePoints)
-  .split('')
-  .join(' ');
+  .split("")
+  .join(" ");
 
 // prettier-ignore
 const zapfDingbatsCodePoints = [
@@ -61,8 +61,8 @@ const zapfDingbatsCodePoints = [
 ];
 
 const zapfDingbatsString = String.fromCodePoint(...zapfDingbatsCodePoints)
-  .split('')
-  .join(' ');
+  .split("")
+  .join(" ");
 
 // prettier-ignore
 const symbolCodePoints = [
@@ -91,8 +91,8 @@ const symbolCodePoints = [
 ];
 
 const symbolString = String.fromCodePoint(...symbolCodePoints)
-  .split('')
-  .join(' ');
+  .split("")
+  .join(" ");
 
 const addPageWithFonts = (pdfDoc, text, fontSize, gapAmt, fontNames) => {
   const page = pdfDoc.addPage([650, 700]);
@@ -108,7 +108,7 @@ const addPageWithFonts = (pdfDoc, text, fontSize, gapAmt, fontNames) => {
       x: 650 / 2 - font.widthOfTextAtSize(fontName, fontSize) / 2,
     });
     page.moveTo(0, page.getY() - font.heightAtSize(fontSize) - 10);
-    page.drawText(lines.join('\n'), {
+    page.drawText(lines.join("\n"), {
       font,
       size: fontSize,
       x: 25,
@@ -126,12 +126,12 @@ const breakTextIntoLines = (text, size, font, maxWidth) => {
   const lines = [];
   let textIdx = 0;
   while (textIdx < text.length) {
-    let line = '';
+    let line = "";
     while (textIdx < text.length) {
-      if (text.charAt(textIdx) === '\n') {
+      if (text.charAt(textIdx) === "\n") {
         lines.push(line);
         textIdx += 1;
-        line = '';
+        line = "";
         continue;
       }
       const newLine = line + text.charAt(textIdx);
@@ -150,7 +150,7 @@ export default async () => {
   const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const helveticaBoldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
-  const title = 'Standard 14 Fonts Demo';
+  const title = "Standard 14 Fonts Demo";
   const description = `
         The PDF specification requires that PDF readers provide 14 standard fonts. 
         PDF documents may use these fonts without having to embed the fonts 
@@ -192,7 +192,7 @@ export default async () => {
     x: 650 / 2 - helveticaBoldFont.widthOfTextAtSize(title, 35) / 2,
     lineHeight: 35,
   });
-  titlePage.drawText(descriptionLines.join('\n'), {
+  titlePage.drawText(descriptionLines.join("\n"), {
     font: helveticaFont,
     size: 16,
     y: 525,
@@ -238,15 +238,15 @@ export default async () => {
   page.moveTo(0, 700);
 
   page.moveDown(100);
-  page.drawText('ZapfDingbats', {
+  page.drawText("ZapfDingbats", {
     font: helveticaFont,
     size: zapfDingbatsFontSize,
     x:
       650 / 2 -
-      helveticaFont.widthOfTextAtSize('ZapfDingbats', zapfDingbatsFontSize) / 2,
+      helveticaFont.widthOfTextAtSize("ZapfDingbats", zapfDingbatsFontSize) / 2,
   });
   page.moveDown(zapfDingbatsFont.heightAtSize(zapfDingbatsFontSize) + 10);
-  page.drawText(zapfDingbatsLines.join('\n'), {
+  page.drawText(zapfDingbatsLines.join("\n"), {
     font: zapfDingbatsFont,
     size: zapfDingbatsFontSize,
     x: 25,
@@ -264,13 +264,13 @@ export default async () => {
   );
 
   page.moveDown(275);
-  page.drawText('Symbol', {
+  page.drawText("Symbol", {
     font: helveticaFont,
     size: symbolFontSize,
-    x: 650 / 2 - helveticaFont.widthOfTextAtSize('Symbol', symbolFontSize) / 2,
+    x: 650 / 2 - helveticaFont.widthOfTextAtSize("Symbol", symbolFontSize) / 2,
   });
   page.moveDown(symbolFont.heightAtSize(symbolFontSize) + 10);
-  page.drawText(symbolLines.join('\n'), {
+  page.drawText(symbolLines.join("\n"), {
     font: symbolFont,
     size: symbolFontSize,
     x: 25,

@@ -1,8 +1,8 @@
-import type DecodeStream from './DecodeStream';
-import type EncodeStream from './EncodeStream';
-import { PropertyDescriptor } from './utils';
+import type DecodeStream from "./DecodeStream.js";
+import type EncodeStream from "./EncodeStream.js";
+import { PropertyDescriptor } from "./utils.js";
 
-export type PointerType = 'local' | 'immediate' | 'parent' | 'global';
+export type PointerType = "local" | "immediate" | "parent" | "global";
 
 export interface PointerOptions {
   type?: PointerType;
@@ -13,13 +13,19 @@ export interface PointerOptions {
 }
 
 export class Pointer {
-  public options: Required<Omit<PointerOptions, 'relativeTo'>> & { relativeTo?: string };
+  public options: Required<Omit<PointerOptions, "relativeTo">> & {
+    relativeTo?: string;
+  };
   public type: any;
 
-  constructor(public offsetType: any, type: any, options: PointerOptions = {}) {
-    this.type = type === 'void' ? null : type;
+  constructor(
+    public offsetType: any,
+    type: any,
+    options: PointerOptions = {},
+  ) {
+    this.type = type === "void" ? null : type;
     this.options = {
-      type: 'local',
+      type: "local",
       allowNull: true,
       nullValue: 0,
       lazy: false,
@@ -32,7 +38,11 @@ export class Pointer {
       return 0;
     }
 
-    return this.options.relativeTo.split('.').reduce((obj: any, prop: string) => obj?.[prop], ctx) ?? 0;
+    return (
+      this.options.relativeTo
+        .split(".")
+        .reduce((obj: any, prop: string) => obj?.[prop], ctx) ?? 0
+    );
   }
 
   decode(stream: DecodeStream, ctx: any): any {
@@ -45,13 +55,13 @@ export class Pointer {
     let relative = 0;
 
     switch (this.options.type) {
-      case 'local':
+      case "local":
         relative = ctx?._startOffset ?? 0;
         break;
-      case 'immediate':
+      case "immediate":
         relative = stream.pos - this.offsetType.size();
         break;
-      case 'parent':
+      case "parent":
         relative = ctx?.parent?._startOffset ?? 0;
         break;
       default: {
@@ -99,10 +109,10 @@ export class Pointer {
 
     if (ctx) {
       switch (this.options.type) {
-        case 'local':
-        case 'immediate':
+        case "local":
+        case "immediate":
           break;
-        case 'parent':
+        case "parent":
           ctx = ctx.parent;
           break;
         default:
@@ -115,7 +125,7 @@ export class Pointer {
     let type = this.type;
     if (!type) {
       if (!(val instanceof VoidPointer)) {
-        throw new Error('Must be a VoidPointer');
+        throw new Error("Must be a VoidPointer");
       }
       type = val.type;
       val = val.value;
@@ -139,13 +149,13 @@ export class Pointer {
     let relative: number;
 
     switch (this.options.type) {
-      case 'local':
+      case "local":
         relative = ctx.startOffset;
         break;
-      case 'immediate':
+      case "immediate":
         relative = stream.pos + this.offsetType.size(val, parent);
         break;
-      case 'parent':
+      case "parent":
         ctx = ctx.parent;
         relative = ctx.startOffset;
         break;
@@ -165,7 +175,7 @@ export class Pointer {
     let type = this.type;
     if (!type) {
       if (!(val instanceof VoidPointer)) {
-        throw new Error('Must be a VoidPointer');
+        throw new Error("Must be a VoidPointer");
       }
       type = val.type;
       val = val.value;
@@ -182,5 +192,8 @@ export class Pointer {
 }
 
 export class VoidPointer {
-  constructor(public type: any, public value: any) {}
+  constructor(
+    public type: any,
+    public value: any,
+  ) {}
 }

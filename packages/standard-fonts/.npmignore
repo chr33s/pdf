@@ -1,13 +1,6 @@
-encoding_metrics
-font_metrics
-scripts
-src
+encoding_metrics/
+font_metrics/
+scripts/
 .gitignore
 .npmignore
-.prettierrc.json
-Makefile.js
-rollup.config.js
 tsconfig.json
-tslint.json
-package-lock.json
-*.zip

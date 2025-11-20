@@ -1,9 +1,9 @@
-import { Coordinates } from '../../types';
-import { plus } from '../maths';
+import { Coordinates } from "../../types";
+import { plus } from "../maths";
 
-import GraphElement from './GraphElement';
-import Point from './Point';
-import Segment from './Segment';
+import GraphElement from "./GraphElement";
+import Point from "./Point";
+import Segment from "./Segment";
 export default class Plot extends GraphElement {
   points: Coordinates[];
 

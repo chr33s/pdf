@@ -1,4 +1,4 @@
-import { Assets } from '..';
+import { Assets } from "..";
 import {
   degrees,
   ParseSpeeds,
@@ -6,7 +6,7 @@ import {
   rgb,
   StandardFonts,
   LineCapStyle,
-} from '../../..';
+} from "../../..";
 
 export default async (assets: Assets) => {
   const { pdfs, images } = assets;
@@ -16,11 +16,11 @@ export default async (assets: Assets) => {
     updateMetadata: false,
   });
 
-  await pdfDoc.attach(pdfs.normal_base64, 'tax_form.pdf', {
-    mimeType: 'application/pdf',
-    description: 'D-2210 tax form for 2012 🏦',
-    creationDate: new Date('2004/04/04'),
-    modificationDate: new Date('2005/05/05'),
+  await pdfDoc.attach(pdfs.normal_base64, "tax_form.pdf", {
+    mimeType: "application/pdf",
+    description: "D-2210 tax form for 2012 🏦",
+    creationDate: new Date("2004/04/04"),
+    modificationDate: new Date("2005/05/05"),
   });
 
   const helveticaFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
@@ -51,7 +51,7 @@ export default async (assets: Assets) => {
   const hotPink = rgb(1, 0, 1);
   const red = rgb(1, 0, 0);
 
-  page0.drawText('This is the new first page!', {
+  page0.drawText("This is the new first page!", {
     x: 5,
     y: 200,
     font: helveticaFont,
@@ -70,10 +70,10 @@ export default async (assets: Assets) => {
     y: 30,
   });
 
-  const lastPageText = 'This is the last page!';
+  const lastPageText = "This is the last page!";
   const lastPageTextWidth = helveticaFont.widthOfTextAtSize(lastPageText, 24);
 
-  const page1Text = 'pdf-lib is awesome!';
+  const page1Text = "pdf-lib is awesome!";
   const page1TextWidth = helveticaFont.widthOfTextAtSize(page1Text, 70);
   page1.setFontSize(70);
   page1.drawText(page1Text, {
@@ -86,7 +86,7 @@ export default async (assets: Assets) => {
   });
 
   page5.setFontSize(24);
-  page5.drawText('This is the last page!', {
+  page5.drawText("This is the last page!", {
     x: 30,
     y: 215,
     font: helveticaFont,
@@ -111,18 +111,18 @@ export default async (assets: Assets) => {
     lineCap: LineCapStyle.Round,
   });
 
-  console.log('Title:', pdfDoc.getTitle());
-  console.log('Author:', pdfDoc.getAuthor());
-  console.log('Subject:', pdfDoc.getSubject());
-  console.log('Creator:', pdfDoc.getCreator());
-  console.log('Keywords:', pdfDoc.getKeywords());
-  console.log('Producer:', pdfDoc.getProducer());
-  console.log('Creation Date:', pdfDoc.getCreationDate());
-  console.log('Modification Date:', pdfDoc.getModificationDate());
+  console.log("Title:", pdfDoc.getTitle());
+  console.log("Author:", pdfDoc.getAuthor());
+  console.log("Subject:", pdfDoc.getSubject());
+  console.log("Creator:", pdfDoc.getCreator());
+  console.log("Keywords:", pdfDoc.getKeywords());
+  console.log("Producer:", pdfDoc.getProducer());
+  console.log("Creation Date:", pdfDoc.getCreationDate());
+  console.log("Modification Date:", pdfDoc.getModificationDate());
 
   const base64Pdf = await pdfDoc.saveAsBase64();
 
-  const pdfBytes = Buffer.from(base64Pdf, 'base64');
+  const pdfBytes = Buffer.from(base64Pdf, "base64");
 
   return pdfBytes;
 };

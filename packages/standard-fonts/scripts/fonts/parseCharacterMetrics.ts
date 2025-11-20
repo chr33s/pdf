@@ -3,7 +3,7 @@ import {
   extractLinesFromSection,
   takeAfterFirstSpace,
   takeUntilFirstSpace,
-} from './utils';
+} from "./utils.ts";
 
 export interface ICharMetrics {
   C: number;
@@ -71,7 +71,7 @@ const parseCharMetrics = (
   line: string,
 ): ICharMetrics => {
   const SEMICOLON_WITH_SURROUDING_WHITESPACE = /\s*;\s*/;
-  const NON_EMPTY = (str) => str !== '';
+  const NON_EMPTY = (str) => str !== "";
 
   const metrics = line
     // E.g. ['C 35', 'WX 600', 'N numbersign', 'B 56 -45 544 651', '']
@@ -89,8 +89,8 @@ const parseCharMetrics = (
   // We'll leave out C, B, and L to save space in the resulting JSON
   return {
     // C: metrics.find(byKey('C')).value,
-    WX: metrics.find(byKey('WX')).value,
-    N: metrics.find(byKey('N')).value,
+    WX: metrics.find(byKey("WX")).value,
+    N: metrics.find(byKey("N")).value,
     // B: metrics.find(byKey('B')).value,
     // L: metrics.filter(byKey('L')).map((l) => l.value),
   } as ICharMetrics;
@@ -98,7 +98,7 @@ const parseCharMetrics = (
 
 export const parseCharMetricsSection = (data: string): ICharMetrics[] => {
   return extractLinesFromSection(data, {
-    startAt: 'StartCharMetrics',
-    endAt: 'EndCharMetrics',
+    startAt: "StartCharMetrics",
+    endAt: "EndCharMetrics",
   }).map(parseCharMetrics);
 };

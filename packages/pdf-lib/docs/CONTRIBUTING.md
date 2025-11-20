@@ -94,7 +94,7 @@ If you don't see any errors or warnings, then everything should have worked corr
 
 ## Running the Unit Tests
 
-We use the [Jest](https://jestjs.io/) framework to write unit tests for `pdf-lib`. All unit tests are kept in the [`tests`](./tests) directory.
+We use the [Vitest](https://vitest.dev/) framework to write unit tests for `pdf-lib`. All unit tests are kept in the [`test`](./test) directory.
 
 To run the unit tests, execute the following:
 
@@ -106,19 +106,19 @@ This should output something like:
 
 ```
 yarn run v1.16.0
-$ jest --config jest.json --runInBand
- PASS  tests/api/PDFDocument.spec.ts (13.238s)
- PASS  tests/core/parser/PDFObjectParser.spec.ts
- PASS  tests/core/parser/PDFParser.spec.ts
+$ vitest run
+ DEV  v4.0.12  /path/to/pdf-lib
+ ✓ test/api/PDFDocument.spec.ts (13.23s)
+ ✓ test/core/parser/PDFObjectParser.spec.ts
+ ✓ test/core/parser/PDFParser.spec.ts
  ...
- PASS  tests/core/document/PDFTrailer.spec.ts
- PASS  tests/core/streams/AsciiHexStream.spec.ts
+ ✓ test/core/document/PDFTrailer.spec.ts
+ ✓ test/core/streams/AsciiHexStream.spec.ts
 
-Test Suites: 44 passed, 44 total
-Tests:       380 passed, 380 total
-Snapshots:   0 total
-Time:        22.975s, estimated 39s
-Ran all test suites.
+ Test Files  44 passed (44)
+    Tests  380 passed (380)
+  Duration  23.00s
+
 ✨  Done in 23.66s.
 ```
 
@@ -198,12 +198,7 @@ Flamegraphs are incredibly useful visual tools for troubleshooting performance i
 
 For most development, manual compilation isn't necessary. The scratchpad and unit tests are usually all you need to test your code changes. But manual compilation _is_ necessary prior to running the integration tests or releasing a new version of the code to NPM.
 
-Compiling the project will produce 4 artifacts:
-
-- **`compiled/cjs`** - a directory containing a CommonJS version of the project (uses `require` instead of `import`). This folder contains `.js` and [`.d.ts`](https://stackoverflow.com/a/21247316) files, rather than the `.ts` files that the project source is written in.
-- **`compiled/es`** - a directory containing an ES2015 version of the project (uses `import` instead of `require`). This folder contains `.js` and [`.d.ts`](https://stackoverflow.com/a/21247316) files, rather than the `.ts` files that the project source is written in.
-- **`compiled/dist/pdf-lib.js`** - a single JavaScript file containing a [UMD](https://www.davidbcalhoun.com/2014/what-is-amd-commonjs-and-umd/) version of the project.
-- **`compiled/dist/pdf-lib.min.js`** - a single JavaScript file containing a minified [UMD](https://www.davidbcalhoun.com/2014/what-is-amd-commonjs-and-umd/) version of the project.
+Compiling the project will emit ESM-ready `.js` and `.d.ts` files into the `dist/` directory.
 
 To compile the project, execute the following:
 
@@ -215,21 +210,11 @@ This should output something like the following:
 
 ```
 yarn run v1.16.0
-$ yarn build:cjs && yarn build:es && yarn build:umd && yarn build:umd:min
-$ ttsc --module commonjs --outDir cjs
-$ ttsc --module ES2015 --outDir es
-$ rollup --config rollup.config.js --file dist/pdf-lib.js
-
-es/index.js → dist/pdf-lib.js...
-created dist/pdf-lib.js in 1.5s
-$ rollup --config rollup.config.js --file dist/pdf-lib.min.js --environment MINIFY
-
-es/index.js → dist/pdf-lib.min.js...
-created dist/pdf-lib.min.js in 4s
-✨  Done in 17.34s.
+$ tsc --project tsconfig.json
+✨  Done in 7.42s.
 ```
 
-The compiled artifacts will be located in the `cjs/`, `es/`, and `dist/` directories.
+The compiled artifacts will be located in the `dist/` directory.
 
 ## Running the Linter
 
@@ -251,9 +236,9 @@ This should output something like the following:
 ```
 yarn run v1.16.0
 $ yarn lint:prettier && yarn lint:tslint:src && yarn lint:tslint:tests
-$ prettier --write './{src,tests}/**/*.{ts,js,json}' --loglevel error
+$ prettier --write './{src,test}/**/*.{ts,js,json}' --loglevel error
 $ tslint --project tsconfig.json --fix
-$ tslint --project tests/tsconfig.json --fix
+$ tslint --project test/tsconfig.json --fix
 ✨  Done in 7.89s.
 ```
 

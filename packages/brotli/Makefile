@@ -1,21 +1,17 @@
 CPP = emcc
-CPPFLAGS = -O3 -s TOTAL_MEMORY=318767104 -s NO_FILESYSTEM=1 -s NO_BROWSER=1 --closure 1 --llvm-lto 1 --pre-js enc/pre.js
+CPPFLAGS = -O3 -s INITIAL_MEMORY=318767104 -s FILESYSTEM=0 -s ENVIRONMENT=node -s EXPORT_ES6=1 -s MODULARIZE=instance --pre-js src/enc/pre.ts
 
 COMMONDIR = vendor/brotli/common
 ENCDIR = vendor/brotli/enc
-ENCSRC = enc/encode.c $(wildcard $(COMMONDIR)/*.c) $(wildcard $(ENCDIR)/*.c)
+ENCSRC = src/enc/encode.c $(wildcard $(COMMONDIR)/*.c) $(wildcard $(ENCDIR)/*.c)
 ENCOBJ = $(ENCSRC:.c=.o)
 
-all: build/encode.js
+all: build
 
 .c.o .cc.o:
 	$(CPP) -I vendor/brotli/include -c $< -o $@
-		
-build/encode.js: enc/pre.js $(ENCOBJ)
-	mkdir -p build/
-	$(CPP) $(CPPFLAGS) -s EXPORTED_FUNCTIONS="['_encode']" -s EXPORTED_RUNTIME_METHODS="['malloc', 'free']" $(ENCOBJ) -o build/encode.js
-	bro --input build/encode.js.mem | base64 | awk '{print "module.exports=\""$$1"\";"}' > build/mem.js
-	rm build/encode.js.mem
-	
-clean:
-	rm -rf $(ENCOBJ) build/
+
+build: src/enc/pre.ts $(ENCOBJ)
+	$(CPP) $(CPPFLAGS) -s EXPORTED_FUNCTIONS="['_encode', '_malloc', '_free']" $(ENCOBJ) -o src/enc/encode.js
+	node scripts/generate-mem.ts src/enc/encode.wasm src/enc/mem.js
+	rm src/enc/encode.wasm

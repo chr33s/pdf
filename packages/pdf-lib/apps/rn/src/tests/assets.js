@@ -1,12 +1,12 @@
-import RNFetchBlob from 'rn-fetch-blob';
-import { encodeToBase64, decodeFromBase64 } from 'pdf-lib';
+import RNFetchBlob from "rn-fetch-blob";
+import { encodeToBase64, decodeFromBase64 } from "pdf-lib";
 
 const PDF_PATH = `${RNFetchBlob.fs.dirs.DocumentDir}/out.pdf`;
 
 export const writePdf = async (pdfBytes, chunkSize = 100000) =>
   new Promise((resolve) => {
     const writes = [];
-    RNFetchBlob.fs.writeStream(PDF_PATH, 'base64').then((stream) => {
+    RNFetchBlob.fs.writeStream(PDF_PATH, "base64").then((stream) => {
       // Iterate through pdfBytes encoding chunks into base64 and writing them out
       for (let i = 0; i < pdfBytes.length; i += chunkSize) {
         const chunk = pdfBytes.subarray(i, i + chunkSize);
@@ -19,9 +19,9 @@ export const writePdf = async (pdfBytes, chunkSize = 100000) =>
 
 export const fetchAsset = async (path) => {
   const res = await RNFetchBlob.config({ fileCache: false }).fetch(
-    'GET',
+    "GET",
     `http://localhost:8080/assets/${encodeURI(path)}`,
-    { 'Cache-Control': 'no-store' },
+    { "Cache-Control": "no-store" },
   );
   return res.base64();
 };
@@ -30,18 +30,18 @@ export const fetchAsset = async (path) => {
 //       primarily for demonstration purposes.
 export const fetchLargeAsset = async (path) => {
   const res = await RNFetchBlob.config({ fileCache: true }).fetch(
-    'GET',
+    "GET",
     `http://localhost:8080/assets/${path}`,
-    { 'Cache-Control': 'no-store' },
+    { "Cache-Control": "no-store" },
   );
 
   const { headers } = res.respInfo;
-  const contentLength = headers['Content-Length'] || headers['content-length'];
-  if (contentLength === undefined) throw new Error('WUHHH');
+  const contentLength = headers["Content-Length"] || headers["content-length"];
+  if (contentLength === undefined) throw new Error("WUHHH");
   const buffer = new Uint8Array(contentLength);
   let offset = 0;
 
-  const stream = await res.readStream('base64');
+  const stream = await res.readStream("base64");
 
   stream.open();
 

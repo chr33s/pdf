@@ -6,14 +6,14 @@ import {
   vector,
   plus,
   times,
-} from '../maths';
+} from "../maths";
 
-import GraphElement from './GraphElement';
-import Line from './Line';
-import Point from './Point';
+import GraphElement from "./GraphElement";
+import Line from "./Line";
+import Point from "./Point";
 
 export default class Segment extends GraphElement {
-  static type = 'Segment';
+  static type = "Segment";
   A: Point;
   B: Point;
   constructor(A: Point = new Point(), B: Point = new Point()) {

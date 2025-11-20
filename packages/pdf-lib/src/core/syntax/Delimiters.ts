@@ -1,4 +1,4 @@
-import CharCodes from './CharCodes';
+import CharCodes from "./CharCodes";
 
 export const IsDelimiter = new Uint8Array(256);
 

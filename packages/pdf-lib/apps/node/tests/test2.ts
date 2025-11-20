@@ -1,6 +1,6 @@
-import fontkit from '@chr33s/fontkit';
-import { Assets } from '..';
-import { ParseSpeeds, PDFDocument, rgb } from '../../..';
+import fontkit from "@chr33s/fontkit";
+import { Assets } from "..";
+import { ParseSpeeds, PDFDocument, rgb } from "../../..";
 
 // This test loads an existing PDF document with many pages.
 // It inserts data for every page (images, rectangles, texts, embedded PDFs).
@@ -43,9 +43,9 @@ export default async (assets: Assets) => {
   const embeddedPageDims = embeddedPage.scale(0.5);
 
   const lines = [
-    'This is an image of Mario running.',
-    'This image and text was drawn on',
-    'top of an existing PDF using pdf-lib!',
+    "This is an image of Mario running.",
+    "This image and text was drawn on",
+    "top of an existing PDF using pdf-lib!",
   ];
   const fontSize = 24;
   const solarizedWhite = rgb(253 / 255, 246 / 255, 227 / 255);
@@ -75,7 +75,7 @@ export default async (assets: Assets) => {
     });
     page.setFont(ubuntuFont);
     page.setFontColor(solarizedGray);
-    page.drawText(lines.join('\n'), {
+    page.drawText(lines.join("\n"), {
       x: centerX - textWidth / 2,
       y: centerY - 15,
     });
@@ -101,14 +101,14 @@ export default async (assets: Assets) => {
   // These will all be undefined since the source document's metadata is
   // stored in a metadata stream, not the more widely used info dictionary.
   // pdf-lib does not currently support reading metadata streams.
-  console.log('Title:', pdfDoc.getTitle());
-  console.log('Author:', pdfDoc.getAuthor());
-  console.log('Subject:', pdfDoc.getSubject());
-  console.log('Creator:', pdfDoc.getCreator());
-  console.log('Keywords:', pdfDoc.getKeywords());
-  console.log('Producer:', pdfDoc.getProducer());
-  console.log('Creation Date:', pdfDoc.getCreationDate());
-  console.log('Modification Date:', pdfDoc.getModificationDate());
+  console.log("Title:", pdfDoc.getTitle());
+  console.log("Author:", pdfDoc.getAuthor());
+  console.log("Subject:", pdfDoc.getSubject());
+  console.log("Creator:", pdfDoc.getCreator());
+  console.log("Keywords:", pdfDoc.getKeywords());
+  console.log("Producer:", pdfDoc.getProducer());
+  console.log("Creation Date:", pdfDoc.getCreationDate());
+  console.log("Modification Date:", pdfDoc.getModificationDate());
 
   const pdfBytes = await pdfDoc.save();
   return pdfBytes;

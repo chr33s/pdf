@@ -1,5 +1,5 @@
-import PDFRef from '../objects/PDFRef';
-import PDFContext from '../PDFContext';
+import PDFRef from "../objects/PDFRef";
+import PDFContext from "../PDFContext";
 
 // prettier-ignore
 const MARKERS = [
@@ -11,9 +11,9 @@ const MARKERS = [
 ];
 
 enum ColorSpace {
-  DeviceGray = 'DeviceGray',
-  DeviceRGB = 'DeviceRGB',
-  DeviceCMYK = 'DeviceCMYK',
+  DeviceGray = "DeviceGray",
+  DeviceRGB = "DeviceRGB",
+  DeviceCMYK = "DeviceCMYK",
 }
 
 const ChannelToColorSpace: { [idx: number]: ColorSpace | undefined } = {
@@ -36,7 +36,7 @@ class JpegEmbedder {
     );
 
     const soi = dataView.getUint16(0);
-    if (soi !== 0xffd8) throw new Error('SOI not found in JPEG');
+    if (soi !== 0xffd8) throw new Error("SOI not found in JPEG");
 
     let pos = 2;
     let marker: number;
@@ -48,7 +48,7 @@ class JpegEmbedder {
       pos += dataView.getUint16(pos);
     }
 
-    if (!MARKERS.includes(marker!)) throw new Error('Invalid JPEG');
+    if (!MARKERS.includes(marker!)) throw new Error("Invalid JPEG");
     pos += 2;
 
     const bitsPerComponent = dataView.getUint8(pos++);
@@ -61,7 +61,7 @@ class JpegEmbedder {
     const channelByte = dataView.getUint8(pos++);
     const channelName = ChannelToColorSpace[channelByte];
 
-    if (!channelName) throw new Error('Unknown JPEG channel.');
+    if (!channelName) throw new Error("Unknown JPEG channel.");
 
     const colorSpace = channelName;
 
@@ -97,13 +97,13 @@ class JpegEmbedder {
 
   async embedIntoContext(context: PDFContext, ref?: PDFRef): Promise<PDFRef> {
     const xObject = context.stream(this.imageData, {
-      Type: 'XObject',
-      Subtype: 'Image',
+      Type: "XObject",
+      Subtype: "Image",
       BitsPerComponent: this.bitsPerComponent,
       Width: this.width,
       Height: this.height,
       ColorSpace: this.colorSpace,
-      Filter: 'DCTDecode',
+      Filter: "DCTDecode",
 
       // CMYK JPEG streams in PDF are typically stored complemented,
       // with 1 as 'off' and 0 as 'on' (PDF 32000-1:2008, 8.6.4.4).

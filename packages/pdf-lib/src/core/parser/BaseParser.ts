@@ -1,9 +1,9 @@
-import { NumberParsingError } from '../errors';
-import ByteStream from '../parser/ByteStream';
-import CharCodes from '../syntax/CharCodes';
-import { IsDigit, IsNumeric } from '../syntax/Numeric';
-import { IsWhitespace } from '../syntax/Whitespace';
-import { charFromCode } from '../../utils';
+import { NumberParsingError } from "../errors";
+import ByteStream from "../parser/ByteStream";
+import CharCodes from "../syntax/CharCodes";
+import { IsDigit, IsNumeric } from "../syntax/Numeric";
+import { IsWhitespace } from "../syntax/Whitespace";
+import { charFromCode } from "../../utils";
 
 const { Newline, CarriageReturn } = CharCodes;
 
@@ -18,7 +18,7 @@ class BaseParser {
   }
 
   protected parseRawInt(): number {
-    let value = '';
+    let value = "";
 
     while (!this.bytes.done()) {
       const byte = this.bytes.peek();
@@ -38,7 +38,7 @@ class BaseParser {
   // TODO: Maybe handle exponential format?
   // TODO: Compare performance of string concatenation to charFromCode(...bytes)
   protected parseRawNumber(): number {
-    let value = '';
+    let value = "";
 
     // Parse integer-part, the leading (+ | - | . | 0-9)
     while (!this.bytes.done()) {

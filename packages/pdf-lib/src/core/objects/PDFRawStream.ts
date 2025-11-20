@@ -1,8 +1,8 @@
-import PDFDict from './PDFDict';
-import PDFStream from './PDFStream';
-import PDFContext from '../PDFContext';
-import { arrayAsString } from '../../utils';
-import { CipherTransform } from '../crypto';
+import PDFDict from "./PDFDict";
+import PDFStream from "./PDFStream";
+import PDFContext from "../PDFContext";
+import { arrayAsString } from "../../utils";
+import { CipherTransform } from "../crypto";
 
 class PDFRawStream extends PDFStream {
   static of = (

@@ -9,8 +9,8 @@ import {
   closePath,
   lineTo,
   moveTo,
-} from './operators';
-import { PDFOperator } from '../core';
+} from "./operators";
+import { PDFOperator } from "../core";
 
 let cx: number = 0;
 let cy: number = 0;
@@ -20,26 +20,26 @@ let sx: number = 0;
 let sy: number = 0;
 
 const parameters = new Map<string, number>([
-  ['A', 7],
-  ['a', 7],
-  ['C', 6],
-  ['c', 6],
-  ['H', 1],
-  ['h', 1],
-  ['L', 2],
-  ['l', 2],
-  ['M', 2],
-  ['m', 2],
-  ['Q', 4],
-  ['q', 4],
-  ['S', 4],
-  ['s', 4],
-  ['T', 2],
-  ['t', 2],
-  ['V', 1],
-  ['v', 1],
-  ['Z', 0],
-  ['z', 0],
+  ["A", 7],
+  ["a", 7],
+  ["C", 6],
+  ["c", 6],
+  ["H", 1],
+  ["h", 1],
+  ["L", 2],
+  ["l", 2],
+  ["M", 2],
+  ["m", 2],
+  ["Q", 4],
+  ["q", 4],
+  ["S", 4],
+  ["s", 4],
+  ["T", 2],
+  ["t", 2],
+  ["V", 1],
+  ["v", 1],
+  ["Z", 0],
+  ["z", 0],
 ]);
 
 interface Cmd {
@@ -51,7 +51,7 @@ const parse = (path: string) => {
   let cmd;
   const ret: Cmd[] = [];
   let args: number[] = [];
-  let curArg = '';
+  let curArg = "";
   let foundDecimal = false;
   let params = 0;
 
@@ -66,15 +66,15 @@ const parse = (path: string) => {
         ret[ret.length] = { cmd, args };
 
         args = [];
-        curArg = '';
+        curArg = "";
         foundDecimal = false;
       }
 
       cmd = c;
     } else if (
-      [' ', ','].includes(c) ||
-      (c === '-' && curArg.length > 0 && curArg[curArg.length - 1] !== 'e') ||
-      (c === '.' && foundDecimal)
+      [" ", ","].includes(c) ||
+      (c === "-" && curArg.length > 0 && curArg[curArg.length - 1] !== "e") ||
+      (c === "." && foundDecimal)
     ) {
       if (curArg.length === 0) {
         continue;
@@ -86,23 +86,23 @@ const parse = (path: string) => {
         args = [+curArg];
 
         // handle assumed commands
-        if (cmd === 'M') {
-          cmd = 'L';
+        if (cmd === "M") {
+          cmd = "L";
         }
-        if (cmd === 'm') {
-          cmd = 'l';
+        if (cmd === "m") {
+          cmd = "l";
         }
       } else {
         args[args.length] = +curArg;
       }
 
-      foundDecimal = c === '.';
+      foundDecimal = c === ".";
 
       // fix for negative numbers or repeated decimals with no delimeter between commands
-      curArg = ['-', '.'].includes(c) ? c : '';
+      curArg = ["-", "."].includes(c) ? c : "";
     } else {
       curArg += c;
-      if (c === '.') {
+      if (c === ".") {
         foundDecimal = true;
       }
     }
@@ -116,11 +116,11 @@ const parse = (path: string) => {
       args = [+curArg];
 
       // handle assumed commands
-      if (cmd === 'M') {
-        cmd = 'L';
+      if (cmd === "M") {
+        cmd = "L";
       }
-      if (cmd === 'm') {
-        cmd = 'l';
+      if (cmd === "m") {
+        cmd = "l";
       }
     } else {
       args[args.length] = +curArg;
@@ -140,7 +140,7 @@ const apply = (commands: Cmd[]) => {
   let cmds: PDFOperator[] = [];
   for (let i = 0; i < commands.length; i++) {
     const c = commands[i];
-    if (c.cmd && typeof runners[c.cmd] === 'function') {
+    if (c.cmd && typeof runners[c.cmd] === "function") {
       const cmd = runners[c.cmd](c.args);
       if (Array.isArray(cmd)) {
         cmds = cmds.concat(cmd);

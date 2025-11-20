@@ -53,26 +53,8 @@ yarn add @chr33s/standard-fonts
 ```
 This assumes you're using [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/lang/en/) as your package manager.
 
-### UMD Module
-You can also download `@chr33s/standard-fonts` as a UMD module from [unpkg](https://unpkg.com/#/). The UMD builds have been compiled to ES5, so they should work [in any modern browser](https://caniuse.com/#feat=es5). UMD builds are useful if you aren't using a package manager or module bundler. For example, you can use them directly in the `<script>` tag of an HTML page.
-
-The following builds are available:
-
-* https://unpkg.com/@chr33s/standard-fonts/dist/standard-fonts.js
-* https://unpkg.com/@chr33s/standard-fonts/dist/standard-fonts.min.js
-
-When using a UMD build, you will have access to a global `window.StandardFonts` variable. This variable contains the classes and enums exported by `@chr33s/standard-fonts`. For example:
-
-```javascript
-// NPM module
-import { Font, FontNames, Encodings } from '@chr33s/standard-fonts';
-const font = Font.load(FontNames.HelveticaBold);
-const encoding = Encodings.WinAnsi;
-
-// UMD module
-var font = StandardFonts.Font.load(StandardFonts.FontNames.HelveticaBold);
-var encoding = StandardFonts.Encodings.WinAnsi;
-```
+### ESM Build
+`@chr33s/standard-fonts` now ships only native ES modules compiled from the TypeScript sources. The published entry point is `dist/index.js`, which also ships bundled type declarations in `dist/index.d.ts`. Use Node 18+ or a modern bundler (Vite, Rollup, Webpack, etc.) to consume the package, and bundle it for browsers as needed.
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)

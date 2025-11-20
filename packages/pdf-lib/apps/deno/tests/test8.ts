@@ -1,4 +1,4 @@
-import { Assets } from '../index.ts';
+import { Assets } from "../index.ts";
 
 // @deno-types="../dummy.d.ts"
 import {
@@ -7,7 +7,7 @@ import {
   PDFPage,
   rgb,
   StandardFonts,
-} from '../../../dist/pdf-lib.esm.js';
+} from "../../../dist/pdf-lib.js";
 
 export default async (assets: Assets) => {
   const { pdfs } = assets;
@@ -24,7 +24,7 @@ export default async (assets: Assets) => {
   const [firstPage] = pages;
 
   const { width, height } = firstPage.getSize();
-  const text = 'pdf-lib is awesome!';
+  const text = "pdf-lib is awesome!";
   const textWidth = helveticaFont.widthOfTextAtSize(text, 75);
   firstPage.moveTo(width / 2 - textWidth / 2, height - 100);
   firstPage.setFont(helveticaFont);
