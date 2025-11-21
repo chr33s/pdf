@@ -1,4 +1,4 @@
-import { Assets } from "../index.ts";
+import { Assets } from "../index.js";
 
 // @deno-types="../dummy.d.ts"
 import {
@@ -13,7 +13,7 @@ import {
 } from "../../../dist/pdf-lib.js";
 
 // import { Assets } from '..';
-// import { PageSizes, PDFDocument, BlendMode, cmyk, degrees, rgb } from '../../..';
+// import { PageSizes, PDFDocument, BlendMode, cmyk, degrees, rgb } from '../../...js';
 
 const inchToPt = (inches: number) => Math.round(inches * 72);
 

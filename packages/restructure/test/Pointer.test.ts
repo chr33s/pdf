@@ -6,8 +6,8 @@ import {
   Struct,
   VoidPointer,
   uint8,
-} from "../src";
-import { expectStream } from "./helpers";
+} from "../src/index.js";
+import { expectStream } from "./helpers.js";
 
 describe("Pointer", () => {
   describe("decode", () => {

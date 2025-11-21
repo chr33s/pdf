@@ -1,7 +1,7 @@
 import { PDFDocument } from "pdf-lib";
 import fontkit from "@chr33s/fontkit";
 
-import { fetchAsset } from "./assets";
+import { fetchAsset } from "./assets.js";
 
 // Based on test14.ts
 const loadA = async (assets) => {

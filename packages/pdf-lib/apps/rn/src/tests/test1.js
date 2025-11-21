@@ -22,7 +22,7 @@ import {
   AFRelationship,
 } from "pdf-lib";
 
-import { fetchAsset } from "./assets";
+import { fetchAsset } from "./assets.js";
 
 const ipsumLines = [
   "Eligendi est pariatur quidem in non excepturi et.",

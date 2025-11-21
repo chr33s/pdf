@@ -1,4 +1,4 @@
-import PDFImage from "./PDFImage";
+import PDFImage from "./PDFImage.js";
 
 export default class PDFSvg {
   svg: string;

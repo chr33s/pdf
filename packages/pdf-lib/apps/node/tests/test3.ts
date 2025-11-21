@@ -6,7 +6,7 @@ import {
   rgb,
   StandardFonts,
   LineCapStyle,
-} from "../../..";
+} from "../../...js";
 
 export default async (assets: Assets) => {
   const { pdfs, images } = assets;

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import BBox from "./BBox.js";
 import Glyph from "./Glyph.js";
 

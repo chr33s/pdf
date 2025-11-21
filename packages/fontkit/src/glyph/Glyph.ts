@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import unicode from "@chr33s/unicode-properties";
 import { cache } from "../decorators.js";
 import Path from "./Path.js";

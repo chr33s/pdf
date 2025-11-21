@@ -1,16 +1,16 @@
-import PDFObject from "./PDFObject";
-import CharCodes from "../syntax/CharCodes";
 import {
+  byteArrayToHexString,
   copyStringIntoBuffer,
+  hasUtf16BOM,
+  parseDate,
+  pdfDocEncodingDecode,
   toHexStringOfMinLength,
   utf16Decode,
   utf16Encode,
-  pdfDocEncodingDecode,
-  parseDate,
-  hasUtf16BOM,
-  byteArrayToHexString,
-} from "../../utils";
-import { InvalidPDFDateStringError } from "../errors";
+} from "../../utils/index.js";
+import { InvalidPDFDateStringError } from "../errors.js";
+import CharCodes from "../syntax/CharCodes.js";
+import PDFObject from "./PDFObject.js";
 
 class PDFHexString extends PDFObject {
   static of = (value: string) => new PDFHexString(value);

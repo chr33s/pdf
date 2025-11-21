@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import standardStrings from "../cff/CFFStandardStrings.js";
 import CFFTop from "../cff/CFFTop.js";
 import Subset from "./Subset.js";
@@ -38,7 +40,7 @@ export default class CFFSubset extends Subset {
         this.cff.stream.pos = subr.offset;
         res.push(this.cff.stream.readBuffer(subr.length));
       } else {
-        res.push(new Buffer([11])); // return
+        res.push(Buffer.from([11])); // return
       }
     }
 

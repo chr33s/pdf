@@ -1,5 +1,11 @@
 import fs from "fs";
-import { PDFArray, PDFDocument, PDFName, StandardFonts } from "../../src/index";
+import { describe, expect, it } from "vitest";
+import {
+  PDFArray,
+  PDFDocument,
+  PDFName,
+  StandardFonts,
+} from "../../src/index.js";
 
 const birdPng = fs.readFileSync("assets/images/greyscale_bird.png");
 

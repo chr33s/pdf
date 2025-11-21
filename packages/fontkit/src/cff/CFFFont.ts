@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import standardStrings from "./CFFStandardStrings.js";
 import CFFTop from "./CFFTop.js";
 

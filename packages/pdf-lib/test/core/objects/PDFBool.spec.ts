@@ -1,5 +1,6 @@
-import { PDFBool, PrivateConstructorError } from "../../../src/core";
-import { toCharCode, typedArrayFor } from "../../../src/utils";
+import { describe, expect, it } from "vitest";
+import { PDFBool, PrivateConstructorError } from "../../../src/core/index.js";
+import { toCharCode, typedArrayFor } from "../../../src/utils/index.js";
 
 describe("PDFBool", () => {
   it("cannot be publicly constructed", () => {

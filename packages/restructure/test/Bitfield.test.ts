@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { Bitfield, DecodeStream, EncodeStream, uint8 } from "../src";
-import { expectStream } from "./helpers";
+import { Bitfield, DecodeStream, EncodeStream, uint8 } from "../src/index.js";
+import { expectStream } from "./helpers.js";
 
 describe("Bitfield", () => {
   const bitfield = new Bitfield(uint8, [

@@ -1,48 +1,53 @@
-import { Color, setFillingColor, setStrokingColor } from "./colors";
 import {
+  PDFHexString,
+  PDFName,
+  PDFNumber,
+  PDFOperator,
+} from "../core/index.js";
+import type { Space, TransformationMatrix } from "../types/index.js";
+import { identityMatrix } from "../types/matrix.js";
+import { Color, setFillingColor, setStrokingColor } from "./colors.js";
+import { asNumber } from "./objects.js";
+import {
+  FillRule,
+  LineCapStyle,
+  TextRenderingMode,
+  beginMarkedContent,
   beginText,
+  clip,
   closePath,
+  concatTransformationMatrix,
   drawObject,
+  endMarkedContent,
+  endPath,
   endText,
   fill,
   fillAndStroke,
+  fillEvenOdd,
   lineTo,
   moveTo,
   nextLine,
   popGraphicsState,
   pushGraphicsState,
   rotateAndSkewTextRadiansAndTranslate,
+  rotateDegrees,
   rotateRadians,
   scale,
+  setDashPattern,
   setFontAndSize,
+  setGraphicsState,
+  setLineCap,
   setLineHeight,
   setLineWidth,
+  setTextRenderingMode,
   showText,
   skewRadians,
   stroke,
   translate,
-  LineCapStyle,
-  setLineCap,
-  rotateDegrees,
-  setGraphicsState,
-  setDashPattern,
-  beginMarkedContent,
-  endMarkedContent,
-  clip,
-  endPath,
-  FillRule,
-  fillEvenOdd,
-  concatTransformationMatrix,
-  TextRenderingMode,
-  setTextRenderingMode,
-} from "./operators";
-import { Rotation, degrees, toDegrees, toRadians } from "./rotations";
-import { svgPathToOperators } from "./svgPath";
-import { PDFHexString, PDFName, PDFNumber, PDFOperator } from "../core";
-import { asNumber } from "./objects";
-import type { Space, TransformationMatrix } from "../types";
-import { transformationToMatrix, combineMatrix } from "./svg";
-import { identityMatrix } from "../types/matrix";
+} from "./operators.js";
+import { Rotation, degrees, toDegrees, toRadians } from "./rotations.js";
+import { combineMatrix, transformationToMatrix } from "./svg.js";
+import { svgPathToOperators } from "./svgPath.js";
 
 export interface DrawTextOptions {
   color: Color;
@@ -109,7 +114,7 @@ export const drawLinesOfText = (
     pushGraphicsState(),
     options.graphicsState && setGraphicsState(options.graphicsState),
     ...(options.clipSpaces ? clipSpaces(options.clipSpaces) : []),
-    options.matrix && concatTransformationMatrix(...options.matrix),
+    ...(options.matrix ? [concatTransformationMatrix(...options.matrix)] : []),
     beginText(),
     setFillingColor(options.color),
     setFontAndSize(options.font, options.size),
@@ -153,7 +158,7 @@ export const drawImage = (
     pushGraphicsState(),
     options.graphicsState && setGraphicsState(options.graphicsState),
     ...(options.clipSpaces ? clipSpaces(options.clipSpaces) : []),
-    options.matrix && concatTransformationMatrix(...options.matrix),
+    ...(options.matrix ? [concatTransformationMatrix(...options.matrix)] : []),
     translate(options.x, options.y),
     rotateRadians(toRadians(options.rotate)),
     scale(options.width, options.height),
@@ -202,7 +207,7 @@ export const drawLine = (options: {
     pushGraphicsState(),
     options.graphicsState && setGraphicsState(options.graphicsState),
     ...(options.clipSpaces ? clipSpaces(options.clipSpaces) : []),
-    options.matrix && concatTransformationMatrix(...options.matrix),
+    ...(options.matrix ? [concatTransformationMatrix(...options.matrix)] : []),
     options.color && setStrokingColor(options.color),
     setLineWidth(options.thickness),
     setDashPattern(options.dashArray ?? [], options.dashPhase ?? 0),
@@ -391,7 +396,7 @@ export const drawSvgPath = (
     pushGraphicsState(),
     options.graphicsState && setGraphicsState(options.graphicsState),
     ...(options.clipSpaces ? clipSpaces(options.clipSpaces) : []),
-    options.matrix && concatTransformationMatrix(...options.matrix),
+    ...(options.matrix ? [concatTransformationMatrix(...options.matrix)] : []),
 
     translate(options.x, options.y),
     rotateRadians(toRadians(options.rotate ?? degrees(0))),

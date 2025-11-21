@@ -1,5 +1,7 @@
-import { PDFString } from "../../../src/core";
-import { toCharCode, typedArrayFor } from "../../../src/utils";
+import { describe, expect, it } from "vitest";
+
+import { PDFString } from "../../../src/core/index.js";
+import { toCharCode, typedArrayFor } from "../../../src/utils/index.js";
 
 describe("PDFString", () => {
   it("can be constructed from PDFString.of(...)", () => {

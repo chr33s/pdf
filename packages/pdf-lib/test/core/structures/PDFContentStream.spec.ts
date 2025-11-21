@@ -1,21 +1,22 @@
 import pako from "pako";
+import { describe, expect, it } from "vitest";
 
 import {
   mergeIntoTypedArray,
   moveText,
+  PDFOperatorNames as Ops,
   PDFContentStream,
   PDFContext,
   PDFDict,
   PDFName,
   PDFNumber,
   PDFOperator,
-  PDFOperatorNames as Ops,
   PDFString,
   popGraphicsState,
   pushGraphicsState,
   toCharCode,
   typedArrayFor,
-} from "../../../src/index";
+} from "../../../src/index.js";
 
 describe("PDFContentStream", () => {
   const context = PDFContext.create();

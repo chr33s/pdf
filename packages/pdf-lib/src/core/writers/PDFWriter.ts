@@ -1,16 +1,16 @@
-import PDFCrossRefSection from "../document/PDFCrossRefSection";
-import PDFHeader from "../document/PDFHeader";
-import PDFTrailer from "../document/PDFTrailer";
-import PDFTrailerDict from "../document/PDFTrailerDict";
-import PDFDict from "../objects/PDFDict";
-import PDFObject from "../objects/PDFObject";
-import PDFRef from "../objects/PDFRef";
-import PDFStream from "../objects/PDFStream";
-import PDFContext from "../PDFContext";
-import PDFObjectStream from "../structures/PDFObjectStream";
-import PDFSecurity from "../security/PDFSecurity";
-import CharCodes from "../syntax/CharCodes";
-import { copyStringIntoBuffer, waitForTick } from "../../utils";
+import { copyStringIntoBuffer, waitForTick } from "../../utils/index.js";
+import PDFCrossRefSection from "../document/PDFCrossRefSection.js";
+import PDFHeader from "../document/PDFHeader.js";
+import PDFTrailer from "../document/PDFTrailer.js";
+import PDFTrailerDict from "../document/PDFTrailerDict.js";
+import PDFDict from "../objects/PDFDict.js";
+import PDFObject from "../objects/PDFObject.js";
+import PDFRef from "../objects/PDFRef.js";
+import PDFStream from "../objects/PDFStream.js";
+import PDFContext from "../PDFContext.js";
+import PDFSecurity from "../security/PDFSecurity.js";
+import PDFObjectStream from "../structures/PDFObjectStream.js";
+import CharCodes from "../syntax/CharCodes.js";
 
 export interface SerializationInfo {
   size: number;

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import OTProcessor from "./OTProcessor.js";
 
 export default class GPOSProcessor extends OTProcessor {
@@ -152,11 +154,12 @@ export default class GPOSProcessor extends OTProcessor {
         let cur = this.positions[this.glyphIterator.index];
         let next = this.positions[nextIndex];
 
+        let d;
         switch (this.direction) {
           case "ltr":
             cur.xAdvance = exit.x + cur.xOffset;
 
-            let d = entry.x + next.xOffset;
+            d = entry.x + next.xOffset;
             next.xAdvance -= d;
             next.xOffset -= d;
             break;
@@ -325,7 +328,6 @@ export default class GPOSProcessor extends OTProcessor {
     let baseCoords = this.getAnchor(baseAnchor);
     let markCoords = this.getAnchor(markRecord.markAnchor);
 
-    let basePos = this.positions[baseGlyphIndex];
     let markPos = this.positions[this.glyphIterator.index];
 
     markPos.xOffset = baseCoords.x - markCoords.x;

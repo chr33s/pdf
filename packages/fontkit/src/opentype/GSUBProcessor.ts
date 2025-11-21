@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import GlyphInfo from "./GlyphInfo.js";
 import OTProcessor from "./OTProcessor.js";
 

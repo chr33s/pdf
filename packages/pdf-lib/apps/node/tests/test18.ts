@@ -1,5 +1,5 @@
 import { Assets } from "..";
-import { PDFDocument } from "../../..";
+import { PDFDocument } from "../../...js";
 
 import fontkit from "@chr33s/fontkit";
 

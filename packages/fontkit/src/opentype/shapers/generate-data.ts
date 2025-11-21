@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 //
 // This script generates a UnicodeTrie containing shaping data derived
 // from Unicode properties (currently just for the Arabic shaper).

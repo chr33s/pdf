@@ -1,5 +1,6 @@
 import fs from "fs";
-import { decodeFromBase64DataUri } from "../../src/utils";
+import { describe, expect, it } from "vitest";
+import { decodeFromBase64DataUri } from "../../src/utils/index.js";
 
 const pdfBytes = fs.readFileSync(new URL("./data/simple.pdf", import.meta.url));
 const pdfBase64Bytes = fs.readFileSync(

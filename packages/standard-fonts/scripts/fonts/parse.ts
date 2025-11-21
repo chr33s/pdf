@@ -35,11 +35,16 @@ const getAfmFilePaths = async () => {
   return afmFiles.map((name) => `${parentDir}/font_metrics/${name}`);
 };
 
+const textEncoder = new TextEncoder();
+
 const compressJson = (json: string) => {
-  const jsonBytes = json.split("").map((c) => c.charCodeAt(0));
-  const base64DeflatedJson = JSON.stringify(
-    base64.encode(pako.deflate(jsonBytes)),
+  const jsonBytes = textEncoder.encode(json);
+  const compressed = pako.deflate(jsonBytes);
+  const arrBuf = compressed.buffer.slice(
+    compressed.byteOffset,
+    compressed.byteOffset + compressed.byteLength,
   );
+  const base64DeflatedJson = JSON.stringify(base64.encode(arrBuf));
   return base64DeflatedJson;
 };
 

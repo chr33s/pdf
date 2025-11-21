@@ -20,8 +20,12 @@ import {
   PDFRef,
   PDFStream,
   PDFWidgetAnnotation,
-} from "../../core.js";
-import { assertIs, assertOrUndefined, assertPositive } from "../../utils.js";
+} from "../../core/index.js";
+import {
+  assertIs,
+  assertOrUndefined,
+  assertPositive,
+} from "../../utils/index.js";
 
 /**
  * Represents a button field of a [[PDFForm]].

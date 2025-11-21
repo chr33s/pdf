@@ -1,15 +1,20 @@
 import assert from "assert";
 import fs from "fs";
+import { describe, it } from "vitest";
 import fontkit from "./addTestHelpersToFontkit.js";
 import { here } from "./utils/dir.decompressJsons.js";
 
 const __dirname = here(import.meta.url);
+const hasSkiaFont = fs.existsSync("/Library/Fonts/Skia.ttf");
+const describeSkia = hasSkiaFont ? describe : describe.skip;
 
 describe("variations", function () {
-  describe("Skia", function () {
-    if (!fs.existsSync("/Library/Fonts/Skia.ttf")) {
+  describeSkia("Skia", function () {
+    if (!hasSkiaFont) {
+      it.skip("requires /Library/Fonts/Skia.ttf", function () {});
       return;
     }
+
     let font = fontkit.openSync("/Library/Fonts/Skia.ttf");
 
     it("should get available variation axes", function () {
@@ -65,7 +70,7 @@ describe("variations", function () {
 
     it("interpolates points without delta values", function () {
       let variation = font.getVariation("Bold");
-      let glyph = variation.glyphForCodePoint("Q".charCodeAt());
+      let glyph = variation.glyphForCodePoint("Q".charCodeAt(0));
 
       return assert.equal(
         glyph.path.toSVG(),

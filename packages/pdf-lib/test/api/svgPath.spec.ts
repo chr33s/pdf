@@ -1,4 +1,6 @@
-import { svgPathToOperators } from "../../src/api/svgPath";
+import { describe, expect, it } from "vitest";
+
+import { svgPathToOperators } from "../../src/api/svgPath.js";
 
 // Test paths adapted from https://svgwg.org/svg2-draft/paths.html
 describe("svgPathToOperators", () => {

@@ -1,4 +1,9 @@
-import { MethodNotImplementedError, PDFObject } from "../../../src/core";
+import { describe, expect, it } from "vitest";
+
+import {
+  MethodNotImplementedError,
+  PDFObject,
+} from "../../../src/core/index.js";
 
 describe("PDFObject", () => {
   const pdfObject = new PDFObject();

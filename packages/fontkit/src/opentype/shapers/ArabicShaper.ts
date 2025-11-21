@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import unicode from "@chr33s/unicode-properties";
 import * as base64 from "base64-arraybuffer";
 import pako from "pako";

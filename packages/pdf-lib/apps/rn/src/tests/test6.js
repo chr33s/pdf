@@ -1,7 +1,7 @@
 import fontkit from "@chr33s/fontkit";
 import { degrees, PDFDocument, rgb } from "pdf-lib";
 
-import { fetchAsset } from "./assets";
+import { fetchAsset } from "./assets.js";
 
 export default async () => {
   const [

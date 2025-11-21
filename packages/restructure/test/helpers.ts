@@ -1,5 +1,5 @@
 import concat from "concat-stream";
-import EncodeStream from "../src/EncodeStream";
+import EncodeStream from "../src/EncodeStream.js";
 
 export function expectStream(
   stream: EncodeStream,

@@ -6,8 +6,8 @@ import {
   Pointer,
   uint16,
   uint8,
-} from "../src";
-import { expectStream } from "./helpers";
+} from "../src/index.js";
+import { expectStream } from "./helpers.js";
 
 describe("Array", () => {
   describe("decode", () => {

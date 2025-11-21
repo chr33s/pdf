@@ -6,8 +6,8 @@ import {
   String as StringT,
   uint8,
   VersionedStruct,
-} from "../src";
-import { expectStream } from "./helpers";
+} from "../src/index.js";
+import { expectStream } from "./helpers.js";
 
 describe("VersionedStruct", () => {
   const baseStruct = new VersionedStruct(uint8, {

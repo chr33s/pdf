@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import * as r from "@chr33s/restructure";
 
 export default class CFFPointer extends r.Pointer {

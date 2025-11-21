@@ -1,12 +1,12 @@
-import { asNumber, asPDFName, asPDFNumber } from "./objects";
-import { degreesToRadians } from "./rotations";
 import {
+  PDFOperatorNames as Ops,
   PDFHexString,
   PDFName,
   PDFNumber,
   PDFOperator,
-  PDFOperatorNames as Ops,
-} from "../core";
+} from "../core/index.js";
+import { asNumber, asPDFName, asPDFNumber } from "./objects.js";
+import { degreesToRadians } from "./rotations.js";
 
 /* ==================== Clipping Path Operators ==================== */
 

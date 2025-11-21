@@ -1,9 +1,11 @@
+import { describe, expect, it } from "vitest";
+
 import {
   PDFAcroTerminal,
   PDFContext,
-  PDFString,
   PDFHexString,
-} from "../../../src/index";
+  PDFString,
+} from "../../../src/index.js";
 
 describe("PDFAcroField", () => {
   it("returns undefined for missing (DAs)", () => {

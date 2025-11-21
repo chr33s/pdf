@@ -1,15 +1,15 @@
-import PDFArray from "../objects/PDFArray";
-import PDFBool from "../objects/PDFBool";
-import PDFDict from "../objects/PDFDict";
-import PDFName from "../objects/PDFName";
-import PDFNumber from "../objects/PDFNumber";
-import PDFContext from "../PDFContext";
 import {
   assertEachIs,
   assertInteger,
   assertIsOneOf,
   assertRange,
-} from "../../utils";
+} from "../../utils/index.js";
+import PDFArray from "../objects/PDFArray.js";
+import PDFBool from "../objects/PDFBool.js";
+import PDFDict from "../objects/PDFDict.js";
+import PDFName from "../objects/PDFName.js";
+import PDFNumber from "../objects/PDFNumber.js";
+import PDFContext from "../PDFContext.js";
 
 const asEnum = <T extends string | number, U extends { [key: string]: T }>(
   rawValue: T | undefined,

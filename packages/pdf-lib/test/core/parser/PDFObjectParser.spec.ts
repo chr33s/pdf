@@ -1,5 +1,14 @@
-import { vi } from "vitest";
-import PDFPageLeaf from "../../../src/core/structures/PDFPageLeaf";
+import {
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest";
+
+import PDFPageLeaf from "../../../src/core/structures/PDFPageLeaf.js";
 import {
   mergeIntoTypedArray,
   numberToString,
@@ -18,7 +27,7 @@ import {
   PDFRef,
   PDFString,
   typedArrayFor,
-} from "../../../src/index";
+} from "../../../src/index.js";
 
 type ParseOptions = { capNumbers?: boolean };
 

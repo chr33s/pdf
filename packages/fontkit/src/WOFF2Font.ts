@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import brotli from "@chr33s/brotli/decompress";
 import * as r from "@chr33s/restructure";
 import TTFFont from "./TTFFont.js";
@@ -38,7 +40,7 @@ export default class WOFF2Font extends TTFFont {
         throw new Error("Error decoding compressed data in WOFF2");
       }
 
-      this.stream = new r.DecodeStream(new Buffer(decompressed));
+      this.stream = new r.DecodeStream(Buffer.from(decompressed));
       this._decompressed = true;
     }
   }

@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { DecodeStream, EncodeStream, Reserved, uint16, uint8 } from "../src";
-import { expectStream } from "./helpers";
+import {
+  DecodeStream,
+  EncodeStream,
+  Reserved,
+  uint16,
+  uint8,
+} from "../src/index.js";
+import { expectStream } from "./helpers.js";
 
 describe("Reserved", () => {
   it("should have a default count of 1", () => {

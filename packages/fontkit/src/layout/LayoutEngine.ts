@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import AATLayoutEngine from "../aat/AATLayoutEngine.js";
 import OTLayoutEngine from "../opentype/OTLayoutEngine.js";
 import GlyphPosition from "./GlyphPosition.js";

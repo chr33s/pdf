@@ -1,9 +1,13 @@
 import fontkit from "@chr33s/fontkit";
 import { FontNames } from "@chr33s/standard-fonts";
 import fs from "fs";
+import { describe, expect, it } from "vitest";
 
-import { CustomFontEmbedder, StandardFontEmbedder } from "../../src/core";
-import { breakTextIntoLines } from "../../src/utils";
+import {
+  CustomFontEmbedder,
+  StandardFontEmbedder,
+} from "../../src/core/index.js";
+import { breakTextIntoLines } from "../../src/utils/index.js";
 
 const font = StandardFontEmbedder.for(FontNames.Helvetica);
 

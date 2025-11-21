@@ -34,8 +34,8 @@ import {
   uint32be,
   uint32le,
   uint8,
-} from "../src";
-import { expectStream } from "./helpers";
+} from "../src/index.js";
+import { expectStream } from "./helpers.js";
 
 type IntegerCase = {
   name: string;

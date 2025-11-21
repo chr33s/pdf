@@ -1,5 +1,5 @@
 import fontkit from "https://cdn.skypack.dev/@chr33s/fontkit@^1.0.0?dts";
-import { Assets } from "../index.ts";
+import { Assets } from "../index.js";
 
 // @deno-types="../dummy.d.ts"
 import {

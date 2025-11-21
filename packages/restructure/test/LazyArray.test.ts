@@ -4,8 +4,8 @@ import {
   EncodeStream,
   LazyArray as LazyArrayT,
   uint8,
-} from "../src";
-import { expectStream } from "./helpers";
+} from "../src/index.js";
+import { expectStream } from "./helpers.js";
 
 describe("LazyArray", () => {
   describe("decode", () => {

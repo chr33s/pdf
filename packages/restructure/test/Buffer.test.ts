@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { Buffer as BufferT, DecodeStream, EncodeStream, uint8 } from "../src";
-import { expectStream } from "./helpers";
+import {
+  Buffer as BufferT,
+  DecodeStream,
+  EncodeStream,
+  uint8,
+} from "../src/index.js";
+import { expectStream } from "./helpers.js";
 
 describe("Buffer", () => {
   describe("decode", () => {

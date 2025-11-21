@@ -1,6 +1,6 @@
 import fontkit from "@chr33s/fontkit";
 import { Assets } from "..";
-import { ParseSpeeds, PDFDocument, rgb } from "../../..";
+import { ParseSpeeds, PDFDocument, rgb } from "../../...js";
 
 // This test loads an existing PDF document with many pages.
 // It inserts data for every page (images, rectangles, texts, embedded PDFs).

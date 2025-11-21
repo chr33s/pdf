@@ -1,4 +1,6 @@
-import { SimpleRNG } from "../../src/utils/rng";
+import { describe, expect, it } from "vitest";
+
+import { SimpleRNG } from "../../src/utils/rng.js";
 
 describe("psuedo random numbers", () => {
   it("generates distinct numbers", () => {

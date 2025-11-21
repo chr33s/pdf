@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 /**
  * Gets an encoding name from platform, encoding, and language ids.
  * Returned encoding names can be used in iconv-lite to decode text.

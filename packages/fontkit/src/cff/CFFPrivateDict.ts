@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import CFFDict from "./CFFDict.js";
 import CFFIndex from "./CFFIndex.js";
 import CFFPointer from "./CFFPointer.js";

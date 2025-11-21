@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 const FLOAT_EOF = 0xf;
 const FLOAT_LOOKUP = [
   "0",

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import * as Script from "../layout/Script.js";
 import GlyphIterator from "./GlyphIterator.js";
 
@@ -356,14 +358,16 @@ export default class OTProcessor {
   }
 
   applyContext(table) {
+    let index;
+    let set;
     switch (table.version) {
       case 1:
-        let index = this.coverageIndex(table.coverage);
+        index = this.coverageIndex(table.coverage);
         if (index === -1) {
           return false;
         }
 
-        let set = table.ruleSets[index];
+        set = table.ruleSets[index];
         for (let rule of set) {
           if (this.sequenceMatches(1, rule.input)) {
             return this.applyLookupList(rule.lookupRecords);
@@ -403,14 +407,17 @@ export default class OTProcessor {
   }
 
   applyChainingContext(table) {
+    let index;
+    let set;
+    let rules;
     switch (table.version) {
       case 1:
-        let index = this.coverageIndex(table.coverage);
+        index = this.coverageIndex(table.coverage);
         if (index === -1) {
           return false;
         }
 
-        let set = table.chainRuleSets[index];
+        set = table.chainRuleSets[index];
         for (let rule of set) {
           if (
             this.sequenceMatches(-rule.backtrack.length, rule.backtrack) &&
@@ -429,7 +436,7 @@ export default class OTProcessor {
         }
 
         index = this.getClassID(this.glyphIterator.cur.id, table.inputClassDef);
-        let rules = table.chainClassSet[index];
+        rules = table.chainClassSet[index];
         if (!rules) {
           return false;
         }

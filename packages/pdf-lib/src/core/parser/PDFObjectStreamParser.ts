@@ -1,11 +1,11 @@
-import { ReparseError } from "../errors";
-import PDFName from "../objects/PDFName";
-import PDFNumber from "../objects/PDFNumber";
-import PDFRawStream from "../objects/PDFRawStream";
-import PDFRef from "../objects/PDFRef";
-import ByteStream from "./ByteStream";
-import PDFObjectParser from "./PDFObjectParser";
-import { waitForTick } from "../../utils";
+import { waitForTick } from "../../utils/index.js";
+import { ReparseError } from "../errors.js";
+import PDFName from "../objects/PDFName.js";
+import PDFNumber from "../objects/PDFNumber.js";
+import PDFRawStream from "../objects/PDFRawStream.js";
+import PDFRef from "../objects/PDFRef.js";
+import ByteStream from "./ByteStream.js";
+import PDFObjectParser from "./PDFObjectParser.js";
 
 class PDFObjectStreamParser extends PDFObjectParser {
   static forStream = (

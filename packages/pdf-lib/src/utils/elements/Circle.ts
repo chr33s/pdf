@@ -6,10 +6,10 @@ import {
   plus,
   times,
   unitVector,
-} from "../maths";
+} from "../maths.js";
 
-import GraphElement from "./GraphElement";
-import Point from "./Point";
+import GraphElement from "./GraphElement.js";
+import Point from "./Point.js";
 export default class Circle extends GraphElement {
   O: Point;
   r: number;

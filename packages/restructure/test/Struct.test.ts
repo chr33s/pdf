@@ -6,8 +6,8 @@ import {
   String as StringT,
   Struct,
   uint8,
-} from "../src";
-import { expectStream } from "./helpers";
+} from "../src/index.js";
+import { expectStream } from "./helpers.js";
 
 describe("Struct", () => {
   describe("decode", () => {

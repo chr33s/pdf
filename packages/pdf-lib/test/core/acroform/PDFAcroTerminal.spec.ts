@@ -1,9 +1,11 @@
+import { describe, expect, it } from "vitest";
+
 import {
   PDFAcroTerminal,
+  PDFArray,
   PDFContext,
   PDFRef,
-  PDFArray,
-} from "../../../src/index";
+} from "../../../src/index.js";
 
 describe("PDFAcroTerminal", () => {
   it("returns Kids when it has them", () => {

@@ -1,5 +1,5 @@
 import ColorParser from "color";
-import { assertIs, assertRange, error } from "../utils";
+import { assertIs, assertRange, error } from "../utils/index.js";
 import {
   setFillingCmykColor,
   setFillingGrayscaleColor,
@@ -7,7 +7,7 @@ import {
   setStrokingCmykColor,
   setStrokingGrayscaleColor,
   setStrokingRgbColor,
-} from "./operators";
+} from "./operators.js";
 
 export enum ColorTypes {
   Grayscale = "Grayscale",

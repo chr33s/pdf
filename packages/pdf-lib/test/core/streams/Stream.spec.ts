@@ -1,4 +1,6 @@
-import Stream from "../../../src/core/streams/Stream";
+import { beforeEach, describe, expect, it } from "vitest";
+
+import Stream from "../../../src/core/streams/Stream.js";
 
 describe("Stream", () => {
   it("can get the stream length", () => {

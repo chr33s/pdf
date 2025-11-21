@@ -10,7 +10,7 @@ import {
 } from "pdf-lib";
 import fontkit from "@chr33s/fontkit";
 
-import { fetchAsset } from "./assets";
+import { fetchAsset } from "./assets.js";
 
 export default async () => {
   const [fancyFieldsPdf, ubuntuR] = await Promise.all([

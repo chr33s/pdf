@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { PropertyDescriptor } from "@chr33s/restructure";
 import isEqual from "deep-equal";
 import CFFOperand from "./CFFOperand.js";

@@ -1,9 +1,10 @@
 import fontkit from "@chr33s/fontkit";
 import fs from "fs";
-import type { Font, Glyph } from "../../../src/types/fontkit";
+import { describe, expect, it } from "vitest";
+import type { Font, Glyph } from "../../../src/types/fontkit.js";
 
-import { createCmap } from "../../../src/core/embedders/CMap";
-import { byAscendingId, sortedUniq } from "../../../src/utils";
+import { createCmap } from "../../../src/core/embedders/CMap.js";
+import { byAscendingId, sortedUniq } from "../../../src/utils/index.js";
 
 const ubuntuFont = fs.readFileSync(
   new URL("../../../assets/fonts/ubuntu/Ubuntu-R.ttf", import.meta.url),

@@ -1,7 +1,7 @@
 import fontkit from "@chr33s/fontkit";
 import { PDFDocument, StandardFonts, last, charAtIndex } from "pdf-lib";
 
-import { fetchAsset } from "./assets";
+import { fetchAsset } from "./assets.js";
 const breakTextIntoLines = (text, size, font, maxWidth) => {
   const lines = [];
   let textIdx = 0;

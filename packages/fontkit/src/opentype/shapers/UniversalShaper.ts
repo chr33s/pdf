@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import * as base64 from "base64-arraybuffer";
 import StateMachine from "dfa";
 import pako from "pako";

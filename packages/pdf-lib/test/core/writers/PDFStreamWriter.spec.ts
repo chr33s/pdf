@@ -1,11 +1,12 @@
 import fs from "fs";
+import { describe, expect, it } from "vitest";
 
 import {
   PDFContext,
   PDFName,
   PDFRef,
   PDFStreamWriter,
-} from "../../../src/index";
+} from "../../../src/index.js";
 
 const expectedPdfBytes = new Uint8Array(
   fs.readFileSync(new URL("./data/stream-writer-1.pdf", import.meta.url)),

@@ -1,11 +1,12 @@
 import { FontNames } from "@chr33s/standard-fonts";
+import { describe, expect, it } from "vitest";
 import {
   PDFContext,
   PDFDict,
   PDFHexString,
   PDFRef,
   StandardFontEmbedder,
-} from "../../../src/index";
+} from "../../../src/index.js";
 
 describe("StandardFontEmbedder", () => {
   it("can be constructed with StandardFontEmbedder.for(...)", () => {

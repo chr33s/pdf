@@ -1,4 +1,5 @@
 import pako from "pako";
+import { describe, expect, it } from "vitest";
 
 import {
   PDFArray,
@@ -12,8 +13,8 @@ import {
   PDFNumber,
   PDFRef,
   PDFString,
-} from "../../src/core";
-import { mergeIntoTypedArray } from "../../src/utils";
+} from "../../src/core/index.js";
+import { mergeIntoTypedArray } from "../../src/utils/index.js";
 
 describe("PDFContext", () => {
   it("retains assigned objects", () => {

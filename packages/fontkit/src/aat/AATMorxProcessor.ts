@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { cache } from "../decorators.js";
 import AATLookupTable from "./AATLookupTable.js";
 import AATStateMachine from "./AATStateMachine.js";

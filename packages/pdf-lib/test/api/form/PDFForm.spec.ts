@@ -1,5 +1,13 @@
 import fs from "fs";
-import { vi } from "vitest";
+import {
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest";
 import {
   PDFAcroForm,
   PDFButton,
@@ -14,7 +22,7 @@ import {
   PDFRef,
   PDFTextField,
   PDFWidgetAnnotation,
-} from "../../../src/index";
+} from "../../../src/index.js";
 
 const getWidgets = (pdfDoc: PDFDocument) =>
   pdfDoc.context
@@ -291,7 +299,7 @@ describe("PDFForm", () => {
 
     expect(() => form.updateFieldAppearances()).not.toThrow();
 
-    expect(
+    await expect(
       pdfDoc.save({ updateFieldAppearances: true }),
     ).resolves.toBeInstanceOf(Uint8Array);
   });

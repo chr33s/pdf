@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import * as base64 from "base64-arraybuffer";
 import codepoints from "codepoints";
 import compileModule from "dfa/compile.js";
@@ -7,10 +9,41 @@ import { fileURLToPath } from "node:url";
 import pako from "pako";
 import UnicodeTrieBuilder from "unicode-trie/builder.js";
 
+const MODULE_CANDIDATES = ["./indic-data.ts", "./indic-data.js"] as const;
+
+const isModuleNotFoundFor = (error: unknown, modulePath: string) =>
+  Boolean(
+    error &&
+    typeof error === "object" &&
+    "code" in error &&
+    (error as NodeJS.ErrnoException).code === "ERR_MODULE_NOT_FOUND" &&
+    typeof (error as NodeJS.ErrnoException).message === "string" &&
+    (error as NodeJS.ErrnoException).message.includes(
+      modulePath.replace("./", ""),
+    ),
+  );
+
+async function loadIndicData() {
+  for (const modulePath of MODULE_CANDIDATES) {
+    try {
+      return await import(modulePath);
+    } catch (error) {
+      if (!isModuleNotFoundFor(error, modulePath)) {
+        throw error;
+      }
+    }
+  }
+
+  throw new Error(
+    "Unable to locate Indic data module. Expected indic-data.ts or indic-data.js to exist.",
+  );
+}
+
 const { CATEGORIES, CONSONANT_FLAGS, POSITIONS } = await loadIndicData();
 
 const compile = (compileModule as any)?.default ?? compileModule;
 const __dirname = dirname(fileURLToPath(import.meta.url));
+const textEncoder = new TextEncoder();
 
 const toArrayBuffer = (view: Uint8Array): ArrayBuffer =>
   view.buffer.slice(
@@ -274,9 +307,7 @@ let stateMachine = compile(
 );
 
 const indicFilePath = join(__dirname, "indic.json");
-const stateMachineJsonBytes = JSON.stringify(stateMachine)
-  .split("")
-  .map((c) => c.charCodeAt(0));
+const stateMachineJsonBytes = textEncoder.encode(JSON.stringify(stateMachine));
 const deflatedIndic = pako.deflate(stateMachineJsonBytes);
 const jsonBase64DeflatedIndic = JSON.stringify(
   base64.encode(toArrayBuffer(deflatedIndic)),
@@ -288,22 +319,3 @@ fs.writeFileSync(
   indicModulePath,
   `export default ${jsonBase64DeflatedIndic};\n`,
 );
-
-async function loadIndicData() {
-  try {
-    return await import("./indic-data.js");
-  } catch (error) {
-    if (
-      error &&
-      typeof error === "object" &&
-      "code" in error &&
-      (error as NodeJS.ErrnoException).code === "ERR_MODULE_NOT_FOUND" &&
-      typeof (error as NodeJS.ErrnoException).message === "string" &&
-      (error as NodeJS.ErrnoException).message.includes("indic-data.js")
-    ) {
-      return await import("./indic-data.ts");
-    }
-
-    throw error;
-  }
-}

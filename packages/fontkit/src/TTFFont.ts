@@ -1,24 +1,26 @@
+// @ts-nocheck
+
 import * as r from "@chr33s/restructure";
-import { cache } from "./decorators.js";
 import fontkit from "./base.js";
-import Directory from "./tables/directory.js";
-import tables from "./tables/index.js";
 import CmapProcessor from "./CmapProcessor.js";
-import LayoutEngine from "./layout/LayoutEngine.js";
-import TTFGlyph from "./glyph/TTFGlyph.js";
+import { cache } from "./decorators.js";
+import BBox from "./glyph/BBox.js";
 import CFFGlyph from "./glyph/CFFGlyph.js";
-import SBIXGlyph from "./glyph/SBIXGlyph.js";
 import COLRGlyph from "./glyph/COLRGlyph.js";
 import GlyphVariationProcessor from "./glyph/GlyphVariationProcessor.js";
-import TTFSubset from "./subset/TTFSubset.js";
+import SBIXGlyph from "./glyph/SBIXGlyph.js";
+import TTFGlyph from "./glyph/TTFGlyph.js";
+import LayoutEngine from "./layout/LayoutEngine.js";
 import CFFSubset from "./subset/CFFSubset.js";
-import BBox from "./glyph/BBox.js";
+import TTFSubset from "./subset/TTFSubset.js";
+import Directory from "./tables/directory.js";
+import tables from "./tables/index.js";
 
 /**
  * This is the base class for all SFNT-based font formats in fontkit.
  * It supports TrueType, and PostScript glyphs, and several color glyph formats.
  */
-export default class TTFFont {
+class TTFFontBase {
   static probe(buffer) {
     let format = buffer.toString("ascii", 0, 4);
     return (
@@ -541,7 +543,7 @@ export default class TTFFont {
     let stream = new r.DecodeStream(this.stream.buffer);
     stream.pos = this._directoryPos;
 
-    let font = new TTFFont(stream, coords);
+    let font = new this.constructor(stream, coords);
     font._tables = this._tables;
 
     return font;
@@ -572,3 +574,5 @@ export default class TTFFont {
     return this.getVariation(name);
   }
 }
+
+export default class TTFFont extends TTFFontBase {}

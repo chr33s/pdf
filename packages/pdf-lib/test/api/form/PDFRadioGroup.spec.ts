@@ -1,11 +1,12 @@
 import fs from "fs";
+import { describe, expect, it } from "vitest";
 import {
-  PDFDocument,
-  PDFName,
-  PDFArray,
-  PDFHexString,
   AnnotationFlags,
-} from "../../../src/index";
+  PDFArray,
+  PDFDocument,
+  PDFHexString,
+  PDFName,
+} from "../../../src/index.js";
 
 const fancyFieldsPdfBytes = fs.readFileSync("assets/pdfs/fancy_fields.pdf");
 

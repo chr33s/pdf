@@ -1,4 +1,4 @@
-import { Assets } from "../index.ts";
+import { Assets } from "../index.js";
 
 // @deno-types="../dummy.d.ts"
 import { PDFDocument } from "../../../dist/pdf-lib.js";

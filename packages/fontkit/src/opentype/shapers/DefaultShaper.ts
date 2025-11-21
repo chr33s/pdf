@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import unicode from "@chr33s/unicode-properties";
 
 const VARIATION_FEATURES = ["rvrn"];

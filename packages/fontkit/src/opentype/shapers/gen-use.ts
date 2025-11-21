@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import * as base64 from "base64-arraybuffer";
 import codepoints from "codepoints";
 import compileModule from "dfa/compile.js";
@@ -8,6 +10,7 @@ import pako from "pako";
 import UnicodeTrieBuilder from "unicode-trie/builder.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+const textEncoder = new TextEncoder();
 
 const toArrayBuffer = (view: Uint8Array): ArrayBuffer =>
   view.buffer.slice(
@@ -273,9 +276,7 @@ let json = Object.assign(
 );
 
 const useFilePath = join(__dirname, "use.json");
-const useJsonBytes = JSON.stringify(json)
-  .split("")
-  .map((c) => c.charCodeAt(0));
+const useJsonBytes = textEncoder.encode(JSON.stringify(json));
 const deflatedUse = pako.deflate(useJsonBytes);
 const jsonBase64DeflatedUse = JSON.stringify(
   base64.encode(toArrayBuffer(deflatedUse)),

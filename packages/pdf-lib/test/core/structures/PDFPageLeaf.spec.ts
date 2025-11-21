@@ -1,3 +1,5 @@
+import { describe, expect, it } from "vitest";
+
 import {
   PDFArray,
   PDFContext,
@@ -6,7 +8,7 @@ import {
   PDFPageLeaf,
   PDFPageTree,
   PDFRef,
-} from "../../../src/index";
+} from "../../../src/index.js";
 
 describe("PDFPageLeaf", () => {
   it("can be constructed directly from a Map and PDFContext", () => {

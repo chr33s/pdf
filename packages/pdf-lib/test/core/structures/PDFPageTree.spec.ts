@@ -1,15 +1,17 @@
 import fs from "fs";
-import { TreeNode } from "../../../src/core/structures/PDFPageTree";
+import { describe, expect, it } from "vitest";
+
+import { TreeNode } from "../../../src/core/structures/PDFPageTree.js";
 import {
   PDFArray,
   PDFContext,
+  PDFDocument,
   PDFName,
   PDFNumber,
   PDFPageLeaf,
   PDFPageTree,
   PDFRef,
-  PDFDocument,
-} from "../../../src/index";
+} from "../../../src/index.js";
 
 const withNullEntryPdfBytes = fs.readFileSync(
   "assets/pdfs/with_null_parent_entry.pdf",

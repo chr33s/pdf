@@ -1,10 +1,11 @@
 import fs from "fs";
+import { describe, expect, it } from "vitest";
 import {
   PDFContext,
   PDFRawStream,
   PDFXRefStreamParser,
   ReparseError,
-} from "../../../src/index";
+} from "../../../src/index.js";
 
 const readData = (file: string) =>
   new Uint8Array(fs.readFileSync(new URL(`./data/${file}`, import.meta.url)));

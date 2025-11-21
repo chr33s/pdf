@@ -1,5 +1,13 @@
 import fs from "fs";
-import { vi } from "vitest";
+import {
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest";
 
 import {
   CharCodes,
@@ -13,7 +21,7 @@ import {
   PDFString,
   ReparseError,
   typedArrayFor,
-} from "../../../src/index";
+} from "../../../src/index.js";
 
 describe("PDFParser", () => {
   const origConsoleWarn = console.warn;

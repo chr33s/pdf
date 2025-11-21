@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { DecodeStream, EncodeStream, String as StringT, uint8 } from "../src";
-import { expectStream } from "./helpers";
+import {
+  DecodeStream,
+  EncodeStream,
+  String as StringT,
+  uint8,
+} from "../src/index.js";
+import { expectStream } from "./helpers.js";
 
 describe("String", () => {
   describe("decode", () => {

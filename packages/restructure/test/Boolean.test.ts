@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { Boolean as BooleanT, DecodeStream, EncodeStream, uint8 } from "../src";
-import { expectStream } from "./helpers";
+import {
+  Boolean as BooleanT,
+  DecodeStream,
+  EncodeStream,
+  uint8,
+} from "../src/index.js";
+import { expectStream } from "./helpers.js";
 
 describe("Boolean", () => {
   describe("decode", () => {

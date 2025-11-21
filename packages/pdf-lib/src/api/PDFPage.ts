@@ -1,27 +1,49 @@
-import { Color, rgb } from "./colors";
 import {
+  PDFArray,
+  PDFContentStream,
+  PDFDict,
+  PDFHexString,
+  PDFName,
+  PDFOperator,
+  PDFPageLeaf,
+  PDFRef,
+} from "../core/index.js";
+import {
+  assertEachIs,
+  assertIs,
+  assertIsOneOfOrUndefined,
+  assertMultiple,
+  assertOrUndefined,
+  assertRangeOrUndefined,
+  breakTextIntoLines,
+  cleanText,
+  lineSplit,
+  rectanglesAreEqual,
+} from "../utils/index.js";
+import { Color, rgb } from "./colors.js";
+import {
+  drawEllipse,
   drawImage,
   drawLine,
   drawLinesOfText,
   drawPage,
   drawRectangle,
   drawSvgPath,
-  drawEllipse,
-} from "./operations";
+} from "./operations.js";
 import {
+  FillRule,
+  LineCapStyle,
   popGraphicsState,
   pushGraphicsState,
-  translate,
-  LineCapStyle,
   scale,
-  FillRule,
-} from "./operators";
-import PDFDocument from "./PDFDocument";
-import PDFEmbeddedPage from "./PDFEmbeddedPage";
-import PDFFont from "./PDFFont";
-import PDFImage from "./PDFImage";
-import PDFSvg from "./PDFSvg";
+  translate,
+} from "./operators.js";
+import PDFDocument from "./PDFDocument.js";
+import PDFEmbeddedPage from "./PDFEmbeddedPage.js";
+import PDFFont from "./PDFFont.js";
+import PDFImage from "./PDFImage.js";
 import {
+  BlendMode,
   PDFPageDrawCircleOptions,
   PDFPageDrawEllipseOptions,
   PDFPageDrawImageOptions,
@@ -29,36 +51,14 @@ import {
   PDFPageDrawPageOptions,
   PDFPageDrawRectangleOptions,
   PDFPageDrawSquareOptions,
+  PDFPageDrawSVGElementOptions,
   PDFPageDrawSVGOptions,
   PDFPageDrawTextOptions,
-  BlendMode,
-  PDFPageDrawSVGElementOptions,
-} from "./PDFPageOptions";
-import { degrees, Rotation, toDegrees } from "./rotations";
-import { StandardFonts } from "./StandardFonts";
-import {
-  PDFContentStream,
-  PDFHexString,
-  PDFName,
-  PDFOperator,
-  PDFPageLeaf,
-  PDFRef,
-  PDFDict,
-  PDFArray,
-} from "../core";
-import {
-  assertEachIs,
-  assertIs,
-  assertMultiple,
-  assertOrUndefined,
-  breakTextIntoLines,
-  cleanText,
-  rectanglesAreEqual,
-  lineSplit,
-  assertRangeOrUndefined,
-  assertIsOneOfOrUndefined,
-} from "../utils";
-import { drawSvg } from "./svg";
+} from "./PDFPageOptions.js";
+import PDFSvg from "./PDFSvg.js";
+import { degrees, Rotation, toDegrees } from "./rotations.js";
+import { StandardFonts } from "./StandardFonts.js";
+import { drawSvg } from "./svg.js";
 
 /**
  * Represents a single page of a [[PDFDocument]].

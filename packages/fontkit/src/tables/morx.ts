@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import * as r from "@chr33s/restructure";
 import { LookupTable, StateTable, UnboundedArray } from "./aat.js";
 

@@ -1,5 +1,6 @@
 import fontkit from "@chr33s/fontkit";
 import fs from "fs";
+import { describe, expect, it } from "vitest";
 
 import {
   CustomFontEmbedder,
@@ -7,7 +8,7 @@ import {
   PDFDict,
   PDFHexString,
   PDFRef,
-} from "../../../src/index";
+} from "../../../src/index.js";
 
 const ubuntuFont = fs.readFileSync("./assets/fonts/ubuntu/Ubuntu-R.ttf");
 

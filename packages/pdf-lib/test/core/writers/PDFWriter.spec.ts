@@ -1,4 +1,6 @@
 import pako from "pako";
+import { describe, expect, it } from "vitest";
+
 import {
   mergeIntoTypedArray,
   PDFContext,
@@ -6,7 +8,7 @@ import {
   PDFRef,
   PDFWriter,
   typedArrayFor,
-} from "../../../src/index";
+} from "../../../src/index.js";
 
 const contentStreamText = `
   BT

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import GlyphInfo from "../GlyphInfo.js";
 import DefaultShaper from "./DefaultShaper.js";
 

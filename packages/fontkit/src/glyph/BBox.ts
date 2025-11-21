@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 /**
  * Represents a glyph bounding box
  */

@@ -9,7 +9,7 @@ import {
   values,
 } from "pdf-lib";
 
-import { fetchAsset } from "./assets";
+import { fetchAsset } from "./assets.js";
 
 const inchToPt = (inches) => Math.round(inches * 72);
 

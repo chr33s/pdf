@@ -6,7 +6,7 @@ import {
   PDFFont,
   StandardFonts,
   charAtIndex,
-} from "../../..";
+} from "../../...js";
 
 const breakTextIntoLines = (
   text: string,

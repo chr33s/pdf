@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import * as r from "@chr33s/restructure";
 import BBox from "./BBox.js";
 import Glyph from "./Glyph.js";

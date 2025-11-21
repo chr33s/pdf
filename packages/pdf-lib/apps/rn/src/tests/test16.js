@@ -1,6 +1,6 @@
 import { PDFDocument } from "pdf-lib";
 
-import { fetchAsset } from "./assets";
+import { fetchAsset } from "./assets.js";
 
 const fieldNames = {
   // Page 1

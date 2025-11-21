@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { DecodeStream } from "../src";
+import { DecodeStream } from "../src/index.js";
 
 describe("DecodeStream", () => {
   it("should read a buffer", () => {

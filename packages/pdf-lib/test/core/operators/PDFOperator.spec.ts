@@ -1,11 +1,13 @@
+import { describe, expect, it } from "vitest";
+
 import {
+  PDFOperatorNames as Ops,
   PDFNumber,
   PDFOperator,
-  PDFOperatorNames as Ops,
   PDFString,
   toCharCode,
   typedArrayFor,
-} from "../../../src/index";
+} from "../../../src/index.js";
 
 describe("PDFOperator", () => {
   it("can be constructed with args", () => {

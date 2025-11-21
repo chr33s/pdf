@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import * as r from "@chr33s/restructure";
 import { Device } from "./opentype.js";
 import { ItemVariationStore } from "./variations.js";

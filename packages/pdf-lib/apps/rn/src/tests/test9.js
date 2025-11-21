@@ -1,7 +1,7 @@
 import fontkit from "@chr33s/fontkit";
 import { PDFDocument, rgb } from "pdf-lib";
 
-import { fetchAsset } from "./assets";
+import { fetchAsset } from "./assets.js";
 
 export default async () => {
   const [inputPdfBytes, ubuntuBytes, smallMarioBytes] = await Promise.all([

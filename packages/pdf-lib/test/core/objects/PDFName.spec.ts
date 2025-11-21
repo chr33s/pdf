@@ -1,5 +1,7 @@
-import { PDFName, PrivateConstructorError } from "../../../src/core";
-import { toCharCode, typedArrayFor } from "../../../src/utils";
+import { describe, expect, it } from "vitest";
+
+import { PDFName, PrivateConstructorError } from "../../../src/core/index.js";
+import { toCharCode, typedArrayFor } from "../../../src/utils/index.js";
 
 describe("PDFName", () => {
   it("can be constructed from PDFName.of(...)", () => {

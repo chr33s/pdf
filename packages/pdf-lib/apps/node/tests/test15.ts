@@ -1,5 +1,5 @@
 import { Assets } from "..";
-import { PDFDocument, rgb, TextAlignment } from "../../..";
+import { PDFDocument, rgb, TextAlignment } from "../../...js";
 
 export default async (assets: Assets) => {
   const pdfDoc = await PDFDocument.load(assets.pdfs.dod_character);

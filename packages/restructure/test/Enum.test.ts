@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { DecodeStream, EncodeStream, Enum, uint8 } from "../src";
-import { expectStream } from "./helpers";
+import { DecodeStream, EncodeStream, Enum, uint8 } from "../src/index.js";
+import { expectStream } from "./helpers.js";
 
 describe("Enum", () => {
   const e = new Enum(uint8, ["foo", "bar", "baz"]);

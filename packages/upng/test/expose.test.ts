@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import UPNG from "../src/index";
+import UPNG from "../src/index.js";
 
 describe("UPNG public API", () => {
   it("exposes encode/decode helpers", () => {

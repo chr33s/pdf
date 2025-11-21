@@ -1,4 +1,6 @@
-import { range, pdfDocEncodingDecode } from "../../src/utils";
+import { describe, expect, it } from "vitest";
+
+import { pdfDocEncodingDecode, range } from "../../src/utils/index.js";
 
 type Mapping = [number, string];
 

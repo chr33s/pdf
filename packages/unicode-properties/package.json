@@ -6,10 +6,10 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "vitest run",
     "build": "npm run generate && tsc",
-    "generate": "node scripts/generate.ts",
     "clean": "rm -rd {dist,src/*.json}",
+    "generate": "node scripts/generate.ts",
+    "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

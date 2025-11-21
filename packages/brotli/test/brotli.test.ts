@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import decompress from "../src/decompress";
+import decompress from "../src/decompress.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, "..");
@@ -11,8 +11,8 @@ const hasEncodeArtifact = fs.existsSync(buildEncodePath);
 
 const describeCompress = hasEncodeArtifact ? describe : describe.skip;
 
-const loadBrotli = async () => await import("../src/index");
-const loadCompress = async () => (await import("../src/compress")).default;
+const loadBrotli = async () => await import("../src/index.js");
+const loadCompress = async () => (await import("../src/compress.js")).default;
 
 describeCompress("compress", () => {
   it("compresses binary data through the aggregated entry point", async () => {

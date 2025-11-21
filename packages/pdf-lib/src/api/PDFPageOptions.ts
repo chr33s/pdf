@@ -1,8 +1,8 @@
-import { Color } from "./colors";
-import PDFFont from "./PDFFont";
-import { Rotation } from "./rotations";
-import { FillRule, LineCapStyle, TextRenderingMode } from "./operators";
-import type { Space, TransformationMatrix } from "../types";
+import type { Space, TransformationMatrix } from "../types/index.js";
+import { Color } from "./colors.js";
+import { FillRule, LineCapStyle, TextRenderingMode } from "./operators.js";
+import PDFFont from "./PDFFont.js";
+import { Rotation } from "./rotations.js";
 
 interface SvgOptions {
   matrix?: TransformationMatrix;

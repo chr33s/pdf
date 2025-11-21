@@ -1,12 +1,13 @@
 import fs from "fs";
-import { PDFDocument } from "../../../src/api";
+import { describe, expect, it } from "vitest";
+import { PDFDocument } from "../../../src/api/index.js";
 import {
   PDFContext,
   PDFName,
   PDFPageEmbedder,
   PDFRawStream,
   PDFRef,
-} from "../../../src/core";
+} from "../../../src/core/index.js";
 
 const examplePdf = fs.readFileSync("./assets/pdfs/normal.pdf");
 

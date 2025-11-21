@@ -2,7 +2,8 @@
 	"extends": "../../tsconfig.json",
   "compilerOptions": {
     "rootDir": "src",
-    "outDir": "dist"
+    "outDir": "dist",
+    "experimentalDecorators": true
   },
   "include": ["./fontkit.d.ts", "src/**/*"],
   "exclude": ["dist", "node_modules", "test"]

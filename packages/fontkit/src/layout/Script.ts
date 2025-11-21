@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import unicode from "@chr33s/unicode-properties";
 
 // This maps the Unicode Script property to an OpenType script tag

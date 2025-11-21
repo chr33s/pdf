@@ -1,10 +1,11 @@
 import fs from "fs";
+import { describe, expect, it } from "vitest";
 import {
   JpegEmbedder,
   PDFContext,
   PDFRawStream,
   PDFRef,
-} from "../../../src/core";
+} from "../../../src/core/index.js";
 
 const catUnicornJpg = fs.readFileSync("./assets/images/cat_riding_unicorn.jpg");
 const minionsLaughing = fs.readFileSync("./assets/images/minions_laughing.jpg");

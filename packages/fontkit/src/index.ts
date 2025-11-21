@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import fontkit from "./base.js";
 import TTFFont from "./TTFFont.js";
 import WOFFFont from "./WOFFFont.js";

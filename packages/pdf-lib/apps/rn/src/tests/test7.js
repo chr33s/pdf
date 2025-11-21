@@ -1,6 +1,6 @@
 import { PDFDocument, StandardFonts, degrees } from "pdf-lib";
 
-import { fetchAsset } from "./assets";
+import { fetchAsset } from "./assets.js";
 
 const createDonorPdf = async () => {
   const pdfDoc = await PDFDocument.create();

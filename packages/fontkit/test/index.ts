@@ -1,5 +1,7 @@
 import assert from "assert";
 import { fileURLToPath } from "node:url";
+import { describe, it } from "vitest";
+
 import fontkit from "./addTestHelpersToFontkit.js";
 import { here } from "./utils/dir.js";
 

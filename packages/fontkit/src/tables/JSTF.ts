@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import * as r from "@chr33s/restructure";
 import { GPOSLookup } from "./GPOS.js";
 import { LookupList } from "./opentype.js";

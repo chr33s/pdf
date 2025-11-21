@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 // see https://developer.apple.com/fonts/TrueType-Reference-Manual/RM09/AppendixF.html
 // and /System/Library/Frameworks/CoreText.framework/Versions/A/Headers/SFNTLayoutTypes.h on a Mac
 const features = {

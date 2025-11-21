@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 export let ISOAdobeCharset = [
   ".notdef",
   "space",

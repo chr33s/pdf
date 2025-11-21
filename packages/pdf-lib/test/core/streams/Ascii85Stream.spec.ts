@@ -1,7 +1,8 @@
 import fs from "fs";
+import { describe, expect, it } from "vitest";
 
-import Ascii85Stream from "../../../src/core/streams/Ascii85Stream";
-import Stream from "../../../src/core/streams/Stream";
+import Ascii85Stream from "../../../src/core/streams/Ascii85Stream.js";
+import Stream from "../../../src/core/streams/Stream.js";
 
 const FILES = ["1"];
 

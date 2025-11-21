@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { EncodeStream } from "../src";
-import { expectStream } from "./helpers";
+import { EncodeStream } from "../src/index.js";
+import { expectStream } from "./helpers.js";
 
 describe("EncodeStream", () => {
   it("should write a buffer", async () => {

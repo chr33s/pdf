@@ -1,5 +1,5 @@
 import CryptoJS from "crypto-js";
-import PDFContext from "../PDFContext";
+import PDFContext from "../PDFContext.js";
 
 type WordArray = CryptoJS.lib.WordArray;
 type RandomWordArrayGenerator = (bytes: number) => WordArray;

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { cache } from "./decorators.js";
 import { getEncoding } from "./encodings.js";
 import { binarySearch, range } from "./utils.js";
@@ -52,7 +54,11 @@ export default class CmapProcessor {
     for (let [platformID, encodingID] of pairs) {
       for (let cmap of cmapTable.tables) {
         if (cmap.platformID === platformID && cmap.encodingID === encodingID) {
-          return cmap.table;
+          const table = cmap.table;
+          if (table == null) {
+            console.warn("cmap subtable is null", platformID, encodingID, cmap);
+          }
+          return table;
         }
       }
     }

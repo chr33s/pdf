@@ -21,7 +21,7 @@ import {
   StandardFonts,
   typedArrayFor,
   AFRelationship,
-} from "../../..";
+} from "../../...js";
 
 const ipsumLines = [
   "Eligendi est pariatur quidem in non excepturi et.",

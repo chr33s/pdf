@@ -1,5 +1,5 @@
-import CharCodes from "../syntax/CharCodes";
-import { copyStringIntoBuffer } from "../../utils";
+import { copyStringIntoBuffer } from "../../utils/index.js";
+import CharCodes from "../syntax/CharCodes.js";
 
 class PDFTrailer {
   static forLastCrossRefSectionOffset = (offset: number) =>

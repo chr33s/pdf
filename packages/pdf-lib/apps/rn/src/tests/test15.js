@@ -1,6 +1,6 @@
 import { PDFDocument, rgb, TextAlignment } from "pdf-lib";
 
-import { fetchAsset } from "./assets";
+import { fetchAsset } from "./assets.js";
 
 export default async () => {
   const [dodCharacterPdf, smallMarioPng, marioEmblemPng] = await Promise.all([

@@ -83,7 +83,8 @@ export default class Struct<
     let total = 0;
     for (const [key, type] of Object.entries(this.fields)) {
       if (type && typeof type.size === "function") {
-        total += type.size(val[key], ctx);
+        const fieldVal = val ? val[key] : undefined;
+        total += type.size(fieldVal, ctx);
       }
     }
 

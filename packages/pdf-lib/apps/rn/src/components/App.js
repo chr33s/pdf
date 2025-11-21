@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 
-import ErrorDisplay from "./ErrorDisplay";
-import TestLauncher from "./TestLauncher";
-import TestRunningSpinner from "./TestRunningSpinner";
-import TestResultDisplay from "./TestResultDisplay";
+import ErrorDisplay from "./ErrorDisplay.js";
+import TestLauncher from "./TestLauncher.js";
+import TestRunningSpinner from "./TestRunningSpinner.js";
+import TestResultDisplay from "./TestResultDisplay.js";
 
 export default class App extends Component {
   static States = {

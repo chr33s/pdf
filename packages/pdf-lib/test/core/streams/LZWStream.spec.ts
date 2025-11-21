@@ -1,7 +1,8 @@
 import fs from "fs";
+import { describe, expect, it } from "vitest";
 
-import LZWStream from "../../../src/core/streams/LZWStream";
-import Stream from "../../../src/core/streams/Stream";
+import LZWStream from "../../../src/core/streams/LZWStream.js";
+import Stream from "../../../src/core/streams/Stream.js";
 
 const FILES = ["1", "2", "3", "4"];
 

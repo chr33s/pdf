@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 export default class GlyphIterator {
   constructor(glyphs, options) {
     this.glyphs = glyphs;

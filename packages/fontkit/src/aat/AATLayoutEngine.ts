@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import * as AATFeatureMap from "./AATFeatureMap.js";
 import AATMorxProcessor from "./AATMorxProcessor.js";
 

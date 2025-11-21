@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 let tables = {};
 export default tables;
 

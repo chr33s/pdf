@@ -1,7 +1,7 @@
 import fontkit from "@chr33s/fontkit";
 import { PDFDocument, rgb } from "pdf-lib";
 
-import { fetchAsset } from "./assets";
+import { fetchAsset } from "./assets.js";
 
 // This test loads an existing PDF document with many pages.
 // It inserts data for every page (images, rectangles, texts, embedded PDFs).

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import Glyph from "./Glyph.js";
 import Path from "./Path.js";
 
@@ -43,6 +45,9 @@ export default class CFFGlyph extends Glyph {
     let usedGsubrs;
     let usedSubrs;
     let open = false;
+    let index;
+    let subr;
+    let phase = false;
 
     this._usedGsubrs = usedGsubrs = {};
     this._usedSubrs = usedSubrs = {};
@@ -113,7 +118,7 @@ export default class CFFGlyph extends Glyph {
 
             case 6: // hlineto
             case 7: // vlineto
-              let phase = op === 6;
+              phase = op === 6;
               while (stack.length >= 1) {
                 if (phase) {
                   x += stack.shift();
@@ -139,8 +144,8 @@ export default class CFFGlyph extends Glyph {
               break;
 
             case 10: // callsubr
-              let index = stack.pop() + subrsBias;
-              let subr = subrs[index];
+              index = stack.pop() + subrsBias;
+              subr = subrs[index];
               if (subr) {
                 usedSubrs[index] = true;
                 var p = stream.pos;

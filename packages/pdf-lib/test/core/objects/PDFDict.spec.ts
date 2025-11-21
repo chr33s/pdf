@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import {
   PDFArray,
   PDFBool,
@@ -7,11 +8,11 @@ import {
   PDFName,
   PDFNull,
   PDFNumber,
+  PDFObject,
   PDFRef,
   PDFString,
-  PDFObject,
-} from "../../../src/core";
-import { toCharCode, typedArrayFor } from "../../../src/utils";
+} from "../../../src/core/index.js";
+import { toCharCode, typedArrayFor } from "../../../src/utils/index.js";
 
 describe("PDFDict", () => {
   const context = PDFContext.create();

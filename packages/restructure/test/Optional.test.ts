@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { DecodeStream, EncodeStream, Optional, uint8 } from "../src";
-import { expectStream } from "./helpers";
+import { DecodeStream, EncodeStream, Optional, uint8 } from "../src/index.js";
+import { expectStream } from "./helpers.js";
 
 describe("Optional", () => {
   describe("decode", () => {

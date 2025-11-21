@@ -1,11 +1,13 @@
+import { describe, expect, it } from "vitest";
+
 import {
-  PDFWidgetAnnotation,
   PDFContext,
-  PDFString,
   PDFHexString,
   PDFName,
   PDFNull,
-} from "../../../src/index";
+  PDFString,
+  PDFWidgetAnnotation,
+} from "../../../src/index.js";
 
 describe("PDFWidgetAnnotation", () => {
   it("returns undefined for missing (DAs)", () => {

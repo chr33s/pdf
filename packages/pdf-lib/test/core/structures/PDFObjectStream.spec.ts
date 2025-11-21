@@ -1,4 +1,5 @@
 import pako from "pako";
+import { describe, expect, it } from "vitest";
 
 import {
   mergeIntoTypedArray,
@@ -10,7 +11,7 @@ import {
   PDFString,
   toCharCode,
   typedArrayFor,
-} from "../../../src/index";
+} from "../../../src/index.js";
 
 describe("PDFObjectStream", () => {
   const context = PDFContext.create();

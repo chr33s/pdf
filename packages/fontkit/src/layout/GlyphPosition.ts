@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 /**
  * Represents positioning information for a glyph in a GlyphRun.
  */

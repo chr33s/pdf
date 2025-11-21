@@ -5,7 +5,7 @@ export default defineConfig({
     environment: "node",
     globals: true,
     include: ["test/**/*.ts"],
-    exclude: ["test/utils/**"],
+    exclude: ["test/utils/**", "test/addTestHelpersToFontkit.ts"],
     threads: false,
     testTimeout: 30000,
     hookTimeout: 30000,

@@ -9,7 +9,7 @@ import {
   PDFFont,
   drawEllipse,
   PDFWidgetAnnotation,
-} from "../../..";
+} from "../../...js";
 
 import fontkit from "@chr33s/fontkit";
 

@@ -1,5 +1,11 @@
 import fs from "fs";
-import { PDFContext, PDFDict, PDFRef, FileEmbedder } from "../../../src/index";
+import { describe, expect, it } from "vitest";
+import {
+  FileEmbedder,
+  PDFContext,
+  PDFDict,
+  PDFRef,
+} from "../../../src/index.js";
 
 const catRidingUnicornJpg = fs.readFileSync(
   "assets/images/cat_riding_unicorn.jpg",

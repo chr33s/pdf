@@ -1,7 +1,8 @@
 import fs from "fs";
+import { describe, expect, it } from "vitest";
 
-import FlateStream from "../../../src/core/streams/FlateStream";
-import Stream from "../../../src/core/streams/Stream";
+import FlateStream from "../../../src/core/streams/FlateStream.js";
+import Stream from "../../../src/core/streams/Stream.js";
 
 const FILES = ["1", "2", "3", "4", "5", "6", "7"];
 

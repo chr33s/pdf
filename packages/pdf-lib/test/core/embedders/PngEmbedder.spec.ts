@@ -1,10 +1,11 @@
 import fs from "fs";
+import { describe, expect, it } from "vitest";
 import {
   PDFContext,
   PDFRawStream,
   PDFRef,
   PngEmbedder,
-} from "../../../src/core";
+} from "../../../src/core/index.js";
 
 const greyscalePng = fs.readFileSync("./assets/images/greyscale_bird.png");
 const rgbaPng = fs.readFileSync("./assets/images/minions_banana_alpha.png");

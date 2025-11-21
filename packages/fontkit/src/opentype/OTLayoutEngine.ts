@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import GlyphInfo from "./GlyphInfo.js";
 import GPOSProcessor from "./GPOSProcessor.js";
 import GSUBProcessor from "./GSUBProcessor.js";

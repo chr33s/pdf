@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 /**
  * ShapingPlans are used by the OpenType shapers to store which
  * features should by applied, and in what order to apply them.

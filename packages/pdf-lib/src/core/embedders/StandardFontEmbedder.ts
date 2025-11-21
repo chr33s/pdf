@@ -1,14 +1,14 @@
 import {
   Encodings,
+  EncodingType,
   Font,
   FontNames,
-  EncodingType,
 } from "@chr33s/standard-fonts";
 
-import PDFHexString from "../objects/PDFHexString";
-import PDFRef from "../objects/PDFRef";
-import PDFContext from "../PDFContext";
-import { toCodePoint, toHexString } from "../../utils";
+import { toCodePoint, toHexString } from "../../utils/index.js";
+import PDFHexString from "../objects/PDFHexString.js";
+import PDFRef from "../objects/PDFRef.js";
+import PDFContext from "../PDFContext.js";
 
 export interface Glyph {
   code: number;

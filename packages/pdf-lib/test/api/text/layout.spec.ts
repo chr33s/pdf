@@ -1,6 +1,12 @@
-import { PDFDocument, StandardFonts, TextAlignment } from "../../../src/index";
+import { describe, expect, it } from "vitest";
 
-import { layoutMultilineText } from "../../../src/api/text/layout";
+import {
+  PDFDocument,
+  StandardFonts,
+  TextAlignment,
+} from "../../../src/index.js";
+
+import { layoutMultilineText } from "../../../src/api/text/layout.js";
 
 const MIN_FONT_SIZE = 4;
 const MAX_FONT_SIZE = 500;

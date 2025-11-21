@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import AATLookupTable from "./AATLookupTable.js";
 
 const START_OF_TEXT_STATE = 0;

@@ -1,6 +1,6 @@
 import { degrees, PDFDocument, radians, rgb, StandardFonts } from "pdf-lib";
 
-import { fetchAsset } from "./assets";
+import { fetchAsset } from "./assets.js";
 
 export default async () => {
   const [inputPdf, minionsLaughingBytes] = await Promise.all([

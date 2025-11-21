@@ -14,15 +14,15 @@
  */
 /* tslint:disable */
 
-import { arrayAsString, isArrayEqual } from "../utils/arrays";
-import { stringAsByteArray } from "../utils/strings";
-import PDFBool from "./objects/PDFBool";
-import PDFDict from "./objects/PDFDict";
-import PDFName from "./objects/PDFName";
-import PDFNumber from "./objects/PDFNumber";
-import PDFString from "./objects/PDFString";
-import DecryptStream from "./streams/DecryptStream";
-import { StreamType } from "./streams/Stream";
+import { arrayAsString, isArrayEqual } from "../utils/arrays.js";
+import { stringAsByteArray } from "../utils/strings.js";
+import PDFBool from "./objects/PDFBool.js";
+import PDFDict from "./objects/PDFDict.js";
+import PDFName from "./objects/PDFName.js";
+import PDFNumber from "./objects/PDFNumber.js";
+import PDFString from "./objects/PDFString.js";
+import DecryptStream from "./streams/DecryptStream.js";
+import { StreamType } from "./streams/Stream.js";
 
 class ARCFourCipher {
   private s: Uint8Array;
