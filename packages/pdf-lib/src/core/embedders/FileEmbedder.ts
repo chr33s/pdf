@@ -8,16 +8,21 @@ import PDFContext from "../PDFContext.js";
  * See:
  * * https://www.pdfa.org/wp-content/uploads/2018/10/PDF20_AN002-AF.pdf
  */
-export enum AFRelationship {
-  Source = "Source",
-  Data = "Data",
-  Alternative = "Alternative",
-  Supplement = "Supplement",
-  EncryptedPayload = "EncryptedPayload",
-  FormData = "FormData",
-  Schema = "Schema",
-  Unspecified = "Unspecified",
-}
+const afRelationship = {
+  Source: "Source",
+  Data: "Data",
+  Alternative: "Alternative",
+  Supplement: "Supplement",
+  EncryptedPayload: "EncryptedPayload",
+  FormData: "FormData",
+  Schema: "Schema",
+  Unspecified: "Unspecified",
+} as const;
+
+export const AFRelationship = afRelationship;
+
+export type AFRelationship =
+  (typeof afRelationship)[keyof typeof afRelationship];
 
 export interface EmbeddedFileOptions {
   mimeType?: string;

@@ -18,8 +18,11 @@ export default class Struct<
 > {
   public process?: (this: T, stream: DecodeStream) => void;
   public preEncode?: (this: T, stream: EncodeStream) => void;
+  public fields: FieldMap;
 
-  constructor(public fields: FieldMap = {}) {}
+  constructor(fields: FieldMap = {}) {
+    this.fields = fields;
+  }
 
   decode(stream: DecodeStream, parent?: any, length = 0): T {
     const result = this._setup(stream, parent, length) as T;

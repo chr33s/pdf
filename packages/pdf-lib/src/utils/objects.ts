@@ -1,10 +1,10 @@
-import { FontNames } from "@chr33s/standard-fonts";
+import { FontNames, type FontName } from "@chr33s/standard-fonts";
 
 export const values = (obj: any) => Object.keys(obj).map((k) => obj[k]);
 
 export const StandardFontValues = values(FontNames);
 
-export const isStandardFont = (input: any): input is FontNames =>
+export const isStandardFont = (input: any): input is FontName =>
   StandardFontValues.includes(input);
 
 export const rectanglesAreEqual = (

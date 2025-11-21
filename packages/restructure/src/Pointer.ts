@@ -17,12 +17,10 @@ export class Pointer {
     relativeTo?: string;
   };
   public type: any;
+  public offsetType: any;
 
-  constructor(
-    public offsetType: any,
-    type: any,
-    options: PointerOptions = {},
-  ) {
+  constructor(offsetType: any, type: any, options: PointerOptions = {}) {
+    this.offsetType = offsetType;
     this.type = type === "void" ? null : type;
     this.options = {
       type: "local",
@@ -192,8 +190,11 @@ export class Pointer {
 }
 
 export class VoidPointer {
-  constructor(
-    public type: any,
-    public value: any,
-  ) {}
+  public type: any;
+  public value: any;
+
+  constructor(type: any, value: any) {
+    this.type = type;
+    this.value = value;
+  }
 }

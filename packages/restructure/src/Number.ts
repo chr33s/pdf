@@ -1,13 +1,14 @@
-import type EncodeStream from "./EncodeStream.js";
 import DecodeStream from "./DecodeStream.js";
+import type EncodeStream from "./EncodeStream.js";
 
 export class NumberT {
   private fn: string;
+  public type: string;
+  public endian: "BE" | "LE";
 
-  constructor(
-    public type: string,
-    public endian: "BE" | "LE" = "BE",
-  ) {
+  constructor(type: string, endian: "BE" | "LE" = "BE") {
+    this.type = type;
+    this.endian = endian;
     this.fn = type;
     if (this.type[this.type.length - 1] !== "8") {
       this.fn += this.endian;

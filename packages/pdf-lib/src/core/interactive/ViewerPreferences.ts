@@ -19,61 +19,79 @@ const asEnum = <T extends string | number, U extends { [key: string]: T }>(
   return enumType[rawValue];
 };
 
-export enum NonFullScreenPageMode {
+const nonFullScreenPageMode = {
   /**
    * After exiting FullScreen mode, neither the document outline nor thumbnail
    * images should be visible.
    */
-  UseNone = "UseNone",
+  UseNone: "UseNone",
 
   /** After exiting FullScreen mode, the document outline should be visible. */
-  UseOutlines = "UseOutlines",
+  UseOutlines: "UseOutlines",
 
   /** After exiting FullScreen mode, thumbnail images should be visible. */
-  UseThumbs = "UseThumbs",
+  UseThumbs: "UseThumbs",
 
   /**
    * After exiting FullScreen mode, the optional content group panel should be
    * visible.
    */
-  UseOC = "UseOC",
-}
+  UseOC: "UseOC",
+} as const;
 
-export enum ReadingDirection {
+export const NonFullScreenPageMode = nonFullScreenPageMode;
+
+export type NonFullScreenPageMode =
+  (typeof nonFullScreenPageMode)[keyof typeof nonFullScreenPageMode];
+
+const readingDirection = {
   /** The predominant reading order is Left to Right. */
-  L2R = "L2R",
+  L2R: "L2R",
 
   /**
    * The predominant reading order is Right to left (including vertical writing
    * systems, such as Chinese, Japanese and Korean).
    */
-  R2L = "R2L",
-}
+  R2L: "R2L",
+} as const;
 
-export enum PrintScaling {
+export const ReadingDirection = readingDirection;
+
+export type ReadingDirection =
+  (typeof readingDirection)[keyof typeof readingDirection];
+
+const printScaling = {
   /** No page scaling. */
-  None = "None",
+  None: "None",
 
   /* Use the PDF reader's default print scaling. */
-  AppDefault = "AppDefault",
-}
+  AppDefault: "AppDefault",
+} as const;
 
-export enum Duplex {
+export const PrintScaling = printScaling;
+
+export type PrintScaling = (typeof printScaling)[keyof typeof printScaling];
+
+const duplex = {
   /** The PDF reader should print single-sided. */
-  Simplex = "Simplex",
+  Simplex: "Simplex",
 
   /**
    * The PDF reader should print double sided and flip on the short edge of the
    * sheet.
    */
-  DuplexFlipShortEdge = "DuplexFlipShortEdge",
+  DuplexFlipShortEdge: "DuplexFlipShortEdge",
 
   /**
    * The PDF reader should print double sided and flip on the long edge of the
    * sheet.
    */
-  DuplexFlipLongEdge = "DuplexFlipLongEdge",
-}
+  DuplexFlipLongEdge: "DuplexFlipLongEdge",
+} as const;
+
+export const Duplex = duplex;
+
+export type Duplex = (typeof duplex)[keyof typeof duplex];
 
 type BoolViewerPrefKey =
   | "HideToolbar"

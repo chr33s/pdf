@@ -21,9 +21,11 @@ export default class DecodeStream {
 
   public pos = 0;
   public length: number;
+  public buffer: Buffer;
   [key: string]: any;
 
-  constructor(public buffer: Buffer) {
+  constructor(buffer: Buffer) {
+    this.buffer = buffer;
     this.length = buffer.length;
   }
 

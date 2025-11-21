@@ -11,26 +11,30 @@ import PDFRef from "../objects/PDFRef.js";
 import PDFContext from "../PDFContext.js";
 import PDFFlateStream from "./PDFFlateStream.js";
 
-export enum EntryType {
-  Deleted = 0,
-  Uncompressed = 1,
-  Compressed = 2,
-}
+const entryType = {
+  Deleted: 0,
+  Uncompressed: 1,
+  Compressed: 2,
+} as const;
+
+export const EntryType = entryType;
+
+export type EntryType = (typeof entryType)[keyof typeof entryType];
 
 export interface DeletedEntry {
-  type: EntryType.Deleted;
+  type: (typeof entryType)["Deleted"];
   ref: PDFRef;
   nextFreeObjectNumber: number;
 }
 
 export interface UncompressedEntry {
-  type: EntryType.Uncompressed;
+  type: (typeof entryType)["Uncompressed"];
   ref: PDFRef;
   offset: number;
 }
 
 export interface CompressedEntry {
-  type: EntryType.Compressed;
+  type: (typeof entryType)["Compressed"];
   ref: PDFRef;
   objectStreamRef: PDFRef;
   index: number;

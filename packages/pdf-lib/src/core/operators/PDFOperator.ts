@@ -7,7 +7,7 @@ import PDFObject from "../objects/PDFObject.js";
 import PDFString from "../objects/PDFString.js";
 import PDFContext from "../PDFContext.js";
 import CharCodes from "../syntax/CharCodes.js";
-import PDFOperatorNames from "./PDFOperatorNames.js";
+import type { PDFOperatorName } from "./PDFOperatorNames.js";
 
 export type PDFOperatorArg =
   | string
@@ -18,13 +18,13 @@ export type PDFOperatorArg =
   | PDFHexString;
 
 class PDFOperator {
-  static of = (name: PDFOperatorNames, args?: PDFOperatorArg[]) =>
+  static of = (name: PDFOperatorName, args?: PDFOperatorArg[]) =>
     new PDFOperator(name, args);
 
-  private readonly name: PDFOperatorNames;
+  private readonly name: PDFOperatorName;
   private readonly args: PDFOperatorArg[];
 
-  private constructor(name: PDFOperatorNames, args?: PDFOperatorArg[]) {
+  private constructor(name: PDFOperatorName, args?: PDFOperatorArg[]) {
     this.name = name;
     this.args = args || [];
   }

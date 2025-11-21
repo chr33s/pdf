@@ -18,10 +18,13 @@ function resolveEncodingValue(
 }
 
 export default class StringT {
-  constructor(
-    public length?: LengthLike,
-    public encoding: EncodingResolver = "ascii",
-  ) {}
+  public length?: LengthLike;
+  public encoding: EncodingResolver;
+
+  constructor(length?: LengthLike, encoding: EncodingResolver = "ascii") {
+    this.length = length;
+    this.encoding = encoding;
+  }
 
   decode(stream: DecodeStream, parent?: any): string | Buffer {
     let length: number;

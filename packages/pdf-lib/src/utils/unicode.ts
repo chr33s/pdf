@@ -261,10 +261,12 @@ export const highSurrogate = (codePoint: number) =>
 export const lowSurrogate = (codePoint: number) =>
   ((codePoint - 0x10000) % 0x400) + 0xdc00;
 
-enum ByteOrder {
-  BigEndian = "BigEndian",
-  LittleEndian = "LittleEndian",
-}
+const byteOrders = {
+  BigEndian: "BigEndian",
+  LittleEndian: "LittleEndian",
+} as const;
+
+type ByteOrder = (typeof byteOrders)[keyof typeof byteOrders];
 
 const REPLACEMENT = "�".codePointAt(0)!;
 
@@ -287,7 +289,7 @@ export const utf16Decode = (
   // Need at least 2 bytes of data in UTF-16 encodings
   if (input.length <= 1) return String.fromCodePoint(REPLACEMENT);
 
-  const byteOrder = byteOrderMark ? readBOM(input) : ByteOrder.BigEndian;
+  const byteOrder = byteOrderMark ? readBOM(input) : byteOrders.BigEndian;
 
   // Skip byte order mark if needed
   let idx = byteOrderMark ? 2 : 0;
@@ -356,8 +358,8 @@ const decodeValues = (first: number, second: number, byteOrder: ByteOrder) => {
   // Append the binary representation of the preceding byte by shifting the
   // first one 8 to the left and than applying a bitwise or-operator to append
   // the second one.
-  if (byteOrder === ByteOrder.LittleEndian) return (second << 8) | first;
-  if (byteOrder === ByteOrder.BigEndian) return (first << 8) | second;
+  if (byteOrder === byteOrders.LittleEndian) return (second << 8) | first;
+  if (byteOrder === byteOrders.BigEndian) return (first << 8) | second;
   throw new Error("Invalid byteOrder");
 };
 
@@ -371,9 +373,9 @@ const decodeValues = (first: number, second: number, byteOrder: ByteOrder) => {
  */
 // prettier-ignore
 const readBOM = (bytes: Uint8Array): ByteOrder => (
-    hasUtf16BigEndianBOM(bytes) ? ByteOrder.BigEndian
-  : hasUtf16LittleEndianBOM(bytes) ? ByteOrder.LittleEndian
-  : ByteOrder.BigEndian
+    hasUtf16BigEndianBOM(bytes) ? byteOrders.BigEndian
+  : hasUtf16LittleEndianBOM(bytes) ? byteOrders.LittleEndian
+  : byteOrders.BigEndian
 );
 
 const hasUtf16BigEndianBOM = (bytes: Uint8Array) =>

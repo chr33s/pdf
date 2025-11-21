@@ -86,20 +86,28 @@ export const setDashPattern = (
 
 export const restoreDashPattern = () => setDashPattern([], 0);
 
-export enum LineCapStyle {
-  Butt = 0,
-  Round = 1,
-  Projecting = 2,
-}
+const lineCapStyle = {
+  Butt: 0,
+  Round: 1,
+  Projecting: 2,
+} as const;
+
+export const LineCapStyle = lineCapStyle;
+
+export type LineCapStyle = (typeof lineCapStyle)[keyof typeof lineCapStyle];
 
 export const setLineCap = (style: LineCapStyle) =>
   PDFOperator.of(Ops.SetLineCapStyle, [asPDFNumber(style)]);
 
-export enum LineJoinStyle {
-  Miter = 0,
-  Round = 1,
-  Bevel = 2,
-}
+const lineJoinStyle = {
+  Miter: 0,
+  Round: 1,
+  Bevel: 2,
+} as const;
+
+export const LineJoinStyle = lineJoinStyle;
+
+export type LineJoinStyle = (typeof lineJoinStyle)[keyof typeof lineJoinStyle];
 
 export const setLineJoin = (style: LineJoinStyle) =>
   PDFOperator.of(Ops.SetLineJoinStyle, [asPDFNumber(style)]);
@@ -185,10 +193,14 @@ export const square = (xPos: number, yPos: number, size: number) =>
 
 export const stroke = () => PDFOperator.of(Ops.StrokePath);
 
-export enum FillRule {
-  NonZero = "f",
-  EvenOdd = "f*",
-}
+const fillRule = {
+  NonZero: "f",
+  EvenOdd: "f*",
+} as const;
+
+export const FillRule = fillRule;
+
+export type FillRule = (typeof fillRule)[keyof typeof fillRule];
 
 export const fill = () => PDFOperator.of(Ops.FillNonZero);
 
@@ -236,16 +248,21 @@ export const setLineHeight = (lineHeight: number | PDFNumber) =>
 export const setTextRise = (rise: number | PDFNumber) =>
   PDFOperator.of(Ops.SetTextRise, [asPDFNumber(rise)]);
 
-export enum TextRenderingMode {
-  Fill = 0,
-  Outline = 1,
-  FillAndOutline = 2,
-  Invisible = 3,
-  FillAndClip = 4,
-  OutlineAndClip = 5,
-  FillAndOutlineAndClip = 6,
-  Clip = 7,
-}
+const textRenderingMode = {
+  Fill: 0,
+  Outline: 1,
+  FillAndOutline: 2,
+  Invisible: 3,
+  FillAndClip: 4,
+  OutlineAndClip: 5,
+  FillAndOutlineAndClip: 6,
+  Clip: 7,
+} as const;
+
+export const TextRenderingMode = textRenderingMode;
+
+export type TextRenderingMode =
+  (typeof textRenderingMode)[keyof typeof textRenderingMode];
 
 export const setTextRenderingMode = (mode: TextRenderingMode) =>
   PDFOperator.of(Ops.SetTextRenderingMode, [asPDFNumber(mode)]);

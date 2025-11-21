@@ -11,14 +11,20 @@ class PDFObjectStreamParser extends PDFObjectParser {
   static forStream = (
     rawStream: PDFRawStream,
     shouldWaitForTick?: () => boolean,
-  ) => new PDFObjectStreamParser(rawStream, shouldWaitForTick);
+  ) => {
+    try {
+      return new PDFObjectStreamParser(rawStream, shouldWaitForTick);
+    } catch (error) {
+      return new FailedPDFObjectStreamParser(
+        error,
+      ) as unknown as PDFObjectStreamParser;
+    }
+  };
 
-  private alreadyParsed: boolean;
-  private readonly shouldWaitForTick: () => boolean;
-  private readonly firstOffset: number;
-  private readonly objectCount: number;
-
-  constructor(rawStream: PDFRawStream, shouldWaitForTick?: () => boolean) {
+  private constructor(
+    rawStream: PDFRawStream,
+    shouldWaitForTick?: () => boolean,
+  ) {
     super(ByteStream.fromPDFRawStream(rawStream), rawStream.dict.context);
 
     const { dict } = rawStream;
@@ -28,6 +34,11 @@ class PDFObjectStreamParser extends PDFObjectParser {
     this.firstOffset = dict.lookup(PDFName.of("First"), PDFNumber).asNumber();
     this.objectCount = dict.lookup(PDFName.of("N"), PDFNumber).asNumber();
   }
+
+  private alreadyParsed: boolean;
+  private readonly shouldWaitForTick: () => boolean;
+  private readonly firstOffset: number;
+  private readonly objectCount: number;
 
   async parseIntoContext(): Promise<void> {
     if (this.alreadyParsed) {
@@ -61,6 +72,14 @@ class PDFObjectStreamParser extends PDFObjectParser {
       offsetsAndObjectNumbers.push({ objectNumber, offset });
     }
     return offsetsAndObjectNumbers;
+  }
+}
+
+class FailedPDFObjectStreamParser {
+  constructor(private readonly error: unknown) {}
+
+  async parseIntoContext(): Promise<void> {
+    throw this.error;
   }
 }
 

@@ -1,7 +1,12 @@
 import { Assets } from "../index.js";
 
 // @deno-types="../dummy.d.ts"
-import { PDFDocument, PDFFont, StandardFonts } from "../../../dist/pdf-lib.js";
+import {
+  PDFDocument,
+  PDFFont,
+  StandardFonts,
+  type StandardFont,
+} from "../../../dist/pdf-lib.js";
 
 // prettier-ignore
 const winAnsiCodePoints = [
@@ -102,7 +107,7 @@ const addPageWithFonts = (
   text: string,
   fontSize: number,
   gapAmt: number,
-  fontNames: StandardFonts[],
+  fontNames: StandardFont[],
 ) => {
   const page = pdfDoc.addPage([650, 700]);
 

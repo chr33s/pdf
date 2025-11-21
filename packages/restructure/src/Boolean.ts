@@ -2,7 +2,11 @@ import type DecodeStream from "./DecodeStream.js";
 import type EncodeStream from "./EncodeStream.js";
 
 export default class BooleanT {
-  constructor(public type: any) {}
+  public type: any;
+
+  constructor(type: any) {
+    this.type = type;
+  }
 
   decode(stream: DecodeStream, parent?: any): boolean {
     return Boolean(this.type.decode(stream, parent));

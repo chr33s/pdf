@@ -6,11 +6,19 @@ import { resolveLength, type LengthLike } from "./utils.js";
 export type LengthType = "count" | "bytes";
 
 export default class ArrayT<T = unknown, TResult = T[]> {
+  public type: any;
+  public length?: LengthLike;
+  public lengthType: LengthType;
+
   constructor(
-    public type: any,
-    public length?: LengthLike,
-    public lengthType: LengthType = "count",
-  ) {}
+    type: any,
+    length?: LengthLike,
+    lengthType: LengthType = "count",
+  ) {
+    this.type = type;
+    this.length = length;
+    this.lengthType = lengthType;
+  }
 
   decode(stream: DecodeStream, parent?: any): TResult {
     const pos = stream.pos;

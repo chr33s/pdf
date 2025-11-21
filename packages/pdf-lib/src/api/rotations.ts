@@ -1,17 +1,19 @@
 import { assertIs, error } from "../utils/index.js";
 
-export enum RotationTypes {
-  Degrees = "degrees",
-  Radians = "radians",
-}
+const rotationTypes = {
+  Degrees: "degrees",
+  Radians: "radians",
+} as const;
+
+export const RotationTypes = rotationTypes;
 
 export interface Radians {
-  type: RotationTypes.Radians;
+  type: (typeof rotationTypes)["Radians"];
   angle: number;
 }
 
 export interface Degrees {
-  type: RotationTypes.Degrees;
+  type: (typeof rotationTypes)["Degrees"];
   angle: number;
 }
 

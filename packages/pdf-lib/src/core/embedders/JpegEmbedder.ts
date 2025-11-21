@@ -10,16 +10,18 @@ const MARKERS = [
   0xffcd, 0xffce, 0xffcf,
 ];
 
-enum ColorSpace {
-  DeviceGray = "DeviceGray",
-  DeviceRGB = "DeviceRGB",
-  DeviceCMYK = "DeviceCMYK",
-}
+const colorSpace = {
+  DeviceGray: "DeviceGray",
+  DeviceRGB: "DeviceRGB",
+  DeviceCMYK: "DeviceCMYK",
+} as const;
+
+type ColorSpace = (typeof colorSpace)[keyof typeof colorSpace];
 
 const ChannelToColorSpace: { [idx: number]: ColorSpace | undefined } = {
-  1: ColorSpace.DeviceGray,
-  3: ColorSpace.DeviceRGB,
-  4: ColorSpace.DeviceCMYK,
+  1: colorSpace.DeviceGray,
+  3: colorSpace.DeviceRGB,
+  4: colorSpace.DeviceCMYK,
 };
 
 /**
@@ -114,7 +116,7 @@ class JpegEmbedder {
       // Applying a swap here as a hedge that most bytes passing
       // through this method will benefit from it.
       Decode:
-        this.colorSpace === ColorSpace.DeviceCMYK
+        this.colorSpace === colorSpace.DeviceCMYK
           ? [1, 0, 1, 0, 1, 0, 1, 0]
           : undefined,
     });

@@ -1,12 +1,16 @@
 import { EmbeddedFileOptions } from "../core/embedders/FileEmbedder.js";
 import { TypeFeatures } from "../types/fontkit.js";
 
-export enum ParseSpeeds {
-  Fastest = Infinity,
-  Fast = 1500,
-  Medium = 500,
-  Slow = 100,
-}
+const parseSpeeds = {
+  Fastest: Infinity,
+  Fast: 1500,
+  Medium: 500,
+  Slow: 100,
+} as const;
+
+export const ParseSpeeds = parseSpeeds;
+
+export type ParseSpeed = (typeof parseSpeeds)[keyof typeof parseSpeeds];
 
 export interface AttachmentOptions extends EmbeddedFileOptions {}
 
@@ -23,7 +27,7 @@ export interface Base64SaveOptions extends SaveOptions {
 
 export interface LoadOptions {
   ignoreEncryption?: boolean;
-  parseSpeed?: ParseSpeeds | number;
+  parseSpeed?: ParseSpeed | number;
   throwOnInvalidObject?: boolean;
   warnOnInvalidObjects?: boolean;
   updateMetadata?: boolean;

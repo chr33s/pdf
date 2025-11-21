@@ -42,7 +42,10 @@ class BrotliBitReader {
   private bit_end_pos_ = 0 /* bit-reading end position from LSB of val_ */;
   private eos_ = 0 /* input stream is finished */;
 
-  constructor(private readonly input_: BrotliBitReaderInput) {
+  private readonly input_: BrotliBitReaderInput;
+
+  constructor(input_: BrotliBitReaderInput) {
+    this.input_ = input_;
     this.reset();
   }
 

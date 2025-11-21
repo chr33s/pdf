@@ -9,26 +9,28 @@ import {
   setStrokingRgbColor,
 } from "./operators.js";
 
-export enum ColorTypes {
-  Grayscale = "Grayscale",
-  RGB = "RGB",
-  CMYK = "CMYK",
-}
+const colorTypes = {
+  Grayscale: "Grayscale",
+  RGB: "RGB",
+  CMYK: "CMYK",
+} as const;
+
+export const ColorTypes = colorTypes;
 
 export interface Grayscale {
-  type: ColorTypes.Grayscale;
+  type: (typeof colorTypes)["Grayscale"];
   gray: number;
 }
 
 export interface RGB {
-  type: ColorTypes.RGB;
+  type: (typeof colorTypes)["RGB"];
   red: number;
   green: number;
   blue: number;
 }
 
 export interface CMYK {
-  type: ColorTypes.CMYK;
+  type: (typeof colorTypes)["CMYK"];
   cyan: number;
   magenta: number;
   yellow: number;

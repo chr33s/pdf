@@ -29,13 +29,17 @@ const splitAlphaChannel = (rgbaChannel: Uint8Array) => {
   return { rgbChannel, alphaChannel };
 };
 
-export enum PngType {
-  Greyscale = "Greyscale",
-  Truecolour = "Truecolour",
-  IndexedColour = "IndexedColour",
-  GreyscaleWithAlpha = "GreyscaleWithAlpha",
-  TruecolourWithAlpha = "TruecolourWithAlpha",
-}
+const pngType = {
+  Greyscale: "Greyscale",
+  Truecolour: "Truecolour",
+  IndexedColour: "IndexedColour",
+  GreyscaleWithAlpha: "GreyscaleWithAlpha",
+  TruecolourWithAlpha: "TruecolourWithAlpha",
+} as const;
+
+export const PngType = pngType;
+
+export type PngType = (typeof pngType)[keyof typeof pngType];
 
 export class PNG {
   static load = (pngData: Uint8Array) => new PNG(pngData);

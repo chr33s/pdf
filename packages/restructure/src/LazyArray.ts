@@ -9,12 +9,16 @@ export class LazyArray<T = unknown> {
   private base: number;
   private items: Array<T | undefined> = [];
 
-  constructor(
-    public type: any,
-    public length: number,
-    public stream: DecodeStream,
-    public ctx: any,
-  ) {
+  public type: any;
+  public length: number;
+  public stream: DecodeStream;
+  public ctx: any;
+
+  constructor(type: any, length: number, stream: DecodeStream, ctx: any) {
+    this.type = type;
+    this.length = length;
+    this.stream = stream;
+    this.ctx = ctx;
     this.base = stream.pos;
   }
 

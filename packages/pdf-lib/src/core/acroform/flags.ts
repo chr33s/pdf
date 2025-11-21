@@ -1,7 +1,7 @@
 const flag = (bitIndex: number) => 1 << bitIndex;
 
 /** From PDF spec table 221 */
-export enum AcroFieldFlags {
+const acroFieldFlags = {
   /**
    * If set, the user may not change the value of the field. Any associated
    * widget annotations will not interact with the user; that is, they will not
@@ -9,40 +9,45 @@ export enum AcroFieldFlags {
    * motions. This flag is useful for fields whose values are computed or
    * imported from a database.
    */
-  ReadOnly = flag(1 - 1),
+  ReadOnly: flag(1 - 1),
 
   /**
    * If set, the field shall have a value at the time it is exported by a
    * submit-form action (see 12.7.5.2, "Submit-Form Action").
    */
-  Required = flag(2 - 1),
+  Required: flag(2 - 1),
 
   /**
    * If set, the field shall not be exported by a submit-form action
    * (see 12.7.5.2, "Submit-Form Action").
    */
-  NoExport = flag(3 - 1),
-}
+  NoExport: flag(3 - 1),
+} as const;
+
+export const AcroFieldFlags = acroFieldFlags;
+
+export type AcroFieldFlag =
+  (typeof acroFieldFlags)[keyof typeof acroFieldFlags];
 
 /** From PDF spec table 226 */
-export enum AcroButtonFlags {
+const acroButtonFlags = {
   /**
    * (Radio buttons only) If set, exactly one radio button shall be selected at
    * all times; selecting the currently selected button has no effect. If clear,
    * clicking the selected button deselects it, leaving no button selected.
    */
-  NoToggleToOff = flag(15 - 1),
+  NoToggleToOff: flag(15 - 1),
 
   /**
    * If set, the field is a set of radio buttons; if clear, the field is a check
    * box. This flag may be set only if the Pushbutton flag is clear.
    */
-  Radio = flag(16 - 1),
+  Radio: flag(16 - 1),
 
   /**
    * If set, the field is a pushbutton that does not retain a permanent value.
    */
-  PushButton = flag(17 - 1),
+  PushButton: flag(17 - 1),
 
   /**
    * If set, a group of radio buttons within a radio button field that use the
@@ -50,16 +55,21 @@ export enum AcroButtonFlags {
    * is checked, they are all checked. If clear, the buttons are mutually
    * exclusive (the same behavior as HTML radio buttons).
    */
-  RadiosInUnison = flag(26 - 1),
-}
+  RadiosInUnison: flag(26 - 1),
+} as const;
+
+export const AcroButtonFlags = acroButtonFlags;
+
+export type AcroButtonFlag =
+  (typeof acroButtonFlags)[keyof typeof acroButtonFlags];
 
 /** From PDF spec table 228 */
-export enum AcroTextFlags {
+const acroTextFlags = {
   /**
    * If set, the field may contain multiple lines of text; if clear, the field's
    * text shall be restricted to a single line.
    */
-  Multiline = flag(13 - 1),
+  Multiline: flag(13 - 1),
 
   /**
    * If set, the field is intended for entering a secure password that should
@@ -69,18 +79,18 @@ export enum AcroTextFlags {
    * > NOTE   To protect password confidentiality, readers should never store
    * >        the value of the text field in the PDF file if this flag is set.
    */
-  Password = flag(14 - 1),
+  Password: flag(14 - 1),
 
   /**
    * If set, the text entered in the field represents the pathname of a file
    * whose contents shall be submitted as the value of the field.
    */
-  FileSelect = flag(21 - 1),
+  FileSelect: flag(21 - 1),
 
   /**
    * If set, text entered in the field shall not be spell-checked.
    */
-  DoNotSpellCheck = flag(23 - 1),
+  DoNotSpellCheck: flag(23 - 1),
 
   /**
    * If set, the field shall not scroll (horizontally for single-line fields,
@@ -90,7 +100,7 @@ export enum AcroTextFlags {
    * filling, the filler should take care not to add more character than will
    * visibly fit in the defined area.
    */
-  DoNotScroll = flag(24 - 1),
+  DoNotScroll: flag(24 - 1),
 
   /**
    * May be set only if the MaxLen entry is present in the text field dictionary
@@ -99,7 +109,7 @@ export enum AcroTextFlags {
    * equally spaced positions, or combs, as the value of MaxLen, and the text
    * is laid out into those combs.
    */
-  Comb = flag(25 - 1),
+  Comb: flag(25 - 1),
 
   /**
    * If set, the value of this field shall be a rich text string
@@ -107,22 +117,26 @@ export enum AcroTextFlags {
    * entry of the field dictionary (Table 222) shall specify the rich text
    * string.
    */
-  RichText = flag(26 - 1),
-}
+  RichText: flag(26 - 1),
+} as const;
+
+export const AcroTextFlags = acroTextFlags;
+
+export type AcroTextFlag = (typeof acroTextFlags)[keyof typeof acroTextFlags];
 
 /** From PDF spec table 230 */
-export enum AcroChoiceFlags {
+const acroChoiceFlags = {
   /**
    * If set, the field is a combo box; if clear, the field is a list box.
    */
-  Combo = flag(18 - 1),
+  Combo: flag(18 - 1),
 
   /**
    * If set, the combo box shall include an editable text box as well as a
    * drop-down list; if clear, it shall include only a drop-down list. This
    * flag shall be used only if the Combo flag is set.
    */
-  Edit = flag(19 - 1),
+  Edit: flag(19 - 1),
 
   /**
    * If set, the field's option items shall be sorted alphabetically. This flag
@@ -130,19 +144,19 @@ export enum AcroChoiceFlags {
    * display the options in the order in which they occur in the Opt array
    * (see Table 231).
    */
-  Sort = flag(20 - 1),
+  Sort: flag(20 - 1),
 
   /**
    * If set, more than one of the field's option items may be selected
    * simultaneously; if clear, at most one item shall be selected.
    */
-  MultiSelect = flag(22 - 1),
+  MultiSelect: flag(22 - 1),
 
   /**
    * If set, text entered in the field shall not be spell-checked. This flag
    * shall not be used unless the Combo and Edit flags are both set.
    */
-  DoNotSpellCheck = flag(23 - 1),
+  DoNotSpellCheck: flag(23 - 1),
 
   /**
    * If set, the new value shall be committed as soon as a selection is made
@@ -158,5 +172,10 @@ export enum AcroChoiceFlags {
    * made, without requiring the user to exit the field. If clear, the new
    * value is not committed until the user exits the field.
    */
-  CommitOnSelChange = flag(27 - 1),
-}
+  CommitOnSelChange: flag(27 - 1),
+} as const;
+
+export const AcroChoiceFlags = acroChoiceFlags;
+
+export type AcroChoiceFlag =
+  (typeof acroChoiceFlags)[keyof typeof acroChoiceFlags];

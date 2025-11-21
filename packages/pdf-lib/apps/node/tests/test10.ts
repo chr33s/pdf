@@ -1,5 +1,10 @@
 import { Assets } from "..";
-import { PDFDocument, PDFFont, StandardFonts } from "../../...js";
+import {
+  PDFDocument,
+  PDFFont,
+  StandardFonts,
+  type StandardFont,
+} from "../../...js";
 
 // prettier-ignore
 const winAnsiCodePoints = [
@@ -100,7 +105,7 @@ const addPageWithFonts = (
   text: string,
   fontSize: number,
   gapAmt: number,
-  fontNames: StandardFonts[],
+  fontNames: StandardFont[],
 ) => {
   const page = pdfDoc.addPage([650, 700]);
 

@@ -2,10 +2,13 @@ import type DecodeStream from "./DecodeStream.js";
 import type EncodeStream from "./EncodeStream.js";
 
 export default class Enum<T = unknown> {
-  constructor(
-    public type: any,
-    public options: T[] = [],
-  ) {}
+  public type: any;
+  public options: T[];
+
+  constructor(type: any, options: T[] = []) {
+    this.type = type;
+    this.options = options;
+  }
 
   decode(stream: DecodeStream): T {
     const index = this.type.decode(stream);

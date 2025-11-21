@@ -3,10 +3,13 @@ import type EncodeStream from "./EncodeStream.js";
 import { resolveLength, type LengthLike } from "./utils.js";
 
 export default class Reserved {
-  constructor(
-    public type: any,
-    public count: LengthLike | number = 1,
-  ) {}
+  public type: any;
+  public count: LengthLike | number;
+
+  constructor(type: any, count: LengthLike | number = 1) {
+    this.type = type;
+    this.count = count;
+  }
 
   decode(stream: DecodeStream, parent?: any): undefined {
     stream.pos += this.size(undefined, parent);

@@ -39,29 +39,33 @@ const compressedJsonForFontName = {
   'ZapfDingbats': ZapfDingbatsCompressed,
 };
 
-export enum FontNames {
-  Courier = "Courier",
-  CourierBold = "Courier-Bold",
-  CourierOblique = "Courier-Oblique",
-  CourierBoldOblique = "Courier-BoldOblique",
+const fontNames = {
+  Courier: "Courier",
+  CourierBold: "Courier-Bold",
+  CourierOblique: "Courier-Oblique",
+  CourierBoldOblique: "Courier-BoldOblique",
 
-  Helvetica = "Helvetica",
-  HelveticaBold = "Helvetica-Bold",
-  HelveticaOblique = "Helvetica-Oblique",
-  HelveticaBoldOblique = "Helvetica-BoldOblique",
+  Helvetica: "Helvetica",
+  HelveticaBold: "Helvetica-Bold",
+  HelveticaOblique: "Helvetica-Oblique",
+  HelveticaBoldOblique: "Helvetica-BoldOblique",
 
-  TimesRoman = "Times-Roman",
-  TimesRomanBold = "Times-Bold",
-  TimesRomanItalic = "Times-Italic",
-  TimesRomanBoldItalic = "Times-BoldItalic",
+  TimesRoman: "Times-Roman",
+  TimesRomanBold: "Times-Bold",
+  TimesRomanItalic: "Times-Italic",
+  TimesRomanBoldItalic: "Times-BoldItalic",
 
-  Symbol = "Symbol",
-  ZapfDingbats = "ZapfDingbats",
-}
+  Symbol: "Symbol",
+  ZapfDingbats: "ZapfDingbats",
+} as const;
 
-export type IFontNames = FontNames | keyof typeof compressedJsonForFontName;
+export const FontNames = fontNames;
 
-const fontCache: { [name in FontNames]?: Font } = {};
+export type FontName = (typeof fontNames)[keyof typeof fontNames];
+
+export type IFontNames = FontName | keyof typeof compressedJsonForFontName;
+
+const fontCache: Partial<Record<FontName, Font>> = {};
 
 export interface ICharMetrics {
   /** Decimal value of default character code (-1 if not encoded) */

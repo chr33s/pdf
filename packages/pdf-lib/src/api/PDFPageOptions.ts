@@ -9,20 +9,24 @@ interface SvgOptions {
   clipSpaces?: Space[];
 }
 
-export enum BlendMode {
-  Normal = "Normal",
-  Multiply = "Multiply",
-  Screen = "Screen",
-  Overlay = "Overlay",
-  Darken = "Darken",
-  Lighten = "Lighten",
-  ColorDodge = "ColorDodge",
-  ColorBurn = "ColorBurn",
-  HardLight = "HardLight",
-  SoftLight = "SoftLight",
-  Difference = "Difference",
-  Exclusion = "Exclusion",
-}
+const blendMode = {
+  Normal: "Normal",
+  Multiply: "Multiply",
+  Screen: "Screen",
+  Overlay: "Overlay",
+  Darken: "Darken",
+  Lighten: "Lighten",
+  ColorDodge: "ColorDodge",
+  ColorBurn: "ColorBurn",
+  HardLight: "HardLight",
+  SoftLight: "SoftLight",
+  Difference: "Difference",
+  Exclusion: "Exclusion",
+} as const;
+
+export const BlendMode = blendMode;
+
+export type BlendMode = (typeof blendMode)[keyof typeof blendMode];
 
 export interface PDFPageDrawTextOptions extends SvgOptions {
   color?: Color;

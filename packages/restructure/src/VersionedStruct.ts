@@ -19,11 +19,13 @@ type PointerContext = {
 };
 
 export default class VersionedStruct extends Struct {
-  constructor(
-    public type: any,
-    public versions: VersionDefinitions = {},
-  ) {
+  public type: any;
+  public versions: VersionDefinitions;
+
+  constructor(type: any, versions: VersionDefinitions = {}) {
     super();
+    this.type = type;
+    this.versions = versions;
   }
 
   private versionGetter(parent: any): any {

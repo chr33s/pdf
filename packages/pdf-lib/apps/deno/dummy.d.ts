@@ -18,3 +18,4 @@ declare const pushGraphicsState: any;
 declare const rgb: any;
 declare const setLineJoin: any;
 declare const StandardFonts: any;
+type StandardFont = any;

@@ -3,6 +3,7 @@ import {
   EncodingType,
   Font,
   FontNames,
+  type FontName,
 } from "@chr33s/standard-fonts";
 
 import { toCodePoint, toHexString } from "../../utils/index.js";
@@ -21,7 +22,7 @@ export interface Glyph {
  *   https://github.com/foliojs/pdfkit/blob/f91bdd61c164a72ea06be1a43dc0a412afc3925f/lib/font/afm.coffee
  */
 class StandardFontEmbedder {
-  static for = (fontName: FontNames, customName?: string) =>
+  static for = (fontName: FontName, customName?: string) =>
     new StandardFontEmbedder(fontName, customName);
 
   readonly font: Font;
@@ -29,7 +30,7 @@ class StandardFontEmbedder {
   readonly fontName: string;
   readonly customName: string | undefined;
 
-  private constructor(fontName: FontNames, customName?: string) {
+  private constructor(fontName: FontName, customName?: string) {
     // prettier-ignore
     this.encoding = (
         fontName === FontNames.ZapfDingbats ? Encodings.ZapfDingbats

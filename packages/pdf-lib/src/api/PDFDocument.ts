@@ -79,7 +79,7 @@ import PDFJavaScript from "./PDFJavaScript.js";
 import PDFPage from "./PDFPage.js";
 import PDFSvg from "./PDFSvg.js";
 import { PageSizes } from "./sizes.js";
-import { StandardFonts } from "./StandardFonts.js";
+import type { StandardFont } from "./StandardFonts.js";
 
 export type BasePDFAttachment = {
   name: string;
@@ -1185,7 +1185,7 @@ export default class PDFDocument {
    * @returns Resolves with the embedded font.
    */
   async embedFont(
-    font: StandardFonts | string | Uint8Array | ArrayBuffer,
+    font: StandardFont | string | Uint8Array | ArrayBuffer,
     options: EmbedFontOptions = {},
   ): Promise<PDFFont> {
     const { subset = false, customName, features } = options;
@@ -1209,7 +1209,7 @@ export default class PDFDocument {
         : await CustomFontEmbedder.for(fontkit, bytes, customName, features);
     } else {
       throw new TypeError(
-        "`font` must be one of `StandardFonts | string | Uint8Array | ArrayBuffer`",
+        "`font` must be one of `StandardFont | string | Uint8Array | ArrayBuffer`",
       );
     }
 
@@ -1231,10 +1231,10 @@ export default class PDFDocument {
    * @param customName The name to be used when embedding the font.
    * @returns The embedded font.
    */
-  embedStandardFont(font: StandardFonts, customName?: string): PDFFont {
+  embedStandardFont(font: StandardFont, customName?: string): PDFFont {
     assertIs(font, "font", ["string"]);
     if (!isStandardFont(font)) {
-      throw new TypeError("`font` must be one of type `StandardFonts`");
+      throw new TypeError("`font` must be one of type `StandardFont`");
     }
 
     const embedder = StandardFontEmbedder.for(font, customName);

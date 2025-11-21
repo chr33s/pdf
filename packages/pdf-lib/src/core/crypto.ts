@@ -177,8 +177,8 @@ const calculateMD5 = (function calculateMD5Closure() {
 })();
 
 class Word64 {
-  private low: number;
-  private high: number;
+  public low: number;
+  public high: number;
 
   constructor(highInteger: number, lowInteger: number) {
     this.high = highInteger | 0;

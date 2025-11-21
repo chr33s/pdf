@@ -4,10 +4,13 @@ import type EncodeStream from "./EncodeStream.js";
 type Condition = boolean | ((this: any, parent?: any) => boolean);
 
 export default class Optional<T = unknown> {
-  constructor(
-    public type: any,
-    public condition: Condition = true,
-  ) {}
+  public type: any;
+  public condition: Condition;
+
+  constructor(type: any, condition: Condition = true) {
+    this.type = type;
+    this.condition = condition;
+  }
 
   private evaluateCondition(parent?: any): boolean {
     if (typeof this.condition === "function") {

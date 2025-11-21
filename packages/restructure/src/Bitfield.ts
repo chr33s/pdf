@@ -2,10 +2,13 @@ import type DecodeStream from "./DecodeStream.js";
 import type EncodeStream from "./EncodeStream.js";
 
 export default class Bitfield {
-  constructor(
-    public type: any,
-    public flags: Array<string | null | undefined> = [],
-  ) {}
+  public type: any;
+  public flags: Array<string | null | undefined>;
+
+  constructor(type: any, flags: Array<string | null | undefined> = []) {
+    this.type = type;
+    this.flags = flags;
+  }
 
   decode(stream: DecodeStream): Record<string, boolean> {
     const value = this.type.decode(stream);

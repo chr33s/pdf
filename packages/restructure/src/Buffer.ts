@@ -4,7 +4,11 @@ import { Number as NumberT } from "./Number.js";
 import { resolveLength, type LengthLike } from "./utils.js";
 
 export default class BufferT {
-  constructor(public length: LengthLike) {}
+  public length: LengthLike;
+
+  constructor(length: LengthLike) {
+    this.length = length;
+  }
 
   decode(stream: DecodeStream, parent?: any): Buffer {
     const length = resolveLength(this.length, stream, parent);
