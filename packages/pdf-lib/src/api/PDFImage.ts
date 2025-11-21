@@ -35,8 +35,13 @@ export default class PDFImage implements Embeddable {
   /** The height of this image in pixels. */
   readonly height: number;
 
-  private embedder: ImageEmbedder | undefined;
-  private embedTask: Promise<PDFRef> | undefined;
+  #embedder: ImageEmbedder | undefined;
+  #embedTask: Promise<PDFRef> | undefined;
+
+  /** @deprecated Retained for backwards compatibility checks. */
+  get embedder(): ImageEmbedder | undefined {
+    return this.#embedder;
+  }
 
   private constructor(ref: PDFRef, doc: PDFDocument, embedder: ImageEmbedder) {
     assertIs(ref, "ref", [[PDFRef, "PDFRef"]]);
@@ -51,7 +56,7 @@ export default class PDFImage implements Embeddable {
     this.width = embedder.width;
     this.height = embedder.height;
 
-    this.embedder = embedder;
+    this.#embedder = embedder;
   }
 
   /**
@@ -125,19 +130,19 @@ export default class PDFImage implements Embeddable {
    * @returns Resolves when the embedding is complete.
    */
   async embed(): Promise<void> {
-    if (!this.embedder) return;
+    if (!this.#embedder) return;
 
     // The image should only be embedded once. If there's a pending embed
     // operation then wait on it. Otherwise we need to start the embed.
-    if (!this.embedTask) {
+    if (!this.#embedTask) {
       const { doc, ref } = this;
-      this.embedTask = this.embedder.embedIntoContext(doc.context, ref);
+      this.#embedTask = this.#embedder.embedIntoContext(doc.context, ref);
     }
-    await this.embedTask;
+    await this.#embedTask;
 
     // We clear `this.embedder` so that the indirectly referenced image data
     // can be garbage collected, thus avoiding a memory leak.
     // See https://github.com/Hopding/pdf-lib/pull/1032/files.
-    this.embedder = undefined;
+    this.#embedder = undefined;
   }
 }

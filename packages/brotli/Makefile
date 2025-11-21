@@ -1,5 +1,5 @@
 CPP = emcc
-CPPFLAGS = -O3 -s INITIAL_MEMORY=318767104 -s FILESYSTEM=0 -s ENVIRONMENT=node -s EXPORT_ES6=1 -s MODULARIZE=instance --pre-js src/enc/pre.ts
+CPPFLAGS = -O3 -s INITIAL_MEMORY=318767104 -s FILESYSTEM=0 -s ENVIRONMENT=node -s EXPORT_ES6=1 -s MODULARIZE=instance --minify 0 --pre-js src/enc/pre.ts
 
 COMMONDIR = vendor/brotli/common
 ENCDIR = vendor/brotli/enc

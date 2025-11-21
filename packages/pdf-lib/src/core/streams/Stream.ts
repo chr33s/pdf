@@ -27,20 +27,20 @@ export interface StreamType {
 }
 
 class Stream implements StreamType {
-  private bytes: Uint8Array;
-  private start: number;
-  private pos: number;
-  private end: number;
+  #bytes: Uint8Array;
+  #start: number;
+  #pos: number;
+  #end: number;
 
   constructor(buffer: Uint8Array, start?: number, length?: number) {
-    this.bytes = buffer;
-    this.start = start || 0;
-    this.pos = this.start;
-    this.end = !!start && !!length ? start + length : this.bytes.length;
+    this.#bytes = buffer;
+    this.#start = start || 0;
+    this.#pos = this.#start;
+    this.#end = !!start && !!length ? start + length : this.#bytes.length;
   }
 
   get length() {
-    return this.end - this.start;
+    return this.#end - this.#start;
   }
 
   get isEmpty() {
@@ -48,10 +48,10 @@ class Stream implements StreamType {
   }
 
   getByte() {
-    if (this.pos >= this.end) {
+    if (this.#pos >= this.#end) {
       return -1;
     }
-    return this.bytes[this.pos++];
+    return this.#bytes[this.#pos++];
   }
 
   getUint16() {
@@ -73,9 +73,9 @@ class Stream implements StreamType {
 
   // Returns subarray of original buffer, should only be read.
   getBytes(length: number, forceClamped = false) {
-    const bytes = this.bytes;
-    const pos = this.pos;
-    const strEnd = this.end;
+    const bytes = this.#bytes;
+    const pos = this.#pos;
+    const strEnd = this.#end;
 
     if (!length) {
       const subarray = bytes.subarray(pos, strEnd);
@@ -86,7 +86,7 @@ class Stream implements StreamType {
       if (end > strEnd) {
         end = strEnd;
       }
-      this.pos = end;
+      this.#pos = end;
       const subarray = bytes.subarray(pos, end);
       // `this.bytes` is always a `Uint8Array` here.
       return forceClamped ? new Uint8ClampedArray(subarray) : subarray;
@@ -95,13 +95,13 @@ class Stream implements StreamType {
 
   peekByte() {
     const peekedByte = this.getByte();
-    this.pos--;
+    this.#pos--;
     return peekedByte;
   }
 
   peekBytes(length: number, forceClamped = false) {
     const bytes = this.getBytes(length, forceClamped);
-    this.pos -= bytes.length;
+    this.#pos -= bytes.length;
     return bytes;
   }
 
@@ -109,23 +109,23 @@ class Stream implements StreamType {
     if (!n) {
       n = 1;
     }
-    this.pos += n;
+    this.#pos += n;
   }
 
   reset() {
-    this.pos = this.start;
+    this.#pos = this.#start;
   }
 
   moveStart() {
-    this.start = this.pos;
+    this.#start = this.#pos;
   }
 
   makeSubStream(start: number, length: number) {
-    return new Stream(this.bytes, start, length);
+    return new Stream(this.#bytes, start, length);
   }
 
   decode(): Uint8Array {
-    return this.bytes;
+    return this.#bytes;
   }
 }
 

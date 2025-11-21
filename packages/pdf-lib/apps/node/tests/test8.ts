@@ -1,5 +1,10 @@
 import { Assets } from "..";
-import { ParseSpeeds, PDFDocument, rgb, StandardFonts } from "../../...js";
+import {
+  ParseSpeeds,
+  PDFDocument,
+  rgb,
+  StandardFonts,
+} from "../../../src/index.js";
 
 export default async (assets: Assets) => {
   const { pdfs } = assets;

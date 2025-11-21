@@ -59,57 +59,63 @@ class PDFCrossRefStream extends PDFFlateStream {
   static of = (dict: PDFDict, entries: Entry[], encode = true) =>
     new PDFCrossRefStream(dict, entries, encode);
 
-  private readonly entries: Entry[];
-  private readonly entryTuplesCache: Cache<EntryTuple[]>;
-  private readonly maxByteWidthsCache: Cache<[number, number, number]>;
-  private readonly indexCache: Cache<number[]>;
+  readonly #entries: Entry[];
+  readonly #entryTuplesCache: Cache<EntryTuple[]>;
+  readonly #maxByteWidthsCache: Cache<[number, number, number]>;
+  readonly #indexCache: Cache<number[]>;
 
   private constructor(dict: PDFDict, entries?: Entry[], encode = true) {
     super(dict, encode);
 
-    this.entries = entries || [];
-    this.entryTuplesCache = Cache.populatedBy(this.computeEntryTuples);
-    this.maxByteWidthsCache = Cache.populatedBy(this.computeMaxEntryByteWidths);
-    this.indexCache = Cache.populatedBy(this.computeIndex);
+    this.#entries = entries || [];
+    this.#entryTuplesCache = Cache.populatedBy(this.#computeEntryTuples);
+    this.#maxByteWidthsCache = Cache.populatedBy(
+      this.#computeMaxEntryByteWidths,
+    );
+    this.#indexCache = Cache.populatedBy(this.#computeIndex);
 
     dict.set(PDFName.of("Type"), PDFName.of("XRef"));
   }
 
   addDeletedEntry(ref: PDFRef, nextFreeObjectNumber: number) {
     const type = EntryType.Deleted;
-    this.entries.push({ type, ref, nextFreeObjectNumber });
-    this.entryTuplesCache.invalidate();
-    this.maxByteWidthsCache.invalidate();
-    this.indexCache.invalidate();
+    this.#entries.push({ type, ref, nextFreeObjectNumber });
+    this.#entryTuplesCache.invalidate();
+    this.#maxByteWidthsCache.invalidate();
+    this.#indexCache.invalidate();
     this.contentsCache.invalidate();
   }
 
   addUncompressedEntry(ref: PDFRef, offset: number) {
     const type = EntryType.Uncompressed;
-    this.entries.push({ type, ref, offset });
-    this.entryTuplesCache.invalidate();
-    this.maxByteWidthsCache.invalidate();
-    this.indexCache.invalidate();
+    this.#entries.push({ type, ref, offset });
+    this.#entryTuplesCache.invalidate();
+    this.#maxByteWidthsCache.invalidate();
+    this.#indexCache.invalidate();
     this.contentsCache.invalidate();
   }
 
   addCompressedEntry(ref: PDFRef, objectStreamRef: PDFRef, index: number) {
     const type = EntryType.Compressed;
-    this.entries.push({ type, ref, objectStreamRef, index });
-    this.entryTuplesCache.invalidate();
-    this.maxByteWidthsCache.invalidate();
-    this.indexCache.invalidate();
+    this.#entries.push({ type, ref, objectStreamRef, index });
+    this.#entryTuplesCache.invalidate();
+    this.#maxByteWidthsCache.invalidate();
+    this.#indexCache.invalidate();
     this.contentsCache.invalidate();
   }
 
   clone(context?: PDFContext): PDFCrossRefStream {
-    const { dict, entries, encode } = this;
-    return PDFCrossRefStream.of(dict.clone(context), entries.slice(), encode);
+    const { dict, encode } = this;
+    return PDFCrossRefStream.of(
+      dict.clone(context),
+      this.#entries.slice(),
+      encode,
+    );
   }
 
   getContentsString(): string {
-    const entryTuples = this.entryTuplesCache.access();
-    const byteWidths = this.maxByteWidthsCache.access();
+    const entryTuples = this.#entryTuplesCache.access();
+    const byteWidths = this.#maxByteWidthsCache.access();
     let value = "";
 
     for (
@@ -138,8 +144,8 @@ class PDFCrossRefStream extends PDFFlateStream {
   }
 
   getUnencodedContents(): Uint8Array {
-    const entryTuples = this.entryTuplesCache.access();
-    const byteWidths = this.maxByteWidthsCache.access();
+    const entryTuples = this.#entryTuplesCache.access();
+    const byteWidths = this.#maxByteWidthsCache.access();
     const buffer = new Uint8Array(this.getUnencodedContentsSize());
 
     let offset = 0;
@@ -169,16 +175,16 @@ class PDFCrossRefStream extends PDFFlateStream {
   }
 
   getUnencodedContentsSize(): number {
-    const byteWidths = this.maxByteWidthsCache.access();
+    const byteWidths = this.#maxByteWidthsCache.access();
     const entryWidth = sum(byteWidths);
-    return entryWidth * this.entries.length;
+    return entryWidth * this.#entries.length;
   }
 
   updateDict(): void {
     super.updateDict();
 
-    const byteWidths = this.maxByteWidthsCache.access();
-    const index = this.indexCache.access();
+    const byteWidths = this.#maxByteWidthsCache.access();
+    const index = this.#indexCache.access();
 
     const { context } = this.dict;
     this.dict.set(PDFName.of("W"), context.obj(byteWidths));
@@ -188,13 +194,13 @@ class PDFCrossRefStream extends PDFFlateStream {
   // Returns an array of integer pairs for each subsection of the cross ref
   // section, where each integer pair represents:
   //   firstObjectNumber(OfSection), length(OfSection)
-  private computeIndex = (): number[] => {
+  #computeIndex = (): number[] => {
     const subsections: number[] = [];
 
     let subsectionLength = 0;
-    for (let idx = 0, len = this.entries.length; idx < len; idx++) {
-      const currEntry = this.entries[idx];
-      const prevEntry = this.entries[idx - 1];
+    for (let idx = 0, len = this.#entries.length; idx < len; idx++) {
+      const currEntry = this.#entries[idx];
+      const prevEntry = this.#entries[idx - 1];
 
       if (idx === 0) {
         subsections.push(currEntry.ref.objectNumber);
@@ -211,13 +217,13 @@ class PDFCrossRefStream extends PDFFlateStream {
     return subsections;
   };
 
-  private computeEntryTuples = (): EntryTuple[] => {
+  #computeEntryTuples = (): EntryTuple[] => {
     const entryTuples: EntryTuple[] = Array.from({
-      length: this.entries.length,
+      length: this.#entries.length,
     });
 
-    for (let idx = 0, len = this.entries.length; idx < len; idx++) {
-      const entry = this.entries[idx];
+    for (let idx = 0, len = this.#entries.length; idx < len; idx++) {
+      const entry = this.#entries[idx];
       if (entry.type === EntryType.Deleted) {
         const { type, nextFreeObjectNumber, ref } = entry;
         entryTuples[idx] = [type, nextFreeObjectNumber, ref.generationNumber];
@@ -235,8 +241,8 @@ class PDFCrossRefStream extends PDFFlateStream {
     return entryTuples;
   };
 
-  private computeMaxEntryByteWidths = (): [number, number, number] => {
-    const entryTuples = this.entryTuplesCache.access();
+  #computeMaxEntryByteWidths = (): [number, number, number] => {
+    const entryTuples = this.#entryTuplesCache.access();
     const widths: [number, number, number] = [0, 0, 0];
 
     for (let idx = 0, len = entryTuples.length; idx < len; idx++) {

@@ -1,14 +1,14 @@
 import { Assets } from "..";
 import {
-  PageSizes,
-  PDFDocument,
   BlendMode,
-  LineCapStyle,
   cmyk,
   degrees,
+  LineCapStyle,
+  PageSizes,
+  PDFDocument,
   rgb,
   values,
-} from "../../...js";
+} from "../../../src/index.js";
 
 const inchToPt = (inches: number) => Math.round(inches * 72);
 

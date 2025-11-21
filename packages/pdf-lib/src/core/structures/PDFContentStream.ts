@@ -8,23 +8,23 @@ class PDFContentStream extends PDFFlateStream {
   static of = (dict: PDFDict, operators: PDFOperator[], encode = true) =>
     new PDFContentStream(dict, operators, encode);
 
-  private readonly operators: PDFOperator[];
+  readonly #operators: PDFOperator[];
 
   private constructor(dict: PDFDict, operators: PDFOperator[], encode = true) {
     super(dict, encode);
-    this.operators = operators;
+    this.#operators = operators;
   }
 
   push(...operators: PDFOperator[]): void {
-    this.operators.push(...operators);
+    this.#operators.push(...operators);
   }
 
   clone(context?: PDFContext): PDFContentStream {
     const operators: PDFOperator[] = Array.from({
-      length: this.operators.length,
+      length: this.#operators.length,
     });
-    for (let idx = 0, len = this.operators.length; idx < len; idx++) {
-      operators[idx] = this.operators[idx].clone(context);
+    for (let idx = 0, len = this.#operators.length; idx < len; idx++) {
+      operators[idx] = this.#operators[idx].clone(context);
     }
     const { dict, encode } = this;
     return PDFContentStream.of(dict.clone(context), operators, encode);
@@ -32,8 +32,8 @@ class PDFContentStream extends PDFFlateStream {
 
   getContentsString(): string {
     let value = "";
-    for (let idx = 0, len = this.operators.length; idx < len; idx++) {
-      value += `${String(this.operators[idx])}\n`;
+    for (let idx = 0, len = this.#operators.length; idx < len; idx++) {
+      value += `${String(this.#operators[idx])}\n`;
     }
     return value;
   }
@@ -41,8 +41,8 @@ class PDFContentStream extends PDFFlateStream {
   getUnencodedContents(): Uint8Array {
     const buffer = new Uint8Array(this.getUnencodedContentsSize());
     let offset = 0;
-    for (let idx = 0, len = this.operators.length; idx < len; idx++) {
-      offset += this.operators[idx].copyBytesInto(buffer, offset);
+    for (let idx = 0, len = this.#operators.length; idx < len; idx++) {
+      offset += this.#operators[idx].copyBytesInto(buffer, offset);
       buffer[offset++] = CharCodes.Newline;
     }
     return buffer;
@@ -50,8 +50,8 @@ class PDFContentStream extends PDFFlateStream {
 
   getUnencodedContentsSize(): number {
     let size = 0;
-    for (let idx = 0, len = this.operators.length; idx < len; idx++) {
-      size += this.operators[idx].sizeInBytes() + 1;
+    for (let idx = 0, len = this.#operators.length; idx < len; idx++) {
+      size += this.#operators[idx].sizeInBytes() + 1;
     }
     return size;
   }

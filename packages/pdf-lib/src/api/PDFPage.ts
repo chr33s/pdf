@@ -104,15 +104,15 @@ export default class PDFPage {
   /** The document to which this page belongs. */
   readonly doc: PDFDocument;
 
-  private fontKey?: PDFName;
-  private font?: PDFFont;
-  private fontSize = 24;
-  private fontColor = rgb(0, 0, 0) as Color;
-  private lineHeight = 24;
-  private x = 0;
-  private y = 0;
-  private contentStream?: PDFContentStream;
-  private contentStreamRef?: PDFRef;
+  #fontKey?: PDFName;
+  #font?: PDFFont;
+  #fontSize = 24;
+  #fontColor = rgb(0, 0, 0) as Color;
+  #lineHeight = 24;
+  #x = 0;
+  #y = 0;
+  #contentStream?: PDFContentStream;
+  #contentStreamRef?: PDFRef;
 
   private constructor(leafNode: PDFPageLeaf, ref: PDFRef, doc: PDFDocument) {
     assertIs(leafNode, "leafNode", [[PDFPageLeaf, "PDFPageLeaf"]]);
@@ -558,15 +558,15 @@ export default class PDFPage {
     assertIs(y, "y", ["number"]);
 
     this.node.normalize();
-    this.getContentStream();
+    this.#getContentStream();
 
-    const start = this.createContentStream(
+    const start = this.#createContentStream(
       pushGraphicsState(),
       translate(x, y),
     );
     const startRef = this.doc.context.register(start);
 
-    const end = this.createContentStream(popGraphicsState());
+    const end = this.#createContentStream(popGraphicsState());
     const endRef = this.doc.context.register(end);
 
     this.node.wrapContentStreams(startRef, endRef);
@@ -616,12 +616,12 @@ export default class PDFPage {
     assertIs(y, "y", ["number"]);
 
     this.node.normalize();
-    this.getContentStream();
+    this.#getContentStream();
 
-    const start = this.createContentStream(pushGraphicsState(), scale(x, y));
+    const start = this.#createContentStream(pushGraphicsState(), scale(x, y));
     const startRef = this.doc.context.register(start);
 
-    const end = this.createContentStream(popGraphicsState());
+    const end = this.#createContentStream(popGraphicsState());
     const endRef = this.doc.context.register(end);
 
     this.node.wrapContentStreams(startRef, endRef);
@@ -652,7 +652,7 @@ export default class PDFPage {
 
     for (let idx = 0; idx < annots.size(); idx++) {
       const annot = annots.lookup(idx);
-      if (annot instanceof PDFDict) this.scaleAnnot(annot, x, y);
+      if (annot instanceof PDFDict) this.#scaleAnnot(annot, x, y);
     }
   }
 
@@ -674,9 +674,9 @@ export default class PDFPage {
    * ```
    */
   resetPosition(): void {
-    this.getContentStream(false);
-    this.x = 0;
-    this.y = 0;
+    this.#getContentStream(false);
+    this.#x = 0;
+    this.#y = 0;
   }
 
   /**
@@ -702,8 +702,11 @@ export default class PDFPage {
   setFont(font: PDFFont): void {
     // TODO: Reuse image Font name if we've already added this image to Resources.Fonts
     assertIs(font, "font", [[PDFFont, "PDFFont"]]);
-    this.font = font;
-    this.fontKey = this.node.newFontDictionary(this.font.name, this.font.ref);
+    this.#font = font;
+    this.#fontKey = this.node.newFontDictionary(
+      this.#font.name,
+      this.#font.ref,
+    );
   }
 
   /**
@@ -722,7 +725,7 @@ export default class PDFPage {
    */
   setFontSize(fontSize: number): void {
     assertIs(fontSize, "fontSize", ["number"]);
-    this.fontSize = fontSize;
+    this.#fontSize = fontSize;
   }
 
   /**
@@ -743,7 +746,7 @@ export default class PDFPage {
    */
   setFontColor(fontColor: Color): void {
     assertIs(fontColor, "fontColor", [[Object, "Color"]]);
-    this.fontColor = fontColor;
+    this.#fontColor = fontColor;
   }
 
   /**
@@ -764,7 +767,7 @@ export default class PDFPage {
    */
   setLineHeight(lineHeight: number): void {
     assertIs(lineHeight, "lineHeight", ["number"]);
-    this.lineHeight = lineHeight;
+    this.#lineHeight = lineHeight;
   }
 
   /**
@@ -775,7 +778,7 @@ export default class PDFPage {
    * @returns The default position of the page.
    */
   getPosition(): { x: number; y: number } {
-    return { x: this.x, y: this.y };
+    return { x: this.#x, y: this.#y };
   }
 
   /**
@@ -786,7 +789,7 @@ export default class PDFPage {
    * @returns The default x coordinate of the page.
    */
   getX(): number {
-    return this.x;
+    return this.#x;
   }
 
   /**
@@ -797,7 +800,7 @@ export default class PDFPage {
    * @returns The default y coordinate of the page.
    */
   getY(): number {
-    return this.y;
+    return this.#y;
   }
 
   /**
@@ -818,8 +821,8 @@ export default class PDFPage {
   moveTo(x: number, y: number): void {
     assertIs(x, "x", ["number"]);
     assertIs(y, "y", ["number"]);
-    this.x = x;
-    this.y = y;
+    this.#x = x;
+    this.#y = y;
   }
 
   /**
@@ -837,7 +840,7 @@ export default class PDFPage {
    */
   moveDown(yDecrease: number): void {
     assertIs(yDecrease, "yDecrease", ["number"]);
-    this.y -= yDecrease;
+    this.#y -= yDecrease;
   }
 
   /**
@@ -855,7 +858,7 @@ export default class PDFPage {
    */
   moveUp(yIncrease: number): void {
     assertIs(yIncrease, "yIncrease", ["number"]);
-    this.y += yIncrease;
+    this.#y += yIncrease;
   }
 
   /**
@@ -873,7 +876,7 @@ export default class PDFPage {
    */
   moveLeft(xDecrease: number): void {
     assertIs(xDecrease, "xDecrease", ["number"]);
-    this.x -= xDecrease;
+    this.#x -= xDecrease;
   }
 
   /**
@@ -891,7 +894,7 @@ export default class PDFPage {
    */
   moveRight(xIncrease: number): void {
     assertIs(xIncrease, "xIncrease", ["number"]);
-    this.x += xIncrease;
+    this.#x += xIncrease;
   }
 
   /**
@@ -925,7 +928,7 @@ export default class PDFPage {
    */
   pushOperators(...operator: PDFOperator[]): void {
     assertEachIs(operator, "operator", [[PDFOperator, "PDFOperator"]]);
-    const contentStream = this.getContentStream();
+    const contentStream = this.#getContentStream();
     contentStream.push(...operator);
   }
 
@@ -987,8 +990,8 @@ export default class PDFPage {
     assertOrUndefined(options.strokeWidth, "options.strokeWidth", ["number"]);
     assertOrUndefined(options.renderMode, "options.renderMode", ["number"]);
 
-    const { oldFont, newFont, newFontKey } = this.setOrEmbedFont(options.font);
-    const fontSize = options.size || this.fontSize;
+    const { oldFont, newFont, newFontKey } = this.#setOrEmbedFont(options.font);
+    const fontSize = options.size || this.#fontSize;
 
     const wordBreaks = options.wordBreaks || this.doc.defaultWordBreaks;
     const textWidth = (t: string) => newFont.widthOfTextAtSize(t, fontSize);
@@ -1002,23 +1005,23 @@ export default class PDFPage {
       encodedLines[idx] = newFont.encodeText(lines[idx]);
     }
 
-    const graphicsStateKey = this.maybeEmbedGraphicsState({
+    const graphicsStateKey = this.#maybeEmbedGraphicsState({
       opacity: options.opacity,
       blendMode: options.blendMode,
     });
 
-    const contentStream = this.getContentStream();
+    const contentStream = this.#getContentStream();
     contentStream.push(
       ...drawLinesOfText(encodedLines, {
-        color: options.color ?? this.fontColor,
+        color: options.color ?? this.#fontColor,
         font: newFontKey,
         size: fontSize,
         rotate: options.rotate ?? degrees(0),
         xSkew: options.xSkew ?? degrees(0),
         ySkew: options.ySkew ?? degrees(0),
-        x: options.x ?? this.x,
-        y: options.y ?? this.y,
-        lineHeight: options.lineHeight ?? this.lineHeight,
+        x: options.x ?? this.#x,
+        y: options.y ?? this.#y,
+        lineHeight: options.lineHeight ?? this.#lineHeight,
         graphicsState: graphicsStateKey,
         matrix: options.matrix,
         clipSpaces: options.clipSpaces,
@@ -1030,7 +1033,7 @@ export default class PDFPage {
 
     if (options.font) {
       if (oldFont) this.setFont(oldFont);
-      else this.resetFont();
+      else this.#resetFont();
     }
   }
 
@@ -1074,16 +1077,16 @@ export default class PDFPage {
 
     const xObjectKey = this.node.newXObject("Image", image.ref);
 
-    const graphicsStateKey = this.maybeEmbedGraphicsState({
+    const graphicsStateKey = this.#maybeEmbedGraphicsState({
       opacity: options.opacity,
       blendMode: options.blendMode,
     });
 
-    const contentStream = this.getContentStream();
+    const contentStream = this.#getContentStream();
     contentStream.push(
       ...drawImage(xObjectKey, {
-        x: options.x ?? this.x,
-        y: options.y ?? this.y,
+        x: options.x ?? this.#x,
+        y: options.y ?? this.#y,
         width: options.width ?? image.size().width,
         height: options.height ?? image.size().height,
         rotate: options.rotate ?? degrees(0),
@@ -1153,7 +1156,7 @@ export default class PDFPage {
       embeddedPage.ref,
     );
 
-    const graphicsStateKey = this.maybeEmbedGraphicsState({
+    const graphicsStateKey = this.#maybeEmbedGraphicsState({
       opacity: options.opacity,
       blendMode: options.blendMode,
     });
@@ -1172,11 +1175,11 @@ export default class PDFPage {
           : 1
     );
 
-    const contentStream = this.getContentStream();
+    const contentStream = this.#getContentStream();
     contentStream.push(
       ...drawPage(xObjectKey, {
-        x: options.x ?? this.x,
-        y: options.y ?? this.y,
+        x: options.x ?? this.#x,
+        y: options.y ?? this.#y,
         xScale,
         yScale,
         rotate: options.rotate ?? degrees(0),
@@ -1256,7 +1259,7 @@ export default class PDFPage {
     assertIsOneOfOrUndefined(options.blendMode, "options.blendMode", BlendMode);
     assertIsOneOfOrUndefined(options.fillRule, "options.fillRule", FillRule);
 
-    const graphicsStateKey = this.maybeEmbedGraphicsState({
+    const graphicsStateKey = this.#maybeEmbedGraphicsState({
       opacity: options.opacity,
       borderOpacity: options.borderOpacity,
       blendMode: options.blendMode,
@@ -1266,11 +1269,11 @@ export default class PDFPage {
       options.borderColor = rgb(0, 0, 0);
     }
 
-    const contentStream = this.getContentStream();
+    const contentStream = this.#getContentStream();
     contentStream.push(
       ...drawSvgPath(path, {
-        x: options.x ?? this.x,
-        y: options.y ?? this.y,
+        x: options.x ?? this.#x,
+        y: options.y ?? this.#y,
         scale: options.scale,
         rotate: options.rotate ?? degrees(0),
         color: options.color ?? undefined,
@@ -1321,7 +1324,7 @@ export default class PDFPage {
     assertRangeOrUndefined(options.opacity, "opacity.opacity", 0, 1);
     assertIsOneOfOrUndefined(options.blendMode, "options.blendMode", BlendMode);
 
-    const graphicsStateKey = this.maybeEmbedGraphicsState({
+    const graphicsStateKey = this.#maybeEmbedGraphicsState({
       borderOpacity: options.opacity,
       blendMode: options.blendMode,
     });
@@ -1330,7 +1333,7 @@ export default class PDFPage {
       options.color = rgb(0, 0, 0);
     }
 
-    const contentStream = this.getContentStream();
+    const contentStream = this.#getContentStream();
     contentStream.push(
       ...drawLine({
         start: options.start,
@@ -1404,7 +1407,7 @@ export default class PDFPage {
     );
     assertIsOneOfOrUndefined(options.blendMode, "options.blendMode", BlendMode);
 
-    const graphicsStateKey = this.maybeEmbedGraphicsState({
+    const graphicsStateKey = this.#maybeEmbedGraphicsState({
       opacity: options.opacity,
       borderOpacity: options.borderOpacity,
       blendMode: options.blendMode,
@@ -1414,11 +1417,11 @@ export default class PDFPage {
       options.color = rgb(0, 0, 0);
     }
 
-    const contentStream = this.getContentStream();
+    const contentStream = this.#getContentStream();
     contentStream.push(
       ...drawRectangle({
-        x: options.x ?? this.x,
-        y: options.y ?? this.y,
+        x: options.x ?? this.#x,
+        y: options.y ?? this.#y,
         width: options.width ?? 150,
         height: options.height ?? 100,
         rotate: options.rotate ?? degrees(0),
@@ -1513,7 +1516,7 @@ export default class PDFPage {
       LineCapStyle,
     );
     assertIsOneOfOrUndefined(options.blendMode, "options.blendMode", BlendMode);
-    const graphicsStateKey = this.maybeEmbedGraphicsState({
+    const graphicsStateKey = this.#maybeEmbedGraphicsState({
       opacity: options.opacity,
       borderOpacity: options.borderOpacity,
       blendMode: options.blendMode,
@@ -1523,11 +1526,11 @@ export default class PDFPage {
       options.color = rgb(0, 0, 0);
     }
 
-    const contentStream = this.getContentStream();
+    const contentStream = this.#getContentStream();
     contentStream.push(
       ...drawEllipse({
-        x: options.x ?? this.x,
-        y: options.y ?? this.y,
+        x: options.x ?? this.#x,
+        y: options.y ?? this.#y,
         xScale: options.xScale ?? 100,
         yScale: options.yScale ?? 100,
         rotate: options.rotate ?? undefined,
@@ -1568,15 +1571,15 @@ export default class PDFPage {
     this.drawEllipse({ ...options, xScale: size, yScale: size });
   }
 
-  private setOrEmbedFont(font?: PDFFont) {
-    const oldFont = this.font;
-    const oldFontKey = this.fontKey;
+  #setOrEmbedFont(font?: PDFFont) {
+    const oldFont = this.#font;
+    const oldFontKey = this.#fontKey;
 
     if (font) this.setFont(font);
     else this.getFont();
 
-    const newFont = this.font!;
-    const newFontKey = this.fontKey!;
+    const newFont = this.#font!;
+    const newFontKey = this.#fontKey!;
 
     return { oldFont, oldFontKey, newFont, newFontKey };
   }
@@ -1613,8 +1616,8 @@ export default class PDFPage {
     assertIsOneOfOrUndefined(options.blendMode, "options.blendMode", BlendMode);
 
     drawSvg(this, svg, {
-      x: options.x ?? this.x,
-      y: options.y ?? this.y,
+      x: options.x ?? this.#x,
+      y: options.y ?? this.#y,
       fonts: options.fonts,
       width: options.width,
       height: options.height,
@@ -1623,33 +1626,33 @@ export default class PDFPage {
   }
 
   getFont(): [PDFFont, PDFName] {
-    if (!this.font || !this.fontKey) {
+    if (!this.#font || !this.#fontKey) {
       const font = this.doc.embedStandardFont(StandardFonts.Helvetica);
       this.setFont(font);
     }
-    return [this.font!, this.fontKey!];
+    return [this.#font!, this.#fontKey!];
   }
 
-  private resetFont(): void {
-    this.font = undefined;
-    this.fontKey = undefined;
+  #resetFont(): void {
+    this.#font = undefined;
+    this.#fontKey = undefined;
   }
 
-  private getContentStream(useExisting = true): PDFContentStream {
-    if (useExisting && this.contentStream) return this.contentStream;
-    this.contentStream = this.createContentStream();
-    this.contentStreamRef = this.doc.context.register(this.contentStream);
-    this.node.addContentStream(this.contentStreamRef);
-    return this.contentStream;
+  #getContentStream(useExisting = true): PDFContentStream {
+    if (useExisting && this.#contentStream) return this.#contentStream;
+    this.#contentStream = this.#createContentStream();
+    this.#contentStreamRef = this.doc.context.register(this.#contentStream);
+    this.node.addContentStream(this.#contentStreamRef);
+    return this.#contentStream;
   }
 
-  private createContentStream(...operators: PDFOperator[]): PDFContentStream {
+  #createContentStream(...operators: PDFOperator[]): PDFContentStream {
     const dict = this.doc.context.obj({});
     const contentStream = PDFContentStream.of(dict, operators);
     return contentStream;
   }
 
-  private maybeEmbedGraphicsState(options: {
+  #maybeEmbedGraphicsState(options: {
     opacity?: number;
     borderOpacity?: number;
     blendMode?: BlendMode;
@@ -1676,7 +1679,7 @@ export default class PDFPage {
     return key;
   }
 
-  private scaleAnnot(annot: PDFDict, x: number, y: number) {
+  #scaleAnnot(annot: PDFDict, x: number, y: number) {
     const selectors = ["RD", "CL", "Vertices", "QuadPoints", "L", "Rect"];
     for (let idx = 0, len = selectors.length; idx < len; idx++) {
       const list = annot.lookup(PDFName.of(selectors[idx]));

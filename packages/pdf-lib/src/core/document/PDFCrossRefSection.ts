@@ -22,33 +22,33 @@ class PDFCrossRefSection {
 
   static createEmpty = () => new PDFCrossRefSection();
 
-  private subsections: Entry[][];
-  private chunkIdx: number;
-  private chunkLength: number;
+  #subsections: Entry[][];
+  #chunkIdx: number;
+  #chunkLength: number;
 
   private constructor(firstEntry: Entry | void) {
-    this.subsections = firstEntry ? [[firstEntry]] : [];
-    this.chunkIdx = 0;
-    this.chunkLength = firstEntry ? 1 : 0;
+    this.#subsections = firstEntry ? [[firstEntry]] : [];
+    this.#chunkIdx = 0;
+    this.#chunkLength = firstEntry ? 1 : 0;
   }
 
   addEntry(ref: PDFRef, offset: number): void {
-    this.append({ ref, offset, deleted: false });
+    this.#append({ ref, offset, deleted: false });
   }
 
   addDeletedEntry(ref: PDFRef, nextFreeObjectNumber: number): void {
-    this.append({ ref, offset: nextFreeObjectNumber, deleted: true });
+    this.#append({ ref, offset: nextFreeObjectNumber, deleted: true });
   }
 
   toString(): string {
     let section = "xref\n";
 
     for (
-      let rangeIdx = 0, rangeLen = this.subsections.length;
+      let rangeIdx = 0, rangeLen = this.#subsections.length;
       rangeIdx < rangeLen;
       rangeIdx++
     ) {
-      const range = this.subsections[rangeIdx];
+      const range = this.#subsections[rangeIdx];
       section += `${range[0].ref.objectNumber} ${range.length}\n`;
       for (
         let entryIdx = 0, entryLen = range.length;
@@ -70,8 +70,8 @@ class PDFCrossRefSection {
 
   sizeInBytes(): number {
     let size = 5;
-    for (let idx = 0, len = this.subsections.length; idx < len; idx++) {
-      const subsection = this.subsections[idx];
+    for (let idx = 0, len = this.#subsections.length; idx < len; idx++) {
+      const subsection = this.#subsections[idx];
       const subsectionLength = subsection.length;
       const [firstEntry] = subsection;
       size += 2;
@@ -91,12 +91,16 @@ class PDFCrossRefSection {
     buffer[offset++] = CharCodes.f;
     buffer[offset++] = CharCodes.Newline;
 
-    offset += this.copySubsectionsIntoBuffer(this.subsections, buffer, offset);
+    offset += this.#copySubsectionsIntoBuffer(
+      this.#subsections,
+      buffer,
+      offset,
+    );
 
     return offset - initialOffset;
   }
 
-  private copySubsectionsIntoBuffer(
+  #copySubsectionsIntoBuffer(
     subsections: Entry[][],
     buffer: Uint8Array,
     offset: number,
@@ -105,7 +109,7 @@ class PDFCrossRefSection {
     const length = subsections.length;
 
     for (let idx = 0; idx < length; idx++) {
-      const subsection = this.subsections[idx];
+      const subsection = this.#subsections[idx];
 
       const firstObjectNumber = String(subsection[0].ref.objectNumber);
       offset += copyStringIntoBuffer(firstObjectNumber, buffer, offset);
@@ -115,13 +119,13 @@ class PDFCrossRefSection {
       offset += copyStringIntoBuffer(rangeLength, buffer, offset);
       buffer[offset++] = CharCodes.Newline;
 
-      offset += this.copyEntriesIntoBuffer(subsection, buffer, offset);
+      offset += this.#copyEntriesIntoBuffer(subsection, buffer, offset);
     }
 
     return offset - initialOffset;
   }
 
-  private copyEntriesIntoBuffer(
+  #copyEntriesIntoBuffer(
     entries: Entry[],
     buffer: Uint8Array,
     offset: number,
@@ -148,24 +152,24 @@ class PDFCrossRefSection {
     return 20 * length;
   }
 
-  private append(currEntry: Entry): void {
-    if (this.chunkLength === 0) {
-      this.subsections.push([currEntry]);
-      this.chunkIdx = 0;
-      this.chunkLength = 1;
+  #append(currEntry: Entry): void {
+    if (this.#chunkLength === 0) {
+      this.#subsections.push([currEntry]);
+      this.#chunkIdx = 0;
+      this.#chunkLength = 1;
       return;
     }
 
-    const chunk = this.subsections[this.chunkIdx];
-    const prevEntry = chunk[this.chunkLength - 1];
+    const chunk = this.#subsections[this.#chunkIdx];
+    const prevEntry = chunk[this.#chunkLength - 1];
 
     if (currEntry.ref.objectNumber - prevEntry.ref.objectNumber > 1) {
-      this.subsections.push([currEntry]);
-      this.chunkIdx += 1;
-      this.chunkLength = 1;
+      this.#subsections.push([currEntry]);
+      this.#chunkIdx += 1;
+      this.#chunkLength = 1;
     } else {
       chunk.push(currEntry);
-      this.chunkLength += 1;
+      this.#chunkLength += 1;
     }
   }
 }

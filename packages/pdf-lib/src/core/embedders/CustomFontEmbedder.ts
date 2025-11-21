@@ -53,7 +53,7 @@ class CustomFontEmbedder {
     this.fontFeatures = fontFeatures;
 
     this.baseFontName = "";
-    this.glyphCache = Cache.populatedBy(this.allGlyphsInFontSortedById);
+    this.glyphCache = Cache.populatedBy(this.#allGlyphsInFontSortedById);
   }
 
   /**
@@ -233,7 +233,7 @@ class CustomFontEmbedder {
     return widths;
   }
 
-  private allGlyphsInFontSortedById = (): Glyph[] => {
+  #allGlyphsInFontSortedById = (): Glyph[] => {
     const glyphs = this.font.characterSet.map((codePoint) =>
       this.font.glyphForCodePoint(codePoint),
     );

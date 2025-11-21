@@ -353,9 +353,10 @@ export default class PDFField {
     { normal, rollover, down }: AppearanceMapping<PDFOperator[]>,
   ) {
     this.updateWidgetAppearances(widget, {
-      normal: this.createAppearanceStream(widget, normal, font),
-      rollover: rollover && this.createAppearanceStream(widget, rollover, font),
-      down: down && this.createAppearanceStream(widget, down, font),
+      normal: this.#createAppearanceStream(widget, normal, font),
+      rollover:
+        rollover && this.#createAppearanceStream(widget, rollover, font),
+      down: down && this.#createAppearanceStream(widget, down, font),
     });
   }
 
@@ -369,10 +370,10 @@ export default class PDFField {
     }: AppearanceMapping<{ on: PDFOperator[]; off: PDFOperator[] }>,
   ) {
     this.updateWidgetAppearances(widget, {
-      normal: this.createAppearanceDict(widget, normal, onValue),
+      normal: this.#createAppearanceDict(widget, normal, onValue),
       rollover:
-        rollover && this.createAppearanceDict(widget, rollover, onValue),
-      down: down && this.createAppearanceDict(widget, down, onValue),
+        rollover && this.#createAppearanceDict(widget, rollover, onValue),
+      down: down && this.#createAppearanceDict(widget, down, onValue),
     });
   }
 
@@ -410,7 +411,7 @@ export default class PDFField {
   //   Font.set(PDFName.of(font.name), font.ref);
   // }
 
-  private createAppearanceStream(
+  #createAppearanceStream(
     widget: PDFWidgetAnnotation,
     appearance: PDFOperator[],
     font?: PDFFont,
@@ -506,15 +507,15 @@ export default class PDFField {
     return context.register(stream);
   }
 
-  private createAppearanceDict(
+  #createAppearanceDict(
     widget: PDFWidgetAnnotation,
     appearance: { on: PDFOperator[]; off: PDFOperator[] },
     onValue: PDFName,
   ): PDFDict {
     const { context } = this.acroField.dict;
 
-    const onStreamRef = this.createAppearanceStream(widget, appearance.on);
-    const offStreamRef = this.createAppearanceStream(widget, appearance.off);
+    const onStreamRef = this.#createAppearanceStream(widget, appearance.on);
+    const offStreamRef = this.#createAppearanceStream(widget, appearance.off);
 
     const appearanceDict = context.obj({});
     appearanceDict.set(onValue, onStreamRef);

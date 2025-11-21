@@ -109,14 +109,14 @@ export class Font {
     for (const metric of font.CharMetrics) {
       charWidths[metric.N] = metric.WX;
     }
-    font.CharWidths = charWidths;
+    font.#CharWidths = charWidths;
 
     const kernPairXAmounts: Record<string, Record<string, number>> = {};
     for (const [name1, name2, width] of font.KernPairs) {
       if (!kernPairXAmounts[name1]) kernPairXAmounts[name1] = {};
       kernPairXAmounts[name1][name2] = width;
     }
-    font.KernPairXAmounts = kernPairXAmounts;
+    font.#KernPairXAmounts = kernPairXAmounts;
 
     fontCache[fontName] = font;
 
@@ -152,17 +152,17 @@ export class Font {
   CharMetrics!: ICharMetrics[];
   KernPairs!: IKernPair[];
 
-  private CharWidths!: { [charName: string]: number };
-  private KernPairXAmounts!: { [name1: string]: { [name2: string]: number } };
+  #CharWidths!: { [charName: string]: number };
+  #KernPairXAmounts!: { [name1: string]: { [name2: string]: number } };
 
   private constructor() {}
 
   getWidthOfGlyph = (glyphName: string): number | void =>
-    this.CharWidths[glyphName];
+    this.#CharWidths[glyphName];
 
   getXAxisKerningForPair = (
     leftGlyphName: string,
     rightGlyphName: string,
   ): number | void =>
-    (this.KernPairXAmounts[leftGlyphName] || {})[rightGlyphName];
+    (this.#KernPairXAmounts[leftGlyphName] || {})[rightGlyphName];
 }

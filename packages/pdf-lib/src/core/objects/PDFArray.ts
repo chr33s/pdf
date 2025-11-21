@@ -16,42 +16,42 @@ import PDFRawStream from "./PDFRawStream.js";
 class PDFArray extends PDFObject {
   static withContext = (context: PDFContext) => new PDFArray(context);
 
-  private readonly array: PDFObject[];
-  private readonly context: PDFContext;
+  readonly #array: PDFObject[];
+  readonly #context: PDFContext;
 
   private constructor(context: PDFContext) {
     super();
-    this.array = [];
-    this.context = context;
+    this.#array = [];
+    this.#context = context;
   }
 
   size(): number {
-    return this.array.length;
+    return this.#array.length;
   }
 
   push(object: PDFObject): void {
-    this.array.push(object);
+    this.#array.push(object);
   }
 
   insert(index: number, object: PDFObject): void {
-    this.array.splice(index, 0, object);
+    this.#array.splice(index, 0, object);
   }
 
   indexOf(object: PDFObject): number | undefined {
-    const index = this.array.indexOf(object);
+    const index = this.#array.indexOf(object);
     return index === -1 ? undefined : index;
   }
 
   remove(index: number): void {
-    this.array.splice(index, 1);
+    this.#array.splice(index, 1);
   }
 
   set(idx: number, object: PDFObject): void {
-    this.array[idx] = object;
+    this.#array[idx] = object;
   }
 
   get(index: number): PDFObject {
-    return this.array[index];
+    return this.#array[index];
   }
 
   lookupMaybe(index: number, type: typeof PDFArray): PDFArray | undefined;
@@ -78,7 +78,7 @@ class PDFArray extends PDFObject {
   ): PDFString | PDFHexString | undefined;
 
   lookupMaybe(index: number, ...types: any[]) {
-    return this.context.lookupMaybe(
+    return this.#context.lookupMaybe(
       this.get(index),
       // @ts-ignore
       ...types,
@@ -104,7 +104,7 @@ class PDFArray extends PDFObject {
   ): PDFString | PDFHexString;
 
   lookup(index: number, ...types: any[]) {
-    return this.context.lookup(
+    return this.#context.lookup(
       this.get(index),
       // @ts-ignore
       ...types,
@@ -128,13 +128,13 @@ class PDFArray extends PDFObject {
   }
 
   asArray(): PDFObject[] {
-    return this.array.slice();
+    return this.#array.slice();
   }
 
   clone(context?: PDFContext): PDFArray {
-    const clone = PDFArray.withContext(context || this.context);
+    const clone = PDFArray.withContext(context || this.#context);
     for (let idx = 0, len = this.size(); idx < len; idx++) {
-      clone.push(this.array[idx]);
+      clone.push(this.#array[idx]);
     }
     return clone;
   }

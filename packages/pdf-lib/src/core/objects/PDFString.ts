@@ -27,11 +27,11 @@ class PDFString extends PDFObject {
     return new PDFString(`D:${year}${month}${day}${hours}${mins}${secs}Z`);
   };
 
-  private readonly value: string;
+  readonly #value: string;
 
   private constructor(value: string) {
     super();
-    this.value = value;
+    this.#value = value;
   }
 
   asBytes(): Uint8Array {
@@ -45,10 +45,10 @@ class PDFString extends PDFObject {
       escaped = false;
     };
 
-    for (let idx = 0, len = this.value.length; idx < len; idx++) {
-      const char = this.value[idx];
+    for (let idx = 0, len = this.#value.length; idx < len; idx++) {
+      const char = this.#value[idx];
       const byte = toCharCode(char);
-      const nextChar = this.value[idx + 1];
+      const nextChar = this.#value[idx + 1];
       if (!escaped) {
         if (byte === CharCodes.BackSlash) escaped = true;
         else pushByte(byte);
@@ -92,26 +92,26 @@ class PDFString extends PDFObject {
   }
 
   asString(): string {
-    return this.value;
+    return this.#value;
   }
 
   clone(): PDFString {
-    return PDFString.of(this.value);
+    return PDFString.of(this.#value);
   }
 
   toString(): string {
-    return `(${this.value})`;
+    return `(${this.#value})`;
   }
 
   sizeInBytes(): number {
-    return this.value.length + 2;
+    return this.#value.length + 2;
   }
 
   copyBytesInto(buffer: Uint8Array, offset: number): number {
     buffer[offset++] = CharCodes.LeftParen;
-    offset += copyStringIntoBuffer(this.value, buffer, offset);
+    offset += copyStringIntoBuffer(this.#value, buffer, offset);
     buffer[offset++] = CharCodes.RightParen;
-    return this.value.length + 2;
+    return this.#value.length + 2;
   }
 }
 

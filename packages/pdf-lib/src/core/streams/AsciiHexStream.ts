@@ -10,15 +10,15 @@ import DecodeStream from "./DecodeStream.js";
 import { StreamType } from "./Stream.js";
 
 class AsciiHexStream extends DecodeStream {
-  private stream: StreamType;
-  private firstDigit: number;
+  #stream: StreamType;
+  #firstDigit: number;
 
   constructor(stream: StreamType, maybeLength?: number) {
     super(maybeLength);
 
-    this.stream = stream;
+    this.#stream = stream;
 
-    this.firstDigit = -1;
+    this.#firstDigit = -1;
 
     // Most streams increase in size when decoded, but AsciiHex streams shrink
     // by 50%.
@@ -29,7 +29,7 @@ class AsciiHexStream extends DecodeStream {
 
   protected readBlock() {
     const UPSTREAM_BLOCK_SIZE = 8000;
-    const bytes = this.stream.getBytes(UPSTREAM_BLOCK_SIZE);
+    const bytes = this.#stream.getBytes(UPSTREAM_BLOCK_SIZE);
     if (!bytes.length) {
       this.eof = true;
       return;
@@ -39,7 +39,7 @@ class AsciiHexStream extends DecodeStream {
     const buffer = this.ensureBuffer(this.bufferLength + maxDecodeLength);
     let bufferLength = this.bufferLength;
 
-    let firstDigit = this.firstDigit;
+    let firstDigit = this.#firstDigit;
     for (let i = 0, ii = bytes.length; i < ii; i++) {
       const ch = bytes[i];
       let digit;
@@ -69,7 +69,7 @@ class AsciiHexStream extends DecodeStream {
       buffer[bufferLength++] = firstDigit << 4;
       firstDigit = -1;
     }
-    this.firstDigit = firstDigit;
+    this.#firstDigit = firstDigit;
     this.bufferLength = bufferLength;
   }
 }

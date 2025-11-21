@@ -29,8 +29,8 @@ class PDFStreamWriter extends PDFWriter {
       objectsPerStream,
     );
 
-  private readonly encodeStreams: boolean;
-  private readonly objectsPerStream: number;
+  readonly #encodeStreams: boolean;
+  readonly #objectsPerStream: number;
 
   private constructor(
     context: PDFContext,
@@ -40,8 +40,8 @@ class PDFStreamWriter extends PDFWriter {
   ) {
     super(context, objectsPerTick);
 
-    this.encodeStreams = encodeStreams;
-    this.objectsPerStream = objectsPerStream;
+    this.#encodeStreams = encodeStreams;
+    this.#objectsPerStream = objectsPerStream;
   }
 
   protected async computeBufferSize() {
@@ -53,7 +53,7 @@ class PDFStreamWriter extends PDFWriter {
 
     const xrefStream = PDFCrossRefStream.create(
       this.createTrailerDict(),
-      this.encodeStreams,
+      this.#encodeStreams,
     );
 
     const uncompressedObjects: [PDFRef, PDFObject][] = [];
@@ -85,7 +85,7 @@ class PDFStreamWriter extends PDFWriter {
       } else {
         let chunk = last(compressedObjects);
         let objectStreamRef = last(objectStreamRefs);
-        if (!chunk || chunk.length % this.objectsPerStream === 0) {
+        if (!chunk || chunk.length % this.#objectsPerStream === 0) {
           chunk = [];
           compressedObjects.push(chunk);
           objectStreamRef = PDFRef.of(objectNumber++);
@@ -103,7 +103,7 @@ class PDFStreamWriter extends PDFWriter {
       const objectStream = PDFObjectStream.withContextAndObjects(
         this.context,
         chunk,
-        this.encodeStreams,
+        this.#encodeStreams,
       );
 
       if (security) this.encrypt(ref, objectStream, security);

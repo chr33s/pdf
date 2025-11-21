@@ -68,22 +68,22 @@ class PDFContext {
 
   security?: PDFSecurity;
 
-  private readonly indirectObjects: Map<PDFRef, PDFObject>;
+  readonly #indirectObjects: Map<PDFRef, PDFObject>;
 
-  private pushGraphicsStateContentStreamRef?: PDFRef;
-  private popGraphicsStateContentStreamRef?: PDFRef;
+  #pushGraphicsStateContentStreamRef?: PDFRef;
+  #popGraphicsStateContentStreamRef?: PDFRef;
 
   private constructor() {
     this.largestObjectNumber = 0;
     this.header = PDFHeader.forVersion(1, 7);
     this.trailerInfo = {};
 
-    this.indirectObjects = new Map();
+    this.#indirectObjects = new Map();
     this.rng = SimpleRNG.withSeed(1);
   }
 
   assign(ref: PDFRef, object: PDFObject): void {
-    this.indirectObjects.set(ref, object);
+    this.#indirectObjects.set(ref, object);
     if (ref.objectNumber > this.largestObjectNumber) {
       this.largestObjectNumber = ref.objectNumber;
     }
@@ -101,7 +101,7 @@ class PDFContext {
   }
 
   delete(ref: PDFRef): boolean {
-    return this.indirectObjects.delete(ref);
+    return this.#indirectObjects.delete(ref);
   }
 
   lookupMaybe(ref: LookupKey, type: typeof PDFArray): PDFArray | undefined;
@@ -128,7 +128,7 @@ class PDFContext {
     // removed in next breaking API change.
     const preservePDFNull = types.includes(PDFNull);
 
-    const result = ref instanceof PDFRef ? this.indirectObjects.get(ref) : ref;
+    const result = ref instanceof PDFRef ? this.#indirectObjects.get(ref) : ref;
 
     if (!result || (result === PDFNull && !preservePDFNull)) return undefined;
 
@@ -161,7 +161,7 @@ class PDFContext {
   ): PDFString | PDFHexString;
 
   lookup(ref: LookupKey, ...types: any[]) {
-    const result = ref instanceof PDFRef ? this.indirectObjects.get(ref) : ref;
+    const result = ref instanceof PDFRef ? this.#indirectObjects.get(ref) : ref;
 
     if (types.length === 0) return result;
 
@@ -178,7 +178,7 @@ class PDFContext {
   }
 
   getObjectRef(pdfObject: PDFObject): PDFRef | undefined {
-    const entries = Array.from(this.indirectObjects.entries());
+    const entries = Array.from(this.#indirectObjects.entries());
     for (let idx = 0, len = entries.length; idx < len; idx++) {
       const [ref, object] = entries[idx];
       if (object === pdfObject) {
@@ -190,7 +190,7 @@ class PDFContext {
   }
 
   enumerateIndirectObjects(): [PDFRef, PDFObject][] {
-    return Array.from(this.indirectObjects.entries()).sort(
+    return Array.from(this.#indirectObjects.entries()).sort(
       byAscendingObjectNumber,
     );
   }
@@ -339,14 +339,14 @@ class PDFContext {
    * state.
    */
   getPushGraphicsStateContentStream(): PDFRef {
-    if (this.pushGraphicsStateContentStreamRef) {
-      return this.pushGraphicsStateContentStreamRef;
+    if (this.#pushGraphicsStateContentStreamRef) {
+      return this.#pushGraphicsStateContentStreamRef;
     }
     const dict = this.obj({});
     const op = PDFOperator.of(Ops.PushGraphicsState);
     const stream = PDFContentStream.of(dict, [op]);
-    this.pushGraphicsStateContentStreamRef = this.register(stream);
-    return this.pushGraphicsStateContentStreamRef;
+    this.#pushGraphicsStateContentStreamRef = this.register(stream);
+    return this.#pushGraphicsStateContentStreamRef;
   }
 
   /*
@@ -356,14 +356,14 @@ class PDFContext {
    * state.
    */
   getPopGraphicsStateContentStream(): PDFRef {
-    if (this.popGraphicsStateContentStreamRef) {
-      return this.popGraphicsStateContentStreamRef;
+    if (this.#popGraphicsStateContentStreamRef) {
+      return this.#popGraphicsStateContentStreamRef;
     }
     const dict = this.obj({});
     const op = PDFOperator.of(Ops.PopGraphicsState);
     const stream = PDFContentStream.of(dict, [op]);
-    this.popGraphicsStateContentStreamRef = this.register(stream);
-    return this.popGraphicsStateContentStreamRef;
+    this.#popGraphicsStateContentStreamRef = this.register(stream);
+    return this.#popGraphicsStateContentStreamRef;
   }
 
   addRandomSuffix(prefix: string, suffixLength = 4): string {

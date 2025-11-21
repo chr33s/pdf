@@ -31,7 +31,7 @@ export class Pointer {
     };
   }
 
-  private relativeToGetter(ctx: any): number {
+  #relativeToGetter(ctx: any): number {
     if (!this.options.relativeTo) {
       return 0;
     }
@@ -72,7 +72,7 @@ export class Pointer {
     }
 
     if (this.options.relativeTo) {
-      relative += this.relativeToGetter(ctx);
+      relative += this.#relativeToGetter(ctx);
     }
 
     const ptr = offset + relative;
@@ -165,7 +165,7 @@ export class Pointer {
     }
 
     if (this.options.relativeTo) {
-      relative += this.relativeToGetter(parent.val ?? parent);
+      relative += this.#relativeToGetter(parent.val ?? parent);
     }
 
     this.offsetType.encode(stream, ctx.pointerOffset - relative);

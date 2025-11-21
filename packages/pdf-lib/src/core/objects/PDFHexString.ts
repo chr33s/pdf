@@ -29,16 +29,16 @@ class PDFHexString extends PDFObject {
   static fromBytes = (bytes: Uint8Array) =>
     PDFHexString.of(byteArrayToHexString(bytes));
 
-  private readonly value: string;
+  readonly #value: string;
 
   constructor(value: string) {
     super();
-    this.value = value;
+    this.#value = value;
   }
 
   asBytes(): Uint8Array {
     // Append a zero if the number of digits is odd. See PDF spec 7.3.4.3
-    const hex = this.value + (this.value.length % 2 === 1 ? "0" : "");
+    const hex = this.#value + (this.#value.length % 2 === 1 ? "0" : "");
     const hexLength = hex.length;
 
     const bytes = new Uint8Array(hex.length / 2);
@@ -72,26 +72,26 @@ class PDFHexString extends PDFObject {
   }
 
   asString(): string {
-    return this.value;
+    return this.#value;
   }
 
   clone(): PDFHexString {
-    return PDFHexString.of(this.value);
+    return PDFHexString.of(this.#value);
   }
 
   toString(): string {
-    return `<${this.value}>`;
+    return `<${this.#value}>`;
   }
 
   sizeInBytes(): number {
-    return this.value.length + 2;
+    return this.#value.length + 2;
   }
 
   copyBytesInto(buffer: Uint8Array, offset: number): number {
     buffer[offset++] = CharCodes.LessThan;
-    offset += copyStringIntoBuffer(this.value, buffer, offset);
+    offset += copyStringIntoBuffer(this.#value, buffer, offset);
     buffer[offset++] = CharCodes.GreaterThan;
-    return this.value.length + 2;
+    return this.#value.length + 2;
   }
 }
 

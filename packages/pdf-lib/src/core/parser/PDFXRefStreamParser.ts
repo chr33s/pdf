@@ -19,59 +19,59 @@ class PDFXRefStreamParser {
   static forStream = (rawStream: PDFRawStream) =>
     new PDFXRefStreamParser(rawStream);
 
-  private alreadyParsed: boolean;
+  #alreadyParsed: boolean;
 
-  private readonly dict: PDFDict;
-  private readonly context: PDFContext;
-  private readonly bytes: ByteStream;
-  private readonly subsections: {
+  readonly #dict: PDFDict;
+  readonly #context: PDFContext;
+  readonly #bytes: ByteStream;
+  readonly #subsections: {
     firstObjectNumber: number;
     length: number;
   }[];
-  private readonly byteWidths: [number, number, number];
+  readonly #byteWidths: [number, number, number];
 
   constructor(rawStream: PDFRawStream) {
-    this.alreadyParsed = false;
+    this.#alreadyParsed = false;
 
-    this.dict = rawStream.dict;
-    this.bytes = ByteStream.fromPDFRawStream(rawStream);
-    this.context = this.dict.context;
+    this.#dict = rawStream.dict;
+    this.#bytes = ByteStream.fromPDFRawStream(rawStream);
+    this.#context = this.#dict.context;
 
-    const Size = this.dict.lookup(PDFName.of("Size"), PDFNumber);
+    const Size = this.#dict.lookup(PDFName.of("Size"), PDFNumber);
 
-    const Index = this.dict.lookup(PDFName.of("Index"));
+    const Index = this.#dict.lookup(PDFName.of("Index"));
     if (Index instanceof PDFArray) {
-      this.subsections = [];
+      this.#subsections = [];
       for (let idx = 0, len = Index.size(); idx < len; idx += 2) {
         const firstObjectNumber = Index.lookup(idx + 0, PDFNumber).asNumber();
         const length = Index.lookup(idx + 1, PDFNumber).asNumber();
-        this.subsections.push({ firstObjectNumber, length });
+        this.#subsections.push({ firstObjectNumber, length });
       }
     } else {
-      this.subsections = [{ firstObjectNumber: 0, length: Size.asNumber() }];
+      this.#subsections = [{ firstObjectNumber: 0, length: Size.asNumber() }];
     }
 
-    const W = this.dict.lookup(PDFName.of("W"), PDFArray);
-    this.byteWidths = [-1, -1, -1];
+    const W = this.#dict.lookup(PDFName.of("W"), PDFArray);
+    this.#byteWidths = [-1, -1, -1];
     for (let idx = 0, len = W.size(); idx < len; idx++) {
-      this.byteWidths[idx] = W.lookup(idx, PDFNumber).asNumber();
+      this.#byteWidths[idx] = W.lookup(idx, PDFNumber).asNumber();
     }
   }
 
   parseIntoContext(): Entry[] {
-    if (this.alreadyParsed) {
+    if (this.#alreadyParsed) {
       throw new ReparseError("PDFXRefStreamParser", "parseIntoContext");
     }
-    this.alreadyParsed = true;
+    this.#alreadyParsed = true;
 
-    this.context.trailerInfo = {
-      Root: this.dict.get(PDFName.of("Root")),
-      Encrypt: this.dict.get(PDFName.of("Encrypt")),
-      Info: this.dict.get(PDFName.of("Info")),
-      ID: this.dict.get(PDFName.of("ID")),
+    this.#context.trailerInfo = {
+      Root: this.#dict.get(PDFName.of("Root")),
+      Encrypt: this.#dict.get(PDFName.of("Encrypt")),
+      Info: this.#dict.get(PDFName.of("Info")),
+      ID: this.#dict.get(PDFName.of("ID")),
     };
 
-    const entries = this.parseEntries();
+    const entries = this.#parseEntries();
 
     // for (let idx = 0, len = entries.length; idx < len; idx++) {
     // const entry = entries[idx];
@@ -81,31 +81,31 @@ class PDFXRefStreamParser {
     return entries;
   }
 
-  private parseEntries(): Entry[] {
+  #parseEntries(): Entry[] {
     const entries = [];
-    const [typeFieldWidth, offsetFieldWidth, genFieldWidth] = this.byteWidths;
+    const [typeFieldWidth, offsetFieldWidth, genFieldWidth] = this.#byteWidths;
 
     for (
-      let subsectionIdx = 0, subsectionLen = this.subsections.length;
+      let subsectionIdx = 0, subsectionLen = this.#subsections.length;
       subsectionIdx < subsectionLen;
       subsectionIdx++
     ) {
-      const { firstObjectNumber, length } = this.subsections[subsectionIdx];
+      const { firstObjectNumber, length } = this.#subsections[subsectionIdx];
 
       for (let objIdx = 0; objIdx < length; objIdx++) {
         let type = 0;
         for (let idx = 0, len = typeFieldWidth; idx < len; idx++) {
-          type = (type << 8) | this.bytes.next();
+          type = (type << 8) | this.#bytes.next();
         }
 
         let offset = 0;
         for (let idx = 0, len = offsetFieldWidth; idx < len; idx++) {
-          offset = (offset << 8) | this.bytes.next();
+          offset = (offset << 8) | this.#bytes.next();
         }
 
         let generationNumber = 0;
         for (let idx = 0, len = genFieldWidth; idx < len; idx++) {
-          generationNumber = (generationNumber << 8) | this.bytes.next();
+          generationNumber = (generationNumber << 8) | this.#bytes.next();
         }
 
         // When the `type` field is absent, it defaults to 1

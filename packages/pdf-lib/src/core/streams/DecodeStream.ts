@@ -23,19 +23,19 @@ class DecodeStream implements StreamType {
   protected buffer: Uint8Array;
   protected eof: boolean;
 
-  private pos: number;
-  private minBufferLength: number;
+  #pos: number;
+  #minBufferLength: number;
 
   constructor(maybeMinBufferLength?: number) {
-    this.pos = 0;
+    this.#pos = 0;
     this.bufferLength = 0;
     this.eof = false;
     this.buffer = emptyBuffer;
-    this.minBufferLength = 512;
+    this.#minBufferLength = 512;
     if (maybeMinBufferLength) {
       // Compute the first power of two that is as big as maybeMinBufferLength.
-      while (this.minBufferLength < maybeMinBufferLength) {
-        this.minBufferLength *= 2;
+      while (this.#minBufferLength < maybeMinBufferLength) {
+        this.#minBufferLength *= 2;
       }
     }
   }
@@ -48,14 +48,14 @@ class DecodeStream implements StreamType {
   }
 
   getByte() {
-    const pos = this.pos;
+    const pos = this.#pos;
     while (this.bufferLength <= pos) {
       if (this.eof) {
         return -1;
       }
       this.readBlock();
     }
-    return this.buffer[this.pos++];
+    return this.buffer[this.#pos++];
   }
 
   getUint16() {
@@ -77,7 +77,7 @@ class DecodeStream implements StreamType {
 
   getBytes(length: number, forceClamped = false) {
     let end;
-    const pos = this.pos;
+    const pos = this.#pos;
 
     if (length) {
       this.ensureBuffer(pos + length);
@@ -97,7 +97,7 @@ class DecodeStream implements StreamType {
       end = this.bufferLength;
     }
 
-    this.pos = end;
+    this.#pos = end;
     const subarray = this.buffer.subarray(pos, end);
     // `this.buffer` is either a `Uint8Array` or `Uint8ClampedArray` here.
     return forceClamped && !(subarray instanceof Uint8ClampedArray)
@@ -107,13 +107,13 @@ class DecodeStream implements StreamType {
 
   peekByte() {
     const peekedByte = this.getByte();
-    this.pos--;
+    this.#pos--;
     return peekedByte;
   }
 
   peekBytes(length: number, forceClamped = false) {
     const bytes = this.getBytes(length, forceClamped);
-    this.pos -= bytes.length;
+    this.#pos -= bytes.length;
     return bytes;
   }
 
@@ -121,11 +121,11 @@ class DecodeStream implements StreamType {
     if (!n) {
       n = 1;
     }
-    this.pos += n;
+    this.#pos += n;
   }
 
   reset() {
-    this.pos = 0;
+    this.#pos = 0;
   }
 
   makeSubStream(start: number, length: number /* dict */) {
@@ -150,7 +150,7 @@ class DecodeStream implements StreamType {
     if (requested <= buffer.byteLength) {
       return buffer;
     }
-    let size = this.minBufferLength;
+    let size = this.#minBufferLength;
     while (size < requested) {
       size *= 2;
     }

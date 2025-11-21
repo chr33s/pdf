@@ -41,7 +41,7 @@ class FileEmbedder {
     return new FileEmbedder(bytes, fileName, options);
   }
 
-  private readonly fileData: Uint8Array;
+  readonly #fileData: Uint8Array;
   readonly fileName: string;
   readonly options: EmbeddedFileOptions;
 
@@ -50,7 +50,7 @@ class FileEmbedder {
     fileName: string,
     options: EmbeddedFileOptions = {},
   ) {
-    this.fileData = fileData;
+    this.#fileData = fileData;
     this.fileName = fileName;
     this.options = options;
   }
@@ -64,11 +64,11 @@ class FileEmbedder {
       afRelationship,
     } = this.options;
 
-    const embeddedFileStream = context.flateStream(this.fileData, {
+    const embeddedFileStream = context.flateStream(this.#fileData, {
       Type: "EmbeddedFile",
       Subtype: mimeType ?? undefined,
       Params: {
-        Size: this.fileData.length,
+        Size: this.#fileData.length,
         CreationDate: creationDate
           ? PDFString.fromDate(creationDate)
           : undefined,
@@ -97,7 +97,7 @@ class FileEmbedder {
   }
 
   getFileData() {
-    return this.fileData;
+    return this.#fileData;
   }
 }
 

@@ -29,40 +29,40 @@ class PDFObjectStreamParser extends PDFObjectParser {
 
     const { dict } = rawStream;
 
-    this.alreadyParsed = false;
-    this.shouldWaitForTick = shouldWaitForTick || (() => false);
-    this.firstOffset = dict.lookup(PDFName.of("First"), PDFNumber).asNumber();
-    this.objectCount = dict.lookup(PDFName.of("N"), PDFNumber).asNumber();
+    this.#alreadyParsed = false;
+    this.#shouldWaitForTick = shouldWaitForTick || (() => false);
+    this.#firstOffset = dict.lookup(PDFName.of("First"), PDFNumber).asNumber();
+    this.#objectCount = dict.lookup(PDFName.of("N"), PDFNumber).asNumber();
   }
 
-  private alreadyParsed: boolean;
-  private readonly shouldWaitForTick: () => boolean;
-  private readonly firstOffset: number;
-  private readonly objectCount: number;
+  #alreadyParsed: boolean;
+  readonly #shouldWaitForTick: () => boolean;
+  readonly #firstOffset: number;
+  readonly #objectCount: number;
 
   async parseIntoContext(): Promise<void> {
-    if (this.alreadyParsed) {
+    if (this.#alreadyParsed) {
       throw new ReparseError("PDFObjectStreamParser", "parseIntoContext");
     }
-    this.alreadyParsed = true;
+    this.#alreadyParsed = true;
 
-    const offsetsAndObjectNumbers = this.parseOffsetsAndObjectNumbers();
+    const offsetsAndObjectNumbers = this.#parseOffsetsAndObjectNumbers();
     for (let idx = 0, len = offsetsAndObjectNumbers.length; idx < len; idx++) {
       const { objectNumber, offset } = offsetsAndObjectNumbers[idx];
-      this.bytes.moveTo(this.firstOffset + offset);
+      this.bytes.moveTo(this.#firstOffset + offset);
       const ref = PDFRef.of(objectNumber, 0);
       const object = this.parseObject(ref);
       this.context.assign(ref, object);
-      if (this.shouldWaitForTick()) await waitForTick();
+      if (this.#shouldWaitForTick()) await waitForTick();
     }
   }
 
-  private parseOffsetsAndObjectNumbers(): {
+  #parseOffsetsAndObjectNumbers(): {
     objectNumber: number;
     offset: number;
   }[] {
     const offsetsAndObjectNumbers = [];
-    for (let idx = 0, len = this.objectCount; idx < len; idx++) {
+    for (let idx = 0, len = this.#objectCount; idx < len; idx++) {
       this.skipWhitespaceAndComments();
       const objectNumber = this.parseRawInt();
 
@@ -76,10 +76,14 @@ class PDFObjectStreamParser extends PDFObjectParser {
 }
 
 class FailedPDFObjectStreamParser {
-  constructor(private readonly error: unknown) {}
+  readonly #error: unknown;
+
+  constructor(error: unknown) {
+    this.#error = error;
+  }
 
   async parseIntoContext(): Promise<void> {
-    throw this.error;
+    throw this.#error;
   }
 }
 

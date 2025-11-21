@@ -35,9 +35,9 @@ class CustomFontSubsetEmbedder extends CustomFontEmbedder {
     );
   }
 
-  private readonly subset: Subset;
-  private readonly glyphs: Glyph[];
-  private readonly glyphIdMap: Map<number, number>;
+  readonly #subset: Subset;
+  readonly #glyphs: Glyph[];
+  readonly #glyphIdMap: Map<number, number>;
 
   private constructor(
     font: Font,
@@ -47,10 +47,10 @@ class CustomFontSubsetEmbedder extends CustomFontEmbedder {
   ) {
     super(font, fontData, customFontName, fontFeatures);
 
-    this.subset = this.font.createSubset();
-    this.glyphs = [];
-    this.glyphCache = Cache.populatedBy(() => this.glyphs);
-    this.glyphIdMap = new Map();
+    this.#subset = this.font.createSubset();
+    this.#glyphs = [];
+    this.glyphCache = Cache.populatedBy(() => this.#glyphs);
+    this.#glyphIdMap = new Map();
   }
 
   encodeText(text: string): PDFHexString {
@@ -59,10 +59,10 @@ class CustomFontSubsetEmbedder extends CustomFontEmbedder {
 
     for (let idx = 0, len = glyphs.length; idx < len; idx++) {
       const glyph = glyphs[idx];
-      const subsetGlyphId = this.subset.includeGlyph(glyph);
+      const subsetGlyphId = this.#subset.includeGlyph(glyph);
 
-      this.glyphs[subsetGlyphId - 1] = glyph;
-      this.glyphIdMap.set(glyph.id, subsetGlyphId);
+      this.#glyphs[subsetGlyphId - 1] = glyph;
+      this.#glyphIdMap.set(glyph.id, subsetGlyphId);
 
       hexCodes[idx] = toHexStringOfMinLength(subsetGlyphId, 4);
     }
@@ -72,17 +72,17 @@ class CustomFontSubsetEmbedder extends CustomFontEmbedder {
   }
 
   protected isCFF(): boolean {
-    return (this.subset as any).cff;
+    return (this.#subset as any).cff;
   }
 
   protected glyphId(glyph?: Glyph): number {
-    return glyph ? this.glyphIdMap.get(glyph.id)! : -1;
+    return glyph ? this.#glyphIdMap.get(glyph.id)! : -1;
   }
 
   protected serializeFont(): Promise<Uint8Array> {
     return new Promise((resolve, reject) => {
       const parts: Uint8Array[] = [];
-      this.subset
+      this.#subset
         .encodeStream()
         .on("data", (bytes) => parts.push(bytes))
         .on("end", () => resolve(mergeUint8Arrays(parts)))

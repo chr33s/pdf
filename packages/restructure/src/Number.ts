@@ -2,16 +2,16 @@ import DecodeStream from "./DecodeStream.js";
 import type EncodeStream from "./EncodeStream.js";
 
 export class NumberT {
-  private fn: string;
+  #fn: string;
   public type: string;
   public endian: "BE" | "LE";
 
   constructor(type: string, endian: "BE" | "LE" = "BE") {
     this.type = type;
     this.endian = endian;
-    this.fn = type;
+    this.#fn = type;
     if (this.type[this.type.length - 1] !== "8") {
-      this.fn += this.endian;
+      this.#fn += this.endian;
     }
   }
 
@@ -25,11 +25,11 @@ export class NumberT {
   }
 
   decode(stream: DecodeStream): number {
-    return (stream as any)[`read${this.fn}`]();
+    return (stream as any)[`read${this.#fn}`]();
   }
 
   encode(stream: EncodeStream, value: number): void {
-    (stream as any)[`write${this.fn}`](value);
+    (stream as any)[`write${this.#fn}`](value);
   }
 }
 
@@ -63,19 +63,19 @@ export const doublele = new NumberT("Double", "LE");
 export const double = doublebe;
 
 export class Fixed extends NumberT {
-  private readonly point: number;
+  readonly #point: number;
 
   constructor(size: number, endian: "BE" | "LE", fracBits = size >> 1) {
     super(`Int${size}`, endian);
-    this.point = 1 << fracBits;
+    this.#point = 1 << fracBits;
   }
 
   decode(stream: DecodeStream): number {
-    return super.decode(stream) / this.point;
+    return super.decode(stream) / this.#point;
   }
 
   encode(stream: EncodeStream, value: number): void {
-    super.encode(stream, (value * this.point) | 0);
+    super.encode(stream, (value * this.#point) | 0);
   }
 }
 

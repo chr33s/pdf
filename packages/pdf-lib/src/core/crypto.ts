@@ -24,13 +24,13 @@ import DecryptStream from "./streams/DecryptStream.js";
 import { StreamType } from "./streams/Stream.js";
 
 class ARCFourCipher {
-  private s: Uint8Array;
-  private a: number;
-  private b: number;
+  #s: Uint8Array;
+  #a: number;
+  #b: number;
 
   constructor(key: Uint8Array) {
-    this.a = 0;
-    this.b = 0;
+    this.#a = 0;
+    this.#b = 0;
     const s = new Uint8Array(256);
     const keyLength = key.length;
 
@@ -43,13 +43,13 @@ class ARCFourCipher {
       s[i] = s[j];
       s[j] = tmp;
     }
-    this.s = s;
+    this.#s = s;
   }
 
   encryptBlock(data: Uint8Array) {
-    let a = this.a,
-      b = this.b;
-    const s = this.s;
+    let a = this.#a,
+      b = this.#b;
+    const s = this.#s;
     const n = data.length;
     const output = new Uint8Array(n);
     for (let i = 0; i < n; ++i) {
@@ -61,8 +61,8 @@ class ARCFourCipher {
       s[b] = tmp;
       output[i] = data[i] ^ s[(tmp + tmp2) & 0xff];
     }
-    this.a = a;
-    this.b = b;
+    this.#a = a;
+    this.#b = b;
     return output;
   }
 
@@ -701,9 +701,9 @@ class AESBaseCipher {
   protected _keySize!: number;
   protected _key!: Uint8Array;
   protected _cyclesOfRepetition!: number;
-  private _inv_s: Uint8Array;
-  private _mix: Uint32Array;
-  private _mixCol: Uint8Array;
+  #_inv_s: Uint8Array;
+  #_mix: Uint32Array;
+  #_mixCol: Uint8Array;
   buffer: Uint8Array;
   bufferPosition: number;
   bufferLength!: number;
@@ -739,7 +739,7 @@ class AESBaseCipher {
       0xb0, 0x54, 0xbb, 0x16,
     ]);
 
-    this._inv_s = new Uint8Array([
+    this.#_inv_s = new Uint8Array([
       0x52, 0x09, 0x6a, 0xd5, 0x30, 0x36, 0xa5, 0x38, 0xbf, 0x40, 0xa3, 0x9e,
       0x81, 0xf3, 0xd7, 0xfb, 0x7c, 0xe3, 0x39, 0x82, 0x9b, 0x2f, 0xff, 0x87,
       0x34, 0x8e, 0x43, 0x44, 0xc4, 0xde, 0xe9, 0xcb, 0x54, 0x7b, 0x94, 0x32,
@@ -764,7 +764,7 @@ class AESBaseCipher {
       0x55, 0x21, 0x0c, 0x7d,
     ]);
 
-    this._mix = new Uint32Array([
+    this.#_mix = new Uint32Array([
       0x00000000, 0x0e090d0b, 0x1c121a16, 0x121b171d, 0x3824342c, 0x362d3927,
       0x24362e3a, 0x2a3f2331, 0x70486858, 0x7e416553, 0x6c5a724e, 0x62537f45,
       0x486c5c74, 0x4665517f, 0x547e4662, 0x5a774b69, 0xe090d0b0, 0xee99ddbb,
@@ -810,12 +810,12 @@ class AESBaseCipher {
       0x9f5d80be, 0x91548db5, 0x834f9aa8, 0x8d4697a3,
     ]);
 
-    this._mixCol = new Uint8Array(256);
+    this.#_mixCol = new Uint8Array(256);
     for (let i = 0; i < 256; i++) {
       if (i < 128) {
-        this._mixCol[i] = i << 1;
+        this.#_mixCol[i] = i << 1;
       } else {
-        this._mixCol[i] = (i << 1) ^ 0x1b;
+        this.#_mixCol[i] = (i << 1) ^ 0x1b;
       }
     }
 
@@ -858,7 +858,7 @@ class AESBaseCipher {
       state[3] = v;
       // InvSubBytes
       for (let j = 0; j < 16; ++j) {
-        state[j] = this._inv_s[state[j]];
+        state[j] = this.#_inv_s[state[j]];
       }
       // AddRoundKey
       for (let j = 0, k = i * 16; j < 16; ++j, ++k) {
@@ -866,10 +866,10 @@ class AESBaseCipher {
       }
       // InvMixColumns
       for (let j = 0; j < 16; j += 4) {
-        const s0 = this._mix[state[j]];
-        const s1 = this._mix[state[j + 1]];
-        const s2 = this._mix[state[j + 2]];
-        const s3 = this._mix[state[j + 3]];
+        const s0 = this.#_mix[state[j]];
+        const s1 = this.#_mix[state[j + 1]];
+        const s2 = this.#_mix[state[j + 2]];
+        const s3 = this.#_mix[state[j + 3]];
         t =
           s0 ^
           (s1 >>> 8) ^
@@ -905,7 +905,7 @@ class AESBaseCipher {
     state[3] = v;
     for (let j = 0; j < 16; ++j) {
       // InvSubBytes
-      state[j] = this._inv_s[state[j]];
+      state[j] = this.#_inv_s[state[j]];
       // AddRoundKey
       state[j] ^= key[j];
     }
@@ -955,10 +955,10 @@ class AESBaseCipher {
         const s2 = state[j + 2];
         const s3 = state[j + 3];
         t = s0 ^ s1 ^ s2 ^ s3;
-        state[j + 0] ^= t ^ this._mixCol[s0 ^ s1];
-        state[j + 1] ^= t ^ this._mixCol[s1 ^ s2];
-        state[j + 2] ^= t ^ this._mixCol[s2 ^ s3];
-        state[j + 3] ^= t ^ this._mixCol[s3 ^ s0];
+        state[j + 0] ^= t ^ this.#_mixCol[s0 ^ s1];
+        state[j + 1] ^= t ^ this.#_mixCol[s1 ^ s2];
+        state[j + 2] ^= t ^ this.#_mixCol[s2 ^ s3];
+        state[j + 3] ^= t ^ this.#_mixCol[s3 ^ s0];
       }
       // AddRoundKey
       for (let j = 0, k = i * 16; j < 16; ++j, ++k) {
@@ -1132,7 +1132,7 @@ class AESBaseCipher {
 }
 
 class AES128Cipher extends AESBaseCipher {
-  private _rcon: Uint8Array;
+  #_rcon: Uint8Array;
 
   constructor(key: Uint8Array) {
     super();
@@ -1140,7 +1140,7 @@ class AES128Cipher extends AESBaseCipher {
     this._cyclesOfRepetition = 10;
     this._keySize = 160; // bits
 
-    this._rcon = new Uint8Array([
+    this.#_rcon = new Uint8Array([
       0x8d, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36, 0x6c,
       0xd8, 0xab, 0x4d, 0x9a, 0x2f, 0x5e, 0xbc, 0x63, 0xc6, 0x97, 0x35, 0x6a,
       0xd4, 0xb3, 0x7d, 0xfa, 0xef, 0xc5, 0x91, 0x39, 0x72, 0xe4, 0xd3, 0xbd,
@@ -1171,7 +1171,7 @@ class AES128Cipher extends AESBaseCipher {
   _expandKey(cipherKey: Uint8Array) {
     const b = 176;
     const s = this._s;
-    const rcon = this._rcon;
+    const rcon = this.#_rcon;
 
     const result = new Uint8Array(b);
     result.set(cipherKey);
@@ -1435,19 +1435,19 @@ class PDF20 {
 
 type Cipher = ARCFourCipher | NullCipher | AES128Cipher | AES256Cipher;
 class CipherTransform {
-  private StringCipherConstructor: () => Cipher;
-  private StreamCipherConstructor: () => Cipher;
+  #StringCipherConstructor: () => Cipher;
+  #StreamCipherConstructor: () => Cipher;
 
   constructor(
     stringCipherConstructor: () => Cipher,
     streamCipherConstructor: () => Cipher,
   ) {
-    this.StringCipherConstructor = stringCipherConstructor;
-    this.StreamCipherConstructor = streamCipherConstructor;
+    this.#StringCipherConstructor = stringCipherConstructor;
+    this.#StreamCipherConstructor = streamCipherConstructor;
   }
 
   createStream(stream: StreamType, length: number) {
-    const cipher = this.StreamCipherConstructor();
+    const cipher = this.#StreamCipherConstructor();
     return new DecryptStream(
       stream,
       function cipherTransformDecryptStream(data, finalize) {
@@ -1458,19 +1458,19 @@ class CipherTransform {
   }
 
   decryptString(s: string) {
-    const cipher = this.StringCipherConstructor();
+    const cipher = this.#StringCipherConstructor();
     let data = stringAsByteArray(s);
     data = cipher.decryptBlock(data, true);
     return arrayAsString(data);
   }
 
   decryptBytes(d: Uint8Array) {
-    const cipher = this.StringCipherConstructor();
+    const cipher = this.#StringCipherConstructor();
     return cipher.decryptBlock(d, true);
   }
 
   encryptString(s: string) {
-    const cipher = this.StringCipherConstructor();
+    const cipher = this.#StringCipherConstructor();
     if (cipher instanceof AESBaseCipher) {
       // Append some chars equal to "16 - (M mod 16)"
       // where M is the string length (see section 7.6.2 in PDF specification)
@@ -1519,12 +1519,12 @@ class CipherTransformFactory {
   strf!: PDFName;
   eff!: PDFName;
 
-  private defaultPasswordBytes = new Uint8Array([
+  #defaultPasswordBytes = new Uint8Array([
     0x28, 0xbf, 0x4e, 0x5e, 0x4e, 0x75, 0x8a, 0x41, 0x64, 0x00, 0x4e, 0x56,
     0xff, 0xfa, 0x01, 0x08, 0x2e, 0x2e, 0x00, 0xb6, 0xd0, 0x68, 0x3e, 0x80,
     0x2f, 0x0c, 0xa9, 0xfe, 0x64, 0x53, 0x69, 0x7a,
   ]);
-  private identityName = PDFName.of("Identity");
+  #identityName = PDFName.of("Identity");
 
   constructor(dict: PDFDict, fileIdBytes: Uint8Array, password?: string) {
     const filter = dict.get(PDFName.of("Filter")) as PDFName;
@@ -1691,9 +1691,9 @@ class CipherTransformFactory {
       }
       this.cf = cf;
       this.stmf =
-        (dict.get(PDFName.of("StmF")) as PDFName) || this.identityName;
+        (dict.get(PDFName.of("StmF")) as PDFName) || this.#identityName;
       this.strf =
-        (dict.get(PDFName.of("StrF")) as PDFName) || this.identityName;
+        (dict.get(PDFName.of("StrF")) as PDFName) || this.#identityName;
       this.eff = (dict.get(PDFName.of("EFF")) as PDFName) || this.stmf;
     }
   }
@@ -1804,7 +1804,7 @@ class CipherTransformFactory {
     }
     j = 0;
     while (i < 32) {
-      hashData[i++] = this.defaultPasswordBytes[j++];
+      hashData[i++] = this.#defaultPasswordBytes[j++];
     }
     // as now the padded password in the hashData[0..i]
     for (j = 0, n = ownerPassword.length; j < n; ++j) {
@@ -1835,7 +1835,7 @@ class CipherTransformFactory {
 
     if (revision >= 3) {
       for (i = 0; i < 32; ++i) {
-        hashData[i] = this.defaultPasswordBytes[i];
+        hashData[i] = this.#defaultPasswordBytes[i];
       }
       for (j = 0, n = fileId.length; j < n; ++j) {
         hashData[i++] = fileId[j];
@@ -1858,7 +1858,7 @@ class CipherTransformFactory {
       }
     } else {
       cipher = new ARCFourCipher(encryptionKey);
-      checkData = cipher.encryptBlock(this.defaultPasswordBytes);
+      checkData = cipher.encryptBlock(this.#defaultPasswordBytes);
       for (j = 0, n = checkData.length; j < n; ++j) {
         if (userPassword[j] !== checkData[j]) {
           return null;
@@ -1882,7 +1882,7 @@ class CipherTransformFactory {
     }
     let j = 0;
     while (i < 32) {
-      hashData[i++] = this.defaultPasswordBytes[j++];
+      hashData[i++] = this.#defaultPasswordBytes[j++];
     }
     let hash = calculateMD5(hashData, 0, i);
     const keyLengthInBytes = keyLength >> 3;

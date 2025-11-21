@@ -5,18 +5,18 @@ class PDFTrailer {
   static forLastCrossRefSectionOffset = (offset: number) =>
     new PDFTrailer(offset);
 
-  private readonly lastXRefOffset: string;
+  readonly #lastXRefOffset: string;
 
   private constructor(lastXRefOffset: number) {
-    this.lastXRefOffset = String(lastXRefOffset);
+    this.#lastXRefOffset = String(lastXRefOffset);
   }
 
   toString(): string {
-    return `startxref\n${this.lastXRefOffset}\n%%EOF`;
+    return `startxref\n${this.#lastXRefOffset}\n%%EOF`;
   }
 
   sizeInBytes(): number {
-    return 16 + this.lastXRefOffset.length;
+    return 16 + this.#lastXRefOffset.length;
   }
 
   copyBytesInto(buffer: Uint8Array, offset: number): number {
@@ -33,7 +33,7 @@ class PDFTrailer {
     buffer[offset++] = CharCodes.f;
     buffer[offset++] = CharCodes.Newline;
 
-    offset += copyStringIntoBuffer(this.lastXRefOffset, buffer, offset);
+    offset += copyStringIntoBuffer(this.#lastXRefOffset, buffer, offset);
 
     buffer[offset++] = CharCodes.Newline;
     buffer[offset++] = CharCodes.Percent;

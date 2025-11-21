@@ -7,11 +7,11 @@ class JavaScriptEmbedder {
     return new JavaScriptEmbedder(script, scriptName);
   }
 
-  private readonly script: string;
+  readonly #script: string;
   readonly scriptName: string;
 
   private constructor(script: string, scriptName: string) {
-    this.script = script;
+    this.#script = script;
     this.scriptName = scriptName;
   }
 
@@ -19,7 +19,7 @@ class JavaScriptEmbedder {
     const jsActionDict = context.obj({
       Type: "Action",
       S: "JavaScript",
-      JS: PDFHexString.fromText(this.script),
+      JS: PDFHexString.fromText(this.#script),
     });
 
     if (ref) {

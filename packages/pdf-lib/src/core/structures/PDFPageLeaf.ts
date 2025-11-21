@@ -31,8 +31,8 @@ class PDFPageLeaf extends PDFDict {
     autoNormalizeCTM = true,
   ) => new PDFPageLeaf(map, context, autoNormalizeCTM);
 
-  private normalized = false;
-  private readonly autoNormalizeCTM: boolean;
+  #normalized = false;
+  readonly #autoNormalizeCTM: boolean;
 
   private constructor(
     map: DictMap,
@@ -40,14 +40,14 @@ class PDFPageLeaf extends PDFDict {
     autoNormalizeCTM = true,
   ) {
     super(map, context);
-    this.autoNormalizeCTM = autoNormalizeCTM;
+    this.#autoNormalizeCTM = autoNormalizeCTM;
   }
 
   clone(context?: PDFContext): PDFPageLeaf {
     const clone = PDFPageLeaf.fromMapWithContext(
       new Map(),
       context || this.context,
-      this.autoNormalizeCTM,
+      this.#autoNormalizeCTM,
     );
     const entries = this.entries();
     for (let idx = 0, len = entries.length; idx < len; idx++) {
@@ -200,7 +200,7 @@ class PDFPageLeaf extends PDFDict {
   }
 
   normalize() {
-    if (this.normalized) return;
+    if (this.#normalized) return;
 
     const { context } = this;
 
@@ -210,7 +210,7 @@ class PDFPageLeaf extends PDFDict {
       this.set(PDFName.Contents, context.obj([contentsRef]));
     }
 
-    if (this.autoNormalizeCTM) {
+    if (this.#autoNormalizeCTM) {
       this.wrapContentStreams(
         this.context.getPushGraphicsStateContentStream(),
         this.context.getPopGraphicsStateContentStream(),
@@ -241,7 +241,7 @@ class PDFPageLeaf extends PDFDict {
     const Annots = this.Annots() || context.obj([]);
     this.set(PDFName.Annots, Annots);
 
-    this.normalized = true;
+    this.#normalized = true;
   }
 
   normalizedEntries() {

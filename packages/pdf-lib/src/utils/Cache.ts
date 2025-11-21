@@ -1,25 +1,25 @@
 class Cache<T> {
   static readonly populatedBy = <T>(populate: () => T) => new Cache(populate);
 
-  private readonly populate: () => T;
-  private value: T | undefined;
+  readonly #populate: () => T;
+  #value: T | undefined;
 
   private constructor(populate: () => T) {
-    this.populate = populate;
-    this.value = undefined;
+    this.#populate = populate;
+    this.#value = undefined;
   }
 
   getValue(): T | undefined {
-    return this.value;
+    return this.#value;
   }
 
   access(): T {
-    if (!this.value) this.value = this.populate();
-    return this.value;
+    if (!this.#value) this.#value = this.#populate();
+    return this.#value;
   }
 
   invalidate(): void {
-    this.value = undefined;
+    this.#value = undefined;
   }
 }
 

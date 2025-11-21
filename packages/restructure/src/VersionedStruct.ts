@@ -28,7 +28,7 @@ export default class VersionedStruct extends Struct {
     this.versions = versions;
   }
 
-  private versionGetter(parent: any): any {
+  #versionGetter(parent: any): any {
     if (typeof this.type === "string") {
       return this.type
         .split(".")
@@ -44,7 +44,7 @@ export default class VersionedStruct extends Struct {
     const result = this._setup(stream, parent, length);
 
     if (typeof this.type === "string") {
-      result.version = this.versionGetter(parent);
+      result.version = this.#versionGetter(parent);
     } else {
       result.version = this.type.decode(stream);
     }

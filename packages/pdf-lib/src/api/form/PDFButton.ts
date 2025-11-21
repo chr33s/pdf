@@ -182,7 +182,7 @@ export default class PDFButton extends PDFField {
 
     // Set appearance streams for widget
     const font = options?.font ?? this.doc.getForm().getDefaultFont();
-    this.updateWidgetAppearance(widget, font);
+    this.#updateWidgetAppearance(widget, font);
 
     // Add widget to the given page
     page.node.addAnnot(widgetRef);
@@ -255,11 +255,11 @@ export default class PDFButton extends PDFField {
     const widgets = this.acroField.getWidgets();
     for (let idx = 0, len = widgets.length; idx < len; idx++) {
       const widget = widgets[idx];
-      this.updateWidgetAppearance(widget, font, provider);
+      this.#updateWidgetAppearance(widget, font, provider);
     }
   }
 
-  private updateWidgetAppearance(
+  #updateWidgetAppearance(
     widget: PDFWidgetAnnotation,
     font: PDFFont,
     provider?: AppearanceProviderFor<PDFButton>,

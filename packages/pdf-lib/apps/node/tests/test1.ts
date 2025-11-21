@@ -21,7 +21,7 @@ import {
   setLineJoin,
   StandardFonts,
   typedArrayFor,
-} from "../../...js";
+} from "../../../src/index.js";
 
 const ipsumLines = [
   "Eligendi est pariatur quidem in non excepturi et.",

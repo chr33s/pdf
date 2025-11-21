@@ -18,10 +18,10 @@ class PngEmbedder {
   readonly width: number;
   readonly colorSpace: "DeviceRGB";
 
-  private readonly image: PNG;
+  readonly #image: PNG;
 
   private constructor(png: PNG) {
-    this.image = png;
+    this.#image = png;
     this.bitsPerComponent = png.bitsPerComponent;
     this.width = png.width;
     this.height = png.height;
@@ -29,14 +29,14 @@ class PngEmbedder {
   }
 
   async embedIntoContext(context: PDFContext, ref?: PDFRef): Promise<PDFRef> {
-    const SMask = this.embedAlphaChannel(context);
+    const SMask = this.#embedAlphaChannel(context);
 
-    const xObject = context.flateStream(this.image.rgbChannel, {
+    const xObject = context.flateStream(this.#image.rgbChannel, {
       Type: "XObject",
       Subtype: "Image",
-      BitsPerComponent: this.image.bitsPerComponent,
-      Width: this.image.width,
-      Height: this.image.height,
+      BitsPerComponent: this.#image.bitsPerComponent,
+      Width: this.#image.width,
+      Height: this.#image.height,
       ColorSpace: this.colorSpace,
       SMask,
     });
@@ -49,15 +49,15 @@ class PngEmbedder {
     }
   }
 
-  private embedAlphaChannel(context: PDFContext): PDFRef | undefined {
-    if (!this.image.alphaChannel) return undefined;
+  #embedAlphaChannel(context: PDFContext): PDFRef | undefined {
+    if (!this.#image.alphaChannel) return undefined;
 
-    const xObject = context.flateStream(this.image.alphaChannel, {
+    const xObject = context.flateStream(this.#image.alphaChannel, {
       Type: "XObject",
       Subtype: "Image",
-      Height: this.image.height,
-      Width: this.image.width,
-      BitsPerComponent: this.image.bitsPerComponent,
+      Height: this.#image.height,
+      Width: this.#image.width,
+      BitsPerComponent: this.#image.bitsPerComponent,
       ColorSpace: "DeviceGray",
       Decode: [0, 1],
     });

@@ -97,10 +97,10 @@ class PDFSecurity {
   context: PDFContext;
 
   // These are required values which are set by the `initalize` function.
-  private id!: Uint8Array;
-  private encryption!: Encryption;
-  private keyBits!: KeyBits;
-  private encryptionKey!: WordArray;
+  #id!: Uint8Array;
+  #encryption!: Encryption;
+  #keyBits!: KeyBits;
+  #encryptionKey!: WordArray;
 
   static create(context: PDFContext, options: SecurityOptions) {
     return new PDFSecurity(context, options);
@@ -115,11 +115,11 @@ class PDFSecurity {
 
     this.context = context;
 
-    this.initialize(options);
+    this.#initialize(options);
   }
 
-  private initialize(options: SecurityOptions) {
-    this.id = generateFileID();
+  #initialize(options: SecurityOptions) {
+    this.#id = generateFileID();
 
     let v: Algorithm;
     switch (this.context.header.getVersionString()) {
@@ -143,15 +143,15 @@ class PDFSecurity {
       case 1:
       case 2:
       case 4:
-        this.encryption = this.initializeV1V2V4(v, options);
+        this.#encryption = this.#initializeV1V2V4(v, options);
         break;
       case 5:
-        this.encryption = this.initializeV5(options);
+        this.#encryption = this.#initializeV5(options);
         break;
     }
   }
 
-  private initializeV1V2V4(v: Algorithm, options: SecurityOptions): Encryption {
+  #initializeV1V2V4(v: Algorithm, options: SecurityOptions): Encryption {
     const encryption = {
       Filter: "Standard",
     } as Encryption;
@@ -162,17 +162,17 @@ class PDFSecurity {
     switch (v) {
       case 1:
         r = 2;
-        this.keyBits = 40;
+        this.#keyBits = 40;
         permissions = getPermissionsR2(options.permissions);
         break;
       case 2:
         r = 3;
-        this.keyBits = 128;
+        this.#keyBits = 128;
         permissions = getPermissionsR3(options.permissions);
         break;
       case 4:
         r = 4;
-        this.keyBits = 128;
+        this.#keyBits = 128;
         permissions = getPermissionsR3(options.permissions);
         break;
       default:
@@ -189,15 +189,15 @@ class PDFSecurity {
 
     const ownerPasswordEntry: WordArray = getOwnerPasswordR2R3R4(
       r,
-      this.keyBits,
+      this.#keyBits,
       paddedUserPassword,
       paddedOwnerPassword,
     );
 
-    this.encryptionKey = getEncryptionKeyR2R3R4(
+    this.#encryptionKey = getEncryptionKeyR2R3R4(
       r,
-      this.keyBits,
-      this.id,
+      this.#keyBits,
+      this.#id,
       paddedUserPassword,
       ownerPasswordEntry,
       permissions,
@@ -205,21 +205,21 @@ class PDFSecurity {
 
     let userPasswordEntry;
     if (r === 2) {
-      userPasswordEntry = getUserPasswordR2(this.encryptionKey);
+      userPasswordEntry = getUserPasswordR2(this.#encryptionKey);
     } else {
-      userPasswordEntry = getUserPasswordR3R4(this.id, this.encryptionKey);
+      userPasswordEntry = getUserPasswordR3R4(this.#id, this.#encryptionKey);
     }
 
     encryption.V = v;
     if (v >= 2) {
-      encryption.Length = this.keyBits;
+      encryption.Length = this.#keyBits;
     }
     if (v === 4) {
       encryption.CF = {
         StdCF: {
           AuthEvent: "DocOpen",
           CFM: "AESV2",
-          Length: this.keyBits / 8,
+          Length: this.#keyBits / 8,
         },
       };
       encryption.StmF = "StdCF";
@@ -235,14 +235,14 @@ class PDFSecurity {
     return encryption;
   }
 
-  private initializeV5(options: SecurityOptions): Encryption {
+  #initializeV5(options: SecurityOptions): Encryption {
     const encryption = {
       Filter: "Standard",
     } as Encryption;
 
-    this.keyBits = 256;
+    this.#keyBits = 256;
 
-    this.encryptionKey = getEncryptionKeyR5(generateRandomWordArray);
+    this.#encryptionKey = getEncryptionKeyR5(generateRandomWordArray);
 
     const processedUserPassword = processPasswordR5(options.userPassword);
     const userPasswordEntry = getUserPasswordR5(
@@ -256,7 +256,7 @@ class PDFSecurity {
     const userEncryptionKeyEntry = getUserEncryptionKeyR5(
       processedUserPassword,
       userKeySalt,
-      this.encryptionKey,
+      this.#encryptionKey,
     );
 
     const processedOwnerPassword = options.ownerPassword
@@ -275,23 +275,23 @@ class PDFSecurity {
       processedOwnerPassword,
       ownerKeySalt,
       userPasswordEntry,
-      this.encryptionKey,
+      this.#encryptionKey,
     );
 
     const permissions = getPermissionsR3(options.permissions);
     const permissionsEntry = getEncryptedPermissionsR5(
       permissions,
-      this.encryptionKey,
+      this.#encryptionKey,
       generateRandomWordArray,
     );
 
     encryption.V = 5;
-    encryption.Length = this.keyBits;
+    encryption.Length = this.#keyBits;
     encryption.CF = {
       StdCF: {
         AuthEvent: "DocOpen",
         CFM: "AESV3",
-        Length: this.keyBits / 8,
+        Length: this.#keyBits / 8,
       },
     };
     encryption.StmF = "StdCF";
@@ -310,12 +310,12 @@ class PDFSecurity {
   }
 
   getEncryptFn(obj: number, gen: number) {
-    const v = this.encryption.V;
+    const v = this.#encryption.V;
 
     let digest: WordArray;
     let key: WordArray;
     if (v < 5) {
-      digest = this.encryptionKey
+      digest = this.#encryptionKey
         .clone()
         .concat(
           CryptoJS.lib.WordArray.create(
@@ -332,7 +332,7 @@ class PDFSecurity {
 
       if (v === 1 || v === 2) {
         key = CryptoJS.MD5(digest);
-        key.sigBytes = Math.min(16, this.keyBits / 8 + 5);
+        key.sigBytes = Math.min(16, this.#keyBits / 8 + 5);
         return (buffer: Uint8Array) =>
           wordArrayToBuffer(
             CryptoJS.RC4.encrypt(
@@ -348,7 +348,7 @@ class PDFSecurity {
         );
       }
     } else if (v === 5) {
-      key = this.encryptionKey;
+      key = this.#encryptionKey;
     } else {
       throw new Error(`Unsupported algorithm '${v}'.`);
     }
@@ -375,10 +375,10 @@ class PDFSecurity {
   }
 
   encrypt() {
-    const ID = this.context.obj([this.id, this.id]);
+    const ID = this.context.obj([this.#id, this.#id]);
     this.context.trailerInfo.ID = ID;
 
-    const Encrypt = this.context.obj(this.encryption);
+    const Encrypt = this.context.obj(this.#encryption);
     this.context.trailerInfo.Encrypt = this.context.register(Encrypt);
 
     return this;

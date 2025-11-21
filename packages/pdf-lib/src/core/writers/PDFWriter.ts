@@ -28,7 +28,7 @@ class PDFWriter {
   protected readonly context: PDFContext;
 
   protected readonly objectsPerTick: number;
-  private parsedObjects = 0;
+  #parsedObjects = 0;
 
   protected constructor(context: PDFContext, objectsPerTick: number) {
     this.context = context;
@@ -159,8 +159,8 @@ class PDFWriter {
   }
 
   protected shouldWaitForTick = (n: number) => {
-    this.parsedObjects += n;
-    return this.parsedObjects % this.objectsPerTick === 0;
+    this.#parsedObjects += n;
+    return this.#parsedObjects % this.objectsPerTick === 0;
   };
 }
 

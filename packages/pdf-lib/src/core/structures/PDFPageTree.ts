@@ -41,7 +41,7 @@ class PDFPageTree extends PDFDict {
 
   pushLeafNode(leafRef: PDFRef): void {
     const Kids = this.Kids();
-    this.insertLeafKid(Kids.size(), leafRef);
+    this.#insertLeafKid(Kids.size(), leafRef);
   }
 
   /**
@@ -65,7 +65,7 @@ class PDFPageTree extends PDFDict {
     for (let idx = 0, len = Kids.size(); idx < len; idx++) {
       if (leafsRemainingUntilTarget === 0) {
         // Insert page and return
-        this.insertLeafKid(idx, leafRef);
+        this.#insertLeafKid(idx, leafRef);
         return undefined;
       }
 
@@ -92,7 +92,7 @@ class PDFPageTree extends PDFDict {
 
     if (leafsRemainingUntilTarget === 0) {
       // Insert page at the end and return
-      this.insertLeafKid(Kids.size(), leafRef);
+      this.#insertLeafKid(Kids.size(), leafRef);
       return undefined;
     }
 
@@ -136,7 +136,7 @@ class PDFPageTree extends PDFDict {
       if (kid instanceof PDFPageLeaf) {
         if (leafsRemainingUntilTarget === 0) {
           // Remove page and return
-          this.removeKid(idx);
+          this.#removeKid(idx);
           return;
         } else {
           // Move on
@@ -166,7 +166,7 @@ class PDFPageTree extends PDFDict {
     }
   }
 
-  private insertLeafKid(kidIdx: number, leafRef: PDFRef): void {
+  #insertLeafKid(kidIdx: number, leafRef: PDFRef): void {
     const Kids = this.Kids();
 
     this.ascend((node) => {
@@ -177,7 +177,7 @@ class PDFPageTree extends PDFDict {
     Kids.insert(kidIdx, leafRef);
   }
 
-  private removeKid(kidIdx: number): void {
+  #removeKid(kidIdx: number): void {
     const Kids = this.Kids();
 
     const kid = Kids.lookup(kidIdx);

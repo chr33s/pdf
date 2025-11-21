@@ -34,8 +34,8 @@ export default class PDFEmbeddedPage implements Embeddable {
   /** The height of this page in pixels. */
   readonly height: number;
 
-  private alreadyEmbedded = false;
-  private readonly embedder: PDFPageEmbedder;
+  #alreadyEmbedded = false;
+  readonly #embedder: PDFPageEmbedder;
 
   private constructor(
     ref: PDFRef,
@@ -51,7 +51,7 @@ export default class PDFEmbeddedPage implements Embeddable {
     this.width = embedder.width;
     this.height = embedder.height;
 
-    this.embedder = embedder;
+    this.#embedder = embedder;
   }
 
   /**
@@ -96,9 +96,9 @@ export default class PDFEmbeddedPage implements Embeddable {
    * @returns Resolves when the embedding is complete.
    */
   async embed(): Promise<void> {
-    if (!this.alreadyEmbedded) {
-      await this.embedder.embedIntoContext(this.doc.context, this.ref);
-      this.alreadyEmbedded = true;
+    if (!this.#alreadyEmbedded) {
+      await this.#embedder.embedIntoContext(this.doc.context, this.ref);
+      this.#alreadyEmbedded = true;
     }
   }
 }

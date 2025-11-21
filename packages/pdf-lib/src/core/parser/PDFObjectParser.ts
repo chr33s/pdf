@@ -45,7 +45,7 @@ class PDFObjectParser extends BaseParser {
   ) => new PDFObjectParser(byteStream, context, capNumbers);
 
   protected readonly context: PDFContext;
-  private readonly cryptoFactory?: CipherTransformFactory;
+  readonly #cryptoFactory?: CipherTransformFactory;
 
   constructor(
     byteStream: ByteStream,
@@ -55,7 +55,7 @@ class PDFObjectParser extends BaseParser {
   ) {
     super(byteStream, capNumbers);
     this.context = context;
-    this.cryptoFactory = cryptoFactory;
+    this.#cryptoFactory = cryptoFactory;
   }
 
   // TODO: Is it possible to reduce duplicate parsing for ref lookaheads?
@@ -111,8 +111,8 @@ class PDFObjectParser extends BaseParser {
     }
     this.bytes.assertNext(CharCodes.GreaterThan);
 
-    if (this.cryptoFactory && ref) {
-      const transformer = this.cryptoFactory.createCipherTransform(
+    if (this.#cryptoFactory && ref) {
+      const transformer = this.#cryptoFactory.createCipherTransform(
         ref.objectNumber,
         ref.generationNumber,
       );
@@ -152,8 +152,8 @@ class PDFObjectParser extends BaseParser {
       if (nestingLvl === 0) {
         let actualValue = value.substring(1, value.length - 1);
 
-        if (this.cryptoFactory && ref) {
-          const transformer = this.cryptoFactory.createCipherTransform(
+        if (this.#cryptoFactory && ref) {
+          const transformer = this.#cryptoFactory.createCipherTransform(
             ref.objectNumber,
             ref.generationNumber,
           );
@@ -267,8 +267,8 @@ class PDFObjectParser extends BaseParser {
 
     let contents = this.bytes.slice(start, end);
 
-    if (this.cryptoFactory && ref) {
-      const transform = this.cryptoFactory.createCipherTransform(
+    if (this.#cryptoFactory && ref) {
+      const transform = this.#cryptoFactory.createCipherTransform(
         ref.objectNumber,
         ref.generationNumber,
       );

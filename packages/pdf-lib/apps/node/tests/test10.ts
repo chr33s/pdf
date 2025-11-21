@@ -4,7 +4,7 @@ import {
   PDFFont,
   StandardFonts,
   type StandardFont,
-} from "../../...js";
+} from "../../../src/index.js";
 
 // prettier-ignore
 const winAnsiCodePoints = [

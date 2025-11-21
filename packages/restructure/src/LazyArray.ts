@@ -6,8 +6,8 @@ import { Number as NumberT } from "./Number.js";
 import { resolveLength } from "./utils.js";
 
 export class LazyArray<T = unknown> {
-  private base: number;
-  private items: Array<T | undefined> = [];
+  #base: number;
+  #items: Array<T | undefined> = [];
 
   public type: any;
   public length: number;
@@ -19,7 +19,7 @@ export class LazyArray<T = unknown> {
     this.length = length;
     this.stream = stream;
     this.ctx = ctx;
-    this.base = stream.pos;
+    this.#base = stream.pos;
   }
 
   get(index: number): T | undefined {
@@ -27,14 +27,14 @@ export class LazyArray<T = unknown> {
       return undefined;
     }
 
-    if (typeof this.items[index] === "undefined") {
+    if (typeof this.#items[index] === "undefined") {
       const pos = this.stream.pos;
-      this.stream.pos = this.base + this.type.size(null, this.ctx) * index;
-      this.items[index] = this.type.decode(this.stream, this.ctx);
+      this.stream.pos = this.#base + this.type.size(null, this.ctx) * index;
+      this.#items[index] = this.type.decode(this.stream, this.ctx);
       this.stream.pos = pos;
     }
 
-    return this.items[index];
+    return this.#items[index];
   }
 
   toArray(): T[] {

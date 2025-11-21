@@ -5,25 +5,25 @@ class PDFHeader {
   static forVersion = (major: number, minor: number) =>
     new PDFHeader(major, minor);
 
-  private readonly major: string;
-  private readonly minor: string;
+  readonly #major: string;
+  readonly #minor: string;
 
   private constructor(major: number, minor: number) {
-    this.major = String(major);
-    this.minor = String(minor);
+    this.#major = String(major);
+    this.#minor = String(minor);
   }
 
   getVersionString(): string {
-    return `${this.major}.${this.minor}`;
+    return `${this.#major}.${this.#minor}`;
   }
 
   toString(): string {
     const bc = charFromCode(129);
-    return `%PDF-${this.major}.${this.minor}\n%${bc}${bc}${bc}${bc}`;
+    return `%PDF-${this.#major}.${this.#minor}\n%${bc}${bc}${bc}${bc}`;
   }
 
   sizeInBytes(): number {
-    return 12 + this.major.length + this.minor.length;
+    return 12 + this.#major.length + this.#minor.length;
   }
 
   copyBytesInto(buffer: Uint8Array, offset: number): number {
@@ -35,9 +35,9 @@ class PDFHeader {
     buffer[offset++] = CharCodes.F;
     buffer[offset++] = CharCodes.Dash;
 
-    offset += copyStringIntoBuffer(this.major, buffer, offset);
+    offset += copyStringIntoBuffer(this.#major, buffer, offset);
     buffer[offset++] = CharCodes.Period;
-    offset += copyStringIntoBuffer(this.minor, buffer, offset);
+    offset += copyStringIntoBuffer(this.#minor, buffer, offset);
     buffer[offset++] = CharCodes.Newline;
 
     buffer[offset++] = CharCodes.Percent;

@@ -1,15 +1,15 @@
 import { Assets } from "..";
 import {
-  PDFDocument,
-  StandardFonts,
-  drawRectangle,
-  rgb,
   degrees,
-  drawText,
-  PDFFont,
   drawEllipse,
+  drawRectangle,
+  drawText,
+  PDFDocument,
+  PDFFont,
   PDFWidgetAnnotation,
-} from "../../...js";
+  rgb,
+  StandardFonts,
+} from "../../../src/index.js";
 
 import fontkit from "@chr33s/fontkit";
 

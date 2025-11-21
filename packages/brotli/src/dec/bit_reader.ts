@@ -34,13 +34,13 @@ class BrotliBitReader {
   static readonly READ_SIZE = BROTLI_READ_SIZE;
   static readonly IBUF_MASK = BROTLI_IBUF_MASK;
 
-  private readonly buf_ = new Uint8Array(BROTLI_IBUF_SIZE);
-  private buf_ptr_ = 0 /* next input will write here */;
-  private val_ = 0 /* pre-fetched bits */;
-  private pos_ = 0 /* byte position in stream */;
-  private bit_pos_ = 0 /* current bit-reading position in val_ */;
-  private bit_end_pos_ = 0 /* bit-reading end position from LSB of val_ */;
-  private eos_ = 0 /* input stream is finished */;
+  readonly buf_ = new Uint8Array(BROTLI_IBUF_SIZE);
+  buf_ptr_ = 0 /* next input will write here */;
+  val_ = 0 /* pre-fetched bits */;
+  pos_ = 0 /* byte position in stream */;
+  bit_pos_ = 0 /* current bit-reading position in val_ */;
+  bit_end_pos_ = 0 /* bit-reading end position from LSB of val_ */;
+  eos_ = 0 /* input stream is finished */;
 
   private readonly input_: BrotliBitReaderInput;
 

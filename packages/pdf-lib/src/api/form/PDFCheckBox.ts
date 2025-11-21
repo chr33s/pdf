@@ -179,7 +179,7 @@ export default class PDFCheckBox extends PDFField {
 
     // Set appearance streams for widget
     widget.setAppearanceState(PDFName.of("Off"));
-    this.updateWidgetAppearance(widget, PDFName.of("Yes"));
+    this.#updateWidgetAppearance(widget, PDFName.of("Yes"));
 
     // Add widget to the given page
     page.node.addAnnot(widgetRef);
@@ -245,12 +245,12 @@ export default class PDFCheckBox extends PDFField {
       const widget = widgets[idx];
       const onValue = widget.getOnValue() ?? PDFName.of("Yes");
       if (!onValue) continue;
-      this.updateWidgetAppearance(widget, onValue, provider);
+      this.#updateWidgetAppearance(widget, onValue, provider);
     }
     this.markAsClean();
   }
 
-  private updateWidgetAppearance(
+  #updateWidgetAppearance(
     widget: PDFWidgetAnnotation,
     onValue: PDFName,
     provider?: AppearanceProviderFor<PDFCheckBox>,

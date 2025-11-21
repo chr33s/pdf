@@ -12,7 +12,7 @@ export default class Optional<T = unknown> {
     this.condition = condition;
   }
 
-  private evaluateCondition(parent?: any): boolean {
+  #evaluateCondition(parent?: any): boolean {
     if (typeof this.condition === "function") {
       return this.condition.call(parent, parent);
     }
@@ -21,7 +21,7 @@ export default class Optional<T = unknown> {
   }
 
   decode(stream: DecodeStream, parent?: any): T | undefined {
-    if (this.evaluateCondition(parent)) {
+    if (this.#evaluateCondition(parent)) {
       return this.type.decode(stream, parent);
     }
 
@@ -29,7 +29,7 @@ export default class Optional<T = unknown> {
   }
 
   size(value?: T, parent?: any): number {
-    if (this.evaluateCondition(parent)) {
+    if (this.#evaluateCondition(parent)) {
       return this.type.size(value, parent);
     }
 
@@ -37,7 +37,7 @@ export default class Optional<T = unknown> {
   }
 
   encode(stream: EncodeStream, value: T, parent?: any): void {
-    if (this.evaluateCondition(parent)) {
+    if (this.#evaluateCondition(parent)) {
       this.type.encode(stream, value, parent);
     }
   }

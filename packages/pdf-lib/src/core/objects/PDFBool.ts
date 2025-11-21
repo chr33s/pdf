@@ -8,16 +8,16 @@ class PDFBool extends PDFObject {
   static readonly True = new PDFBool(ENFORCER, true);
   static readonly False = new PDFBool(ENFORCER, false);
 
-  private readonly value: boolean;
+  readonly #value: boolean;
 
   private constructor(enforcer: any, value: boolean) {
     if (enforcer !== ENFORCER) throw new PrivateConstructorError("PDFBool");
     super();
-    this.value = value;
+    this.#value = value;
   }
 
   asBoolean(): boolean {
-    return this.value;
+    return this.#value;
   }
 
   clone(): PDFBool {
@@ -25,15 +25,15 @@ class PDFBool extends PDFObject {
   }
 
   toString(): string {
-    return String(this.value);
+    return String(this.#value);
   }
 
   sizeInBytes(): number {
-    return this.value ? 4 : 5;
+    return this.#value ? 4 : 5;
   }
 
   copyBytesInto(buffer: Uint8Array, offset: number): number {
-    if (this.value) {
+    if (this.#value) {
       buffer[offset++] = CharCodes.t;
       buffer[offset++] = CharCodes.r;
       buffer[offset++] = CharCodes.u;

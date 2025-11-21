@@ -7,7 +7,7 @@ import {
   radians,
   rgb,
   StandardFonts,
-} from "../../...js";
+} from "../../../src/index.js";
 
 export default async (assets: Assets) => {
   const { pdfs, images } = assets;

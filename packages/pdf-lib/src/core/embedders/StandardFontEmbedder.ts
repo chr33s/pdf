@@ -48,20 +48,20 @@ class StandardFontEmbedder {
    * encodings)
    */
   encodeText(text: string): PDFHexString {
-    const glyphs = this.encodeTextAsGlyphs(text);
+    const glyphs = this.#encodeTextAsGlyphs(text);
     const hexCodes = glyphs.map((glyph) => toHexString(glyph.code));
     return PDFHexString.of(hexCodes.join(""));
   }
 
   widthOfTextAtSize(text: string, size: number): number {
-    const glyphs = this.encodeTextAsGlyphs(text);
+    const glyphs = this.#encodeTextAsGlyphs(text);
     let totalWidth = 0;
 
     for (let idx = 0, len = glyphs.length; idx < len; idx++) {
       const left = glyphs[idx].name;
       const right = (glyphs[idx + 1] || {}).name;
       const kernAmount = this.font.getXAxisKerningForPair(left, right) || 0;
-      totalWidth += this.widthOfGlyph(left) + kernAmount;
+      totalWidth += this.#widthOfGlyph(left) + kernAmount;
     }
 
     const scale = size / 1000;
@@ -109,12 +109,12 @@ class StandardFontEmbedder {
     }
   }
 
-  private widthOfGlyph(glyphName: string): number {
+  #widthOfGlyph(glyphName: string): number {
     // Default to 250 if font doesn't specify a width
     return this.font.getWidthOfGlyph(glyphName) || 250;
   }
 
-  private encodeTextAsGlyphs(text: string): Glyph[] {
+  #encodeTextAsGlyphs(text: string): Glyph[] {
     const fallbackGlyph = this.encoding.encodeUnicodeCodePoint(
       toCodePoint("?")!,
     );

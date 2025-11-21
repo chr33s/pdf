@@ -21,6 +21,8 @@ const ENFORCER = {};
 const pool = new Map<string, PDFName>();
 
 class PDFName extends PDFObject {
+  readonly encodedName!: string;
+
   static of = (name: string): PDFName => {
     const decodedValue = decodeName(name);
 
@@ -59,7 +61,7 @@ class PDFName extends PDFObject {
   static readonly CreationDate = PDFName.of("CreationDate");
   static readonly ModDate = PDFName.of("ModDate");
 
-  private readonly encodedName: string;
+  readonly #encodedName: string;
 
   private constructor(enforcer: any, name: string) {
     if (enforcer !== ENFORCER) throw new PrivateConstructorError("PDFName");
@@ -72,7 +74,13 @@ class PDFName extends PDFObject {
       encodedName += isRegularChar(code) ? character : `#${toHexString(code)}`;
     }
 
-    this.encodedName = encodedName;
+    this.#encodedName = encodedName;
+    Object.defineProperty(this, "encodedName", {
+      value: encodedName,
+      enumerable: true,
+      configurable: false,
+      writable: false,
+    });
   }
 
   asBytes(): Uint8Array {
@@ -86,10 +94,10 @@ class PDFName extends PDFObject {
       escaped = false;
     };
 
-    for (let idx = 1, len = this.encodedName.length; idx < len; idx++) {
-      const char = this.encodedName[idx];
+    for (let idx = 1, len = this.#encodedName.length; idx < len; idx++) {
+      const char = this.#encodedName[idx];
       const byte = toCharCode(char);
-      const nextChar = this.encodedName[idx + 1];
+      const nextChar = this.#encodedName[idx + 1];
       if (!escaped) {
         if (byte === CharCodes.Hash) escaped = true;
         else pushByte(byte);
@@ -128,12 +136,12 @@ class PDFName extends PDFObject {
   }
 
   asString(): string {
-    return this.encodedName;
+    return this.#encodedName;
   }
 
   /** @deprecated in favor of [[PDFName.asString]] */
   value(): string {
-    return this.encodedName;
+    return this.#encodedName;
   }
 
   clone(): PDFName {
@@ -141,16 +149,16 @@ class PDFName extends PDFObject {
   }
 
   toString(): string {
-    return this.encodedName;
+    return this.#encodedName;
   }
 
   sizeInBytes(): number {
-    return this.encodedName.length;
+    return this.#encodedName.length;
   }
 
   copyBytesInto(buffer: Uint8Array, offset: number): number {
-    copyStringIntoBuffer(this.encodedName, buffer, offset);
-    return this.encodedName.length;
+    copyStringIntoBuffer(this.#encodedName, buffer, offset);
+    return this.#encodedName.length;
   }
 }
 

@@ -78,8 +78,8 @@ export default class PDFForm {
   /** The document to which this form belongs. */
   readonly doc: PDFDocument;
 
-  private readonly dirtyFields: Set<PDFRef>;
-  private readonly defaultFontCache: Cache<PDFFont>;
+  readonly #dirtyFields: Set<PDFRef>;
+  readonly #defaultFontCache: Cache<PDFFont>;
 
   private constructor(acroForm: PDFAcroForm, doc: PDFDocument) {
     assertIs(acroForm, "acroForm", [[PDFAcroForm, "PDFAcroForm"]]);
@@ -88,8 +88,8 @@ export default class PDFForm {
     this.acroForm = acroForm;
     this.doc = doc;
 
-    this.dirtyFields = new Set();
-    this.defaultFontCache = Cache.populatedBy(this.embedDefaultFont);
+    this.#dirtyFields = new Set();
+    this.#defaultFontCache = Cache.populatedBy(this.#embedDefaultFont);
   }
 
   /**
@@ -348,7 +348,7 @@ export default class PDFForm {
     assertIs(name, "name", ["string"]);
 
     const nameParts = splitFieldName(name);
-    const parent = this.findOrCreateNonTerminals(nameParts.nonTerminal);
+    const parent = this.#findOrCreateNonTerminals(nameParts.nonTerminal);
 
     const button = PDFAcroPushButton.create(this.doc.context);
     button.setPartialName(nameParts.terminal);
@@ -378,7 +378,7 @@ export default class PDFForm {
     assertIs(name, "name", ["string"]);
 
     const nameParts = splitFieldName(name);
-    const parent = this.findOrCreateNonTerminals(nameParts.nonTerminal);
+    const parent = this.#findOrCreateNonTerminals(nameParts.nonTerminal);
 
     const checkBox = PDFAcroCheckBox.create(this.doc.context);
     checkBox.setPartialName(nameParts.terminal);
@@ -408,7 +408,7 @@ export default class PDFForm {
     assertIs(name, "name", ["string"]);
 
     const nameParts = splitFieldName(name);
-    const parent = this.findOrCreateNonTerminals(nameParts.nonTerminal);
+    const parent = this.#findOrCreateNonTerminals(nameParts.nonTerminal);
 
     const comboBox = PDFAcroComboBox.create(this.doc.context);
     comboBox.setPartialName(nameParts.terminal);
@@ -438,7 +438,7 @@ export default class PDFForm {
     assertIs(name, "name", ["string"]);
 
     const nameParts = splitFieldName(name);
-    const parent = this.findOrCreateNonTerminals(nameParts.nonTerminal);
+    const parent = this.#findOrCreateNonTerminals(nameParts.nonTerminal);
 
     const listBox = PDFAcroListBox.create(this.doc.context);
     listBox.setPartialName(nameParts.terminal);
@@ -469,7 +469,7 @@ export default class PDFForm {
     assertIs(name, "name", ["string"]);
     const nameParts = splitFieldName(name);
 
-    const parent = this.findOrCreateNonTerminals(nameParts.nonTerminal);
+    const parent = this.#findOrCreateNonTerminals(nameParts.nonTerminal);
 
     const radioButton = PDFAcroRadioButton.create(this.doc.context);
     radioButton.setPartialName(nameParts.terminal);
@@ -503,7 +503,7 @@ export default class PDFForm {
     assertIs(name, "name", ["string"]);
     const nameParts = splitFieldName(name);
 
-    const parent = this.findOrCreateNonTerminals(nameParts.nonTerminal);
+    const parent = this.#findOrCreateNonTerminals(nameParts.nonTerminal);
 
     const text = PDFAcroText.create(this.doc.context);
     text.setPartialName(nameParts.terminal);
@@ -548,8 +548,8 @@ export default class PDFForm {
       for (let j = 0, lenWidgets = widgets.length; j < lenWidgets; j++) {
         try {
           const widget = widgets[j];
-          const page = this.findWidgetPage(widget);
-          const widgetRef = this.findWidgetAppearanceRef(field, widget);
+          const page = this.#findWidgetPage(widget);
+          const widgetRef = this.#findWidgetAppearanceRef(field, widget);
 
           const xObjectKey = page.node.newXObject("FlatWidget", widgetRef);
 
@@ -591,7 +591,7 @@ export default class PDFForm {
         const widget = widgets[i];
         const widgetRef = this.doc.context.getObjectRef(widget.dict);
 
-        const page = this.findWidgetPage(widget);
+        const page = this.#findWidgetPage(widget);
         pages.add(page);
 
         if (widgetRef !== undefined) {
@@ -671,7 +671,7 @@ export default class PDFForm {
    */
   markFieldAsDirty(fieldRef: PDFRef) {
     assertOrUndefined(fieldRef, "fieldRef", [[PDFRef, "PDFRef"]]);
-    this.dirtyFields.add(fieldRef);
+    this.#dirtyFields.add(fieldRef);
   }
 
   /**
@@ -686,7 +686,7 @@ export default class PDFForm {
    */
   markFieldAsClean(fieldRef: PDFRef) {
     assertOrUndefined(fieldRef, "fieldRef", [[PDFRef, "PDFRef"]]);
-    this.dirtyFields.delete(fieldRef);
+    this.#dirtyFields.delete(fieldRef);
   }
 
   /**
@@ -701,14 +701,14 @@ export default class PDFForm {
    */
   fieldIsDirty(fieldRef: PDFRef): boolean {
     assertOrUndefined(fieldRef, "fieldRef", [[PDFRef, "PDFRef"]]);
-    return this.dirtyFields.has(fieldRef);
+    return this.#dirtyFields.has(fieldRef);
   }
 
   getDefaultFont() {
-    return this.defaultFontCache.access();
+    return this.#defaultFontCache.access();
   }
 
-  private findWidgetPage(widget: PDFWidgetAnnotation): PDFPage {
+  #findWidgetPage(widget: PDFWidgetAnnotation): PDFPage {
     const pageRef = widget.P();
     let page = this.doc.getPages().find((x) => x.ref === pageRef);
     if (page === undefined) {
@@ -727,7 +727,7 @@ export default class PDFForm {
     return page;
   }
 
-  private findWidgetAppearanceRef(
+  #findWidgetAppearanceRef(
     field: PDFField,
     widget: PDFWidgetAnnotation,
   ): PDFRef {
@@ -755,7 +755,7 @@ export default class PDFForm {
     return refOrDict;
   }
 
-  private findOrCreateNonTerminals(partialNames: string[]) {
+  #findOrCreateNonTerminals(partialNames: string[]) {
     let nonTerminal: [PDFAcroForm] | [PDFAcroNonTerminal, PDFRef] = [
       this.acroForm,
     ];
@@ -763,7 +763,7 @@ export default class PDFForm {
       const namePart = partialNames[idx];
       if (!namePart) throw new InvalidFieldNamePartError(namePart);
       const [parent, parentRef] = nonTerminal;
-      const res = this.findNonTerminal(namePart, parent);
+      const res = this.#findNonTerminal(namePart, parent);
 
       if (res) {
         nonTerminal = res;
@@ -779,7 +779,7 @@ export default class PDFForm {
     return nonTerminal;
   }
 
-  private findNonTerminal(
+  #findNonTerminal(
     partialName: string,
     parent: PDFAcroForm | PDFAcroNonTerminal,
   ): [PDFAcroNonTerminal, PDFRef] | undefined {
@@ -799,7 +799,7 @@ export default class PDFForm {
     return undefined;
   }
 
-  private embedDefaultFont = (): PDFFont =>
+  #embedDefaultFont = (): PDFFont =>
     this.doc.embedStandardFont(StandardFonts.Helvetica);
 }
 

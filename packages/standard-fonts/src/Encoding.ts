@@ -21,21 +21,21 @@ type EncodingNames = "Symbol" | "ZapfDingbats" | "WinAnsi";
 class Encoding {
   name: EncodingNames;
   supportedCodePoints: number[];
-  private unicodeMappings: UnicodeMappings;
+  #unicodeMappings: UnicodeMappings;
 
   constructor(name: EncodingNames, unicodeMappings: UnicodeMappings) {
     this.name = name;
     this.supportedCodePoints = Object.keys(unicodeMappings)
       .map(Number)
       .sort((a, b) => a - b);
-    this.unicodeMappings = unicodeMappings;
+    this.#unicodeMappings = unicodeMappings;
   }
 
   canEncodeUnicodeCodePoint = (codePoint: number) =>
-    codePoint in this.unicodeMappings;
+    codePoint in this.#unicodeMappings;
 
   encodeUnicodeCodePoint = (codePoint: number) => {
-    const mapped = this.unicodeMappings[codePoint];
+    const mapped = this.#unicodeMappings[codePoint];
     if (!mapped) {
       const str = String.fromCharCode(codePoint);
       const hexCode = `0x${padStart(codePoint.toString(16), 4, "0")}`;

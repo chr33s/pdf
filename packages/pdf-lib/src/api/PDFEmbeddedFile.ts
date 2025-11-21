@@ -33,13 +33,13 @@ export default class PDFEmbeddedFile implements Embeddable {
   /** The document to which this embedded file belongs. */
   readonly doc: PDFDocument;
 
-  private alreadyEmbedded = false;
-  private readonly embedder: FileEmbedder;
+  #alreadyEmbedded = false;
+  readonly #embedder: FileEmbedder;
 
   private constructor(ref: PDFRef, doc: PDFDocument, embedder: FileEmbedder) {
     this.ref = ref;
     this.doc = doc;
-    this.embedder = embedder;
+    this.#embedder = embedder;
   }
 
   /**
@@ -52,8 +52,8 @@ export default class PDFEmbeddedFile implements Embeddable {
    * @returns Resolves when the embedding is complete.
    */
   async embed(): Promise<void> {
-    if (!this.alreadyEmbedded) {
-      const ref = await this.embedder.embedIntoContext(
+    if (!this.#alreadyEmbedded) {
+      const ref = await this.#embedder.embedIntoContext(
         this.doc.context,
         this.ref,
       );
@@ -73,7 +73,7 @@ export default class PDFEmbeddedFile implements Embeddable {
       }
       const EFNames = EmbeddedFiles.lookup(PDFName.of("Names"), PDFArray);
 
-      EFNames.push(PDFHexString.fromText(this.embedder.fileName));
+      EFNames.push(PDFHexString.fromText(this.#embedder.fileName));
       EFNames.push(ref);
 
       /**
@@ -90,7 +90,7 @@ export default class PDFEmbeddedFile implements Embeddable {
       const AF = this.doc.catalog.lookup(PDFName.of("AF"), PDFArray);
       AF.push(ref);
 
-      this.alreadyEmbedded = true;
+      this.#alreadyEmbedded = true;
     }
   }
 
@@ -99,7 +99,7 @@ export default class PDFEmbeddedFile implements Embeddable {
    * @returns the embedder.
    */
   getEmbedder() {
-    return this.embedder;
+    return this.#embedder;
   }
 
   /**
@@ -107,7 +107,7 @@ export default class PDFEmbeddedFile implements Embeddable {
    * @returns true if the file has already been embedded, false otherwise.
    */
   getAlreadyEmbedded() {
-    return this.alreadyEmbedded;
+    return this.#alreadyEmbedded;
   }
 
   getRef() {

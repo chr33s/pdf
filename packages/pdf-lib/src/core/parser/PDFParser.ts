@@ -43,11 +43,11 @@ class PDFParser extends PDFObjectParser {
       cryptoFactory,
     );
 
-  private readonly objectsPerTick: number;
-  private readonly throwOnInvalidObject: boolean;
-  private readonly warnOnInvalidObjects: boolean;
-  private alreadyParsed = false;
-  private parsedObjects = 0;
+  readonly #objectsPerTick: number;
+  readonly #throwOnInvalidObject: boolean;
+  readonly #warnOnInvalidObjects: boolean;
+  #alreadyParsed = false;
+  #parsedObjects = 0;
 
   constructor(
     pdfBytes: Uint8Array,
@@ -63,23 +63,23 @@ class PDFParser extends PDFObjectParser {
       capNumbers,
       cryptoFactory,
     );
-    this.objectsPerTick = objectsPerTick;
-    this.throwOnInvalidObject = throwOnInvalidObject;
-    this.warnOnInvalidObjects = warnOnInvalidObjects;
+    this.#objectsPerTick = objectsPerTick;
+    this.#throwOnInvalidObject = throwOnInvalidObject;
+    this.#warnOnInvalidObjects = warnOnInvalidObjects;
     this.context.isDecrypted = !!cryptoFactory?.encryptionKey;
   }
 
   async parseDocument(): Promise<PDFContext> {
-    if (this.alreadyParsed) {
+    if (this.#alreadyParsed) {
       throw new ReparseError("PDFParser", "parseDocument");
     }
-    this.alreadyParsed = true;
+    this.#alreadyParsed = true;
 
-    this.context.header = this.parseHeader();
+    this.context.header = this.#parseHeader();
 
     let prevOffset;
     while (!this.bytes.done()) {
-      await this.parseDocumentSection();
+      await this.#parseDocumentSection();
       const offset = this.bytes.offset();
       if (offset === prevOffset) {
         throw new StalledParserError(this.bytes.position());
@@ -87,7 +87,7 @@ class PDFParser extends PDFObjectParser {
       prevOffset = offset;
     }
 
-    this.maybeRecoverRoot();
+    this.#maybeRecoverRoot();
 
     if (this.context.lookup(PDFRef.of(0))) {
       console.warn("Removing parsed object: 0 0 R");
@@ -97,7 +97,7 @@ class PDFParser extends PDFObjectParser {
     return this.context;
   }
 
-  private maybeRecoverRoot(): void {
+  #maybeRecoverRoot(): void {
     const isValidCatalog = (obj?: PDFObject) =>
       obj instanceof PDFDict &&
       obj.lookup(PDFName.of("Type")) === PDFName.of("Catalog");
@@ -115,14 +115,14 @@ class PDFParser extends PDFObjectParser {
     }
   }
 
-  private parseHeader(): PDFHeader {
+  #parseHeader(): PDFHeader {
     while (!this.bytes.done()) {
       if (this.matchKeyword(Keywords.header)) {
         const major = this.parseRawInt();
         this.bytes.assertNext(CharCodes.Period);
         const minor = this.parseRawInt();
         const header = PDFHeader.forVersion(major, minor);
-        this.skipBinaryHeaderComment();
+        this.#skipBinaryHeaderComment();
         return header;
       }
       this.bytes.next();
@@ -131,7 +131,7 @@ class PDFParser extends PDFObjectParser {
     throw new MissingPDFHeaderError(this.bytes.position());
   }
 
-  private parseIndirectObjectHeader(): PDFRef {
+  #parseIndirectObjectHeader(): PDFRef {
     this.skipWhitespaceAndComments();
     const objectNumber = this.parseRawInt();
 
@@ -146,10 +146,10 @@ class PDFParser extends PDFObjectParser {
     return PDFRef.of(objectNumber, generationNumber);
   }
 
-  private matchIndirectObjectHeader(): boolean {
+  #matchIndirectObjectHeader(): boolean {
     const initialOffset = this.bytes.offset();
     try {
-      this.parseIndirectObjectHeader();
+      this.#parseIndirectObjectHeader();
       return true;
     } catch (error) {
       void error;
@@ -158,13 +158,13 @@ class PDFParser extends PDFObjectParser {
     }
   }
 
-  private shouldWaitForTick = () => {
-    this.parsedObjects += 1;
-    return this.parsedObjects % this.objectsPerTick === 0;
+  #shouldWaitForTick = () => {
+    this.#parsedObjects += 1;
+    return this.#parsedObjects % this.#objectsPerTick === 0;
   };
 
-  private async parseIndirectObject(): Promise<PDFRef> {
-    const ref = this.parseIndirectObjectHeader();
+  async #parseIndirectObject(): Promise<PDFRef> {
+    const ref = this.#parseIndirectObjectHeader();
 
     this.skipWhitespaceAndComments();
     const object = this.parseObject(ref);
@@ -183,7 +183,7 @@ class PDFParser extends PDFObjectParser {
     ) {
       await PDFObjectStreamParser.forStream(
         object,
-        this.shouldWaitForTick,
+        this.#shouldWaitForTick,
       ).parseIntoContext();
     } else if (
       object instanceof PDFRawStream &&
@@ -198,16 +198,16 @@ class PDFParser extends PDFObjectParser {
   }
 
   // TODO: Improve and clean this up
-  private tryToParseInvalidIndirectObject() {
+  #tryToParseInvalidIndirectObject() {
     const startPos = this.bytes.position();
 
     const msg = `Trying to parse invalid object: ${JSON.stringify(startPos)})`;
-    if (this.throwOnInvalidObject) throw new Error(msg);
-    if (this.warnOnInvalidObjects) console.warn(msg);
+    if (this.#throwOnInvalidObject) throw new Error(msg);
+    if (this.#warnOnInvalidObjects) console.warn(msg);
 
-    const ref = this.parseIndirectObjectHeader();
+    const ref = this.#parseIndirectObjectHeader();
 
-    if (this.warnOnInvalidObjects)
+    if (this.#warnOnInvalidObjects)
       console.warn(`Invalid object ref: ${String(ref)}`);
 
     this.skipWhitespaceAndComments();
@@ -232,30 +232,30 @@ class PDFParser extends PDFObjectParser {
     return ref;
   }
 
-  private async parseIndirectObjects(): Promise<void> {
+  async #parseIndirectObjects(): Promise<void> {
     this.skipWhitespaceAndComments();
 
     while (!this.bytes.done() && IsDigit[this.bytes.peek()]) {
       const initialOffset = this.bytes.offset();
 
       try {
-        await this.parseIndirectObject();
+        await this.#parseIndirectObject();
       } catch (error) {
         void error;
         // TODO: Add tracing/logging mechanism to track when this happens!
         this.bytes.moveTo(initialOffset);
-        this.tryToParseInvalidIndirectObject();
+        this.#tryToParseInvalidIndirectObject();
       }
       this.skipWhitespaceAndComments();
 
       // TODO: Can this be done only when needed, to avoid harming performance?
-      this.skipJibberish();
+      this.#skipJibberish();
 
-      if (this.shouldWaitForTick()) await waitForTick();
+      if (this.#shouldWaitForTick()) await waitForTick();
     }
   }
 
-  private maybeParseCrossRefSection(): PDFCrossRefSection | void {
+  #maybeParseCrossRefSection(): PDFCrossRefSection | void {
     this.skipWhitespaceAndComments();
     if (!this.matchKeyword(Keywords.xref)) return;
     this.skipWhitespaceAndComments();
@@ -294,7 +294,7 @@ class PDFParser extends PDFObjectParser {
     return xref;
   }
 
-  private maybeParseTrailerDict(): void {
+  #maybeParseTrailerDict(): void {
     this.skipWhitespaceAndComments();
     if (!this.matchKeyword(Keywords.trailer)) return;
     this.skipWhitespaceAndComments();
@@ -310,7 +310,7 @@ class PDFParser extends PDFObjectParser {
     };
   }
 
-  private maybeParseTrailer(): PDFTrailer | void {
+  #maybeParseTrailer(): PDFTrailer | void {
     this.skipWhitespaceAndComments();
     if (!this.matchKeyword(Keywords.startxref)) return;
     this.skipWhitespaceAndComments();
@@ -326,14 +326,14 @@ class PDFParser extends PDFObjectParser {
     return PDFTrailer.forLastCrossRefSectionOffset(offset);
   }
 
-  private async parseDocumentSection(): Promise<void> {
-    await this.parseIndirectObjects();
-    this.maybeParseCrossRefSection();
-    this.maybeParseTrailerDict();
-    this.maybeParseTrailer();
+  async #parseDocumentSection(): Promise<void> {
+    await this.#parseIndirectObjects();
+    this.#maybeParseCrossRefSection();
+    this.#maybeParseTrailerDict();
+    this.#maybeParseTrailer();
 
     // TODO: Can this be done only when needed, to avoid harming performance?
-    this.skipJibberish();
+    this.#skipJibberish();
   }
 
   /**
@@ -342,7 +342,7 @@ class PDFParser extends PDFObjectParser {
    * skip past that jibberish, should it exist, until it reaches the next
    * indirect object header, an xref table section, or the file trailer.
    */
-  private skipJibberish(): void {
+  #skipJibberish(): void {
     this.skipWhitespaceAndComments();
     while (!this.bytes.done()) {
       const initialOffset = this.bytes.offset();
@@ -353,7 +353,7 @@ class PDFParser extends PDFObjectParser {
           this.matchKeyword(Keywords.xref) ||
           this.matchKeyword(Keywords.trailer) ||
           this.matchKeyword(Keywords.startxref) ||
-          this.matchIndirectObjectHeader()
+          this.#matchIndirectObjectHeader()
         ) {
           this.bytes.moveTo(initialOffset);
           break;
@@ -376,11 +376,11 @@ class PDFParser extends PDFObjectParser {
    * these headers correctly, we just throw out all bytes leading up to the
    * first indirect object header.
    */
-  private skipBinaryHeaderComment(): void {
+  #skipBinaryHeaderComment(): void {
     this.skipWhitespaceAndComments();
     try {
       const initialOffset = this.bytes.offset();
-      this.parseIndirectObjectHeader();
+      this.#parseIndirectObjectHeader();
       this.bytes.moveTo(initialOffset);
     } catch (error) {
       void error;

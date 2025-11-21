@@ -21,30 +21,30 @@ class PDFDict extends PDFObject {
 
   readonly context: PDFContext;
 
-  private readonly dict: DictMap;
+  readonly #dict: DictMap;
 
   suppressEncryption: boolean = false;
 
   protected constructor(map: DictMap, context: PDFContext) {
     super();
-    this.dict = map;
+    this.#dict = map;
     this.context = context;
   }
 
   keys(): PDFName[] {
-    return Array.from(this.dict.keys());
+    return Array.from(this.#dict.keys());
   }
 
   values(): PDFObject[] {
-    return Array.from(this.dict.values());
+    return Array.from(this.#dict.values());
   }
 
   entries(): [PDFName, PDFObject][] {
-    return Array.from(this.dict.entries());
+    return Array.from(this.#dict.entries());
   }
 
   set(key: PDFName, value: PDFObject): void {
-    this.dict.set(key, value);
+    this.#dict.set(key, value);
   }
 
   get(
@@ -53,13 +53,13 @@ class PDFDict extends PDFObject {
     // removed in next breaking API change.
     preservePDFNull = false,
   ): PDFObject | undefined {
-    const value = this.dict.get(key);
+    const value = this.#dict.get(key);
     if (value === PDFNull && !preservePDFNull) return undefined;
     return value;
   }
 
   has(key: PDFName): boolean {
-    const value = this.dict.get(key);
+    const value = this.#dict.get(key);
     return value !== undefined && value !== PDFNull;
   }
 
@@ -154,21 +154,23 @@ class PDFDict extends PDFObject {
   }
 
   delete(key: PDFName): boolean {
-    return this.dict.delete(key);
+    return this.#dict.delete(key);
   }
 
   asMap(): Map<PDFName, PDFObject> {
-    return new Map(this.dict);
+    return new Map(this.#dict);
   }
 
   /** Generate a random key that doesn't exist in current key set */
   uniqueKey(tag = ""): PDFName {
-    const existingKeys = this.keys();
-    let key = PDFName.of(this.context.addRandomSuffix(tag, 10));
-    while (existingKeys.includes(key)) {
-      key = PDFName.of(this.context.addRandomSuffix(tag, 10));
+    const existingKeyNames = new Set(
+      this.keys().map((key) => key.decodeText()),
+    );
+    let keyName = this.context.addRandomSuffix(tag, 10);
+    while (existingKeyNames.has(keyName)) {
+      keyName = this.context.addRandomSuffix(tag, 10);
     }
-    return key;
+    return PDFName.of(keyName);
   }
 
   clone(context?: PDFContext): PDFDict {

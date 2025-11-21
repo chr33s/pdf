@@ -81,7 +81,7 @@ class JpegEmbedder {
   readonly width: number;
   readonly colorSpace: ColorSpace;
 
-  private readonly imageData: Uint8Array;
+  readonly #imageData: Uint8Array;
 
   private constructor(
     imageData: Uint8Array,
@@ -90,7 +90,7 @@ class JpegEmbedder {
     height: number,
     colorSpace: ColorSpace,
   ) {
-    this.imageData = imageData;
+    this.#imageData = imageData;
     this.bitsPerComponent = bitsPerComponent;
     this.width = width;
     this.height = height;
@@ -98,7 +98,7 @@ class JpegEmbedder {
   }
 
   async embedIntoContext(context: PDFContext, ref?: PDFRef): Promise<PDFRef> {
-    const xObject = context.stream(this.imageData, {
+    const xObject = context.stream(this.#imageData, {
       Type: "XObject",
       Subtype: "Image",
       BitsPerComponent: this.bitsPerComponent,

@@ -10,10 +10,10 @@ import DecodeStream from "./DecodeStream.js";
 import { StreamType } from "./Stream.js";
 
 class LZWStream extends DecodeStream {
-  private stream: StreamType;
-  private cachedData: number;
-  private bitsCached: number;
-  private lzwState?: {
+  #stream: StreamType;
+  #cachedData: number;
+  #bitsCached: number;
+  #lzwState?: {
     earlyChange: 0 | 1;
     codeLength: number;
     nextCode: number;
@@ -32,9 +32,9 @@ class LZWStream extends DecodeStream {
   ) {
     super(maybeLength);
 
-    this.stream = stream;
-    this.cachedData = 0;
-    this.bitsCached = 0;
+    this.#stream = stream;
+    this.#cachedData = 0;
+    this.#bitsCached = 0;
 
     const maxLzwDictionarySize = 4096;
     const lzwState = {
@@ -51,7 +51,7 @@ class LZWStream extends DecodeStream {
       lzwState.dictionaryValues[i] = i;
       lzwState.dictionaryLengths[i] = 1;
     }
-    this.lzwState = lzwState;
+    this.#lzwState = lzwState;
   }
 
   protected readBlock() {
@@ -63,7 +63,7 @@ class LZWStream extends DecodeStream {
     let j;
     let q;
 
-    const lzwState = this.lzwState;
+    const lzwState = this.#lzwState;
     if (!lzwState) {
       return; // eof was found
     }
@@ -83,7 +83,7 @@ class LZWStream extends DecodeStream {
     let buffer = this.ensureBuffer(this.bufferLength + estimatedDecodedSize);
 
     for (i = 0; i < blockSize; i++) {
-      const code = this.readBits(codeLength);
+      const code = this.#readBits(codeLength);
       const hasPrev = currentSequenceLength > 0;
       if (!code || code < 256) {
         currentSequence[0] = code as number;
@@ -105,7 +105,7 @@ class LZWStream extends DecodeStream {
         continue;
       } else {
         this.eof = true;
-        delete this.lzwState;
+        this.#lzwState = undefined;
         break;
       }
 
@@ -143,11 +143,11 @@ class LZWStream extends DecodeStream {
     this.bufferLength = currentBufferLength;
   }
 
-  private readBits(n: number) {
-    let bitsCached = this.bitsCached;
-    let cachedData = this.cachedData;
+  #readBits(n: number) {
+    let bitsCached = this.#bitsCached;
+    let cachedData = this.#cachedData;
     while (bitsCached < n) {
-      const c = this.stream.getByte();
+      const c = this.#stream.getByte();
       if (c === -1) {
         this.eof = true;
         return null;
@@ -155,8 +155,8 @@ class LZWStream extends DecodeStream {
       cachedData = (cachedData << 8) | c;
       bitsCached += 8;
     }
-    this.bitsCached = bitsCached -= n;
-    this.cachedData = cachedData;
+    this.#bitsCached = bitsCached -= n;
+    this.#cachedData = cachedData;
     return (cachedData >>> bitsCached) & ((1 << n) - 1);
   }
 }

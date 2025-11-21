@@ -239,16 +239,16 @@ export default class PDFDocument {
   /** The default word breaks used in PDFPage.drawText */
   defaultWordBreaks: string[] = [" "];
 
-  private fontkit?: Fontkit;
-  private pageCount: number | undefined;
-  private readonly pageCache: Cache<PDFPage[]>;
-  private readonly pageMap: Map<PDFPageLeaf, PDFPage>;
-  private readonly formCache: Cache<PDFForm>;
-  private readonly fonts: PDFFont[];
-  private readonly images: PDFImage[];
-  private readonly embeddedPages: PDFEmbeddedPage[];
-  private readonly embeddedFiles: PDFEmbeddedFile[];
-  private readonly javaScripts: PDFJavaScript[];
+  #fontkit?: Fontkit;
+  #pageCount: number | undefined;
+  readonly #pageCache: Cache<PDFPage[]>;
+  readonly #pageMap: Map<PDFPageLeaf, PDFPage>;
+  readonly #formCache: Cache<PDFForm>;
+  readonly #fonts: PDFFont[];
+  readonly #images: PDFImage[];
+  readonly #embeddedPages: PDFEmbeddedPage[];
+  readonly #embeddedFiles: PDFEmbeddedFile[];
+  readonly #javaScripts: PDFJavaScript[];
 
   private constructor(
     context: PDFContext,
@@ -267,18 +267,18 @@ export default class PDFDocument {
     }
     this.isEncrypted = !!context.lookup(context.trailerInfo.Encrypt);
 
-    this.pageCache = Cache.populatedBy(this.computePages);
-    this.pageMap = new Map();
-    this.formCache = Cache.populatedBy(this.getOrCreateForm);
-    this.fonts = [];
-    this.images = [];
-    this.embeddedPages = [];
-    this.embeddedFiles = [];
-    this.javaScripts = [];
+    this.#pageCache = Cache.populatedBy(this.#computePages);
+    this.#pageMap = new Map();
+    this.#formCache = Cache.populatedBy(this.#getOrCreateForm);
+    this.#fonts = [];
+    this.#images = [];
+    this.#embeddedPages = [];
+    this.#embeddedFiles = [];
+    this.#javaScripts = [];
 
     if (!ignoreEncryption && this.isEncrypted) throw new EncryptedPDFError();
 
-    if (updateMetadata) this.updateInfoDict();
+    if (updateMetadata) this.#updateInfoDict();
   }
 
   /**
@@ -300,7 +300,7 @@ export default class PDFDocument {
    * @param fontkit The fontkit instance to be registered.
    */
   registerFontkit(fontkit: Fontkit): void {
-    this.fontkit = fontkit;
+    this.#fontkit = fontkit;
   }
 
   /**
@@ -318,7 +318,7 @@ export default class PDFDocument {
    * @returns The form for this document.
    */
   getForm(): PDFForm {
-    const form = this.formCache.access();
+    const form = this.#formCache.access();
     if (form.hasXFA()) {
       console.warn(
         "Removing XFA form data as pdf-lib does not support reading or writing XFA",
@@ -337,7 +337,7 @@ export default class PDFDocument {
    * @returns A string containing the title of this document, if it has one.
    */
   getTitle(): string | undefined {
-    const title = this.getInfoDict().lookup(PDFName.Title);
+    const title = this.#getInfoDict().lookup(PDFName.Title);
     if (!title) return undefined;
     assertIsLiteralOrHexString(title);
     return title.decodeText();
@@ -352,7 +352,7 @@ export default class PDFDocument {
    * @returns A string containing the author of this document, if it has one.
    */
   getAuthor(): string | undefined {
-    const author = this.getInfoDict().lookup(PDFName.Author);
+    const author = this.#getInfoDict().lookup(PDFName.Author);
     if (!author) return undefined;
     assertIsLiteralOrHexString(author);
     return author.decodeText();
@@ -367,7 +367,7 @@ export default class PDFDocument {
    * @returns A string containing the subject of this document, if it has one.
    */
   getSubject(): string | undefined {
-    const subject = this.getInfoDict().lookup(PDFName.Subject);
+    const subject = this.#getInfoDict().lookup(PDFName.Subject);
     if (!subject) return undefined;
     assertIsLiteralOrHexString(subject);
     return subject.decodeText();
@@ -382,7 +382,7 @@ export default class PDFDocument {
    * @returns A string containing the keywords of this document, if it has any.
    */
   getKeywords(): string | undefined {
-    const keywords = this.getInfoDict().lookup(PDFName.Keywords);
+    const keywords = this.#getInfoDict().lookup(PDFName.Keywords);
     if (!keywords) return undefined;
     assertIsLiteralOrHexString(keywords);
     return keywords.decodeText();
@@ -397,7 +397,7 @@ export default class PDFDocument {
    * @returns A string containing the creator of this document, if it has one.
    */
   getCreator(): string | undefined {
-    const creator = this.getInfoDict().lookup(PDFName.Creator);
+    const creator = this.#getInfoDict().lookup(PDFName.Creator);
     if (!creator) return undefined;
     assertIsLiteralOrHexString(creator);
     return creator.decodeText();
@@ -412,7 +412,7 @@ export default class PDFDocument {
    * @returns A string containing the producer of this document, if it has one.
    */
   getProducer(): string | undefined {
-    const producer = this.getInfoDict().lookup(PDFName.Producer);
+    const producer = this.#getInfoDict().lookup(PDFName.Producer);
     if (!producer) return undefined;
     assertIsLiteralOrHexString(producer);
     return producer.decodeText();
@@ -444,7 +444,7 @@ export default class PDFDocument {
    *          if it has one.
    */
   getCreationDate(): Date | undefined {
-    const creationDate = this.getInfoDict().lookup(PDFName.CreationDate);
+    const creationDate = this.#getInfoDict().lookup(PDFName.CreationDate);
     if (!creationDate) return undefined;
     assertIsLiteralOrHexString(creationDate);
     return creationDate.decodeDate();
@@ -461,7 +461,7 @@ export default class PDFDocument {
    *          if it has one.
    */
   getModificationDate(): Date | undefined {
-    const modificationDate = this.getInfoDict().lookup(PDFName.ModDate);
+    const modificationDate = this.#getInfoDict().lookup(PDFName.ModDate);
     if (!modificationDate) return undefined;
     assertIsLiteralOrHexString(modificationDate);
     return modificationDate.decodeDate();
@@ -487,7 +487,7 @@ export default class PDFDocument {
   setTitle(title: string, options?: SetTitleOptions): void {
     assertIs(title, "title", ["string"]);
     const key = PDFName.of("Title");
-    this.getInfoDict().set(key, PDFHexString.fromText(title));
+    this.#getInfoDict().set(key, PDFHexString.fromText(title));
 
     // Indicate that readers should display the title rather than the filename
     if (options?.showInWindowTitleBar) {
@@ -507,7 +507,7 @@ export default class PDFDocument {
   setAuthor(author: string): void {
     assertIs(author, "author", ["string"]);
     const key = PDFName.of("Author");
-    this.getInfoDict().set(key, PDFHexString.fromText(author));
+    this.#getInfoDict().set(key, PDFHexString.fromText(author));
   }
 
   /**
@@ -521,7 +521,7 @@ export default class PDFDocument {
   setSubject(subject: string): void {
     assertIs(subject, "author", ["string"]);
     const key = PDFName.of("Subject");
-    this.getInfoDict().set(key, PDFHexString.fromText(subject));
+    this.#getInfoDict().set(key, PDFHexString.fromText(subject));
   }
 
   /**
@@ -535,7 +535,7 @@ export default class PDFDocument {
   setKeywords(keywords: string[]): void {
     assertIs(keywords, "keywords", [Array]);
     const key = PDFName.of("Keywords");
-    this.getInfoDict().set(key, PDFHexString.fromText(keywords.join(" ")));
+    this.#getInfoDict().set(key, PDFHexString.fromText(keywords.join(" ")));
   }
 
   /**
@@ -549,7 +549,7 @@ export default class PDFDocument {
   setCreator(creator: string): void {
     assertIs(creator, "creator", ["string"]);
     const key = PDFName.of("Creator");
-    this.getInfoDict().set(key, PDFHexString.fromText(creator));
+    this.#getInfoDict().set(key, PDFHexString.fromText(creator));
   }
 
   /**
@@ -563,7 +563,7 @@ export default class PDFDocument {
   setProducer(producer: string): void {
     assertIs(producer, "creator", ["string"]);
     const key = PDFName.of("Producer");
-    this.getInfoDict().set(key, PDFHexString.fromText(producer));
+    this.#getInfoDict().set(key, PDFHexString.fromText(producer));
   }
 
   /**
@@ -593,7 +593,7 @@ export default class PDFDocument {
   setCreationDate(creationDate: Date): void {
     assertIs(creationDate, "creationDate", [[Date, "Date"]]);
     const key = PDFName.of("CreationDate");
-    this.getInfoDict().set(key, PDFString.fromDate(creationDate));
+    this.#getInfoDict().set(key, PDFString.fromDate(creationDate));
   }
 
   /**
@@ -608,7 +608,7 @@ export default class PDFDocument {
   setModificationDate(modificationDate: Date): void {
     assertIs(modificationDate, "modificationDate", [[Date, "Date"]]);
     const key = PDFName.of("ModDate");
-    this.getInfoDict().set(key, PDFString.fromDate(modificationDate));
+    this.#getInfoDict().set(key, PDFString.fromDate(modificationDate));
   }
 
   /**
@@ -619,8 +619,8 @@ export default class PDFDocument {
    * @returns The number of pages in this document.
    */
   getPageCount(): number {
-    if (this.pageCount === undefined) this.pageCount = this.getPages().length;
-    return this.pageCount;
+    if (this.#pageCount === undefined) this.#pageCount = this.getPages().length;
+    return this.#pageCount;
   }
 
   /**
@@ -636,7 +636,7 @@ export default class PDFDocument {
    * @returns An array of all the pages contained in this document.
    */
   getPages(): PDFPage[] {
-    return this.pageCache.access();
+    return this.#pageCache.access();
   }
 
   /**
@@ -686,10 +686,10 @@ export default class PDFDocument {
    */
   removePage(index: number): void {
     const pageCount = this.getPageCount();
-    if (this.pageCount === 0) throw new RemovePageFromEmptyDocumentError();
+    if (this.#pageCount === 0) throw new RemovePageFromEmptyDocumentError();
     assertRange(index, "index", 0, pageCount - 1);
     this.catalog.removeLeafNode(index);
-    this.pageCount = pageCount - 1;
+    this.#pageCount = pageCount - 1;
   }
 
   /**
@@ -775,10 +775,10 @@ export default class PDFDocument {
     const parentRef = this.catalog.insertLeafNode(page.ref, index);
     page.node.setParent(parentRef);
 
-    this.pageMap.set(page.node, page);
-    this.pageCache.invalidate();
+    this.#pageMap.set(page.node, page);
+    this.#pageCache.invalidate();
 
-    this.pageCount = pageCount + 1;
+    this.#pageCount = pageCount + 1;
 
     return page;
   }
@@ -900,7 +900,7 @@ export default class PDFDocument {
 
     const ref = this.context.nextRef();
     const javaScript = PDFJavaScript.of(ref, this, embedder);
-    this.javaScripts.push(javaScript);
+    this.#javaScripts.push(javaScript);
   }
 
   /**
@@ -982,10 +982,10 @@ export default class PDFDocument {
 
     const ref = this.context.nextRef();
     const embeddedFile = PDFEmbeddedFile.of(ref, this, embedder);
-    this.embeddedFiles.push(embeddedFile);
+    this.#embeddedFiles.push(embeddedFile);
   }
 
-  private getRawAttachments() {
+  #getRawAttachments() {
     if (!this.catalog.has(PDFName.of("Names"))) return [];
     const Names = this.catalog.lookup(PDFName.of("Names"), PDFDict);
 
@@ -1009,8 +1009,8 @@ export default class PDFDocument {
     return rawAttachments;
   }
 
-  private getSavedAttachments(): SavedPDFAttachment[] {
-    const rawAttachments = this.getRawAttachments();
+  #getSavedAttachments(): SavedPDFAttachment[] {
+    const rawAttachments = this.#getRawAttachments();
     return rawAttachments.flatMap(({ fileName, fileSpec, specRef }) => {
       const efDict = fileSpec.lookup(PDFName.of("EF"));
       if (!(efDict instanceof PDFDict)) return [];
@@ -1079,8 +1079,8 @@ export default class PDFDocument {
     });
   }
 
-  private getUnsavedAttachments(): UnsavedPDFAttachment[] {
-    const attachments = this.embeddedFiles.flatMap((file) => {
+  #getUnsavedAttachments(): UnsavedPDFAttachment[] {
+    const attachments = this.#embeddedFiles.flatMap((file) => {
       if (file.getAlreadyEmbedded()) return [];
       const embedder = file.getEmbedder();
       return {
@@ -1104,8 +1104,8 @@ export default class PDFDocument {
    * @returns Array of attachments with name and data
    */
   getAttachments(): PDFAttachment[] {
-    const savedAttachments = this.getSavedAttachments();
-    const unsavedAttachments = this.getUnsavedAttachments();
+    const savedAttachments = this.#getSavedAttachments();
+    const unsavedAttachments = this.#getUnsavedAttachments();
 
     return [...savedAttachments, ...unsavedAttachments];
   }
@@ -1116,10 +1116,10 @@ export default class PDFDocument {
       if (file.name !== name) return;
       // the file wasn't embedded into context yet
       if ("pdfEmbeddedFile" in file) {
-        const i = this.embeddedFiles.findIndex(
+        const i = this.#embeddedFiles.findIndex(
           (f) => file.pdfEmbeddedFile === f,
         );
-        if (i !== undefined) this.embeddedFiles.splice(i, 1);
+        if (i !== undefined) this.#embeddedFiles.splice(i, 1);
       } else {
         // remove references from catalog
         const namesArr = this.catalog
@@ -1198,7 +1198,7 @@ export default class PDFDocument {
       embedder = StandardFontEmbedder.for(font, customName);
     } else if (canBeConvertedToUint8Array(font)) {
       const bytes = toUint8Array(font);
-      const fontkit = this.assertFontkit();
+      const fontkit = this.#assertFontkit();
       embedder = subset
         ? await CustomFontSubsetEmbedder.for(
             fontkit,
@@ -1215,7 +1215,7 @@ export default class PDFDocument {
 
     const ref = this.context.nextRef();
     const pdfFont = PDFFont.of(ref, this, embedder);
-    this.fonts.push(pdfFont);
+    this.#fonts.push(pdfFont);
 
     return pdfFont;
   }
@@ -1241,7 +1241,7 @@ export default class PDFDocument {
 
     const ref = this.context.nextRef();
     const pdfFont = PDFFont.of(ref, this, embedder);
-    this.fonts.push(pdfFont);
+    this.#fonts.push(pdfFont);
 
     return pdfFont;
   }
@@ -1282,7 +1282,7 @@ export default class PDFDocument {
     const embedder = await JpegEmbedder.for(bytes);
     const ref = this.context.nextRef();
     const pdfImage = PDFImage.of(ref, this, embedder);
-    this.images.push(pdfImage);
+    this.#images.push(pdfImage);
     return pdfImage;
   }
 
@@ -1322,7 +1322,7 @@ export default class PDFDocument {
     const embedder = await PngEmbedder.for(bytes);
     const ref = this.context.nextRef();
     const pdfImage = PDFImage.of(ref, this, embedder);
-    this.images.push(pdfImage);
+    this.#images.push(pdfImage);
     return pdfImage;
   }
 
@@ -1506,7 +1506,7 @@ export default class PDFDocument {
       embeddedPages[idx] = PDFEmbeddedPage.of(ref, this, embedder);
     }
 
-    this.embeddedPages.push(...embeddedPages);
+    this.#embeddedPages.push(...embeddedPages);
 
     return embeddedPages;
   }
@@ -1526,11 +1526,11 @@ export default class PDFDocument {
    * @returns Resolves when the flush is complete.
    */
   async flush(): Promise<void> {
-    await this.embedAll(this.fonts);
-    await this.embedAll(this.images);
-    await this.embedAll(this.embeddedPages);
-    await this.embedAll(this.embeddedFiles);
-    await this.embedAll(this.javaScripts);
+    await this.#embedAll(this.#fonts);
+    await this.#embedAll(this.#images);
+    await this.#embedAll(this.#embeddedPages);
+    await this.#embedAll(this.#embeddedFiles);
+    await this.#embedAll(this.#javaScripts);
   }
 
   /**
@@ -1565,7 +1565,7 @@ export default class PDFDocument {
     if (addDefaultPage && this.getPageCount() === 0) this.addPage();
 
     if (updateFieldAppearances) {
-      const form = this.formCache.getValue();
+      const form = this.#formCache.getValue();
       if (form) form.updateFieldAppearances();
     }
 
@@ -1612,17 +1612,17 @@ export default class PDFDocument {
     return undefined;
   }
 
-  private async embedAll(embeddables: Embeddable[]): Promise<void> {
+  async #embedAll(embeddables: Embeddable[]): Promise<void> {
     for (let idx = 0, len = embeddables.length; idx < len; idx++) {
       await embeddables[idx].embed();
     }
   }
 
-  private updateInfoDict(): void {
+  #updateInfoDict(): void {
     const pdfLib = "pdf-lib (https://github.com/Hopding/pdf-lib)";
     const now = new Date();
 
-    const info = this.getInfoDict();
+    const info = this.#getInfoDict();
 
     this.setProducer(pdfLib);
     this.setModificationDate(now);
@@ -1631,7 +1631,7 @@ export default class PDFDocument {
     if (!info.get(PDFName.of("CreationDate"))) this.setCreationDate(now);
   }
 
-  private getInfoDict(): PDFDict {
+  #getInfoDict(): PDFDict {
     const existingInfo = this.context.lookup(this.context.trailerInfo.Info);
     if (existingInfo instanceof PDFDict) return existingInfo;
 
@@ -1641,19 +1641,19 @@ export default class PDFDocument {
     return newInfo;
   }
 
-  private assertFontkit(): Fontkit {
-    if (!this.fontkit) throw new FontkitNotRegisteredError();
-    return this.fontkit;
+  #assertFontkit(): Fontkit {
+    if (!this.#fontkit) throw new FontkitNotRegisteredError();
+    return this.#fontkit;
   }
 
-  private computePages = (): PDFPage[] => {
+  #computePages = (): PDFPage[] => {
     const pages: PDFPage[] = [];
     this.catalog.Pages().traverse((node, ref) => {
       if (node instanceof PDFPageLeaf) {
-        let page = this.pageMap.get(node);
+        let page = this.#pageMap.get(node);
         if (!page) {
           page = PDFPage.of(node, ref, this);
-          this.pageMap.set(node, page);
+          this.#pageMap.set(node, page);
         }
         pages.push(page);
       }
@@ -1661,7 +1661,7 @@ export default class PDFDocument {
     return pages;
   };
 
-  private getOrCreateForm = (): PDFForm => {
+  #getOrCreateForm = (): PDFForm => {
     const acroForm = this.catalog.getOrCreateAcroForm();
     return PDFForm.of(acroForm, this);
   };

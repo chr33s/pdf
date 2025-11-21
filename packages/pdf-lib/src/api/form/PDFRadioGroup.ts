@@ -379,7 +379,7 @@ export default class PDFRadioGroup extends PDFField {
 
     // Set appearance streams for widget
     widget.setAppearanceState(PDFName.of("Off"));
-    this.updateWidgetAppearance(widget, apStateValue);
+    this.#updateWidgetAppearance(widget, apStateValue);
 
     // Add widget to the given page
     page.node.addAnnot(widgetRef);
@@ -451,11 +451,11 @@ export default class PDFRadioGroup extends PDFField {
       const widget = widgets[idx];
       const onValue = widget.getOnValue();
       if (!onValue) continue;
-      this.updateWidgetAppearance(widget, onValue, provider);
+      this.#updateWidgetAppearance(widget, onValue, provider);
     }
   }
 
-  private updateWidgetAppearance(
+  #updateWidgetAppearance(
     widget: PDFWidgetAnnotation,
     onValue: PDFName,
     provider?: AppearanceProviderFor<PDFRadioGroup>,

@@ -33,8 +33,8 @@ export default class PDFJavaScript implements Embeddable {
   /** The document to which this embedded script belongs. */
   readonly doc: PDFDocument;
 
-  private alreadyEmbedded = false;
-  private readonly embedder: JavaScriptEmbedder;
+  #alreadyEmbedded = false;
+  readonly #embedder: JavaScriptEmbedder;
 
   private constructor(
     ref: PDFRef,
@@ -43,7 +43,7 @@ export default class PDFJavaScript implements Embeddable {
   ) {
     this.ref = ref;
     this.doc = doc;
-    this.embedder = embedder;
+    this.#embedder = embedder;
   }
 
   /**
@@ -56,10 +56,10 @@ export default class PDFJavaScript implements Embeddable {
    * @returns Resolves when the embedding is complete.
    */
   async embed(): Promise<void> {
-    if (!this.alreadyEmbedded) {
+    if (!this.#alreadyEmbedded) {
       const { catalog, context } = this.doc;
 
-      const ref = await this.embedder.embedIntoContext(
+      const ref = await this.#embedder.embedIntoContext(
         this.doc.context,
         this.ref,
       );
@@ -79,10 +79,10 @@ export default class PDFJavaScript implements Embeddable {
       }
       const JSNames = Javascript.lookup(PDFName.of("Names"), PDFArray);
 
-      JSNames.push(PDFHexString.fromText(this.embedder.scriptName));
+      JSNames.push(PDFHexString.fromText(this.#embedder.scriptName));
       JSNames.push(ref);
 
-      this.alreadyEmbedded = true;
+      this.#alreadyEmbedded = true;
     }
   }
 }

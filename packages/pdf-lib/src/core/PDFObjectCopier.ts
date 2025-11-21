@@ -32,26 +32,26 @@ class PDFObjectCopier {
   static for = (src: PDFContext, dest: PDFContext) =>
     new PDFObjectCopier(src, dest);
 
-  private readonly src: PDFContext;
-  private readonly dest: PDFContext;
-  private readonly traversedObjects = new Map<PDFObject, PDFObject>();
+  readonly #src: PDFContext;
+  readonly #dest: PDFContext;
+  readonly #traversedObjects = new Map<PDFObject, PDFObject>();
 
   private constructor(src: PDFContext, dest: PDFContext) {
-    this.src = src;
-    this.dest = dest;
+    this.#src = src;
+    this.#dest = dest;
   }
 
   // prettier-ignore
   copy = <T extends PDFObject>(object: T): T => (
-      object instanceof PDFPageLeaf ? this.copyPDFPage(object)
-    : object instanceof PDFDict     ? this.copyPDFDict(object)
-    : object instanceof PDFArray    ? this.copyPDFArray(object)
-    : object instanceof PDFStream   ? this.copyPDFStream(object)
-    : object instanceof PDFRef      ? this.copyPDFIndirectObject(object)
+      object instanceof PDFPageLeaf ? this.#copyPDFPage(object)
+    : object instanceof PDFDict     ? this.#copyPDFDict(object)
+    : object instanceof PDFArray    ? this.#copyPDFArray(object)
+    : object instanceof PDFStream   ? this.#copyPDFStream(object)
+    : object instanceof PDFRef      ? this.#copyPDFIndirectObject(object)
     : object.clone()
   ) as T;;
 
-  private copyPDFPage = (originalPage: PDFPageLeaf): PDFPageLeaf => {
+  #copyPDFPage = (originalPage: PDFPageLeaf): PDFPageLeaf => {
     const clonedPage = originalPage.clone();
 
     // Move any entries that the originalPage is inheriting from its parent
@@ -68,16 +68,16 @@ class PDFObjectCopier {
     // tree from being copied when we only need a single page.
     clonedPage.delete(PDFName.of("Parent"));
 
-    return this.copyPDFDict(clonedPage) as PDFPageLeaf;
+    return this.#copyPDFDict(clonedPage) as PDFPageLeaf;
   };
 
-  private copyPDFDict = (originalDict: PDFDict): PDFDict => {
-    if (this.traversedObjects.has(originalDict)) {
-      return this.traversedObjects.get(originalDict) as PDFDict;
+  #copyPDFDict = (originalDict: PDFDict): PDFDict => {
+    if (this.#traversedObjects.has(originalDict)) {
+      return this.#traversedObjects.get(originalDict) as PDFDict;
     }
 
-    const clonedDict = originalDict.clone(this.dest);
-    this.traversedObjects.set(originalDict, clonedDict);
+    const clonedDict = originalDict.clone(this.#dest);
+    this.#traversedObjects.set(originalDict, clonedDict);
 
     const entries = originalDict.entries();
 
@@ -89,13 +89,13 @@ class PDFObjectCopier {
     return clonedDict;
   };
 
-  private copyPDFArray = (originalArray: PDFArray): PDFArray => {
-    if (this.traversedObjects.has(originalArray)) {
-      return this.traversedObjects.get(originalArray) as PDFArray;
+  #copyPDFArray = (originalArray: PDFArray): PDFArray => {
+    if (this.#traversedObjects.has(originalArray)) {
+      return this.#traversedObjects.get(originalArray) as PDFArray;
     }
 
-    const clonedArray = originalArray.clone(this.dest);
-    this.traversedObjects.set(originalArray, clonedArray);
+    const clonedArray = originalArray.clone(this.#dest);
+    this.#traversedObjects.set(originalArray, clonedArray);
 
     for (let idx = 0, len = originalArray.size(); idx < len; idx++) {
       const value = originalArray.get(idx);
@@ -105,13 +105,13 @@ class PDFObjectCopier {
     return clonedArray;
   };
 
-  private copyPDFStream = (originalStream: PDFStream): PDFStream => {
-    if (this.traversedObjects.has(originalStream)) {
-      return this.traversedObjects.get(originalStream) as PDFStream;
+  #copyPDFStream = (originalStream: PDFStream): PDFStream => {
+    if (this.#traversedObjects.has(originalStream)) {
+      return this.#traversedObjects.get(originalStream) as PDFStream;
     }
 
-    const clonedStream = originalStream.clone(this.dest);
-    this.traversedObjects.set(originalStream, clonedStream);
+    const clonedStream = originalStream.clone(this.#dest);
+    this.#traversedObjects.set(originalStream, clonedStream);
 
     const entries = originalStream.dict.entries();
     for (let idx = 0, len = entries.length; idx < len; idx++) {
@@ -122,21 +122,21 @@ class PDFObjectCopier {
     return clonedStream;
   };
 
-  private copyPDFIndirectObject = (ref: PDFRef): PDFRef => {
-    const alreadyMapped = this.traversedObjects.has(ref);
+  #copyPDFIndirectObject = (ref: PDFRef): PDFRef => {
+    const alreadyMapped = this.#traversedObjects.has(ref);
 
     if (!alreadyMapped) {
-      const newRef = this.dest.nextRef();
-      this.traversedObjects.set(ref, newRef);
+      const newRef = this.#dest.nextRef();
+      this.#traversedObjects.set(ref, newRef);
 
-      const dereferencedValue = this.src.lookup(ref);
+      const dereferencedValue = this.#src.lookup(ref);
       if (dereferencedValue) {
         const cloned = this.copy(dereferencedValue);
-        this.dest.assign(newRef, cloned);
+        this.#dest.assign(newRef, cloned);
       }
     }
 
-    return this.traversedObjects.get(ref) as PDFRef;
+    return this.#traversedObjects.get(ref) as PDFRef;
   };
 }
 

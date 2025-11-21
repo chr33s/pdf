@@ -1,5 +1,5 @@
 import { Assets } from "..";
-import { PDFDocument, values, PDFTextField } from "../../...js";
+import { PDFDocument, PDFTextField, values } from "../../../src/index.js";
 
 const fieldNames = {
   // Page 1
