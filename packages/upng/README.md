@@ -1,63 +1,39 @@
-<h1>
-  upng
+# @chr33s/upng
 
-  <br />
+> Small, fast, and modernized PNG/APNG encoder and decoder for the `@chr33s/pdf` ecosystem.
 
-  <!-- NPM Version -->
-  <a href="https://www.npmjs.com/package/@chr33s/upng">
-    <img
-      src="https://img.shields.io/npm/v/png-ts.svg?style=flat-square"
-      alt="NPM Version"
-    />
-  </a>
-</h1>
+This package wraps the excellent [`UPNG.js`](https://github.com/photopea/UPNG.js) library and keeps it maintained and
+published for `@chr33s/pdf-lib` and related tools. Key differences from upstream distributions include:
 
-> A small, fast and advanced PNG / APNG encoder and decoder
-
-This project is a fork of [`UPNG.js`](https://github.com/photopea/UPNG.js) and was created for use in [`pdf-lib`](https://github.com/Hopding/pdf-lib). The maintainer of the original repo does not publish it to NPM. That is the primary purpose of this fork. In addition, an `index.d.ts` file has been added (copied directly from [`@types/upng-js`](https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/upng-js/index.d.ts)) to makes TypeScript definitions available without requiring additional packages to be installed.
+- native ES module output targeting NodeNext (Node.js 18+ or a modern bundler required),
+- TypeScript source with generated declaration files bundled in the package, and
+- continuous maintenance inside the [`chr33s/pdf`](https://github.com/chr33s/pdf) monorepo alongside other PDF
+dependencies.
 
 ## Example of `UPNG.toRGBA8`
-```javascript
-// Import the UPNG class
-import UPNG from '@chr33s/upng';
+```ts
+import UPNG from "@chr33s/upng";
 
-// Create a UPNG object
 const pngImage = UPNG.decode(/* Uint8Array containing bytes of PNG image */);
 
-// `pixels` is a 1D array (in rgba order) of decoded pixel data
-const pixels = pngImage.UPNG.toRGBA8();
+// `pixels` is a 1D array (in RGBA order) of decoded pixel data
+const pixels = UPNG.toRGBA8(pngImage)[0];
 ```
 
 ## Installation
-### NPM Module
-To install the latest stable version:
-```bash
-# With npm
-npm install --save @chr33s/upng
 
-# With yarn
+```bash
+# npm
+npm install @chr33s/upng
+
+# pnpm
+pnpm add @chr33s/upng
+
+# yarn
 yarn add @chr33s/upng
 ```
-This assumes you're using [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/lang/en/) as your package manager.
 
-### UMD Module
-You can also download `@chr33s/upng` as a UMD module from [unpkg](https://unpkg.com/#/). The UMD builds have been compiled to ES5, so they should work [in any modern browser](https://caniuse.com/#feat=es5). UMD builds are useful if you aren't using a package manager or module bundler. For example, you can use them directly in the `<script>` tag of an HTML page.
-
-The following builds are available:
-
-* https://unpkg.com/@chr33s/upng/dist/UPNG.js
-* https://unpkg.com/@chr33s/upng/dist/UPNG.min.js
-
-When using a UMD build, you will have access to a global `window.UPNG` variable. This variable contains the `UPNG` class exported by `@chr33s/upng`. For example:
-
-```javascript
-// NPM module
-import UPNG from '@chr33s/upng';
-const pngImage = UPNG.decode(/* ... */)
-
-// UMD module
-var pngImage = window.UPNG.decode(/* ... */)
-```
+Package consumers should run on Node.js 18+ or enable NodeNext-compatible module resolution in their bundler configuration.
 
 
 ## Encoder

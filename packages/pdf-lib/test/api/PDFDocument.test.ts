@@ -245,10 +245,10 @@ describe("PDFDocument", () => {
       expect(pdfDoc.getAuthor()).toBeUndefined();
       expect(pdfDoc.getSubject()).toBeUndefined();
       expect(pdfDoc.getProducer()).toBe(
-        "pdf-lib (https://github.com/Hopding/pdf-lib)",
+        "pdf-lib (https://github.com/chr33s/pdf)",
       );
       expect(pdfDoc.getCreator()).toBe(
-        "pdf-lib (https://github.com/Hopding/pdf-lib)",
+        "pdf-lib (https://github.com/chr33s/pdf)",
       );
       expect(pdfDoc.getKeywords()).toBeUndefined();
       // Dates can not be tested since they have the current time as value.
@@ -296,7 +296,7 @@ describe("PDFDocument", () => {
         "Subject metadata (StringType=LiteralString, Encoding=UTF-16BE) with some chinese 你怎么敢",
       );
       expect(pdfDoc.getProducer()).toBe(
-        "pdf-lib (https://github.com/Hopding/pdf-lib)",
+        "pdf-lib (https://github.com/chr33s/pdf)",
       );
       expect(pdfDoc.getKeywords()).toBe(
         "Keywords metadata (StringType=LiteralString, Encoding=PDFDocEncoding) with  some weird  chars ˘•€",

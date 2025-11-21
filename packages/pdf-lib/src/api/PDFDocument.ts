@@ -1619,7 +1619,7 @@ export default class PDFDocument {
   }
 
   #updateInfoDict(): void {
-    const pdfLib = "pdf-lib (https://github.com/Hopding/pdf-lib)";
+    const pdfLib = "pdf-lib (https://github.com/chr33s/pdf)";
     const now = new Date();
 
     const info = this.#getInfoDict();

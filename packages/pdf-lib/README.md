@@ -1,60 +1,13 @@
-## Forked by [Cantoo](https://cantoo.fr)
+# @chr33s/pdf-lib
 
-This fork adds the support for svg to the pdf-lib project. Until pdf-lib project gets a better maintainance, we will maintain this project as long as we need it but cannot guarantee the support for issues too far from our own roadmap.
+This distribution evolves Hopding’s original `pdf-lib` with the SVG work from the Cantoo fork, modern ESM packaging, and up-to-date TypeScript tooling. It lives alongside all supporting dependencies in the `chr33s/pdf` monorepo.
 
-Install with: `npm install @cantoo/pdf-lib`
+Install with: `npm install @chr33s/pdf-lib`
 
-<hr/>
+> This README keeps the upstream documentation where it still applies. Behavioural differences are called out in the monorepo changelog when relevant.
 
-<a href="https://pdf-lib.js.org">
-<h1 align="center">
-<img alt="pdf-lib" height="300" src="https://raw.githubusercontent.com/Hopding/pdf-lib-docs/master/assets/logo-full.svg?sanitize=true">
-</h1>
-</a>
-
-<div align="center">
-  <strong>Create and modify PDF documents in any JavaScript environment.</strong>
-</div>
-<div align="center">
-  Designed to work in any modern JavaScript runtime. Tested in Node, Browser, Deno, and React Native environments.
-</div>
-
-<br />
-
-<div align="center">
-  <!-- NPM Version -->
-  <a href="https://www.npmjs.com/package/pdf-lib">
-    <img
-      src="https://img.shields.io/npm/v/pdf-lib.svg?style=flat-square"
-      alt="NPM Version"
-    />
-  </a>
-  <!-- Build Status -->
-  <a href="https://circleci.com/gh/Hopding/pdf-lib">
-    <img
-      src="https://img.shields.io/circleci/project/github/Hopding/pdf-lib/master.svg?style=flat-square&label=CircleCI"
-      alt="CircleCI Build Status"
-    />
-  </a>
-  <!-- Prettier Badge -->
-  <a href="https://prettier.io/">
-    <img
-      src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square"
-      alt="Prettier Badge"
-    />
-  </a>
-  <!-- Discord Badge -->
-  <a href="https://discord.gg/Y7uuVMc">
-    <img
-      src="https://img.shields.io/static/v1?label=discord&message=pdf-lib&color=566fbb&style=flat-square"
-      alt="Discord Badge"
-    />
-  </a>
-</div>
-
-<br />
-
-> **Learn more at [pdf-lib.js.org](https://pdf-lib.js.org)**
+Create and modify PDF documents in any JavaScript environment.   
+Designed to work in any modern JavaScript runtime. Tested in Node, Browser, Deno, and React Native environments.
 
 ## Table of Contents
 
@@ -141,7 +94,7 @@ _This example produces [this PDF](assets/pdfs/examples/create_document.pdf)._
 
 <!-- prettier-ignore -->
 ```js
-import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
+import { PDFDocument, StandardFonts, rgb } from '@chr33s/pdf-lib'
 
 // Create a new PDFDocument
 const pdfDoc = await PDFDocument.create()
@@ -182,7 +135,7 @@ _This example produces [this PDF](assets/pdfs/examples/modify_document.pdf)_ (wh
 
 <!-- prettier-ignore -->
 ```js
-import { degrees, PDFDocument, rgb, StandardFonts } from 'pdf-lib';
+import { degrees, PDFDocument, rgb, StandardFonts } from '@chr33s/pdf-lib';
 
 // This should be a Uint8Array or ArrayBuffer
 // This data can be obtained in a number of different ways
@@ -233,7 +186,7 @@ _This example produces [this PDF](assets/pdfs/examples/create_form.pdf)._
 
 <!-- prettier-ignore -->
 ```js
-import { PDFDocument } from 'pdf-lib'
+import { PDFDocument } from '@chr33s/pdf-lib'
 
 // Create a new PDFDocument
 const pdfDoc = await PDFDocument.create()
@@ -331,7 +284,7 @@ _This example produces [this PDF](assets/pdfs/examples/fill_form.pdf)_ (when [th
 
 <!-- prettier-ignore -->
 ```js
-import { PDFDocument } from 'pdf-lib'
+import { PDFDocument } from '@chr33s/pdf-lib'
 
 // These should be Uint8Arrays or ArrayBuffers
 // This data can be obtained in a number of different ways
@@ -440,7 +393,7 @@ _This example produces [this PDF](assets/pdfs/examples/flatten_form.pdf)_ (when 
 
 <!-- prettier-ignore -->
 ```js
-import { PDFDocument } from 'pdf-lib'
+import { PDFDocument } from '@chr33s/pdf-lib'
 
 // This should be a Uint8Array or ArrayBuffer
 // This data can be obtained in a number of different ways
@@ -488,7 +441,7 @@ _This example produces [this PDF](assets/pdfs/examples/copy_pages.pdf)_ (when [t
 
 <!-- prettier-ignore -->
 ```js
-import { PDFDocument } from 'pdf-lib'
+import { PDFDocument } from '@chr33s/pdf-lib'
 
 // Create a new PDFDocument
 const pdfDoc = await PDFDocument.create()
@@ -533,7 +486,7 @@ _This example produces [this PDF](assets/pdfs/examples/embed_png_and_jpeg_images
 
 <!-- prettier-ignore -->
 ```js
-import { PDFDocument } from 'pdf-lib'
+import { PDFDocument } from '@chr33s/pdf-lib'
 
 // These should be Uint8Arrays or ArrayBuffers
 // This data can be obtained in a number of different ways
@@ -591,7 +544,7 @@ _This example produces [this PDF](assets/pdfs/examples/embed_pdf_pages.pdf)_ (wh
 
 <!-- prettier-ignore -->
 ```js
-import { PDFDocument } from 'pdf-lib'
+import { PDFDocument } from '@chr33s/pdf-lib'
 
 // These should be Uint8Arrays or ArrayBuffers
 // This data can be obtained in a number of different ways
@@ -655,7 +608,7 @@ const pdfBytes = await pdfDoc.save()
 
 `pdf-lib` relies on a sister module to support embedding custom fonts: [`@chr33s/fontkit`](https://www.npmjs.com/package/@chr33s/fontkit). You must add the `@chr33s/fontkit` module to your project and register it using `pdfDoc.registerFontkit(...)` before embedding custom fonts.
 
-> **[See below for detailed installation instructions on installing `@chr33s/fontkit` as a UMD or NPM module.](#fontkit-installation)**
+> **[See below for detailed installation instructions on installing `@chr33s/fontkit` as a NPM module.](#fontkit-installation)**
 
 _This example produces [this PDF](assets/pdfs/examples/embed_font_and_measure_text.pdf)_ (when [this font](assets/fonts/ubuntu/Ubuntu-R.ttf) is used for the `fontBytes` variable).
 
@@ -663,7 +616,7 @@ _This example produces [this PDF](assets/pdfs/examples/embed_font_and_measure_te
 
 <!-- prettier-ignore -->
 ```js
-import { PDFDocument, rgb } from 'pdf-lib'
+import { PDFDocument, rgb } from '@chr33s/pdf-lib'
 import fontkit from '@chr33s/fontkit'
 
 // This should be a Uint8Array or ArrayBuffer
@@ -726,7 +679,7 @@ _This example produces [this PDF](assets/pdfs/examples/add_attachments.pdf)_ (wh
 
 <!-- prettier-ignore -->
 ```js
-import { PDFDocument } from 'pdf-lib'
+import { PDFDocument } from '@chr33s/pdf-lib'
 
 // These should be Uint8Arrays or ArrayBuffers
 // This data can be obtained in a number of different ways
@@ -791,7 +744,7 @@ _This example produces [this PDF](assets/pdfs/examples/set_document_metadata.pdf
 
 <!-- prettier-ignore -->
 ```js
-import { PDFDocument, StandardFonts } from 'pdf-lib'
+import { PDFDocument, StandardFonts } from '@chr33s/pdf-lib'
 
 // Create a new PDFDocument
 const pdfDoc = await PDFDocument.create()
@@ -812,7 +765,7 @@ pdfDoc.setAuthor('Humpty Dumpty')
 pdfDoc.setSubject('📘 An Epic Tale of Woe 📖')
 pdfDoc.setKeywords(['eggs', 'wall', 'fall', 'king', 'horses', 'men'])
 pdfDoc.setProducer('PDF App 9000 🤖')
-pdfDoc.setCreator('pdf-lib (https://github.com/Hopding/pdf-lib)')
+pdfDoc.setCreator('pdf-lib (https://github.com/chr33s/pdf)')
 pdfDoc.setCreationDate(new Date('2018-06-24T01:58:37.228Z'))
 pdfDoc.setModificationDate(new Date('2019-12-21T07:00:11.000Z'))
 
@@ -831,7 +784,7 @@ const pdfBytes = await pdfDoc.save()
 
 <!-- prettier-ignore -->
 ```js
-import { PDFDocument } from 'pdf-lib'
+import { PDFDocument } from '@chr33s/pdf-lib'
 
 // This should be a Uint8Array or ArrayBuffer
 // This data can be obtained in a number of different ways
@@ -880,7 +833,7 @@ import {
   PrintScaling,
   Duplex,
   PDFName,
-} from 'pdf-lib'
+} from '@chr33s/pdf-lib'
 
 // Create a new PDFDocument
 const pdfDoc = await PDFDocument.create()
@@ -939,7 +892,7 @@ const pdfBytes = await pdfDoc.save()
 
 <!-- prettier-ignore -->
 ```js
-import { PDFDocument } from 'pdf-lib'
+import { PDFDocument } from '@chr33s/pdf-lib'
 
 // This should be a Uint8Array or ArrayBuffer
 // This data can be obtained in a number of different ways
@@ -993,7 +946,7 @@ _This example produces [this PDF](assets/pdfs/examples/draw_svg_paths.pdf)_.
 
 <!-- prettier-ignore -->
 ```js
-import { PDFDocument, rgb } from 'pdf-lib'
+import { PDFDocument, rgb } from '@chr33s/pdf-lib'
 
 // SVG path for a wavy line
 const svgPath =
@@ -1034,7 +987,7 @@ const pdfBytes = await pdfDoc.save()
 ### Draw SVG
 
 ```js
-import { PDFDocument, rgb } from 'pdf-lib';
+import { PDFDocument, rgb } from '@chr33s/pdf-lib';
 
 // SVG of a square inside a square
 const svg = `<svg width="100" height="100">
@@ -1078,7 +1031,7 @@ import {
   PDFDocument,
   StandardFonts,
   rgb,
-} from 'https://cdn.skypack.dev/pdf-lib@^1.11.1?dts';
+} from 'jsr:@chr33s/pdf-lib@?dts';
 
 const pdfDoc = await PDFDocument.create();
 const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
@@ -1117,8 +1070,8 @@ import {
   PDFDocument,
   rgb,
   StandardFonts,
-} from 'https://cdn.skypack.dev/pdf-lib@^1.11.1?dts';
-import fontkit from 'https://cdn.skypack.dev/@chr33s/fontkit@^1.0.0?dts';
+} from 'jsr:@chr33s/pdf-lib@?dts';
+import fontkit from 'jsr:@chr33s/fontkit@?dts';
 
 const url = 'https://pdf-lib.js.org/assets/ubuntu/Ubuntu-R.ttf';
 const fontBytes = await fetch(url).then((res) => res.arrayBuffer());
@@ -1186,43 +1139,16 @@ To install the latest stable version:
 npm install --save pdf-lib
 
 # With yarn
-yarn add pdf-lib
+yarn add @chr33s/pdf-lib
 ```
 
 This assumes you're using [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/lang/en/) as your package manager.
-
-### UMD Module
-
-You can also download `pdf-lib` as a UMD module from [unpkg](https://unpkg.com/#/) or [jsDelivr](https://www.jsdelivr.com/). The UMD builds have been compiled to ES5, so they should work [in any modern browser](https://caniuse.com/#feat=es5). UMD builds are useful if you aren't using a package manager or module bundler. For example, you can use them directly in the `<script>` tag of an HTML page.
-
-The following builds are available:
-
-- https://unpkg.com/pdf-lib/dist/pdf-lib.js
-- https://unpkg.com/pdf-lib/dist/pdf-lib.min.js
-- https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.js
-- https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.min.js
-
-> **NOTE:** if you are using the CDN scripts in production, you should include a specific version number in the URL, for example:
->
-> - https://unpkg.com/pdf-lib@1.4.0/dist/pdf-lib.min.js
-> - https://cdn.jsdelivr.net/npm/pdf-lib@1.4.0/dist/pdf-lib.min.js
-
-When using a UMD build, you will have access to a global `window.PDFLib` variable. This variable contains all of the classes and functions exported by `pdf-lib`. For example:
-
-```javascript
-// NPM module
-import { PDFDocument, rgb } from 'pdf-lib';
-
-// UMD module
-var PDFDocument = PDFLib.PDFDocument;
-var rgb = PDFLib.rgb;
-```
 
 ## Fontkit Installation
 
 `pdf-lib` relies upon a sister module to support embedding custom fonts: [`@chr33s/fontkit`](https://www.npmjs.com/package/@chr33s/fontkit). You must add the `@chr33s/fontkit` module to your project and register it using `pdfDoc.registerFontkit(...)` before embedding custom fonts (see the [font embedding example](#embed-font-and-measure-text)). This module is not included by default because not all users need it, and it increases bundle size.
 
-Installing this module is easy. Just like `pdf-lib` itself, `@chr33s/fontkit` can be installed with `npm`/`yarn` or as a UMD module.
+Installing this module is easy. Just like `pdf-lib` itself, `@chr33s/fontkit` can be installed with `npm`/`yarn`.
 
 ### Fontkit NPM Module
 
@@ -1238,32 +1164,10 @@ To register the `fontkit` instance:
 
 <!-- prettier-ignore -->
 ```js
-import { PDFDocument } from 'pdf-lib'
+import { PDFDocument } from '@chr33s/pdf-lib'
 import fontkit from '@chr33s/fontkit'
 
 const pdfDoc = await PDFDocument.create()
-pdfDoc.registerFontkit(fontkit)
-```
-
-### Fontkit UMD Module
-
-The following builds are available:
-
-- https://unpkg.com/@chr33s/fontkit/dist/fontkit.js
-- https://unpkg.com/@chr33s/fontkit/dist/fontkit.umd.min.js
-- https://cdn.jsdelivr.net/npm/@chr33s/fontkit/dist/fontkit.js
-- https://cdn.jsdelivr.net/npm/@chr33s/fontkit/dist/fontkit.umd.min.js
-
-> **NOTE:** if you are using the CDN scripts in production, you should include a specific version number in the URL, for example:
->
-> - https://unpkg.com/@chr33s/fontkit@0.0.4/dist/fontkit.umd.min.js
-> - https://cdn.jsdelivr.net/npm/@chr33s/fontkit@0.0.4/dist/fontkit.umd.min.js
-
-When using a UMD build, you will have access to a global `window.fontkit` variable. To register the `fontkit` instance:
-
-<!-- prettier-ignore -->
-```js
-var pdfDoc = await PDFLib.PDFDocument.create()
 pdfDoc.registerFontkit(fontkit)
 ```
 
@@ -1272,7 +1176,7 @@ pdfDoc.registerFontkit(fontkit)
 API documentation is available on the project site at https://pdf-lib.js.org/docs/api/.
 
 The repo for the project site (and generated documentation files) is
-located here: https://github.com/Hopding/pdf-lib-docs.
+located here: https://github.com/chr33s/pdf-docs.
 
 ## Fonts and Unicode
 
@@ -1283,7 +1187,7 @@ When working with PDFs, you will frequently come across the terms "character enc
 - **There are 14 standard fonts** defined in the PDF specification. They are as follows: _Times Roman_ (normal, bold, and italic), _Helvetica_ (normal, bold, and italic), _Courier_ (normal, bold, and italic), _ZapfDingbats_ (normal), and _Symbol_ (normal). These 14 fonts are guaranteed to be available in PDF readers. As such, you do not need to embed any font data if you wish to use one of these fonts. You can use a standard font like so:
   <!-- prettier-ignore -->
   ```js
-  import { PDFDocument, StandardFonts } from 'pdf-lib'
+  import { PDFDocument, StandardFonts } from '@chr33s/pdf-lib'
   const pdfDoc = await PDFDocument.create()
   const courierFont = await pdfDoc.embedFont(StandardFonts.Courier)
   const page = pdfDoc.addPage()
@@ -1295,7 +1199,7 @@ When working with PDFs, you will frequently come across the terms "character enc
 - **You can use characters outside the Latin alphabet** by embedding your own fonts. Embedding your own font requires to you load the font data (from a file or via a network request, for example) and pass it to the `embedFont` method. When you embed your own font, you can use any Unicode characters that it supports. This capability frees you from the limitations imposed by the standard fonts. Most PDF files use embedded fonts. You can embed and use a custom font like so ([see also](#embed-font-and-measure-text)):
   <!-- prettier-ignore -->
   ```js
-  import { PDFDocument } from 'pdf-lib'
+  import { PDFDocument } from '@chr33s/pdf-lib'
   import fontkit from '@chr33s/fontkit'
 
   const url = 'https://pdf-lib.js.org/assets/ubuntu/Ubuntu-R.ttf'
@@ -1327,7 +1231,7 @@ Embedding a font in a PDF document will typically increase the file's size. You 
 const font = await pdfDoc.embedFont(fontBytes, { subset: true });
 ```
 
-Note that subsetting does not work for all fonts. See https://github.com/Hopding/pdf-lib/issues/207#issuecomment-537210471 for additional details.
+Note that subsetting does not work for all fonts. See https://github.com/chr33s/pdf/issues/207#issuecomment-537210471 for additional details.
 
 ## Creating and Filling Forms
 
@@ -1347,7 +1251,7 @@ See the [form creation](#create-form) and [form filling](#fill-form) usage examp
 You can use an embedded font when filling form fields as follows:
 
 ```js
-import { PDFDocument } from 'pdf-lib';
+import { PDFDocument } from '@chr33s/pdf-lib';
 import fontkit from '@chr33s/fontkit';
 
 // Fetch the PDF with form fields
@@ -1443,28 +1347,28 @@ Below are some of the most commonly used methods for reading and filling the afo
 ## Limitations
 
 - `pdf-lib` **can** extract the content of text fields (see [`PDFTextField.getText`](https://pdf-lib.js.org/docs/api/classes/pdftextfield#gettext)), but it **cannot** extract plain text on a page outside of a form field. This is a difficult feature to implement, but it is within the scope of this library and may be added to `pdf-lib` in the future. See
-  [#93](https://github.com/Hopding/pdf-lib/issues/93),
-  [#137](https://github.com/Hopding/pdf-lib/issues/137),
-  [#177](https://github.com/Hopding/pdf-lib/issues/177),
-  [#329](https://github.com/Hopding/pdf-lib/issues/329), and
-  [#380](https://github.com/Hopding/pdf-lib/issues/380).
+  [#93](https://github.com/chr33s/pdf/issues/93),
+  [#137](https://github.com/chr33s/pdf/issues/137),
+  [#177](https://github.com/chr33s/pdf/issues/177),
+  [#329](https://github.com/chr33s/pdf/issues/329), and
+  [#380](https://github.com/chr33s/pdf/issues/380).
 - `pdf-lib` **can** remove and edit the content of text fields (see [`PDFTextField.setText`](https://pdf-lib.js.org/docs/api/classes/pdftextfield#settext)), but it does **not** provide APIs for removing or editing text on a page outside of a form field. This is also a difficult feature to implement, but is within the scope of `pdf-lib` and may be added in the future. See
-  [#93](https://github.com/Hopding/pdf-lib/issues/93),
-  [#137](https://github.com/Hopding/pdf-lib/issues/137),
-  [#177](https://github.com/Hopding/pdf-lib/issues/177),
-  [#329](https://github.com/Hopding/pdf-lib/issues/329), and
-  [#380](https://github.com/Hopding/pdf-lib/issues/380).
+  [#93](https://github.com/chr33s/pdf/issues/93),
+  [#137](https://github.com/chr33s/pdf/issues/137),
+  [#177](https://github.com/chr33s/pdf/issues/177),
+  [#329](https://github.com/chr33s/pdf/issues/329), and
+  [#380](https://github.com/chr33s/pdf/issues/380).
 - `pdf-lib` does **not** support the use of HTML or CSS when adding content to a PDF. Similarly, `pdf-lib` **cannot** embed HTML/CSS content into PDFs. As convenient as such a feature might be, it would be extremely difficult to implement and is far beyond the scope of this library. If this capability is something you need, consider using [Puppeteer](https://github.com/puppeteer/puppeteer).
 
 ## Help and Discussion
 
-[Discussions](https://github.com/Hopding/pdf-lib/discussions) is the best place to chat with us, ask questions, and learn more about pdf-lib!
+[Discussions](https://github.com/chr33s/pdf/discussions) is the best place to chat with us, ask questions, and learn more about pdf-lib!
 
 See also [MAINTAINERSHIP.md#communication](docs/MAINTAINERSHIP.md#communication) and [MAINTAINERSHIP.md#discord](docs/MAINTAINERSHIP.md#discord).
 
 ## Encryption Handling
 
-**`pdf-lib` does support encrypted documents.**
+**`@chr33s/pdf-lib` does support encrypted documents.**
 
 To load a document, use this:
 

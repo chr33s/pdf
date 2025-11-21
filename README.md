@@ -8,3 +8,14 @@
 - [@chr33s/unicode-properties](./packages/unicode-properties/)
 - [@chr33s/upng](./packages/upng/)
 
+## TODO
+
+- [ ] update: packages/*/README.md to reflect changes
+- [ ] replace *Sync() -> promises (e.g. readFileSync())
+- [ ] Audit dependencies
+
+npm rm node-html-better-parser && npm i -S node-html-parser
+crypto-js -> crypto.subtle
+
+- [ ] remove @ts-nocheck
+- [ ] add: release workflow

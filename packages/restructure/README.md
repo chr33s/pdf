@@ -1,20 +1,30 @@
-# Purpose of this Fork
-This project is a fork of https://github.com/foliojs/restructure created for use in https://github.com/Hopding/pdf-lib.
+# @chr33s/restructure
 
-Listed below are changes that have been made in this fork:
+> Declarative binary encoding and decoding primitives packaged as modern ES modules.
 
-* Remove calls to `new Function()` to allow usage on CSP sites:
-  * [0596e95](https://github.com/Hopding/restructure/commit/0596e9597801ed8a63f0af7e6f2f858d1aff5304)
-* Released to NPM as `@chr33s/restructure`
-  * [819fd2d](https://github.com/Hopding/restructure/commit/819fd2d1140cf06f4ebc5bfc3f1adbda0b2b5ec1)
+`@chr33s/restructure` lives in the [`chr33s/pdf`](https://github.com/chr33s/pdf) monorepo and carries forward the
+[`Hopding/restructure`](https://github.com/Hopding/restructure) fork of Devon Govett’s original project. This edition provides:
 
-Also see
-* https://github.com/Hopding/fontkit
-* https://github.com/Hopding/unicode-properties
-* https://github.com/Hopding/brotli.js
-* https://github.com/Hopding/png-ts
+- native ES modules targeting NodeNext (Node.js 18+ or a modern bundler required),
+- TypeScript sources with generated declaration files for first-class editor support, and
+- updated test coverage powered by Vitest.
 
-# Restructure
+## Installation
+
+```bash
+# npm
+npm install @chr33s/restructure
+
+# pnpm
+pnpm add @chr33s/restructure
+
+# yarn
+yarn add @chr33s/restructure
+```
+
+Use Node.js 18+ or configure your bundler to resolve NodeNext-style ES modules.
+
+## Overview
 
 Restructure allows you to declaratively encode and decode binary data.
 It supports a wide variety of types to enable you to express a multitude
@@ -29,29 +39,31 @@ bitfields, and more.  See the documentation below for more details.
 This is just a small example of what Restructure can do. Check out the API documentation
 below for more information.
 
-```javascript
-var r = require('@chr33s/restructure');
+```ts
+import fs from "node:fs";
+import {
+  DecodeStream,
+  EncodeStream,
+  Struct,
+  String,
+  uint8,
+} from "@chr33s/restructure";
 
-var Person = new r.Struct({
-  name: new r.String(r.uint8, 'utf8'),
-  age: r.uint8
+const Person = new Struct({
+  name: new String(uint8, "utf8"),
+  age: uint8,
 });
 
 // decode a person from a buffer
-var stream = new r.DecodeStream(buffer);
-Person.decode(stream); // returns an object with the fields defined above
+const decodeStream = new DecodeStream(buffer);
+const person = Person.decode(decodeStream);
 
-// encode a person from an object
-// pipe the stream to a destination, such as a file
-var stream = new r.EncodeStream();
-stream.pipe(fs.createWriteStream('out.bin'));
+// encode a person back to a stream
+const encodeStream = new EncodeStream();
+encodeStream.pipe(fs.createWriteStream("out.bin"));
 
-Person.encode(stream, {
-  name: 'Devon',
-  age: 21
-});
-
-stream.end();
+Person.encode(encodeStream, person);
+encodeStream.end();
 ```
 
 
