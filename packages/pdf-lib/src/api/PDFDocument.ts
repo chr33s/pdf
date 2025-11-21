@@ -1185,7 +1185,7 @@ export default class PDFDocument {
    * @returns Resolves with the embedded font.
    */
   async embedFont(
-    font: StandardFont | string | Uint8Array | ArrayBuffer,
+    font: string | Uint8Array | ArrayBuffer,
     options: EmbedFontOptions = {},
   ): Promise<PDFFont> {
     const { subset = false, customName, features } = options;
@@ -1209,7 +1209,7 @@ export default class PDFDocument {
         : await CustomFontEmbedder.for(fontkit, bytes, customName, features);
     } else {
       throw new TypeError(
-        "`font` must be one of `StandardFont | string | Uint8Array | ArrayBuffer`",
+        "`font` must be one of `string | Uint8Array | ArrayBuffer`",
       );
     }
 

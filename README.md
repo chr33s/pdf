@@ -1,4 +1,4 @@
-# Monorepo of ESM only pdf-lib & dependency tree
+# Monorepo of Modern ESM only pdf-lib & dependency tree
 
 - [@chr33s/brotli](./packages/brotli/)
 - [@chr33s/font-kit](./packages/fontkit/)
