@@ -1,10 +1,10 @@
-import { Assets } from "..";
 import {
   degrees,
   ParseSpeeds,
   PDFDocument,
   StandardFonts,
 } from "../../../src/index.js";
+import { Assets } from "../index.js";
 
 const createDonorPdf = async () => {
   const pdfDoc = await PDFDocument.create();

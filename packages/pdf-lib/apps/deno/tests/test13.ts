@@ -1,7 +1,7 @@
-import { Assets } from "../index.js";
+import { Assets } from "../index.ts";
 
 // @deno-types="../dummy.d.ts"
-import { PDFDocument, rgb } from "../../../dist/pdf-lib.js";
+import { PDFDocument, rgb } from "../../../dist/index.js";
 
 // prettier-ignore
 const pngSuite = [

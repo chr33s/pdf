@@ -7,7 +7,7 @@ import {
   degrees,
   rgb,
   values,
-} from "pdf-lib";
+} from "@chr33s/pdf-lib";
 
 import { fetchAsset } from "./assets.js";
 

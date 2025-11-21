@@ -1,4 +1,10 @@
-import { degrees, PDFDocument, radians, rgb, StandardFonts } from "pdf-lib";
+import {
+  degrees,
+  PDFDocument,
+  radians,
+  rgb,
+  StandardFonts,
+} from "@chr33s/pdf-lib";
 
 import { fetchAsset } from "./assets.js";
 

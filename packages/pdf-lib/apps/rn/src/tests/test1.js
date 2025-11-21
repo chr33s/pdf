@@ -20,7 +20,7 @@ import {
   setLineJoin,
   StandardFonts,
   typedArrayFor,
-} from "pdf-lib";
+} from "@chr33s/pdf-lib";
 
 import { fetchAsset } from "./assets.js";
 

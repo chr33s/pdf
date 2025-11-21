@@ -59,81 +59,83 @@ const writePdfToTmp = (pdf: Uint8Array) => {
   return path;
 };
 
-const readFont = (font: string) => fs.readFileSync(`assets/fonts/${font}`);
-
-const readImage = (image: string) => fs.readFileSync(`assets/images/${image}`);
-
-const readPdf = (pdf: string) => fs.readFileSync(`assets/pdfs/${pdf}`);
+const readFile = (path: string) => fs.readFileSync(`../../assets/${path}`);
 
 const assets = {
   fonts: {
     ttf: {
-      ubuntu_r: readFont("ubuntu/Ubuntu-R.ttf"),
-      ubuntu_r_base64: String(readFont("ubuntu/Ubuntu-R.ttf.base64")),
-      bio_rhyme_r: readFont("bio_rhyme/BioRhymeExpanded-Regular.ttf"),
-      press_start_2p_r: readFont("press_start_2p/PressStart2P-Regular.ttf"),
-      indie_flower_r: readFont("indie_flower/IndieFlower.ttf"),
-      great_vibes_r: readFont("great_vibes/GreatVibes-Regular.ttf"),
-      nunito: readFont("nunito/Nunito-Regular.ttf"),
+      ubuntu_r: readFile("fonts/ubuntu/Ubuntu-R.ttf"),
+      ubuntu_r_base64: String(readFile("fonts/ubuntu/Ubuntu-R.ttf.base64")),
+      bio_rhyme_r: readFile("fonts/bio_rhyme/BioRhymeExpanded-Regular.ttf"),
+      press_start_2p_r: readFile(
+        "fonts/press_start_2p/PressStart2P-Regular.ttf",
+      ),
+      indie_flower_r: readFile("fonts/indie_flower/IndieFlower.ttf"),
+      great_vibes_r: readFile("fonts/great_vibes/GreatVibes-Regular.ttf"),
+      nunito: readFile("fonts/nunito/Nunito-Regular.ttf"),
     },
     otf: {
-      fantasque_sans_mono_bi: readFont(
-        "fantasque/OTF/FantasqueSansMono-BoldItalic.otf",
+      fantasque_sans_mono_bi: readFile(
+        "fonts/fantasque/OTF/FantasqueSansMono-BoldItalic.otf",
       ),
-      apple_storm_r: readFont("apple_storm/AppleStormCBo.otf"),
-      hussar_3d_r: readFont("hussar_3d/Hussar3DFour.otf"),
-      source_hans_jp: readFont("source_hans_jp/SourceHanSerifJP-Regular.otf"),
+      apple_storm_r: readFile("fonts/apple_storm/AppleStormCBo.otf"),
+      hussar_3d_r: readFile("fonts/hussar_3d/Hussar3DFour.otf"),
+      source_hans_jp: readFile(
+        "fonts/source_hans_jp/SourceHanSerifJP-Regular.otf",
+      ),
     },
   },
   images: {
     jpg: {
-      cat_riding_unicorn: readImage("cat_riding_unicorn.jpg"),
+      cat_riding_unicorn: readFile("images/cat_riding_unicorn.jpg"),
       cat_riding_unicorn_base64: String(
-        readImage("cat_riding_unicorn.jpg.base64"),
+        readFile("images/cat_riding_unicorn.jpg.base64"),
       ),
-      minions_laughing: readImage("minions_laughing.jpg"),
-      cmyk_colorspace: readImage("cmyk_colorspace.jpg"),
+      minions_laughing: readFile("images/minions_laughing.jpg"),
+      cmyk_colorspace: readFile("images/cmyk_colorspace.jpg"),
     },
     png: {
-      greyscale_bird: readImage("greyscale_bird.png"),
+      greyscale_bird: readFile("images/greyscale_bird.png"),
       greyscale_bird_base64_uri: String(
-        readImage("greyscale_bird.png.base64.uri"),
+        readFile("images/greyscale_bird.png.base64.uri"),
       ),
-      minions_banana_alpha: readImage("minions_banana_alpha.png"),
-      minions_banana_no_alpha: readImage("minions_banana_no_alpha.png"),
-      small_mario: readImage("small_mario.png"),
-      etwe: readImage("etwe.png"),
-      self_drive: readImage("self_drive.png"),
-      mario_emblem: readImage("mario_emblem.png"),
+      minions_banana_alpha: readFile("images/minions_banana_alpha.png"),
+      minions_banana_no_alpha: readFile("images/minions_banana_no_alpha.png"),
+      small_mario: readFile("images/small_mario.png"),
+      etwe: readFile("images/etwe.png"),
+      self_drive: readFile("images/self_drive.png"),
+      mario_emblem: readFile("images/mario_emblem.png"),
     },
   },
   pdfs: {
-    normal: readPdf("normal.pdf"),
-    normal_base64: String(readPdf("normal.pdf.base64")),
-    with_update_sections: readPdf("with_update_sections.pdf"),
+    normal: readFile("pdfs/normal.pdf"),
+    normal_base64: String(readFile("pdfs/normal.pdf.base64")),
+    with_update_sections: readFile("pdfs/with_update_sections.pdf"),
     with_update_sections_base64_uri: String(
-      readPdf("with_update_sections.pdf.base64.uri"),
+      readFile("pdfs/with_update_sections.pdf.base64.uri"),
     ),
-    linearized_with_object_streams: readPdf(
-      "linearized_with_object_streams.pdf",
+    linearized_with_object_streams: readFile(
+      "pdfs/linearized_with_object_streams.pdf",
     ),
-    with_large_page_count: readPdf("with_large_page_count.pdf"),
-    with_missing_endstream_eol_and_polluted_ctm: readPdf(
-      "with_missing_endstream_eol_and_polluted_ctm.pdf",
+    with_large_page_count: readFile("pdfs/with_large_page_count.pdf"),
+    with_missing_endstream_eol_and_polluted_ctm: readFile(
+      "pdfs/with_missing_endstream_eol_and_polluted_ctm.pdf",
     ),
-    with_newline_whitespace_in_indirect_object_numbers: readPdf(
-      "with_newline_whitespace_in_indirect_object_numbers.pdf",
+    with_newline_whitespace_in_indirect_object_numbers: readFile(
+      "pdfs/with_newline_whitespace_in_indirect_object_numbers.pdf",
     ),
-    with_comments: readPdf("with_comments.pdf"),
-    with_cropbox: readPdf("with_cropbox.pdf"),
-    us_constitution: readPdf("us_constitution.pdf"),
-    simple_pdf_2_example: readPdf("pdf20examples/Simple PDF 2.0 file.pdf"),
-    with_combed_fields: readPdf("with_combed_fields.pdf"),
-    dod_character: readPdf("dod_character.pdf"),
-    with_xfa_fields: readPdf("with_xfa_fields.pdf"),
-    fancy_fields: readPdf("fancy_fields.pdf"),
-    form_to_flatten: readPdf("form_to_flatten.pdf"),
-    with_annots: readPdf("with_annots.pdf"),
+    with_comments: readFile("pdfs/with_comments.pdf"),
+    with_cropbox: readFile("pdfs/with_cropbox.pdf"),
+    us_constitution: readFile("pdfs/us_constitution.pdf"),
+    simple_pdf_2_example: readFile(
+      "pdfs/pdf20examples/Simple PDF 2.0 file.pdf",
+    ),
+    with_combed_fields: readFile("pdfs/with_combed_fields.pdf"),
+    dod_character: readFile("pdfs/dod_character.pdf"),
+    with_xfa_fields: readFile("pdfs/with_xfa_fields.pdf"),
+    fancy_fields: readFile("pdfs/fancy_fields.pdf"),
+    form_to_flatten: readFile("pdfs/form_to_flatten.pdf"),
+    with_annots: readFile("pdfs/with_annots.pdf"),
   },
 };
 

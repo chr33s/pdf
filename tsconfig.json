@@ -10,6 +10,7 @@
     "resolveJsonModule": true,
     "declaration": true,
     "erasableSyntaxOnly": true,
+    "rewriteRelativeImportExtensions": true,
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
     "allowJs": true,

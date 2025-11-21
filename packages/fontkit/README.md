@@ -99,7 +99,7 @@ You can also download `@chr33s/fontkit` as a UMD module from [unpkg](https://unp
 
 The following builds are available:
 
-* https://unpkg.com/@chr33s/fontkit/dist/fontkit.umd.js
+* https://unpkg.com/@chr33s/fontkit/dist/fontkit.js
 * https://unpkg.com/@chr33s/fontkit/dist/fontkit.umd.min.js
 
 When using a UMD build, you will have access to a global `window.fontkit` variable. This variable contains the object exported by `@chr33s/fontkit`. For example:

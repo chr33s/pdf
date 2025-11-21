@@ -1,4 +1,4 @@
-import { Assets } from "../index.js";
+import { Assets } from "../index.ts";
 
 // @deno-types="../dummy.d.ts"
 import {
@@ -9,7 +9,7 @@ import {
   radians,
   rgb,
   StandardFonts,
-} from "../../../dist/pdf-lib.js";
+} from "../../../dist/index.js";
 
 export default async (assets: Assets) => {
   const { pdfs, images } = assets;

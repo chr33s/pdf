@@ -1,4 +1,4 @@
-import { PDFDocument, StandardFonts } from "pdf-lib";
+import { PDFDocument, StandardFonts } from "@chr33s/pdf-lib";
 
 // prettier-ignore
 const winAnsiCodePoints = [

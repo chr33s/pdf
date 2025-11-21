@@ -1,13 +1,8 @@
-import fontkit from "https://cdn.skypack.dev/@chr33s/fontkit@^1.0.0?dts";
-import { Assets } from "../index.js";
+import fontkit from "../fontkit.ts";
+import { Assets } from "../index.ts";
 
 // @deno-types="../dummy.d.ts"
-import {
-  degrees,
-  ParseSpeeds,
-  PDFDocument,
-  rgb,
-} from "../../../dist/pdf-lib.js";
+import { degrees, ParseSpeeds, PDFDocument, rgb } from "../../../dist/index.js";
 
 export default async (assets: Assets) => {
   const { pdfs, images, fonts } = assets;

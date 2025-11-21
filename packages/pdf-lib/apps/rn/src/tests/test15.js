@@ -1,4 +1,4 @@
-import { PDFDocument, rgb, TextAlignment } from "pdf-lib";
+import { PDFDocument, rgb, TextAlignment } from "@chr33s/pdf-lib";
 
 import { fetchAsset } from "./assets.js";
 

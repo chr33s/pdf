@@ -1,4 +1,4 @@
-import { Assets } from "../index.js";
+import { Assets } from "../index.ts";
 
 // @deno-types="../dummy.d.ts"
 import {
@@ -6,7 +6,7 @@ import {
   ParseSpeeds,
   PDFDocument,
   StandardFonts,
-} from "../../../dist/pdf-lib.js";
+} from "../../../dist/index.js";
 
 const createDonorPdf = async () => {
   const pdfDoc = await PDFDocument.create();

@@ -1,19 +1,19 @@
-import fontkit from "https://cdn.skypack.dev/@chr33s/fontkit@^1.0.0?dts";
+import fontkit from "../fontkit.ts";
 
-import { Assets } from "../index.js";
+import { Assets } from "../index.ts";
 
 // @deno-types="../dummy.d.ts"
 import {
-  PDFDocument,
-  StandardFonts,
-  drawRectangle,
-  rgb,
   degrees,
-  drawText,
-  PDFFont,
   drawEllipse,
+  drawRectangle,
+  drawText,
+  PDFDocument,
+  PDFFont,
   PDFWidgetAnnotation,
-} from "../../../dist/pdf-lib.js";
+  rgb,
+  StandardFonts,
+} from "../../../dist/index.js";
 
 export default async (assets: Assets) => {
   const pdfDoc = await PDFDocument.load(assets.pdfs.fancy_fields);

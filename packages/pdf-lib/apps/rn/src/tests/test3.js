@@ -4,7 +4,7 @@ import {
   rgb,
   StandardFonts,
   LineCapStyle,
-} from "pdf-lib";
+} from "@chr33s/pdf-lib";
 
 import { fetchAsset } from "./assets.js";
 

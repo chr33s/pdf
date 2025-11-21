@@ -1249,9 +1249,9 @@ pdfDoc.registerFontkit(fontkit)
 
 The following builds are available:
 
-- https://unpkg.com/@chr33s/fontkit/dist/fontkit.umd.js
+- https://unpkg.com/@chr33s/fontkit/dist/fontkit.js
 - https://unpkg.com/@chr33s/fontkit/dist/fontkit.umd.min.js
-- https://cdn.jsdelivr.net/npm/@chr33s/fontkit/dist/fontkit.umd.js
+- https://cdn.jsdelivr.net/npm/@chr33s/fontkit/dist/fontkit.js
 - https://cdn.jsdelivr.net/npm/@chr33s/fontkit/dist/fontkit.umd.min.js
 
 > **NOTE:** if you are using the CDN scripts in production, you should include a specific version number in the URL, for example:

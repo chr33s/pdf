@@ -1,4 +1,4 @@
-import { PDFDocument, values, PDFTextField } from "pdf-lib";
+import { PDFDocument, values, PDFTextField } from "@chr33s/pdf-lib";
 
 import { fetchAsset } from "./assets.js";
 

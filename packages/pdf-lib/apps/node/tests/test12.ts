@@ -1,4 +1,3 @@
-import { Assets } from "..";
 import {
   BlendMode,
   cmyk,
@@ -9,6 +8,7 @@ import {
   rgb,
   values,
 } from "../../../src/index.js";
+import { Assets } from "../index.js";
 
 const inchToPt = (inches: number) => Math.round(inches * 72);
 

@@ -1,7 +1,7 @@
-import { Assets } from "../index.js";
+import { Assets } from "../index.ts";
 
 // @deno-types="../dummy.d.ts"
-import { PDFDocument, rgb, TextAlignment } from "../../../dist/pdf-lib.js";
+import { PDFDocument, rgb, TextAlignment } from "../../../dist/index.js";
 
 export default async (assets: Assets) => {
   const pdfDoc = await PDFDocument.load(assets.pdfs.dod_character);

@@ -1,4 +1,4 @@
-import { PDFDocument } from "pdf-lib";
+import { PDFDocument } from "@chr33s/pdf-lib";
 import fontkit from "@chr33s/fontkit";
 
 import { fetchAsset } from "./assets.js";

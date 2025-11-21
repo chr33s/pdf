@@ -1,5 +1,5 @@
 import fontkit from "@chr33s/fontkit";
-import { PDFDocument, StandardFonts, charAtIndex, last } from "pdf-lib";
+import { PDFDocument, StandardFonts, charAtIndex, last } from "@chr33s/pdf-lib";
 
 import { fetchAsset } from "./assets.js";
 const breakTextIntoLines = (text, size, font, maxWidth) => {

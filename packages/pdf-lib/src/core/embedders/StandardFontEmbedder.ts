@@ -115,9 +115,7 @@ class StandardFontEmbedder {
   }
 
   #encodeTextAsGlyphs(text: string): Glyph[] {
-    const fallbackGlyph = this.encoding.encodeUnicodeCodePoint(
-      toCodePoint("?")!,
-    );
+    const fallbackGlyph = this.#fallbackGlyph();
 
     return Array.from(text).map((char) => {
       const codePoint = toCodePoint(char)!;
@@ -128,6 +126,27 @@ class StandardFontEmbedder {
         return fallbackGlyph;
       }
     });
+  }
+
+  #fallbackGlyph(): Glyph {
+    const preferredFallbacks = ["?", " "];
+
+    for (const candidate of preferredFallbacks) {
+      const codePoint = toCodePoint(candidate);
+      if (!codePoint) continue;
+      if (this.encoding.canEncodeUnicodeCodePoint(codePoint)) {
+        return this.encoding.encodeUnicodeCodePoint(codePoint);
+      }
+    }
+
+    const [firstSupported] = this.encoding.supportedCodePoints;
+    if (firstSupported === undefined) {
+      throw new Error(
+        `Encoding ${this.encoding.name} does not expose any glyphs`,
+      );
+    }
+
+    return this.encoding.encodeUnicodeCodePoint(firstSupported);
   }
 }
 

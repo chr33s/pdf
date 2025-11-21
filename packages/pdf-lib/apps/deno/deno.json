@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "lib": ["deno.ns", "dom"],
+    "strict": true
+  },
+  "include": ["**/*"]
+}

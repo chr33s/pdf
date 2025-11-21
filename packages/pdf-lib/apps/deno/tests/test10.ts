@@ -1,4 +1,4 @@
-import { Assets } from "../index.js";
+import { Assets } from "../index.ts";
 
 // @deno-types="../dummy.d.ts"
 import {
@@ -6,7 +6,7 @@ import {
   PDFFont,
   StandardFonts,
   type StandardFont,
-} from "../../../dist/pdf-lib.js";
+} from "../../../dist/index.js";
 
 // prettier-ignore
 const winAnsiCodePoints = [

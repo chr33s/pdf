@@ -1,5 +1,5 @@
-import { decodeFromBase64, encodeToBase64 } from "pdf-lib";
-import RNFetchBlob from "rn-fetch-blob";
+import { decodeFromBase64, encodeToBase64 } from "@chr33s/pdf-lib";
+import RNFetchBlob from "react-native-blob-util";
 
 const PDF_PATH = `${RNFetchBlob.fs.dirs.DocumentDir}/out.pdf`;
 

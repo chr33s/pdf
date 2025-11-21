@@ -1,4 +1,3 @@
-import { Assets } from "..";
 import {
   degrees,
   drawEllipse,
@@ -10,6 +9,7 @@ import {
   rgb,
   StandardFonts,
 } from "../../../src/index.js";
+import { Assets } from "../index.js";
 
 import fontkit from "@chr33s/fontkit";
 

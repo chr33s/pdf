@@ -1,4 +1,4 @@
-import { PDFDocument } from "pdf-lib";
+import { PDFDocument } from "@chr33s/pdf-lib";
 
 import { fetchAsset } from "./assets.js";
 

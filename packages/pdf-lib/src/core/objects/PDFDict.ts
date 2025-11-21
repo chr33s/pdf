@@ -1,3 +1,5 @@
+import PDFContext from "../PDFContext.js";
+import CharCodes from "../syntax/CharCodes.js";
 import PDFArray from "./PDFArray.js";
 import PDFBool from "./PDFBool.js";
 import PDFHexString from "./PDFHexString.js";
@@ -8,8 +10,6 @@ import PDFObject from "./PDFObject.js";
 import PDFRef from "./PDFRef.js";
 import PDFStream from "./PDFStream.js";
 import PDFString from "./PDFString.js";
-import PDFContext from "../PDFContext.js";
-import CharCodes from "../syntax/CharCodes.js";
 
 export type DictMap = Map<PDFName, PDFObject>;
 

@@ -1,12 +1,12 @@
-import { Assets } from "../index.js";
+import { Assets } from "../index.ts";
 
 // @deno-types="../dummy.d.ts"
 import {
   PDFDocument,
-  values,
-  PDFTextField,
   PDFField,
-} from "../../../dist/pdf-lib.js";
+  PDFTextField,
+  values,
+} from "../../../dist/index.js";
 
 const fieldNames = {
   // Page 1

@@ -1,16 +1,16 @@
-import { Assets } from "../index.js";
+import { Assets } from "../index.ts";
 
 // @deno-types="../dummy.d.ts"
 import {
-  PageSizes,
-  PDFDocument,
   BlendMode,
-  LineCapStyle,
   cmyk,
   degrees,
+  LineCapStyle,
+  PageSizes,
+  PDFDocument,
   rgb,
   values,
-} from "../../../dist/pdf-lib.js";
+} from "../../../dist/index.js";
 
 // import { Assets } from '..';
 // import { PageSizes, PDFDocument, BlendMode, cmyk, degrees, rgb } from '../../...js';

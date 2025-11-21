@@ -1,6 +1,6 @@
 import fontkit from "@chr33s/fontkit";
-import { Assets } from "..";
 import { degrees, ParseSpeeds, PDFDocument, rgb } from "../../../src/index.js";
+import { Assets } from "../index.js";
 
 export default async (assets: Assets) => {
   const { pdfs, images, fonts } = assets;

@@ -1,5 +1,4 @@
 import fontkit from "@chr33s/fontkit";
-import { Assets } from "..";
 import {
   AFRelationship,
   clip,
@@ -22,6 +21,7 @@ import {
   StandardFonts,
   typedArrayFor,
 } from "../../../src/index.js";
+import { Assets } from "../index.js";
 
 const ipsumLines = [
   "Eligendi est pariatur quidem in non excepturi et.",

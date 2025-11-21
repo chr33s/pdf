@@ -1,4 +1,4 @@
-import { PDFDocument, StandardFonts, degrees } from "pdf-lib";
+import { PDFDocument, StandardFonts, degrees } from "@chr33s/pdf-lib";
 
 import { fetchAsset } from "./assets.js";
 
