@@ -69,7 +69,7 @@ describe("Pointer", () => {
 
       const res = struct.decode(stream);
       const descriptor = Object.getOwnPropertyDescriptor(res, "ptr");
-      expect(descriptor?.get).to.be.a("function");
+      expect(typeof descriptor?.get).to.equal("function");
       expect(descriptor?.enumerable).to.equal(true);
       expect(res.ptr).to.equal(53);
     });

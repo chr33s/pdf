@@ -4,10 +4,6 @@ import * as r from "@chr33s/restructure";
 import TTFFont from "./TTFFont.js";
 
 let DFontName = new r.String(r.uint8);
-let DFontData = new r.Struct({
-  len: r.uint32,
-  buf: new r.Buffer("len"),
-});
 
 let Ref = new r.Struct({
   id: r.uint16,
@@ -51,7 +47,7 @@ export default class DFont {
 
     try {
       var header = DFontHeader.decode(stream);
-    } catch (e) {
+    } catch {
       return false;
     }
 

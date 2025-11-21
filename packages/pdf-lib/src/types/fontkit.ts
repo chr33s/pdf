@@ -73,7 +73,7 @@ export interface Path {
    * Compiles the path to a JavaScript function that can be applied with a
    * graphics context in order to render the path.
    */
-  toFunction(): Function; // tslint:disable-line ban-types
+  toFunction(): Function;
 
   /**
    * Converts the path to an SVG path data string.

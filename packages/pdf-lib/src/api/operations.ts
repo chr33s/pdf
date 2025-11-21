@@ -77,6 +77,9 @@ const clipSpace = ({ topLeft, topRight, bottomRight, bottomLeft }: Space) => [
 ];
 const clipSpaces = (spaces: Space[]) => spaces.flatMap(clipSpace);
 
+const negate = (value: number | PDFNumber): number | PDFNumber =>
+  typeof value === "number" ? -value : PDFNumber.of(-value.asNumber());
+
 export const drawText = (
   line: PDFHexString,
   options: DrawTextOptions,
@@ -392,6 +395,12 @@ export const drawSvgPath = (
     return [];
   }
 
+  const scaleValue = options.scale ?? 1;
+  const scaleOperator =
+    options.scale !== undefined
+      ? scale(scaleValue, negate(scaleValue))
+      : scale(1, -1);
+
   return [
     pushGraphicsState(),
     options.graphicsState && setGraphicsState(options.graphicsState),
@@ -402,7 +411,7 @@ export const drawSvgPath = (
     rotateRadians(toRadians(options.rotate ?? degrees(0))),
 
     // SVG path Y axis is opposite pdf-lib's
-    options.scale ? scale(options.scale, -options.scale) : scale(1, -1),
+    scaleOperator,
     options.color && setFillingColor(options.color),
     options.borderColor && setStrokingColor(options.borderColor),
     options.borderWidth && setLineWidth(options.borderWidth),

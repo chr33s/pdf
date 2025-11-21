@@ -1,5 +1,5 @@
+import { decodeFromBase64, encodeToBase64 } from "pdf-lib";
 import RNFetchBlob from "rn-fetch-blob";
-import { encodeToBase64, decodeFromBase64 } from "pdf-lib";
 
 const PDF_PATH = `${RNFetchBlob.fs.dirs.DocumentDir}/out.pdf`;
 
@@ -13,7 +13,7 @@ export const writePdf = async (pdfBytes, chunkSize = 100000) =>
         writes.push(stream.write(encodeToBase64(chunk)));
       }
       stream.close();
-      Promise.all(writes).then(() => resolve(PDF_PATH));
+      void Promise.all(writes).then(() => resolve(PDF_PATH));
     });
   });
 

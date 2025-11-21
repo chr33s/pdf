@@ -23,7 +23,7 @@ export default class AATLayoutEngine {
     );
   }
 
-  getAvailableFeatures(script, language) {
+  getAvailableFeatures(_script, _language) {
     return AATFeatureMap.mapAATToOT(this.morxProcessor.getSupportedFeatures());
   }
 

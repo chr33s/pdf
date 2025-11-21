@@ -30,14 +30,11 @@ class PDFAcroForm {
   getFields(): [PDFAcroField, PDFRef][] {
     const { Fields } = this.normalizedEntries();
 
-    const fields = new Array(Fields.size());
-    for (let idx = 0, len = Fields.size(); idx < len; idx++) {
+    return Array.from({ length: Fields.size() }, (_, idx) => {
       const ref = Fields.get(idx) as PDFRef;
       const dict = Fields.lookup(idx, PDFDict);
-      fields[idx] = [createPDFAcroField(dict, ref), ref];
-    }
-
-    return fields;
+      return [createPDFAcroField(dict, ref), ref] as [PDFAcroField, PDFRef];
+    });
   }
 
   getAllFields(): [PDFAcroField, PDFRef][] {

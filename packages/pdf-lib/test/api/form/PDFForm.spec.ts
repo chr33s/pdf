@@ -42,13 +42,16 @@ const getRefs = (pdfDoc: PDFDocument) =>
 const getApRefs = (widget: PDFWidgetAnnotation) => {
   const onValue = widget.getOnValue() ?? PDFName.of("Yes");
   const aps = widget.getAppearances();
+  const normal = aps?.normal as PDFDict | undefined;
+  const rollover = aps?.rollover as PDFDict | undefined;
+  const down = aps?.down as PDFDict | undefined;
   return [
-    (aps?.normal as PDFDict).get(onValue),
-    (aps?.rollover as PDFDict | undefined)?.get(onValue),
-    (aps?.down as PDFDict | undefined)?.get(onValue),
-    (aps?.normal as PDFDict).get(PDFName.of("Off")),
-    (aps?.rollover as PDFDict | undefined)?.get(PDFName.of("Off")),
-    (aps?.down as PDFDict | undefined)?.get(PDFName.of("Off")),
+    normal?.get(onValue),
+    rollover?.get(onValue),
+    down?.get(onValue),
+    normal?.get(PDFName.of("Off")),
+    rollover?.get(PDFName.of("Off")),
+    down?.get(PDFName.of("Off")),
   ].filter(Boolean);
 };
 

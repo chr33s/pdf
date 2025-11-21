@@ -1,5 +1,3 @@
-// tslint:disable radix
-
 /**
  * Converts a number to its string representation in decimal. This function
  * differs from simply converting a number to a string with `.toString()`
@@ -17,7 +15,8 @@ export const numberToString = (num: number) => {
       const negative = num < 0;
       if (negative) num *= -1;
       num *= Math.pow(10, e - 1);
-      numStr = "0." + new Array(e).join("0") + num.toString().substring(2);
+      numStr =
+        "0." + "0".repeat(Math.max(e - 1, 0)) + num.toString().substring(2);
       if (negative) numStr = "-" + numStr;
     }
   } else {
@@ -25,7 +24,7 @@ export const numberToString = (num: number) => {
     if (e > 20) {
       e -= 20;
       num /= Math.pow(10, e);
-      numStr = num.toString() + new Array(e + 1).join("0");
+      numStr = num.toString() + "0".repeat(Math.max(e, 0));
     }
   }
 

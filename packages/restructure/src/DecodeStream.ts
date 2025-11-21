@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 let iconv: typeof import("iconv-lite") | null = null;
 try {
   iconv = require("iconv-lite");
@@ -28,10 +27,7 @@ export default class DecodeStream {
     this.length = buffer.length;
   }
 
-  readString(
-    length: number,
-    encoding: BufferEncoding | string = "ascii",
-  ): string | Buffer {
+  readString(length: number, encoding: string = "ascii"): string | Buffer {
     switch (encoding) {
       case "utf16le":
       case "ucs2":

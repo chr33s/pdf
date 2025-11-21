@@ -15,9 +15,12 @@ export function cache(
   }
 
   if (descriptor.get) {
-    let get = descriptor.get;
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    const originalGet = descriptor.get;
+    const callOriginalGet = (self: Record<PropertyKey, unknown>) =>
+      Reflect.apply(originalGet!, self, []);
     descriptor.get = function (this: Record<PropertyKey, unknown>) {
-      let value = get.call(this);
+      const value = callOriginalGet(this);
       Object.defineProperty(this, key, { value });
       return value;
     };

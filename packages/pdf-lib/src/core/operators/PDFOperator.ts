@@ -30,7 +30,7 @@ class PDFOperator {
   }
 
   clone(context?: PDFContext): PDFOperator {
-    const args = new Array(this.args.length);
+    const args: PDFOperatorArg[] = Array.from({ length: this.args.length });
     for (let idx = 0, len = args.length; idx < len; idx++) {
       const arg = this.args[idx];
       args[idx] = arg instanceof PDFObject ? arg.clone(context) : arg;

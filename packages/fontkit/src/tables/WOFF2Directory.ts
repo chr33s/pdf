@@ -7,7 +7,6 @@ const Base128 = {
     let result = 0;
     let iterable = [0, 1, 2, 3, 4];
     for (let j = 0; j < iterable.length; j++) {
-      let i = iterable[j];
       let code = stream.readUInt8();
 
       // If any of the top seven bits are set then we're about to overflow.

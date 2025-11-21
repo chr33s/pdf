@@ -221,7 +221,8 @@ export default class OTProcessor {
     }
   }
 
-  applyLookup(lookup, table) {
+  // Subclasses override and use lookup/table parameters; underscore prevents lint noise here.
+  applyLookup(_lookup, _table) {
     throw new Error("applyLookup must be implemented by subclasses");
   }
 

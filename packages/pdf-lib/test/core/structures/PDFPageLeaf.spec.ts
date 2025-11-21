@@ -348,7 +348,7 @@ describe("PDFPageLeaf", () => {
     const pushRef = context.getPushGraphicsStateContentStream();
     const popRef = context.getPopGraphicsStateContentStream();
     expect(pageTree.Contents()!.toString()).toBe(
-      `[ ${pushRef} 21 0 R ${popRef} ]`,
+      `[ ${String(pushRef)} 21 0 R ${String(popRef)} ]`,
     );
     expect(pageTree.Resources()!.toString()).toBe(
       "<<\n/Font <<\n>>\n/XObject <<\n>>\n/ExtGState <<\n>>\n>>",

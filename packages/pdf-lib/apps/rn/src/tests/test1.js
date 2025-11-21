@@ -1,5 +1,6 @@
 import fontkit from "@chr33s/fontkit";
 import {
+  AFRelationship,
   clip,
   clipEvenOdd,
   closePath,
@@ -11,7 +12,6 @@ import {
   LineCapStyle,
   LineJoinStyle,
   lineTo,
-  typedArrayFor,
   moveTo,
   PDFDocument,
   popGraphicsState,
@@ -19,7 +19,7 @@ import {
   rgb,
   setLineJoin,
   StandardFonts,
-  AFRelationship,
+  typedArrayFor,
 } from "pdf-lib";
 
 import { fetchAsset } from "./assets.js";
@@ -435,7 +435,7 @@ export default async () => {
     rotate: degrees(-90),
   });
 
-  const [normalPdfBytes] = await Promise.all([fetchAsset("pdfs/normal.pdf")]);
+  const normalPdfBytes = await fetchAsset("pdfs/normal.pdf");
 
   const [embeddedPage1, embeddedPage2] = await pdfDoc.embedPdf(
     normalPdfBytes,
@@ -657,7 +657,7 @@ export default async () => {
   });
 
   page5.drawText("There should be no remnant of a field\nbelow this text!!", {
-    y: size - fMax * 5 - fPadding * 0 - fHeight * 3,
+    y: size - fMax * 5 - fHeight * 3,
     x: fPadding,
     size: 18,
     font: indieFlowerFont,

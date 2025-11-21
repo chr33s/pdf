@@ -720,7 +720,7 @@ export default class PDFForm {
       page = this.doc.findPageForAnnotationRef(widgetRef);
 
       if (page === undefined) {
-        throw new Error(`Could not find page for PDFRef ${widgetRef}`);
+        throw new Error(`Could not find page for PDFRef ${String(widgetRef)}`);
       }
     }
 

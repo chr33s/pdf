@@ -3,9 +3,9 @@ import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 import { fetchAsset } from "./assets.js";
 
 export default async () => {
-  const [inputPdfBytes] = await Promise.all([
-    fetchAsset("pdfs/with_newline_whitespace_in_indirect_object_numbers.pdf"),
-  ]);
+  const inputPdfBytes = await fetchAsset(
+    "pdfs/with_newline_whitespace_in_indirect_object_numbers.pdf",
+  );
 
   const pdfDoc = await PDFDocument.load(inputPdfBytes);
 

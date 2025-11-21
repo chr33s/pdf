@@ -358,7 +358,7 @@ const decodeValues = (first: number, second: number, byteOrder: ByteOrder) => {
   // the second one.
   if (byteOrder === ByteOrder.LittleEndian) return (second << 8) | first;
   if (byteOrder === ByteOrder.BigEndian) return (first << 8) | second;
-  throw new Error(`Invalid byteOrder: ${byteOrder}`);
+  throw new Error("Invalid byteOrder");
 };
 
 /**

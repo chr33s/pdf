@@ -3,10 +3,7 @@ import type EncodeStream from "./EncodeStream.js";
 import { Number as NumberT } from "./Number.js";
 import { resolveLength, type LengthLike } from "./utils.js";
 
-type EncodingResolver =
-  | BufferEncoding
-  | string
-  | ((this: any, parent?: any) => string);
+type EncodingResolver = string | ((this: any, parent?: any) => string);
 
 function resolveEncodingValue(
   resolver: EncodingResolver,
@@ -74,9 +71,7 @@ export default class StringT {
   }
 
   encode(stream: EncodeStream, value: string, parent?: any): void {
-    const encoding = resolveEncodingValue(this.encoding, parent) as
-      | BufferEncoding
-      | string;
+    const encoding = resolveEncodingValue(this.encoding, parent);
 
     if (this.length instanceof NumberT) {
       const normalizedEncoding = (

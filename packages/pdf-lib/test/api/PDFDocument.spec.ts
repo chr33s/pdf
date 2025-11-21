@@ -853,7 +853,7 @@ describe("PDFDocument", () => {
 
     it("removes the attachment after saving", async () => {
       const pdfDoc = await PDFDocument.load(hasAttachmentPdfBytes);
-      pdfDoc.attach(examplePngImage, "example.png", {
+      await pdfDoc.attach(examplePngImage, "example.png", {
         mimeType: "image/png",
         description: "An example image",
       });

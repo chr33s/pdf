@@ -1,5 +1,3 @@
-/* tslint:disable:ban-types */
-
 import { values as objectValues } from "./objects.js";
 
 export const backtick = (val: any) => `\`${val}\``;
@@ -20,12 +18,7 @@ export const createValueErrorMsg = (
   valueName: string,
   values: Primitive[],
 ) => {
-  const allowedValues = new Array(values.length);
-
-  for (let idx = 0, len = values.length; idx < len; idx++) {
-    const v = values[idx];
-    allowedValues[idx] = formatValue(v);
-  }
+  const allowedValues = values.map((v) => formatValue(v));
 
   const joinedValues = allowedValues.join(" or ");
 
@@ -124,22 +117,19 @@ export const createTypeErrorMsg = (
   valueName: string,
   types: TypeDescriptor[],
 ) => {
-  const allowedTypes = new Array(types.length);
-
-  for (let idx = 0, len = types.length; idx < len; idx++) {
-    const type = types[idx];
-    if (type === "null") allowedTypes[idx] = backtick("null");
-    if (type === "undefined") allowedTypes[idx] = backtick("undefined");
-    if (type === "string") allowedTypes[idx] = backtick("string");
-    else if (type === "number") allowedTypes[idx] = backtick("number");
-    else if (type === "boolean") allowedTypes[idx] = backtick("boolean");
-    else if (type === "symbol") allowedTypes[idx] = backtick("symbol");
-    else if (type === "bigint") allowedTypes[idx] = backtick("bigint");
-    else if (type === Array) allowedTypes[idx] = backtick("Array");
-    else if (type === Uint8Array) allowedTypes[idx] = backtick("Uint8Array");
-    else if (type === ArrayBuffer) allowedTypes[idx] = backtick("ArrayBuffer");
-    else allowedTypes[idx] = backtick((type as [Function, string])[1]);
-  }
+  const allowedTypes = types.map((type) => {
+    if (type === "null") return backtick("null");
+    if (type === "undefined") return backtick("undefined");
+    if (type === "string") return backtick("string");
+    if (type === "number") return backtick("number");
+    if (type === "boolean") return backtick("boolean");
+    if (type === "symbol") return backtick("symbol");
+    if (type === "bigint") return backtick("bigint");
+    if (type === Array) return backtick("Array");
+    if (type === Uint8Array) return backtick("Uint8Array");
+    if (type === ArrayBuffer) return backtick("ArrayBuffer");
+    return backtick((type as [Function, string])[1]);
+  });
 
   const joinedTypes = allowedTypes.join(" or ");
 

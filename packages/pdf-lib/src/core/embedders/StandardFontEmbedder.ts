@@ -48,10 +48,7 @@ class StandardFontEmbedder {
    */
   encodeText(text: string): PDFHexString {
     const glyphs = this.encodeTextAsGlyphs(text);
-    const hexCodes = new Array(glyphs.length);
-    for (let idx = 0, len = glyphs.length; idx < len; idx++) {
-      hexCodes[idx] = toHexString(glyphs[idx].code);
-    }
+    const hexCodes = glyphs.map((glyph) => toHexString(glyph.code));
     return PDFHexString.of(hexCodes.join(""));
   }
 
@@ -117,18 +114,19 @@ class StandardFontEmbedder {
   }
 
   private encodeTextAsGlyphs(text: string): Glyph[] {
-    const codePoints = Array.from(text);
-    const glyphs: Glyph[] = new Array(codePoints.length);
-    for (let idx = 0, len = codePoints.length; idx < len; idx++) {
-      const codePoint = toCodePoint(codePoints[idx])!;
+    const fallbackGlyph = this.encoding.encodeUnicodeCodePoint(
+      toCodePoint("?")!,
+    );
+
+    return Array.from(text).map((char) => {
+      const codePoint = toCodePoint(char)!;
       try {
-        glyphs[idx] = this.encoding.encodeUnicodeCodePoint(codePoint);
-      } catch (error) {
+        return this.encoding.encodeUnicodeCodePoint(codePoint);
+      } catch {
         // Replace non-WinAnsi characters with a placeholder
-        glyphs[idx] = this.encoding.encodeUnicodeCodePoint(toCodePoint("?")!);
+        return fallbackGlyph;
       }
-    }
-    return glyphs;
+    });
   }
 }
 

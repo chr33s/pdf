@@ -6,6 +6,7 @@ const pdfBytes = fs.readFileSync(new URL("./data/simple.pdf", import.meta.url));
 const pdfBase64Bytes = fs.readFileSync(
   new URL("./data/simple.pdf.base64", import.meta.url),
 );
+const pdfBase64String = pdfBase64Bytes.toString();
 
 // Jest stalls when comparing large arrays, so we'll use this instead
 const arraysAreEqual = (a: Uint8Array, b: Uint8Array) => {
@@ -18,42 +19,42 @@ const arraysAreEqual = (a: Uint8Array, b: Uint8Array) => {
 
 describe("decodeFromBase64DataUri", () => {
   it("can decode plain base64 strings", () => {
-    const uri = String(pdfBase64Bytes);
+    const uri = pdfBase64String;
     expect(arraysAreEqual(decodeFromBase64DataUri(uri), pdfBytes)).toBe(true);
   });
 
   it("can decode complete data URIs", () => {
-    const uri = `data:application/pdf;base64,${pdfBase64Bytes}`;
+    const uri = `data:application/pdf;base64,${pdfBase64String}`;
     expect(arraysAreEqual(decodeFromBase64DataUri(uri), pdfBytes)).toBe(true);
   });
 
   it("can decode partial data URIs (1)", () => {
-    const uri = `data:application/pdf;,${pdfBase64Bytes}`;
+    const uri = `data:application/pdf;,${pdfBase64String}`;
     expect(arraysAreEqual(decodeFromBase64DataUri(uri), pdfBytes)).toBe(true);
   });
 
   it("can decode partial data URIs (2)", () => {
-    const uri = `data:;,${pdfBase64Bytes}`;
+    const uri = `data:;,${pdfBase64String}`;
     expect(arraysAreEqual(decodeFromBase64DataUri(uri), pdfBytes)).toBe(true);
   });
 
   it("can decode partial data URIs (3)", () => {
-    const uri = `data:application/pdf;,${pdfBase64Bytes}`;
+    const uri = `data:application/pdf;,${pdfBase64String}`;
     expect(arraysAreEqual(decodeFromBase64DataUri(uri), pdfBytes)).toBe(true);
   });
 
   it("can decode partial data URIs (4)", () => {
-    const uri = `:;,${pdfBase64Bytes}`;
+    const uri = `:;,${pdfBase64String}`;
     expect(arraysAreEqual(decodeFromBase64DataUri(uri), pdfBytes)).toBe(true);
   });
 
   it("can decode partial data URIs (5)", () => {
-    const uri = `;,${pdfBase64Bytes}`;
+    const uri = `;,${pdfBase64String}`;
     expect(arraysAreEqual(decodeFromBase64DataUri(uri), pdfBytes)).toBe(true);
   });
 
   it("can decode partial data URIs (6)", () => {
-    const uri = `,${pdfBase64Bytes}`;
+    const uri = `,${pdfBase64String}`;
     expect(arraysAreEqual(decodeFromBase64DataUri(uri), pdfBytes)).toBe(true);
   });
 

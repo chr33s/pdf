@@ -28,7 +28,7 @@ Directory.process = function () {
   this.tables = tables;
 };
 
-Directory.preEncode = function (stream) {
+Directory.preEncode = function (_stream) {
   let tables = [];
   for (let tag in this.tables) {
     let table = this.tables[tag];

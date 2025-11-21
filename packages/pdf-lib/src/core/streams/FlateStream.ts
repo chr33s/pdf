@@ -14,7 +14,6 @@
  * under the Apache 2.0 open source license.
  */
 
-/* tslint:disable  no-conditional-assignment */
 import DecodeStream from "../../core/streams/DecodeStream.js";
 import { StreamType } from "../../core/streams/Stream.js";
 
@@ -273,7 +272,6 @@ class FlateStream extends DecodeStream {
     let limit = buffer ? buffer.length : 0;
     let pos = this.bufferLength;
 
-    // eslint-disable-next-line no-constant-condition
     while (true) {
       let code1 = this.getCode(litCodeTable);
       if (code1 < 256) {

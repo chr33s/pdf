@@ -14,7 +14,6 @@ class CFFFont {
   }
 
   decode() {
-    let start = this.stream.pos;
     let top = CFFTop.decode(this.stream);
     for (let key in top) {
       let val = top[key];

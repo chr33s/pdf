@@ -438,7 +438,6 @@ export default class GlyphVariationProcessor {
         idx = table.advanceWidthMapping.mapCount - 1;
       }
 
-      let entryFormat = table.advanceWidthMapping.entryFormat;
       ({ outerIndex, innerIndex } = table.advanceWidthMapping.mapData[idx]);
     } else {
       outerIndex = 0;

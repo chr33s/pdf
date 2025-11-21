@@ -3,10 +3,8 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   test: {
     environment: "node",
-    globals: true,
     include: ["test/**/*.ts"],
     exclude: ["test/utils/**", "test/addTestHelpersToFontkit.ts"],
-    threads: false,
     testTimeout: 30000,
     hookTimeout: 30000,
     coverage: {

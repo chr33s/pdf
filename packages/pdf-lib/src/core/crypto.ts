@@ -12,7 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* tslint:disable */
 
 import { arrayAsString, isArrayEqual } from "../utils/arrays.js";
 import { stringAsByteArray } from "../utils/strings.js";
@@ -574,10 +573,7 @@ const calculateSHA512 = (function calculateSHA512Closure() {
     padded[i++] = (length >> 5) & 0xff;
     padded[i++] = (length << 3) & 0xff;
 
-    const w = new Array(80);
-    for (i = 0; i < 80; i++) {
-      w[i] = new Word64(0, 0);
-    }
+    const w = Array.from({ length: 80 }, () => new Word64(0, 0));
     let a = new Word64(0, 0),
       b = new Word64(0, 0),
       c = new Word64(0, 0);
@@ -1087,7 +1083,7 @@ class AESBaseCipher {
     this.buffer = new Uint8Array(16);
     this.bufferLength = 0;
     // starting decryption
-    this.decryptBlock = this._decryptBlock2;
+    this.decryptBlock = this._decryptBlock2.bind(this);
     return this.decryptBlock(data, finalize);
   }
 
@@ -1604,10 +1600,11 @@ class CipherTransformFactory {
       if (revision === 6) {
         try {
           password = unescape(encodeURIComponent(password));
-        } catch (ex) {
+        } catch (error) {
           console.warn(
             "CipherTransformFactory: " +
               "Unable to convert UTF8 encoded password.",
+            error,
           );
         }
       }
@@ -1989,8 +1986,8 @@ export {
   calculateSHA256,
   calculateSHA384,
   calculateSHA512,
-  CipherTransformFactory,
   CipherTransform,
+  CipherTransformFactory,
   PDF17,
   PDF20,
 };

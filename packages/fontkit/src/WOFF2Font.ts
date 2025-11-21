@@ -95,7 +95,7 @@ export default class WOFF2Font extends TTFFont {
           glyph.points[nPoints[i] - 1].endContour = true;
         }
 
-        var instructionSize = read255UInt16(table.glyphs);
+        read255UInt16(table.glyphs);
       } else if (nContours < 0) {
         // composite glyph
         let haveInstructions = TTFGlyph.prototype._decodeComposite.call(
@@ -104,7 +104,7 @@ export default class WOFF2Font extends TTFFont {
           table.composites,
         );
         if (haveInstructions) {
-          var instructionSize = read255UInt16(table.glyphs);
+          read255UInt16(table.glyphs);
         }
       }
 

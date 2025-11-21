@@ -248,7 +248,7 @@ function initialReordering(font, glyphs, plan) {
     start < glyphs.length;
     start = end, end = nextSyllable(glyphs, start)
   ) {
-    let { category, syllableType } = glyphs[start].shaperInfo;
+    const { syllableType } = glyphs[start].shaperInfo;
 
     if (
       syllableType === "symbol_cluster" ||

@@ -52,7 +52,7 @@ class PDFObjectStream extends PDFFlateStream {
     let value = this.offsetsString;
     for (let idx = 0, len = this.objects.length; idx < len; idx++) {
       const [, object] = this.objects[idx];
-      value += `${object}\n`;
+      value += `${String(object)}\n`;
     }
     return value;
   }
@@ -88,7 +88,9 @@ class PDFObjectStream extends PDFFlateStream {
 
   private computeObjectOffsets(): [number, number][] {
     let offset = 0;
-    const offsets = new Array(this.objects.length);
+    const offsets: [number, number][] = Array.from({
+      length: this.objects.length,
+    });
     for (let idx = 0, len = this.objects.length; idx < len; idx++) {
       const [ref, object] = this.objects[idx];
       offsets[idx] = [ref.objectNumber, offset];

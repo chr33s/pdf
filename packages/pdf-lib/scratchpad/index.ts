@@ -2,7 +2,7 @@ import fs from "node:fs";
 import { PDFDocument } from "../src/index.js";
 import { openPdf, Reader } from "./open.js";
 
-(async () => {
+void (async () => {
   const pdfDoc1 = await PDFDocument.create();
   const image1 = await pdfDoc1.embedPng(
     fs.readFileSync("assets/images/mario_emblem.png"),

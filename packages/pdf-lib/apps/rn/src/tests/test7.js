@@ -57,9 +57,6 @@ export default async () => {
   await pdfDoc.save();
 
   await anotherDonorPdf.save();
-  for (let idx = 0, len = allDonorPdfBytes.length; idx < len; idx++) {
-    allDonorPdfBytes[idx].length;
-  }
 
   const base64Pdf = await pdfDoc.saveAsBase64({ dataUri: true });
 

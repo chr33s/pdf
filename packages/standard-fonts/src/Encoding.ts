@@ -1,4 +1,3 @@
-/* tslint:disable max-classes-per-file */
 import { decompressJson, padStart } from "./utils.js";
 
 import AllEncodingsCompressed from "./all-encodings.compressed.json" with { type: "json" };

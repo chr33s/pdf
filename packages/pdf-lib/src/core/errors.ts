@@ -1,4 +1,3 @@
-// tslint:disable: max-classes-per-file
 import { arrayAsString } from "../utils/index.js";
 import PDFObject from "./objects/PDFObject.js";
 
@@ -17,8 +16,10 @@ export class PrivateConstructorError extends Error {
 }
 
 export class UnexpectedObjectTypeError extends Error {
-  constructor(expected: any | any[], actual: any) {
-    const name = (t: any) => t?.name ?? t?.constructor?.name;
+  constructor(expected: unknown, actual: unknown) {
+    const name = (t: unknown) =>
+      (t as { name?: string; constructor?: { name?: string } })?.name ??
+      (t as { constructor?: { name?: string } })?.constructor?.name;
 
     const expectedTypes = Array.isArray(expected)
       ? expected.map(name)
@@ -26,7 +27,7 @@ export class UnexpectedObjectTypeError extends Error {
 
     const msg =
       `Expected instance of ${expectedTypes.join(" or ")}, ` +
-      `but got instance of ${actual ? name(actual) : actual}`;
+      `but got instance of ${actual ? name(actual) : String(actual)}`;
 
     super(msg);
   }
@@ -48,7 +49,7 @@ export class ReparseError extends Error {
 
 export class MissingCatalogError extends Error {
   constructor(ref?: PDFObject) {
-    const msg = `Missing catalog (ref=${ref})`;
+    const msg = `Missing catalog (ref=${String(ref)})`;
     super(msg);
   }
 }

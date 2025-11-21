@@ -69,7 +69,7 @@ const NAMES = [
   "wwsSubfamilyName",
 ];
 
-NameTable.process = function (stream) {
+NameTable.process = function (_stream) {
   var records = {};
   for (let record of this.records) {
     // find out what language this is for

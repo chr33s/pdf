@@ -62,7 +62,7 @@ const parseMetric = (
     : key === 'N'  ? { key, value: String(rawValue) }
     : key === 'B'  ? { key, value: rawValue.split(' ').map(Number) }
     : key === 'L'  ? { key, value: rawValue.split(' ').map(String) }
-    : error(`Unrecognized character metric key: "${key}"`)
+    : error(`Unrecognized character metric key: "${String(key)}"`)
   );
 };
 

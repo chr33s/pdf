@@ -1492,7 +1492,9 @@ export default class PDFDocument {
         ? (p: PDFPageLeaf) => p
         : PDFObjectCopier.for(context, this.context).copy;
 
-    const embeddedPages = new Array<PDFEmbeddedPage>(pages.length);
+    const embeddedPages = Array.from({
+      length: pages.length,
+    }) as PDFEmbeddedPage[];
     for (let idx = 0, len = pages.length; idx < len; idx++) {
       const page = maybeCopyPage(pages[idx].node);
       const box = boundingBoxes[idx];
@@ -1665,7 +1667,6 @@ export default class PDFDocument {
   };
 }
 
-/* tslint:disable-next-line only-arrow-functions */
 function assertIsLiteralOrHexString(
   pdfObject: PDFObject,
 ): asserts pdfObject is PDFHexString | PDFString {

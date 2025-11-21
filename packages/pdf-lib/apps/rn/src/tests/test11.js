@@ -1,5 +1,5 @@
 import fontkit from "@chr33s/fontkit";
-import { PDFDocument, StandardFonts, last, charAtIndex } from "pdf-lib";
+import { PDFDocument, StandardFonts, charAtIndex, last } from "pdf-lib";
 
 import { fetchAsset } from "./assets.js";
 const breakTextIntoLines = (text, size, font, maxWidth) => {
@@ -39,9 +39,9 @@ const breakLinesIntoGroups = (lines, lineHeight, maxHeight) => {
 };
 
 export default async () => {
-  const [sourceHanBytes] = await Promise.all([
-    fetchAsset("fonts/source_hans_jp/SourceHanSerifJP-Regular.otf"),
-  ]);
+  const sourceHanBytes = await fetchAsset(
+    "fonts/source_hans_jp/SourceHanSerifJP-Regular.otf",
+  );
 
   const pdfDoc = await PDFDocument.create();
 

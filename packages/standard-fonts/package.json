@@ -9,10 +9,10 @@
     "build": "npm run clean && npm run generate && tsc",
     "clean": "rm -rf dist {encodings_metrics,font_metrics,src}/*.json",
     "typecheck": "tsc --noEmit",
-		"generate": "npm run generate:fonts && npm run generate:encodings",
+    "generate": "npm run generate:fonts && npm run generate:encodings",
     "generate:fonts": "node scripts/fonts/parse.ts",
     "generate:encodings": "node scripts/encodings/parse.ts",
-		"test": "echo ..."
+    "test": "vitest run"
   },
   "repository": "https://github.com/Hopding/standard-fonts.git",
   "keywords": [
@@ -38,6 +38,7 @@
     "@types/pako": "^2.0.4",
     "base64-arraybuffer": "^1.0.2",
     "mz": "^2.7.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.12"
   }
 }

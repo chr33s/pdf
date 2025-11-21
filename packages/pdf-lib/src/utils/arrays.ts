@@ -121,19 +121,12 @@ export const sum = (array: number[] | Uint8Array): number => {
 };
 
 export const range = (start: number, end: number): number[] => {
-  const arr = new Array(end - start);
-  for (let idx = 0, len = arr.length; idx < len; idx++) {
-    arr[idx] = start + idx;
-  }
-  return arr;
+  const length = Math.max(0, end - start);
+  return Array.from({ length }, (_, idx) => start + idx);
 };
 
 export const pluckIndices = <T>(arr: T[], indices: number[]) => {
-  const plucked = new Array<T>(indices.length);
-  for (let idx = 0, len = indices.length; idx < len; idx++) {
-    plucked[idx] = arr[indices[idx]];
-  }
-  return plucked;
+  return indices.map((index) => arr[index]);
 };
 
 export const canBeConvertedToUint8Array = (
@@ -167,11 +160,5 @@ for (let byte = 0x00; byte <= 0xff; ++byte) {
 }
 
 export const byteArrayToHexString = (array: Uint8Array) => {
-  const hexOctets = new Array(array.length);
-
-  for (let idx = 0; idx < array.length; ++idx) {
-    hexOctets[idx] = byteToHex[array[idx]];
-  }
-
-  return hexOctets.join("");
+  return Array.from(array, (value) => byteToHex[value]).join("");
 };

@@ -84,14 +84,9 @@ export default class PDFOptionList extends PDFField {
    */
   getOptions(): string[] {
     const rawOptions = this.acroField.getOptions();
-
-    const options = new Array<string>(rawOptions.length);
-    for (let idx = 0, len = options.length; idx < len; idx++) {
-      const { display, value } = rawOptions[idx];
-      options[idx] = (display ?? value).decodeText();
-    }
-
-    return options;
+    return rawOptions.map(({ display, value }) =>
+      (display ?? value).decodeText(),
+    );
   }
 
   /**
@@ -108,13 +103,7 @@ export default class PDFOptionList extends PDFField {
    */
   getSelected(): string[] {
     const values = this.acroField.getValues();
-
-    const selected = new Array<string>(values.length);
-    for (let idx = 0, len = values.length; idx < len; idx++) {
-      selected[idx] = values[idx].decodeText();
-    }
-
-    return selected;
+    return values.map((value) => value.decodeText());
   }
 
   /**
@@ -152,10 +141,9 @@ export default class PDFOptionList extends PDFField {
     assertIs(options, "options", [Array]);
 
     this.markAsDirty();
-    const optionObjects = new Array<{ value: PDFHexString }>(options.length);
-    for (let idx = 0, len = options.length; idx < len; idx++) {
-      optionObjects[idx] = { value: PDFHexString.fromText(options[idx]) };
-    }
+    const optionObjects = options.map((option) => ({
+      value: PDFHexString.fromText(option),
+    }));
     this.acroField.setOptions(optionObjects);
   }
 
@@ -185,10 +173,9 @@ export default class PDFOptionList extends PDFField {
       display?: PDFString | PDFHexString;
     }[] = this.acroField.getOptions();
 
-    const newOptions = new Array<{ value: PDFHexString }>(optionsArr.length);
-    for (let idx = 0, len = optionsArr.length; idx < len; idx++) {
-      newOptions[idx] = { value: PDFHexString.fromText(optionsArr[idx]) };
-    }
+    const newOptions = optionsArr.map((option) => ({
+      value: PDFHexString.fromText(option),
+    }));
 
     this.acroField.setOptions(existingOptions.concat(newOptions));
   }
@@ -225,10 +212,7 @@ export default class PDFOptionList extends PDFField {
       this.enableMultiselect();
     }
 
-    const values = new Array<PDFHexString>(optionsArr.length);
-    for (let idx = 0, len = optionsArr.length; idx < len; idx++) {
-      values[idx] = PDFHexString.fromText(optionsArr[idx]);
-    }
+    const values = optionsArr.map((option) => PDFHexString.fromText(option));
 
     if (merge) {
       const existingValues = this.acroField.getValues();

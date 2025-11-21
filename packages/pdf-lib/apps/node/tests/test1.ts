@@ -1,6 +1,7 @@
 import fontkit from "@chr33s/fontkit";
 import { Assets } from "..";
 import {
+  AFRelationship,
   clip,
   clipEvenOdd,
   closePath,
@@ -20,7 +21,6 @@ import {
   setLineJoin,
   StandardFonts,
   typedArrayFor,
-  AFRelationship,
 } from "../../...js";
 
 const ipsumLines = [
@@ -622,7 +622,7 @@ export default async (assets: Assets) => {
   });
 
   page5.drawText("There should be no remnant of a field\nbelow this text!!", {
-    y: size - fMax * 5 - fPadding * 0 - fHeight * 3,
+    y: size - fMax * 5 - fHeight * 3,
     x: fPadding,
     size: 18,
     font: indieFlowerFont,

@@ -3,6 +3,7 @@ import { Assets } from "../index.js";
 
 // @deno-types="../dummy.d.ts"
 import {
+  AFRelationship,
   clip,
   clipEvenOdd,
   closePath,
@@ -13,7 +14,6 @@ import {
   grayscale,
   LineCapStyle,
   LineJoinStyle,
-  typedArrayFor,
   lineTo,
   moveTo,
   PDFDocument,
@@ -22,7 +22,7 @@ import {
   rgb,
   setLineJoin,
   StandardFonts,
-  AFRelationship,
+  typedArrayFor,
 } from "../../../dist/pdf-lib.js";
 
 const ipsumLines = [
@@ -624,7 +624,7 @@ export default async (assets: Assets) => {
   });
 
   page5.drawText("There should be no remnant of a field\nbelow this text!!", {
-    y: size - fMax * 5 - fPadding * 0 - fHeight * 3,
+    y: size - fMax * 5 - fHeight * 3,
     x: fPadding,
     size: 18,
     font: indieFlowerFont,

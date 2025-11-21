@@ -1,9 +1,9 @@
+import PDFWidgetAnnotation from "../annotation/PDFWidgetAnnotation.js";
+import { IndexOutOfBoundsError } from "../errors.js";
 import PDFDict from "../objects/PDFDict.js";
 import PDFName from "../objects/PDFName.js";
 import PDFRef from "../objects/PDFRef.js";
 import PDFAcroField from "./PDFAcroField.js";
-import PDFWidgetAnnotation from "../annotation/PDFWidgetAnnotation.js";
-import { IndexOutOfBoundsError } from "../errors.js";
 
 class PDFAcroTerminal extends PDFAcroField {
   static fromDict = (dict: PDFDict, ref: PDFRef) =>
@@ -21,13 +21,10 @@ class PDFAcroTerminal extends PDFAcroField {
     if (!kidDicts) return [PDFWidgetAnnotation.fromDict(this.dict)];
 
     // This field's kids are its widgets
-    const widgets = new Array<PDFWidgetAnnotation>(kidDicts.size());
-    for (let idx = 0, len = kidDicts.size(); idx < len; idx++) {
+    return Array.from({ length: kidDicts.size() }, (_, idx) => {
       const dict = kidDicts.lookup(idx, PDFDict);
-      widgets[idx] = PDFWidgetAnnotation.fromDict(dict);
-    }
-
-    return widgets;
+      return PDFWidgetAnnotation.fromDict(dict);
+    });
   }
 
   addWidget(ref: PDFRef) {

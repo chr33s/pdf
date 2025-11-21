@@ -1,4 +1,5 @@
 // @ts-nocheck
+/* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-redundant-type-constituents, eslint/no-constant-condition */
 import pako from "pako";
 
 declare const UZIP: unknown | undefined;

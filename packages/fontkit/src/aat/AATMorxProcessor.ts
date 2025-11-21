@@ -21,13 +21,13 @@ const LAST_MASK = 0x80000000;
 const STORE_MASK = 0x40000000;
 const OFFSET_MASK = 0x3fffffff;
 
-const VERTICAL_ONLY = 0x800000;
+const _VERTICAL_ONLY = 0x800000;
 const REVERSE_DIRECTION = 0x400000;
-const HORIZONTAL_AND_VERTICAL = 0x200000;
+const _HORIZONTAL_AND_VERTICAL = 0x200000;
 
 // glyph insertion flags
-const CURRENT_IS_KASHIDA_LIKE = 0x2000;
-const MARKED_IS_KASHIDA_LIKE = 0x1000;
+const _CURRENT_IS_KASHIDA_LIKE = 0x2000;
+const _MARKED_IS_KASHIDA_LIKE = 0x1000;
 const CURRENT_INSERT_BEFORE = 0x0800;
 const MARKED_INSERT_BEFORE = 0x0400;
 const CURRENT_INSERT_COUNT = 0x03e0;
@@ -35,13 +35,6 @@ const MARKED_INSERT_COUNT = 0x001f;
 
 export default class AATMorxProcessor {
   constructor(font) {
-    this.processIndicRearragement = this.processIndicRearragement.bind(this);
-    this.processContextualSubstitution =
-      this.processContextualSubstitution.bind(this);
-    this.processLigature = this.processLigature.bind(this);
-    this.processNoncontextualSubstitutions =
-      this.processNoncontextualSubstitutions.bind(this);
-    this.processGlyphInsertion = this.processGlyphInsertion.bind(this);
     this.font = font;
     this.morx = font.morx;
     this.inputCache = null;
@@ -125,7 +118,7 @@ export default class AATMorxProcessor {
     }
   }
 
-  processIndicRearragement(glyph, entry, index) {
+  processIndicRearragement = (glyph, entry, index) => {
     if (entry.flags & MARK_FIRST) {
       this.firstGlyph = index;
     }
@@ -140,9 +133,9 @@ export default class AATMorxProcessor {
       this.firstGlyph,
       this.lastGlyph,
     );
-  }
+  };
 
-  processContextualSubstitution(glyph, entry, index) {
+  processContextualSubstitution = (glyph, entry, index) => {
     let subsitutions = this.subtable.table.substitutionTable.items;
     if (entry.markIndex !== 0xffff) {
       let lookup = subsitutions.getItem(entry.markIndex);
@@ -170,9 +163,9 @@ export default class AATMorxProcessor {
     if (entry.flags & SET_MARK) {
       this.markedGlyph = index;
     }
-  }
+  };
 
-  processLigature(glyph, entry, index) {
+  processLigature = (glyph, entry, index) => {
     if (entry.flags & SET_COMPONENT) {
       this.ligatureStack.push(index);
     }
@@ -218,9 +211,9 @@ export default class AATMorxProcessor {
       // Put ligature glyph indexes back on the stack
       this.ligatureStack.push(...ligatureGlyphs);
     }
-  }
+  };
 
-  processNoncontextualSubstitutions(subtable, glyphs, index) {
+  processNoncontextualSubstitutions = (subtable, glyphs, index) => {
     let lookupTable = new AATLookupTable(subtable.table.lookupTable);
 
     for (index = 0; index < glyphs.length; index++) {
@@ -233,7 +226,7 @@ export default class AATMorxProcessor {
         }
       }
     }
-  }
+  };
 
   _insertGlyphs(glyphIndex, insertionActionIndex, count, isBefore) {
     let insertions = [];
@@ -251,7 +244,7 @@ export default class AATMorxProcessor {
     this.glyphs.splice(glyphIndex, 0, ...insertions);
   }
 
-  processGlyphInsertion(glyph, entry, index) {
+  processGlyphInsertion = (glyph, entry, index) => {
     if (entry.flags & SET_MARK) {
       this.markedIndex = index;
     }
@@ -272,7 +265,7 @@ export default class AATMorxProcessor {
       let isBefore = !!(entry.flags & CURRENT_INSERT_BEFORE);
       this._insertGlyphs(index, entry.currentInsertIndex, count, isBefore);
     }
-  }
+  };
 
   getSupportedFeatures() {
     let features = [];
@@ -393,7 +386,6 @@ function swap(glyphs, rangeA, rangeB, reverseA = false, reverseB = false) {
 }
 
 function reorderGlyphs(glyphs, verb, firstGlyph, lastGlyph) {
-  let length = lastGlyph - firstGlyph + 1;
   switch (verb) {
     case 0: // no change
       return glyphs;

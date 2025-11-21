@@ -19,7 +19,7 @@ export default class Enum<T = unknown> {
   encode(stream: EncodeStream, value: T): void {
     const index = this.options.indexOf(value);
     if (index === -1) {
-      throw new Error(`Unknown option in enum: ${value}`);
+      throw new Error(`Unknown option in enum: ${String(value)}`);
     }
 
     this.type.encode(stream, index);

@@ -13,8 +13,10 @@ import PDFString from "../objects/PDFString.js";
 //   `/Helv 12 Tf` -> ['Helv', '12']
 //   `/HeBo 8.00 Tf` -> ['HeBo', '8.00']
 //   `/HeBo Tf` -> ['HeBo', undefined]
-const tfRegex =
-  /\/([^\0\t\n\f\r ]+)[\0\t\n\f\r ]*(\d*\.\d+|\d+)?[\0\t\n\f\r ]+Tf/;
+const CONTROL_WHITESPACE = "\\x00\\t\\n\\f\\r ";
+const tfRegex = new RegExp(
+  `/([^${CONTROL_WHITESPACE}]+)[${CONTROL_WHITESPACE}]*(\\d*\\.\\d+|\\d+)?[${CONTROL_WHITESPACE}]+Tf`,
+);
 class PDFAcroField {
   readonly dict: PDFDict;
   readonly ref: PDFRef;

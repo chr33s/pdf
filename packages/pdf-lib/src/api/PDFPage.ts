@@ -997,7 +997,7 @@ export default class PDFPage {
         ? lineSplit(cleanText(text))
         : breakTextIntoLines(text, wordBreaks, options.maxWidth, textWidth);
 
-    const encodedLines = new Array(lines.length) as PDFHexString[];
+    const encodedLines = Array.from({ length: lines.length }) as PDFHexString[];
     for (let idx = 0, len = lines.length; idx < len; idx++) {
       encodedLines[idx] = newFont.encodeText(lines[idx]);
     }
