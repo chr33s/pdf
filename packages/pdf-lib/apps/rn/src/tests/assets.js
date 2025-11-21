@@ -6,14 +6,14 @@ const PDF_PATH = `${RNFetchBlob.fs.dirs.DocumentDir}/out.pdf`;
 export const writePdf = async (pdfBytes, chunkSize = 100000) =>
   new Promise((resolve) => {
     const writes = [];
-    RNFetchBlob.fs.writeStream(PDF_PATH, "base64").then((stream) => {
+    void RNFetchBlob.fs.writeStream(PDF_PATH, "base64").then(async (stream) => {
       // Iterate through pdfBytes encoding chunks into base64 and writing them out
       for (let i = 0; i < pdfBytes.length; i += chunkSize) {
         const chunk = pdfBytes.subarray(i, i + chunkSize);
         writes.push(stream.write(encodeToBase64(chunk)));
       }
-      stream.close();
-      void Promise.all(writes).then(() => resolve(PDF_PATH));
+      await stream.close();
+      await Promise.all(writes).then(() => resolve(PDF_PATH));
     });
   });
 
@@ -41,7 +41,7 @@ export const fetchLargeAsset = async (path) => {
   const buffer = new Uint8Array(contentLength);
   let offset = 0;
 
-  const stream = await res.readStream("base64");
+  const stream = res.readStream("base64");
 
   stream.open();
 

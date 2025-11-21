@@ -10,7 +10,6 @@
 
 ## TODO
 
-- [ ] update: packages/*/README.md to reflect changes
 - [ ] replace *Sync() -> promises (e.g. readFileSync())
 - [ ] Audit dependencies
 
