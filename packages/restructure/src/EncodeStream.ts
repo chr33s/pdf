@@ -1,4 +1,4 @@
-import { Readable } from "stream";
+import { Readable } from "node:stream";
 import DecodeStream from "./DecodeStream.js";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires

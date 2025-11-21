@@ -1,8 +1,8 @@
-import { execSync } from "child_process";
-import fs from "fs";
-import os from "os";
-import { sep } from "path";
-import readline from "readline";
+import { execSync } from "node:child_process";
+import fs from "node:fs";
+import os from "node:os";
+import { sep } from "node:path";
+import readline from "node:readline";
 
 import test1 from "./tests/test1.js";
 import test10 from "./tests/test10.js";

@@ -1,7 +1,7 @@
-import { inspect } from "util";
+import { inspect } from "node:util";
+import ArrayT from "./Array.js";
 import type DecodeStream from "./DecodeStream.js";
 import type EncodeStream from "./EncodeStream.js";
-import ArrayT from "./Array.js";
 import { Number as NumberT } from "./Number.js";
 import { resolveLength } from "./utils.js";
 

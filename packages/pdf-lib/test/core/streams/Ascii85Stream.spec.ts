@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "node:fs";
 import { describe, expect, it } from "vitest";
 
 import Ascii85Stream from "../../../src/core/streams/Ascii85Stream.js";

@@ -1,6 +1,6 @@
 import fontkit from "@chr33s/fontkit";
 import { FontNames } from "@chr33s/standard-fonts";
-import fs from "fs";
+import fs from "node:fs";
 import { describe, expect, it } from "vitest";
 
 import {

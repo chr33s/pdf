@@ -1,8 +1,8 @@
 import * as base64 from "base64-arraybuffer";
 import fs from "mz/fs.js";
+import { basename, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import pako from "pako";
-import { basename, dirname } from "path";
-import { fileURLToPath } from "url";
 
 import {
   type ICharMetrics,

@@ -1,9 +1,9 @@
 // @ts-nocheck
 
 import * as r from "@chr33s/restructure";
-import assert from "assert";
+import assert from "node:assert";
 import concat from "concat-stream";
-import fs from "fs";
+import fs from "node:fs";
 import { describe, it } from "vitest";
 
 import CFFFont from "../src/cff/CFFFont.js";

@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "node:fs";
 import { PDFDocument } from "../src/index.js";
 import { openPdf, Reader } from "./open.js";
 

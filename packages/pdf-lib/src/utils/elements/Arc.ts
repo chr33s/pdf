@@ -1,4 +1,10 @@
-import { angleABC, distance, distanceCoords, rotate, vector } from "../maths.js";
+import {
+  angleABC,
+  distance,
+  distanceCoords,
+  rotate,
+  vector,
+} from "../maths.js";
 
 import Circle from "./Circle.js";
 import GraphElement from "./GraphElement.js";

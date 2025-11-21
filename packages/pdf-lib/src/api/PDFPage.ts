@@ -204,10 +204,10 @@ export default class PDFPage {
     const trimBox = this.getTrimBox();
     const artBox = this.getArtBox();
 
-    const hasCropBox = this.node.CropBox()!!;
-    const hasBleedBox = this.node.BleedBox()!!;
-    const hasTrimBox = this.node.TrimBox()!!;
-    const hasArtBox = this.node.ArtBox()!!;
+    const hasCropBox = this.node.CropBox()!;
+    const hasBleedBox = this.node.BleedBox()!;
+    const hasTrimBox = this.node.TrimBox()!;
+    const hasArtBox = this.node.ArtBox()!;
 
     if (hasCropBox && rectanglesAreEqual(cropBox, mediaBox)) {
       this.setCropBox(mediaBox.x, mediaBox.y, width, height);

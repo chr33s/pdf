@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-import fs from "fs";
-import path from "path";
-import { brotliCompressSync, constants } from "zlib";
+import fs from "node:fs";
+import path from "node:path";
+import { brotliCompressSync, constants } from "node:zlib";
 
 function fail(message: string) {
   console.error(message);

@@ -59,7 +59,7 @@ Fontkit is an advanced font engine for Node and the browser, used by [PDFKit](ht
 
 ```js
 import fontkit from '@chr33s/fontkit';
-import fs from 'fs';
+import fs from 'node:fs';
 
 // open a font synchronously
 const fontData = fs.readFileSync('font.ttf');

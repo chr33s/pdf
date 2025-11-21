@@ -1,5 +1,5 @@
 import fontkit from "@chr33s/fontkit";
-import fs from "fs";
+import fs from "node:fs";
 import {
   afterAll,
   beforeAll,

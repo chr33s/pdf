@@ -6,7 +6,7 @@
 //
 import * as base64 from "base64-arraybuffer";
 import codepoints from "codepoints";
-import fs from "fs";
+import fs from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import pako from "pako";

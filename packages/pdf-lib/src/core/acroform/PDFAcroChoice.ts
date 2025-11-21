@@ -4,7 +4,10 @@ import PDFString from "../objects/PDFString.js";
 import PDFArray from "../objects/PDFArray.js";
 import PDFName from "../objects/PDFName.js";
 import { AcroChoiceFlags } from "./flags.js";
-import { InvalidAcroFieldValueError, MultiSelectValueError } from "../errors.js";
+import {
+  InvalidAcroFieldValueError,
+  MultiSelectValueError,
+} from "../errors.js";
 
 class PDFAcroChoice extends PDFAcroTerminal {
   setValues(values: (PDFString | PDFHexString)[]) {

@@ -528,7 +528,7 @@ class TTFFontBase {
     }
 
     // normalize the coordinates
-    let coords = this.fvar.axis.map((axis, i) => {
+    let coords = this.fvar.axis.map((axis) => {
       let axisTag = axis.axisTag.trim();
       if (axisTag in settings) {
         return Math.max(

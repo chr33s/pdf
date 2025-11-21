@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "node:fs";
 
 import { Assets } from "..";
 import { PDFDocument, rgb } from "../../...js";

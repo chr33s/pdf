@@ -1,4 +1,7 @@
-import { UnexpectedObjectTypeError, UnsupportedEncodingError } from "../errors.js";
+import {
+  UnexpectedObjectTypeError,
+  UnsupportedEncodingError,
+} from "../errors.js";
 import PDFArray from "../objects/PDFArray.js";
 import PDFDict from "../objects/PDFDict.js";
 import PDFName from "../objects/PDFName.js";

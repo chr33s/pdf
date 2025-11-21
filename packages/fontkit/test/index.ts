@@ -1,4 +1,4 @@
-import assert from "assert";
+import assert from "node:assert";
 import { fileURLToPath } from "node:url";
 import { describe, it } from "vitest";
 

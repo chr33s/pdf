@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "node:fs";
 import { describe, expect, it } from "vitest";
 import { decodeFromBase64DataUri } from "../../src/utils/index.js";
 
