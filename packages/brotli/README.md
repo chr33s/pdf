@@ -33,13 +33,6 @@ const compressed = compress(new Uint8Array([1, 2, 3]));
 const restored = decompress(compressed);
 ```
 
-Each helper is also exposed via subpath exports for bundlers that prefer explicitly scoped imports:
-
-```ts
-import decompress from "@chr33s/brotli/decompress";
-import compress from "@chr33s/brotli/compress";
-```
-
 ## API
 
 - `decompress(input, outSize?)`: Accepts a `Uint8Array` (or any array-like of numbers) and returns a new `Uint8Array` with the decoded bytes. Provide `outSize` when the final length is known (for example when decoding WOFF2 glyph streams) to skip an extra allocation.

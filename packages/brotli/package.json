@@ -5,23 +5,6 @@
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "default": "./dist/index.js"
-    },
-    "./compress": {
-      "types": "./dist/compress.d.ts",
-      "import": "./dist/compress.js",
-      "default": "./dist/compress.js"
-    },
-    "./decompress": {
-      "types": "./dist/decompress.d.ts",
-      "import": "./dist/decompress.js",
-      "default": "./dist/decompress.js"
-    }
-  },
   "scripts": {
     "build": "make && tsc",
     "clean": "rm -rf dist",
