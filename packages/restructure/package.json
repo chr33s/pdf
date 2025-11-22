@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "Declaratively encode and decode binary data",
   "main": "dist/index.js",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
   "scripts": {

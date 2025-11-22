@@ -4,6 +4,7 @@
   "description": "A port of the Brotli compression algorithm as used in WOFF2",
   "type": "module",
   "main": "dist/index.js",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "make && tsc",

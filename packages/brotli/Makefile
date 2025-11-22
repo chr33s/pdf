@@ -13,5 +13,5 @@ all: build
 
 build: src/enc/pre.ts $(ENCOBJ)
 	$(CPP) $(CPPFLAGS) -s EXPORTED_FUNCTIONS="['_encode', '_malloc', '_free']" $(ENCOBJ) -o src/enc/encode.js
-	node scripts/generate-mem.ts src/enc/encode.wasm src/enc/mem.js
+	npx -y tsx scripts/generate-mem.ts src/enc/encode.wasm src/enc/mem.js
 	rm src/enc/encode.wasm

@@ -29,4 +29,9 @@ const compressed = brotliCompressSync(raw, {
 });
 const base64 = compressed.toString("base64");
 const moduleSource = `export default "${base64}";\n`;
-fs.writeFileSync(resolvedOutput, moduleSource);
+
+try {
+  fs.writeFileSync(resolvedOutput, moduleSource);
+} catch (error) {
+  fail(`Failed to write output file: ${error}`);
+}

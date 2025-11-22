@@ -4,6 +4,7 @@
   "description": "Metrics for the Standard 14 PDF fonts and their encodings",
   "type": "module",
   "main": "dist/index.js",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "npm run clean && npm run generate && tsc",

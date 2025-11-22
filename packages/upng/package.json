@@ -5,6 +5,7 @@
   "description": "Small, fast and advanced PNG / APNG encoder and decoder",
   "type": "module",
   "main": "dist/index.js",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "npm run clean && tsc",
