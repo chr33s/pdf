@@ -7,16 +7,84 @@ concurrency:
 on:
   push:
     branches: [main]
+    tags: [v*]
 
 jobs:
-  lint:
-    name: Lint
+  build:
+    name: Build
     runs-on: ubuntu-latest
+    if: ${{ github.ref_type == 'branch' }}
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
         with:
-          node-version-file: "package.json"
           cache: "npm"
+          node-version-file: "package.json"
       - run: npm ci
       - run: npm run check
+      - run: |
+          git clone https://github.com/emscripten-core/emsdk.git
+          cd emsdk
+          git checkout -b 3.1.29
+          ./emsdk install 4.0.20
+          ./emsdk activate 4.0.20
+          EMSDK=$HOME/work/pdf/pdf/emsdk
+          echo "EMSDK=$EMSDK" >> $GITHUB_ENV
+          echo "EMSCRIPTEN_ROOT=$EMSDK/upstream/emscripten" >> $GITHUB_ENV
+          echo "$EMSDK:$EMSCRIPTEN_ROOT" >> $GITHUB_PATH
+          echo 'source "$EMSDK/emsdk_env.sh"' >> $HOME/.bash_profile
+          source "$EMSDK/emsdk_env.sh"
+          emcc --version
+      - run: npm run workspace build
+      - run: npm run workspace test
+      - uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: .
+
+  publish:
+    name: Publish
+    runs-on: ubuntu-latest
+    if: ${{ github.ref_type == 'tag' }}
+    strategy:
+      matrix:
+        package: [brotli, restructure, standard-fonts, unicode-properties, upng, fontkit, pdf-lib]
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: build
+      - uses: actions/setup-node@v5
+        with:
+          cache: "npm"
+          node-version-file: "package.json"
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm publish --prefix packages/${{ matrix.package }} --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const tag_name = context.ref;
+            const name = tag_name.replace(/^refs\/tags\/v/, '');
+            const version = name.split("/").at(-1);
+            const prerelease = version.startsWith("0.") || version.includes("-");
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            const { data: latestRelease } = await github.rest.repos.getLatestRelease({
+              owner,
+              repo,
+            });
+            const latestReleaseTagName = latestRelease.tag_name;
+            const latestReleaseVersion = latestReleaseTagName.split("/").at(-1);
+            const body = `changes: [${latestReleaseVersion}...${version}](https://github.com/${owner}/${repo}/compare/${latestReleaseTagName}...${tag_name})`;
+
+            await github.rest.repos.createRelease({
+              body,
+              name,
+              owner,
+              prerelease,
+              repo,
+              tag_name,
+            });
+
