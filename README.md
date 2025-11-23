@@ -10,11 +10,30 @@
 
 ## TODO
 
+- [ ] migrate to monorepo
+
+- [@chr33s/codepoints](./packages/codepoints)
+- [@chr33s/tiny-inflate](./packages/tiny-inflate)
+- [@chr33s/unicode-trie](./packages/unicode-trie)
+- [@chr33s/dfa](./packages/dfa)
+
 - [ ] replace *Sync() -> promises (e.g. readFileSync())
 - [ ] Audit dependencies
 
 npm rm node-html-better-parser && npm i -S node-html-parser
 crypto-js -> crypto.subtle
+deep-equal -> fast-deep-equal
 
 - [ ] remove @ts-nocheck
-- [ ] add: release workflow
+- [ ] ensure [scripts,test] are typechecked
+
+## Notes
+
+Monorepo migration
+
+```sh
+git remote add codepoints https://github.com/foliojs/codepoints
+git fetch codepoints
+git merge --allow-unrelated-histories codepoints/master
+git mv ...
+```
