@@ -1,6 +1,7 @@
 # Monorepo of Modern ESM only pdf-lib & dependency tree
 
 - [@chr33s/brotli](./packages/brotli/)
+- [@chr33s/codepoints](./packages/codepoints/)
 - [@chr33s/font-kit](./packages/fontkit/)
 - [@chr33s/pdf-lib](./packages/pdf-lib/)
 - [@chr33s/restructure](./packages/restructure/)
@@ -12,10 +13,9 @@
 
 - [ ] migrate to monorepo
 
-- [@chr33s/codepoints](./packages/codepoints)
-- [@chr33s/tiny-inflate](./packages/tiny-inflate)
-- [@chr33s/unicode-trie](./packages/unicode-trie)
-- [@chr33s/dfa](./packages/dfa)
+- [@chr33s/dfa](./packages/dfa/)
+- [@chr33s/tiny-inflate](./packages/tiny-inflate/)
+- [@chr33s/unicode-trie](./packages/unicode-trie/)
 
 - [ ] replace *Sync() -> promises (e.g. readFileSync())
 - [ ] Audit dependencies
@@ -32,8 +32,8 @@ deep-equal -> fast-deep-equal
 Monorepo migration
 
 ```sh
-git remote add codepoints https://github.com/foliojs/codepoints
-git fetch codepoints
-git merge --allow-unrelated-histories codepoints/master
+git remote add dfa https://github.com/foliojs/dfa
+git fetch dfa
+git merge --allow-unrelated-histories dfa/master
 git mv ...
 ```
