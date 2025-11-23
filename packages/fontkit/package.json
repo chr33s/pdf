@@ -3,9 +3,9 @@
   "version": "1.1.0",
   "description": "An advanced font engine for Node and the browser",
   "main": "dist/index.js",
-  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
+  "sideEffects": false,
   "scripts": {
     "build": "npm run generate && tsc && npm run copy:shaper-data",
     "clean": "rm -rf dist src/opentype/shapers/*.json src/opentype/shapers/*Data.js",
