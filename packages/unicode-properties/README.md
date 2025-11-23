@@ -4,7 +4,7 @@
 
 `@chr33s/unicode-properties` is part of the [`chr33s/pdf`](https://github.com/chr33s/pdf) monorepo and continues the
 [Hopding/unicode-properties](https://github.com/Hopding/unicode-properties) fork of the original foliojs project. This
-edition:
+edition is native ES modules only:
 
 - ships native ES modules with NodeNext resolution (Node.js 18+ or a modern bundler required),
 - is authored in TypeScript with generated declaration files, and

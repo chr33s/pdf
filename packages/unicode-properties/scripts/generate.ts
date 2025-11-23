@@ -60,8 +60,8 @@ const getIndex = (lookup: IndexLookup, key: string | undefined): number =>
   lookup[key ?? ""] ?? 0;
 
 const srcDir = path.resolve(process.cwd(), "src");
-const trieFilePath = path.join(srcDir, "trie.json");
-const dataFilePath = path.join(srcDir, "data.json");
+const trieFilePath = path.join(srcDir, "trie.ts");
+const dataFilePath = path.join(srcDir, "data.ts");
 
 const categories: IndexLookup = Object.create(null);
 const combiningClasses: IndexLookup = Object.create(null);
@@ -123,8 +123,12 @@ for (const entry of entries) {
 }
 
 const trieBuffer = trie.toBuffer();
-const triePayload = JSON.stringify(base64.encode(pako.deflate(trieBuffer)));
-writeFileSync(trieFilePath, triePayload);
+const triePayload = base64.encode(pako.deflate(trieBuffer));
+
+const emitModule = (value: string): string =>
+  `const payload = ${JSON.stringify(value)};\nexport default payload;\n`;
+
+writeFileSync(trieFilePath, emitModule(triePayload));
 
 const encoder = new TextEncoder();
 const data = {
@@ -135,5 +139,5 @@ const data = {
 };
 
 const dataBytes = encoder.encode(JSON.stringify(data));
-const dataPayload = JSON.stringify(base64.encode(pako.deflate(dataBytes)));
-writeFileSync(dataFilePath, dataPayload);
+const dataPayload = base64.encode(pako.deflate(dataBytes));
+writeFileSync(dataFilePath, emitModule(dataPayload));

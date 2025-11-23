@@ -1,9 +1,9 @@
-import UnicodeTrie from "unicode-trie";
-import pako from "pako";
 import * as base64 from "base64-arraybuffer";
+import pako from "pako";
+import UnicodeTrie from "unicode-trie";
 
-import base64DeflatedData from "./data.json" with { type: "json" };
-import base64DeflatedTrie from "./trie.json" with { type: "json" };
+import base64DeflatedData from "./data.js";
+import base64DeflatedTrie from "./trie.js";
 
 type UnicodeDataset = {
   categories: string[];
@@ -212,18 +212,18 @@ export const unicodeProperties: UnicodePropertiesAPI = {
 export {
   getCategory,
   getCombiningClass,
-  getScript,
   getEastAsianWidth,
   getNumericValue,
+  getScript,
   isAlphabetic,
-  isDigit,
-  isPunctuation,
-  isLowerCase,
-  isUpperCase,
-  isTitleCase,
-  isWhiteSpace,
   isBaseForm,
+  isDigit,
+  isLowerCase,
   isMark,
+  isPunctuation,
+  isTitleCase,
+  isUpperCase,
+  isWhiteSpace,
 };
 
 export default unicodeProperties;
