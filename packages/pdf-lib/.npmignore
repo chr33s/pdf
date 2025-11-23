@@ -1,0 +1,10 @@
+apps/
+assets/
+docs/
+node_modules/
+scratchpad/
+test/
+.gitignore
+tsconfig.json
+vitest.config.ts
+pdf_specification.pdf

@@ -1,0 +1,7 @@
+data/
+node_modules/
+scripts/
+test/
+.gitignore
+tsconfig.json
+vitest.config.ts
