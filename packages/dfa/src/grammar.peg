@@ -1,0 +1,72 @@
+{
+  const n = options?.nodes;
+  if (!n) {
+    throw new Error('The parser expects a nodes module via options.nodes.');
+  }
+}
+
+rules
+  = statement+
+
+statement
+  = s:statement_type _ { return s }
+
+statement_type
+  = assignment
+  / comment
+
+comment
+  = '#' v:[^\r\n]* [\r\n] { return new n.Comment(v.join('')) }
+
+assignment
+  = v:variable _ '=' _ e:expr _ ';' { return new n.Assignment(v, e) }
+
+variable
+  = v:name  { return new n.Variable(v) }
+
+expr
+  = alternation
+
+alternation
+  = a:concatenation _ '|' _ b:alternation     { return new n.Alternation(a, b) }
+  / concatenation
+
+concatenation
+  = a:repeat _ b:concatenation           { return new n.Concatenation(a, b) }
+  / repeat
+
+repeat
+  = t:name ':' e:repeat { return new n.Concatenation(e, new n.Tag(t)) }
+  / t:term '*'  { return new n.Repeat(t, '*') }
+  / t:term '?'  { return new n.Repeat(t, '?') }
+  / t:term '+'  { return new n.Repeat(t, '+') }
+  / t:term '{' m:number '}' { return n.buildRepetition(t, m, m) }
+  / t:term '{' min:number ',' '}' { return n.buildRepetition(t, min, Infinity) }
+  / t:term '{' ',' max:number '}' { return n.buildRepetition(t, 0, max) }
+  / t:term '{' min:number ',' max:number '}' { return n.buildRepetition(t, min, max) }
+  / term
+
+term
+  = variable
+  / x:number { return new n.Literal(x) }
+  / '(' e:expr ')' { return e }
+
+repetition
+  = '{' number '}' { return n.buildRepetition() }
+
+name
+  = a:name_start_char b:name_char* { return a + b.join('') }
+
+name_start_char
+  = "_"
+  / [a-zA-Z]
+
+name_char
+  = name_start_char
+  / [0-9]
+
+number
+  = num:[0-9]+  { return parseInt(num.join('')) }
+
+_
+  = [ \t\r\n]*

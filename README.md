@@ -2,6 +2,7 @@
 
 - [@chr33s/brotli](./packages/brotli/)
 - [@chr33s/codepoints](./packages/codepoints/)
+- [@chr33s/dfa](./packages/dfa/)
 - [@chr33s/font-kit](./packages/fontkit/)
 - [@chr33s/pdf-lib](./packages/pdf-lib/)
 - [@chr33s/restructure](./packages/restructure/)
@@ -13,7 +14,6 @@
 
 - [ ] migrate to monorepo
 
-- [@chr33s/dfa](./packages/dfa/)
 - [@chr33s/tiny-inflate](./packages/tiny-inflate/)
 - [@chr33s/unicode-trie](./packages/unicode-trie/)
 
@@ -23,6 +23,7 @@
 npm rm node-html-better-parser && npm i -S node-html-parser
 crypto-js -> crypto.subtle
 deep-equal -> fast-deep-equal
+tiny-inflate -> pako
 
 - [ ] remove @ts-nocheck
 - [ ] ensure [scripts,test] are typechecked
@@ -32,8 +33,8 @@ deep-equal -> fast-deep-equal
 Monorepo migration
 
 ```sh
-git remote add dfa https://github.com/foliojs/dfa
-git fetch dfa
-git merge --allow-unrelated-histories dfa/master
+git remote add tiny-inflate https://github.com/foliojs/tiny-inflate
+git fetch tiny-inflate
+git merge --allow-unrelated-histories tiny-inflate/master
 git mv ...
 ```

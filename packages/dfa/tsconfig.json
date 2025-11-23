@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "types": ["node"]
+  },
+  "include": [
+    "dfa.d.ts",
+    "src/**/*"
+  ],
+  "exclude": [
+    "dist"
+  ]
+}

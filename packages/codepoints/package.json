@@ -28,7 +28,6 @@
   "homepage": "https://github.com/devongovett/codepoints",
   "devDependencies": {
     "@types/node": "^22.10.1",
-    "tsx": "^4.19.0",
     "typescript": "^5.6.3"
   }
 }

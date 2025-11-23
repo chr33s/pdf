@@ -1,0 +1,30 @@
+{
+  "name": "@chr33s/dfa",
+  "version": "0.0.0",
+  "description": "Deterministic finite automata compiler",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "npm run clean && npm run generate && tsc",
+    "clean": "rm -rf dist src/grammar.ts",
+    "generate": "node scripts/build-grammar.ts",
+    "prepublishOnly": "npm run build",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "state",
+    "machine",
+    "compiler"
+  ],
+  "author": "Devon Govett <devongovett@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.11.5",
+    "peggy": "^4.0.2",
+    "typescript": "^5.9.3",
+    "vitest": "^1.6.0"
+  }
+}
