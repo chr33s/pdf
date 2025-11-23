@@ -16,7 +16,7 @@ export const decompress = function (
   buffer: Uint8Array,
   opts?: DecompressOptions,
 ): Uint8Array | null {
-  const brotli = brotliModule as any;
+  const brotli = brotliModule;
   // allocate input buffer and copy data to it
   const inputPtr = brotli._malloc(buffer.length);
   brotli.HEAPU8.set(buffer, inputPtr);

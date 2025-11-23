@@ -18,22 +18,22 @@ const DEFAULT_PADDING = 1024;
  * Returns null on error
  */
 export const compress = function (
-  buffer: Uint8Array,
+  buffer: Uint8Array | string,
   opts?: CompressOptions | boolean,
 ): Uint8Array | null {
-  const brotli = brotliModule as any;
+  const brotli = brotliModule;
   // default to binary data
   let quality = 11;
-  let mode = 0;
+  let mode = 0; // BROTLI_MODE_GENERIC
   let lgwin = 22;
   let dictionary = new Uint8Array();
 
   if (typeof opts === "boolean") {
     mode = opts ? 0 : 1;
   } else if (opts && typeof opts === "object") {
-    quality = opts.quality ?? 11;
-    mode = opts.mode ?? 0;
-    lgwin = opts.lgwin ?? 22;
+    quality = opts.quality ?? quality;
+    mode = opts.mode ?? mode;
+    lgwin = opts.lgwin ?? lgwin;
     if (opts.dictionary) {
       dictionary = new Uint8Array(opts.dictionary);
     }

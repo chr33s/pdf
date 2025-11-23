@@ -4,6 +4,7 @@
 		"**/dist",
 		"packages/brotli/src/*.js",
 		"packages/brotli/src/brotli.d.ts",
+		"packages/brotli/vendor",
 		"packages/dfa/src/grammar.ts",
 		"packages/fontkit/src/opentype/shapers/*.js",
 	]

@@ -1,4 +1,5 @@
 #include <brotli/decode.h>
+#include <brotli/shared_dictionary.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -23,7 +24,12 @@ uint8_t* decompress(size_t input_size,
   }
 
   if (dictionary_size > 0) {
-    BrotliDecoderSetCustomDictionary(state, dictionary_size, dictionary_buffer);
+    BrotliDecoderAttachDictionary(
+      state,
+      BROTLI_SHARED_DICTIONARY_RAW,
+      dictionary_size,
+      dictionary_buffer
+    );
   }
 
   const uint8_t** buffers = (const uint8_t**)malloc(INITIAL_BUFFERS_SIZE);
