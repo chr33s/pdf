@@ -5,12 +5,10 @@ import fontkit from "./addTestHelpersToFontkit.js";
 import { here } from "./utils/dir.decompressJsons.js";
 
 const __dirname = here(import.meta.url);
-const hasSkiaFont = fs.existsSync("/Library/Fonts/Skia.ttf");
-const describeSkia = hasSkiaFont ? describe : describe.skip;
 
 describe("variations", function () {
-  describeSkia("Skia", function () {
-    if (!hasSkiaFont) {
+  describe("Skia", function () {
+    if (!fs.existsSync("/Library/Fonts/Skia.ttf")) {
       it.skip("requires /Library/Fonts/Skia.ttf", function () {});
       return;
     }

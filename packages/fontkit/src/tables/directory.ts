@@ -29,28 +29,42 @@ Directory.process = function () {
 };
 
 Directory.preEncode = function (_stream) {
-  let tables = [];
-  for (let tag in this.tables) {
-    let table = this.tables[tag];
-    if (table) {
-      tables.push({
-        tag: tag,
+  if (!Array.isArray(this.tables)) {
+    let entries = [];
+    let source = this.tables ?? {};
+
+    for (let tag of Object.keys(source)) {
+      let table = source[tag];
+      if (!table) continue;
+
+      let definition = Tables[tag];
+      if (!definition) {
+        throw new Error("Unknown table definition for tag " + tag);
+      }
+
+      entries.push({
+        tag,
         checkSum: 0,
-        offset: new r.VoidPointer(Tables[tag], table),
-        length: Tables[tag].size(table),
+        offset: new r.VoidPointer(definition, table),
+        length: definition.size(table),
       });
     }
+
+    this.tables = entries;
   }
 
-  this.tag = "true";
-  this.numTables = tables.length;
-  this.tables = tables;
+  this.tag = this.tag ?? "true";
+  this.numTables = this.tables.length;
 
-  let maxExponentFor2 = Math.floor(Math.log(this.numTables) / Math.LN2);
-  let maxPowerOf2 = Math.pow(2, maxExponentFor2);
+  let maxExponentFor2 = 0;
+  let maxPowerOf2 = 0;
+  if (this.numTables > 0) {
+    maxExponentFor2 = Math.floor(Math.log2(this.numTables));
+    maxPowerOf2 = 1 << maxExponentFor2;
+  }
 
   this.searchRange = maxPowerOf2 * 16;
-  this.entrySelector = Math.log(maxPowerOf2) / Math.LN2;
+  this.entrySelector = maxExponentFor2;
   this.rangeShift = this.numTables * 16 - this.searchRange;
 };
 
