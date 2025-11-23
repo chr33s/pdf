@@ -20,12 +20,12 @@
     "@chr33s/restructure": "file:../restructure",
     "@chr33s/tiny-inflate": "file:../tiny-inflate",
     "@chr33s/unicode-properties": "file:../unicode-properties",
+    "@chr33s/unicode-trie": "file:../unicode-trie",
     "base64-arraybuffer": "^1.0.2",
     "clone": "^2.1.2",
     "deep-equal": "^2.2.3",
     "iconv-lite": "^0.7.0",
-    "pako": "^2.1.0",
-    "unicode-trie": "^2.0.0"
+    "pako": "^2.1.0"
   },
   "devDependencies": {
     "@chr33s/codepoints": "file:../codepoints",
@@ -35,7 +35,6 @@
     "@types/iconv-lite": "^0.0.1",
     "@types/node": "^24.10.1",
     "@types/pako": "^2.0.4",
-    "@types/unicode-trie": "^2.0.3",
     "concat-stream": "^2.0.0",
     "typescript": "^5.9.3",
     "vitest": "^4.0.12"

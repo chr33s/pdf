@@ -14,15 +14,15 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@chr33s/unicode-trie": "file:../unicode-trie",
     "base64-arraybuffer": "^1.0.2",
-    "pako": "^2.1.0",
-    "unicode-trie": "^2.0.0"
+    "pako": "^2.1.0"
   },
   "devDependencies": {
     "@chr33s/codepoints": "file:../codepoints",
+    "@types/base64-arraybuffer": "^0.1.0",
     "@types/node": "^24.10.1",
     "@types/pako": "^2.0.4",
-    "@types/unicode-trie": "^2.0.3",
     "typescript": "^5.9.3",
     "vitest": "^4.0.12"
   },

@@ -1,9 +1,9 @@
 import codePoints from "@chr33s/codepoints";
+import { builder as UnicodeTrieBuilder } from "@chr33s/unicode-trie";
 import base64 from "base64-arraybuffer";
 import { writeFileSync } from "node:fs";
 import path from "node:path";
 import pako from "pako";
-import UnicodeTrieBuilder from "unicode-trie/builder.js";
 
 type IndexLookup = Record<string, number>;
 

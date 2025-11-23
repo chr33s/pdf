@@ -2,9 +2,9 @@
 
 import { StateMachine } from "@chr33s/dfa";
 import unicode from "@chr33s/unicode-properties";
+import UnicodeTrie from "@chr33s/unicode-trie";
 import * as base64 from "base64-arraybuffer";
 import pako from "pako";
-import UnicodeTrie from "unicode-trie";
 import * as Script from "../../layout/Script.js";
 import GlyphInfo from "../GlyphInfo.js";
 import DefaultShaper from "./DefaultShaper.js";

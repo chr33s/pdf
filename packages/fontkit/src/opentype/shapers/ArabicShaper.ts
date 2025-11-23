@@ -1,9 +1,9 @@
 // @ts-nocheck
 
 import unicode from "@chr33s/unicode-properties";
+import UnicodeTrie from "@chr33s/unicode-trie";
 import * as base64 from "base64-arraybuffer";
 import pako from "pako";
-import UnicodeTrie from "unicode-trie";
 import DefaultShaper from "./DefaultShaper.js";
 
 // Trie is serialized as a Buffer in node, but here

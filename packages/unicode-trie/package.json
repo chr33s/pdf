@@ -1,0 +1,35 @@
+{
+  "name": "@chr33s/unicode-trie",
+  "version": "2.0.0",
+  "description": "Unicode Trie data structure for fast character metadata lookup, ported from ICU",
+  "type": "module",
+  "sideEffects": false,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "npm run clean && tsc",
+    "clean": "rm -rf dist",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/devongovett/unicode-trie.git"
+  },
+  "author": "Devon Govett <devongovett@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/devongovett/unicode-trie/issues"
+  },
+  "homepage": "https://github.com/devongovett/unicode-trie",
+  "dependencies": {
+    "@chr33s/tiny-inflate": "file:../tiny-inflate",
+    "pako": "^2.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "@types/pako": "^2.0.4",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.12"
+  }
+}

@@ -2,12 +2,12 @@
 
 import codepoints from "@chr33s/codepoints";
 import { compile as compileModule } from "@chr33s/dfa";
+import { builder as UnicodeTrieBuilder } from "@chr33s/unicode-trie";
 import * as base64 from "base64-arraybuffer";
 import fs from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import pako from "pako";
-import UnicodeTrieBuilder from "unicode-trie/builder.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const textEncoder = new TextEncoder();

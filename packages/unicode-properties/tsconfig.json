@@ -4,6 +4,6 @@
     "rootDir": "src",
     "outDir": "dist"
   },
-  "include": ["./unicode-modules.d.ts", "src/**/*"],
+  "include": ["src/**/*"],
   "exclude": ["dist", "node_modules", "test"]
 }
