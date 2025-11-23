@@ -31,7 +31,7 @@ for faster runtime performance.  To build a Unicode Trie, use the
 
 ```js
 import { writeFileSync } from "node:fs";
-import UnicodeTrieBuilder from "@chr33s/unicode-trie/builder.js";
+import { builder as UnicodeTrieBuilder } from "@chr33s/unicode-trie";
 
 // create a trie
 let builder = new UnicodeTrieBuilder();

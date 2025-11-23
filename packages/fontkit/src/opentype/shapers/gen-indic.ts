@@ -2,7 +2,7 @@
 
 import codepoints from "@chr33s/codepoints";
 import { compile as compileModule } from "@chr33s/dfa";
-import UnicodeTrieBuilder from "@chr33s/unicode-trie/builder.js";
+import { builder as UnicodeTrieBuilder } from "@chr33s/unicode-trie";
 import * as base64 from "base64-arraybuffer";
 import fs from "node:fs";
 import { dirname, join } from "node:path";
