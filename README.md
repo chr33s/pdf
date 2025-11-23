@@ -7,15 +7,12 @@
 - [@chr33s/pdf-lib](./packages/pdf-lib/)
 - [@chr33s/restructure](./packages/restructure/)
 - [@chr33s/standard-fonts](./packages/standard-fonts/)
+- [@chr33s/tiny-inflate](./packages/tiny-inflate/)
 - [@chr33s/unicode-properties](./packages/unicode-properties/)
+- [@chr33s/unicode-trie](./packages/unicode-trie/)
 - [@chr33s/upng](./packages/upng/)
 
 ## TODO
-
-- [ ] migrate to monorepo
-
-- [@chr33s/tiny-inflate](./packages/tiny-inflate/)
-- [@chr33s/unicode-trie](./packages/unicode-trie/)
 
 - [ ] replace *Sync() -> promises (e.g. readFileSync())
 - [ ] Audit dependencies
@@ -33,8 +30,8 @@ tiny-inflate -> pako
 Monorepo migration
 
 ```sh
-git remote add tiny-inflate https://github.com/foliojs/tiny-inflate
-git fetch tiny-inflate
-git merge --allow-unrelated-histories tiny-inflate/master
+git remote add unicode-trie https://github.com/foliojs/unicode-trie
+git fetch unicode-trie
+git merge --allow-unrelated-histories unicode-trie/master
 git mv ...
 ```

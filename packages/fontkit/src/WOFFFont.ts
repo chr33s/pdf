@@ -1,7 +1,7 @@
 // @ts-nocheck
 
 import * as r from "@chr33s/restructure";
-import inflate from "tiny-inflate";
+import inflate from "@chr33s/tiny-inflate";
 import TTFFont from "./TTFFont.js";
 import WOFFDirectory from "./tables/WOFFDirectory.js";
 

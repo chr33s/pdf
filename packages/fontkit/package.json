@@ -18,13 +18,13 @@
     "@chr33s/brotli": "file:../brotli",
     "@chr33s/dfa": "file:../dfa",
     "@chr33s/restructure": "file:../restructure",
+    "@chr33s/tiny-inflate": "file:../tiny-inflate",
     "@chr33s/unicode-properties": "file:../unicode-properties",
     "base64-arraybuffer": "^1.0.2",
     "clone": "^2.1.2",
     "deep-equal": "^2.2.3",
     "iconv-lite": "^0.7.0",
     "pako": "^2.1.0",
-    "tiny-inflate": "^1.0.3",
     "unicode-trie": "^2.0.0"
   },
   "devDependencies": {
