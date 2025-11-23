@@ -9,8 +9,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "prepare": "npm run build",
-    "test": "vitest run",
-    "test:watch": "vitest"
+    "test": "vitest run"
   },
   "repository": {
     "type": "git",
@@ -29,8 +28,8 @@
   },
   "homepage": "https://github.com/devongovett/tiny-inflate",
   "devDependencies": {
-    "@types/node": "^22.0.0",
+    "@types/node": "^24.10.1",
     "typescript": "^5.5.0",
-    "vitest": "^1.6.0"
+    "vitest": "^4.0.13"
   }
 }
