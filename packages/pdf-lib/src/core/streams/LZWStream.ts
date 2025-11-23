@@ -84,8 +84,14 @@ class LZWStream extends DecodeStream {
 
     for (i = 0; i < blockSize; i++) {
       const code = this.#readBits(codeLength);
+
+      // Explicitly check for EOF
+      if (code === null) {
+        break;
+      }
+
       const hasPrev = currentSequenceLength > 0;
-      if (!code || code < 256) {
+      if (code < 256) {
         currentSequence[0] = code as number;
         currentSequenceLength = 1;
       } else if (code >= 258) {
