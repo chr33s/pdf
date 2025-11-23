@@ -1,8 +1,8 @@
 // @ts-nocheck
 
+import { StateMachine } from "@chr33s/dfa";
 import unicode from "@chr33s/unicode-properties";
 import * as base64 from "base64-arraybuffer";
-import StateMachine from "dfa";
 import pako from "pako";
 import UnicodeTrie from "unicode-trie";
 import * as Script from "../../layout/Script.js";

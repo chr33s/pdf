@@ -1,6 +1,3 @@
-declare module "codepoints";
-declare module "dfa";
-
 export as namespace fontkit;
 
 /**

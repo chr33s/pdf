@@ -1,8 +1,8 @@
 // @ts-nocheck
 
+import codepoints from "@chr33s/codepoints";
+import { compile as compileModule } from "@chr33s/dfa";
 import * as base64 from "base64-arraybuffer";
-import codepoints from "codepoints";
-import compileModule from "dfa/compile.js";
 import fs from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";

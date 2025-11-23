@@ -4,8 +4,8 @@
 // This script generates a UnicodeTrie containing shaping data derived
 // from Unicode properties (currently just for the Arabic shaper).
 //
+import codepoints from "@chr33s/codepoints";
 import * as base64 from "base64-arraybuffer";
-import codepoints from "codepoints";
 import fs from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";

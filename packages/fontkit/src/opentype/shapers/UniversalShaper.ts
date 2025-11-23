@@ -1,7 +1,7 @@
 // @ts-nocheck
 
+import { StateMachine } from "@chr33s/dfa";
 import * as base64 from "base64-arraybuffer";
-import StateMachine from "dfa";
 import pako from "pako";
 import UnicodeTrie from "unicode-trie";
 import GlyphInfo from "../GlyphInfo.js";

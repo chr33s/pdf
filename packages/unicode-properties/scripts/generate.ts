@@ -1,5 +1,5 @@
+import codePoints from "@chr33s/codepoints";
 import base64 from "base64-arraybuffer";
-import codePoints from "codepoints";
 import { writeFileSync } from "node:fs";
 import path from "node:path";
 import pako from "pako";

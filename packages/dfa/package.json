@@ -10,7 +10,6 @@
     "build": "npm run clean && npm run generate && tsc",
     "clean": "rm -rf dist src/grammar.ts",
     "generate": "node scripts/build-grammar.ts",
-    "prepublishOnly": "npm run build",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
