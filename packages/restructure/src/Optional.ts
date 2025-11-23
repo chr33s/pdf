@@ -1,13 +1,15 @@
+import Base from "./Base.js";
 import type DecodeStream from "./DecodeStream.js";
 import type EncodeStream from "./EncodeStream.js";
 
 type Condition = boolean | ((this: any, parent?: any) => boolean);
 
-export default class Optional<T = unknown> {
+export default class Optional<T = unknown> extends Base<T | undefined> {
   public type: any;
   public condition: Condition;
 
   constructor(type: any, condition: Condition = true) {
+    super();
     this.type = type;
     this.condition = condition;
   }

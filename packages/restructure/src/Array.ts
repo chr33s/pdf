@@ -1,3 +1,4 @@
+import Base from "./Base.js";
 import type DecodeStream from "./DecodeStream.js";
 import type EncodeStream from "./EncodeStream.js";
 import { Number as NumberT } from "./Number.js";
@@ -5,7 +6,7 @@ import { resolveLength, type LengthLike } from "./utils.js";
 
 export type LengthType = "count" | "bytes";
 
-export default class ArrayT<T = unknown, TResult = T[]> {
+export default class ArrayT<T = unknown, TResult = T[]> extends Base<TResult> {
   public type: any;
   public length?: LengthLike;
   public lengthType: LengthType;
@@ -15,6 +16,7 @@ export default class ArrayT<T = unknown, TResult = T[]> {
     length?: LengthLike,
     lengthType: LengthType = "count",
   ) {
+    super();
     this.type = type;
     this.length = length;
     this.lengthType = lengthType;
@@ -62,7 +64,7 @@ export default class ArrayT<T = unknown, TResult = T[]> {
     return result as unknown as TResult;
   }
 
-  size(array?: T[], ctx?: any): number {
+  size(array?: T[], ctx?: any, includePointers = true): number {
     if (!array) {
       return (
         this.type.size(null, ctx) * resolveLength(this.length, undefined, ctx)
@@ -74,11 +76,15 @@ export default class ArrayT<T = unknown, TResult = T[]> {
 
     if (this.length instanceof NumberT) {
       total += this.length.size();
-      context = { parent: ctx };
+      context = { parent: ctx, pointerSize: 0 };
     }
 
     for (const item of array) {
       total += this.type.size(item, context);
+    }
+
+    if (includePointers && this.length instanceof NumberT && context) {
+      total += context.pointerSize ?? 0;
     }
 
     return total;
@@ -94,7 +100,7 @@ export default class ArrayT<T = unknown, TResult = T[]> {
         parent,
         pointerSize: 0,
       };
-      ctx.pointerOffset = stream.pos + this.size(array, ctx);
+      ctx.pointerOffset = stream.pos + this.size(array, ctx, false);
       this.length.encode(stream, array.length);
     }
 

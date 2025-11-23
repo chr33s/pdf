@@ -1,3 +1,4 @@
+import Base from "./Base.js";
 import type DecodeStream from "./DecodeStream.js";
 import type EncodeStream from "./EncodeStream.js";
 import { PropertyDescriptor } from "./utils.js";
@@ -8,18 +9,19 @@ export interface PointerOptions {
   type?: PointerType;
   allowNull?: boolean;
   nullValue?: number;
-  relativeTo?: string;
+  relativeTo?: string | ((ctx: any) => number);
   lazy?: boolean;
 }
 
-export class Pointer {
+export class Pointer extends Base<any> {
   public options: Required<Omit<PointerOptions, "relativeTo">> & {
-    relativeTo?: string;
+    relativeTo?: string | ((ctx: any) => number);
   };
   public type: any;
   public offsetType: any;
 
   constructor(offsetType: any, type: any, options: PointerOptions = {}) {
+    super();
     this.offsetType = offsetType;
     this.type = type === "void" ? null : type;
     this.options = {
@@ -32,12 +34,17 @@ export class Pointer {
   }
 
   #relativeToGetter(ctx: any): number {
-    if (!this.options.relativeTo) {
+    const { relativeTo } = this.options;
+    if (!relativeTo) {
       return 0;
     }
 
+    if (typeof relativeTo === "function") {
+      return relativeTo(ctx) ?? 0;
+    }
+
     return (
-      this.options.relativeTo
+      relativeTo
         .split(".")
         .reduce((obj: any, prop: string) => obj?.[prop], ctx) ?? 0
     );
@@ -129,7 +136,7 @@ export class Pointer {
       val = val.value;
     }
 
-    if (val && ctx) {
+    if (val != null && ctx) {
       ctx.pointerSize += type.size(val, parent);
     }
 
@@ -165,7 +172,8 @@ export class Pointer {
     }
 
     if (this.options.relativeTo) {
-      relative += this.#relativeToGetter(parent.val ?? parent);
+      const target = parent?.val ?? parent;
+      relative += this.#relativeToGetter(target);
     }
 
     this.offsetType.encode(stream, ctx.pointerOffset - relative);

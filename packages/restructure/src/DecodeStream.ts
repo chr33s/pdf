@@ -1,9 +1,4 @@
-let iconv: typeof import("iconv-lite") | null = null;
-try {
-  iconv = require("iconv-lite");
-} catch {
-  iconv = null;
-}
+import iconv from "iconv-lite";
 
 export default class DecodeStream {
   public static readonly TYPES = {

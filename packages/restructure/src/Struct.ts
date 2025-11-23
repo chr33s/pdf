@@ -17,7 +17,7 @@ export default class Struct<
   T extends Record<string, any> = Record<string, any>,
 > {
   public process?: (this: T, stream: DecodeStream) => void;
-  public preEncode?: (this: T, stream: EncodeStream) => void;
+  public preEncode?: (this: T, stream?: EncodeStream) => void;
   public fields: FieldMap;
 
   constructor(fields: FieldMap = {}) {
@@ -82,6 +82,10 @@ export default class Struct<
       val,
       pointerSize: 0,
     };
+
+    if (this.preEncode) {
+      this.preEncode.call(val);
+    }
 
     let total = 0;
     for (const [key, type] of Object.entries(this.fields)) {

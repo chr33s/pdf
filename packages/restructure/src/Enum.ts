@@ -1,11 +1,13 @@
+import Base from "./Base.js";
 import type DecodeStream from "./DecodeStream.js";
 import type EncodeStream from "./EncodeStream.js";
 
-export default class Enum<T = unknown> {
+export default class Enum<T = unknown> extends Base<T> {
   public type: any;
   public options: T[];
 
   constructor(type: any, options: T[] = []) {
+    super();
     this.type = type;
     this.options = options;
   }

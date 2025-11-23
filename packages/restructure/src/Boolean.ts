@@ -1,10 +1,12 @@
+import Base from "./Base.js";
 import type DecodeStream from "./DecodeStream.js";
 import type EncodeStream from "./EncodeStream.js";
 
-export default class BooleanT {
+export default class BooleanT extends Base<boolean> {
   public type: any;
 
   constructor(type: any) {
+    super();
     this.type = type;
   }
 

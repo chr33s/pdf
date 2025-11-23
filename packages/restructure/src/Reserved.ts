@@ -1,12 +1,14 @@
+import Base from "./Base.js";
 import type DecodeStream from "./DecodeStream.js";
 import type EncodeStream from "./EncodeStream.js";
 import { resolveLength, type LengthLike } from "./utils.js";
 
-export default class Reserved {
+export default class Reserved extends Base<void> {
   public type: any;
   public count: LengthLike | number;
 
   constructor(type: any, count: LengthLike | number = 1) {
+    super();
     this.type = type;
     this.count = count;
   }

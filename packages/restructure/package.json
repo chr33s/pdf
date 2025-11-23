@@ -12,14 +12,10 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
-  "dependencies": {
-    "browserify-optional": "^1.0.1"
-  },
   "devDependencies": {
     "@types/concat-stream": "^2.0.3",
     "@types/node": "^24.10.1",
     "concat-stream": "^2.0.0",
-    "coveralls": "^3.1.1",
     "iconv-lite": "^0.7.0",
     "typescript": "^5.9.3",
     "vitest": "^4.0.12"
@@ -43,11 +39,6 @@
   },
   "license": "MIT",
   "homepage": "https://github.com/Hopding/restructure",
-  "browserify": {
-    "transform": [
-      "browserify-optional"
-    ]
-  },
   "private": false,
   "directories": {
     "test": "test"

@@ -1,12 +1,14 @@
+import Base from "./Base.js";
 import DecodeStream from "./DecodeStream.js";
 import type EncodeStream from "./EncodeStream.js";
 
-export class NumberT {
+export class NumberT extends Base<number> {
   #fn: string;
   public type: string;
   public endian: "BE" | "LE";
 
   constructor(type: string, endian: "BE" | "LE" = "BE") {
+    super();
     this.type = type;
     this.endian = endian;
     this.#fn = type;

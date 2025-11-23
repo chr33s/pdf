@@ -1,12 +1,14 @@
+import Base from "./Base.js";
 import type DecodeStream from "./DecodeStream.js";
 import type EncodeStream from "./EncodeStream.js";
 import { Number as NumberT } from "./Number.js";
 import { resolveLength, type LengthLike } from "./utils.js";
 
-export default class BufferT {
+export default class BufferT extends Base<Buffer> {
   public length: LengthLike;
 
   constructor(length: LengthLike) {
+    super();
     this.length = length;
   }
 
@@ -16,11 +18,16 @@ export default class BufferT {
   }
 
   size(value?: Buffer, parent?: any): number {
-    if (!value) {
+    if (value == null) {
       return resolveLength(this.length, undefined, parent);
     }
 
-    return value.length;
+    let length = value.length;
+    if (this.length instanceof NumberT) {
+      length += this.length.size();
+    }
+
+    return length;
   }
 
   encode(stream: EncodeStream, value: Buffer, _parent?: any): void {

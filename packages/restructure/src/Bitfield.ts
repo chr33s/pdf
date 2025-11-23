@@ -1,11 +1,13 @@
+import Base from "./Base.js";
 import type DecodeStream from "./DecodeStream.js";
 import type EncodeStream from "./EncodeStream.js";
 
-export default class Bitfield {
+export default class Bitfield extends Base<Record<string, boolean>> {
   public type: any;
   public flags: Array<string | null | undefined>;
 
   constructor(type: any, flags: Array<string | null | undefined> = []) {
+    super();
     this.type = type;
     this.flags = flags;
   }

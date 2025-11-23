@@ -76,6 +76,10 @@ export default class VersionedStruct extends Struct {
       throw new Error("Not a fixed size");
     }
 
+    if (this.preEncode) {
+      this.preEncode.call(val);
+    }
+
     const ctx = {
       parent,
       val,

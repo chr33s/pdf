@@ -1,18 +1,12 @@
+import iconv from "iconv-lite";
 import { Readable } from "node:stream";
 import DecodeStream from "./DecodeStream.js";
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-let iconv: typeof import("iconv-lite") | null = null;
-try {
-  iconv = require("iconv-lite");
-} catch {
-  iconv = null;
-}
 
 export default class EncodeStream extends Readable {
   public buffer: Buffer;
   public bufferOffset = 0;
   public pos = 0;
+  #chunks: Buffer[] = [];
   [key: string]: any;
 
   constructor(bufferSize = 65536) {
@@ -31,14 +25,18 @@ export default class EncodeStream extends Readable {
 
   flush(): void {
     if (this.bufferOffset > 0) {
-      this.push(Buffer.from(this.buffer.slice(0, this.bufferOffset)));
+      const chunk = Buffer.from(this.buffer.slice(0, this.bufferOffset));
+      this.#chunks.push(chunk);
+      this.push(chunk);
       this.bufferOffset = 0;
     }
   }
 
   writeBuffer(buffer: Buffer): void {
     this.flush();
-    this.push(buffer);
+    const chunk = Buffer.from(buffer);
+    this.#chunks.push(chunk);
+    this.push(chunk);
     this.pos += buffer.length;
   }
 
@@ -120,6 +118,11 @@ export default class EncodeStream extends Readable {
     this.flush();
     this.push(null);
     return this;
+  }
+
+  toBuffer(): Buffer {
+    this.flush();
+    return Buffer.concat(this.#chunks);
   }
 }
 
