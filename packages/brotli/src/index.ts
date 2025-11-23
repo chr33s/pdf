@@ -1,2 +1,3 @@
 export { compress } from "./compress.js";
-export { BrotliDecompressBuffer, decompress } from "./decompress.js";
+export { BrotliDecompressBuffer } from "./dec/decode.js";
+export { default as decompress } from "./decompress.js";

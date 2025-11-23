@@ -1,6 +1,5 @@
 import { BrotliDecompressBuffer } from "./dec/decode.js";
 
 const decompress: typeof BrotliDecompressBuffer = BrotliDecompressBuffer;
-
-export { BrotliDecompressBuffer, decompress };
+export { decompress };
 export default decompress;

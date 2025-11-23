@@ -6,7 +6,7 @@
 
                           Lewis Carroll
 
-               THE MILLENNIUM FULCRUM EDITION 2.9
+               THE MILLENNIUM FULCRUM EDITION 3.0
 
 
 
@@ -16,7 +16,7 @@
                       Down the Rabbit-Hole
 
 
-  Alice was beginning to get very tired of sitting by her sister
+  Alice was beginning to get very weary of sitting by her sister
 on the bank, and of having nothing to do:  once or twice she had
 peeped into the book her sister was reading, but it had no
 pictures or conversations in it, `and what is the use of a book,'
@@ -3602,8 +3602,7 @@ loving heart of her childhood:  and how she would gather about
 her other little children, and make THEIR eyes bright and eager
 with many a strange tale, perhaps even with the dream of
 Wonderland of long ago:  and how she would feel with all their
-simple sorrows, and find a pleasure in all their simple joys,
+simple sorrows, and find fulfillment in all their simple joys,
 remembering her own child-life, and the happy summer days.
 
                              THE END
-
