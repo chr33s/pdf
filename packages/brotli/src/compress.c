@@ -15,28 +15,22 @@ size_t encodeWithDictionary(
     const uint8_t dictionary_buffer[BROTLI_ARRAY_PARAM(dictionary_size)],
     size_t encoded_size,
     uint8_t encoded_buffer[BROTLI_ARRAY_PARAM(encoded_size)]) {
-  BrotliEncoderState* state =
-      BrotliEncoderCreateInstance(NULL, NULL, NULL);
+  BrotliEncoderState* state = BrotliEncoderCreateInstance(NULL, NULL, NULL);
   if (state == NULL) {
     return 0;
   }
-  if (quality != BROTLI_DEFAULT_QUALITY &&
-      !BrotliEncoderSetParameter(state, BROTLI_PARAM_QUALITY, quality)) {
+  if (quality != BROTLI_DEFAULT_QUALITY && !BrotliEncoderSetParameter(state, BROTLI_PARAM_QUALITY, quality)) {
     BrotliEncoderDestroyInstance(state);
     return 0;
   }
-  if (lgwin != BROTLI_DEFAULT_WINDOW &&
-      !BrotliEncoderSetParameter(state, BROTLI_PARAM_LGWIN, lgwin)) {
+  if (lgwin != BROTLI_DEFAULT_WINDOW && !BrotliEncoderSetParameter(state, BROTLI_PARAM_LGWIN, lgwin)) {
     BrotliEncoderDestroyInstance(state);
     return 0;
   }
-#ifdef BROTLI_PARAM_SIZE_HINT
-  if (!BrotliEncoderSetParameter(state, BROTLI_PARAM_SIZE_HINT,
-                                 input_size)) {
+  if (mode != BROTLI_DEFAULT_MODE && !BrotliEncoderSetParameter(state, BROTLI_PARAM_MODE, mode)) {
     BrotliEncoderDestroyInstance(state);
     return 0;
   }
-#endif
   if (!input_size) {
     BrotliEncoderDestroyInstance(state);
     return 0;
@@ -45,27 +39,9 @@ size_t encodeWithDictionary(
     BrotliEncoderDestroyInstance(state);
     return 0;
   }
-#if defined(BROTLI_SHARED_DICTIONARY_RAW)
-  BrotliEncoderPreparedDictionary* prepared = NULL;
   if (dictionary_size) {
-    prepared = BrotliEncoderPrepareDictionary(
-        BROTLI_SHARED_DICTIONARY_RAW, dictionary_size,
-        dictionary_buffer, quality, NULL, NULL, NULL);
-    if (!prepared) {
-      BrotliEncoderDestroyInstance(state);
-      return 0;
-    }
-    if (!BrotliEncoderAttachPreparedDictionary(state, prepared)) {
-      BrotliEncoderDestroyInstance(state);
-      return 0;
-    }
+    BrotliEncoderSetCustomDictionary(state, dictionary_size, dictionary_buffer);
   }
-#else
-  if (dictionary_size) {
-    BrotliEncoderSetCustomDictionary(state, dictionary_size,
-                                     dictionary_buffer);
-  }
-#endif
   size_t available_in, available_out = 0, bytes_written = 0;
   BROTLI_BOOL result = BROTLI_TRUE;
   result = BrotliEncoderCompressStream(
@@ -89,9 +65,6 @@ size_t encodeWithDictionary(
     memcpy(encoded_buffer + initial_buffer_size, buffer, buffer_size);
     output_buffer_size += buffer_size;
   }
-#if defined(BROTLI_SHARED_DICTIONARY_RAW)
-  BrotliEncoderDestroyPreparedDictionary(prepared);
-#endif
   BrotliEncoderDestroyInstance(state);
   // Keeping all data in a buffer until the input stream is exhausted is
   // infeasible, so some data may have emitted when the error is reported.
