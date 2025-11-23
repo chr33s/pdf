@@ -1,5 +1,7 @@
 import brotliPromise from "./brotli.js";
 
+const brotliModule = await brotliPromise();
+
 /**
  * Compresses the given buffer
  * The second parameter is optional and specifies whether the buffer is
@@ -10,11 +12,11 @@ type DecompressOptions = {
   dictionary?: Uint8Array;
 };
 
-export const decompress = async function (
+export const decompress = function (
   buffer: Uint8Array,
   opts?: DecompressOptions,
-): Promise<Uint8Array | null> {
-  const brotli = (await brotliPromise()) as any;
+): Uint8Array | null {
+  const brotli = brotliModule as any;
   // allocate input buffer and copy data to it
   const inputPtr = brotli._malloc(buffer.length);
   brotli.HEAPU8.set(buffer, inputPtr);

@@ -1,5 +1,7 @@
 import brotliPromise from "./brotli.js";
 
+const brotliModule = await brotliPromise();
+
 type CompressOptions = {
   quality?: number;
   mode?: number;
@@ -15,11 +17,11 @@ const DEFAULT_PADDING = 1024;
  * text or binary data (the default is binary).
  * Returns null on error
  */
-export const compress = async function (
+export const compress = function (
   buffer: Uint8Array,
   opts?: CompressOptions | boolean,
-): Promise<Uint8Array | null> {
-  const brotli = await brotliPromise();
+): Uint8Array | null {
+  const brotli = brotliModule as any;
   // default to binary data
   let quality = 11;
   let mode = 0;

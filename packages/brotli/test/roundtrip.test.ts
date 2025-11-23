@@ -9,8 +9,8 @@ describe("roundtrip", async function () {
   files.forEach(async function (file) {
     it(file, async function () {
       const input = readFileSync(`data/${file}`);
-      const compressed = await compress(input);
-      const decompressed = await decompress(compressed!);
+      const compressed = compress(input);
+      const decompressed = decompress(compressed!);
       expect(input.length).toBe(decompressed!.length);
       expect(Buffer.from(decompressed!)).toStrictEqual(input);
     });

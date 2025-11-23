@@ -13,7 +13,7 @@ describe("decompress", async function () {
       const expected = readFileSync(
         `data/${file.replace(/\.compressed.*/, "")}`,
       );
-      const result = await decompress(compressed);
+      const result = decompress(compressed);
       expect(Buffer.from(result!)).toStrictEqual(expected);
     });
   });
@@ -22,7 +22,7 @@ describe("decompress", async function () {
     const data = zlib.brotliCompressSync(
       readFileSync("../dist/brotli.js").slice(0, 1024 * 4),
     );
-    const mod = await decompress(data);
+    const mod = decompress(data);
     const node = zlib.brotliDecompressSync(data);
     expect(Buffer.from(mod!)).toStrictEqual(node);
   });
