@@ -62,8 +62,8 @@ const getIndex = (
 ): number => lookup[key ?? ""] ?? 0;
 
 const srcDir = path.resolve(process.cwd(), "src");
-const trieFilePath = path.join(srcDir, "trie.ts");
-const dataFilePath = path.join(srcDir, "data.ts");
+const trieFilePath = path.join(srcDir, "trie.js");
+const dataFilePath = path.join(srcDir, "data.js");
 
 const categories: IndexLookup = Object.create(null);
 const combiningClasses: IndexLookup = Object.create(null);

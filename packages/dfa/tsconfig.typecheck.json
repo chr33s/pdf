@@ -10,7 +10,7 @@
   "exclude": [
     "dist",
     "node_modules",
-    "src/grammar.ts",
+    "src/grammar.js",
     "vendor"
   ]
 }

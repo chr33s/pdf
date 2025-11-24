@@ -8,7 +8,7 @@ const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, "..");
 const srcDir = path.join(projectRoot, "src");
 const grammarPath = path.join(srcDir, "grammar.peg");
-const outputPath = path.join(srcDir, "grammar.ts");
+const outputPath = path.join(srcDir, "grammar.js");
 
 async function buildGrammar(): Promise<void> {
   const grammar = await readFile(grammarPath, "utf8");

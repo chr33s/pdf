@@ -10,7 +10,7 @@
   "exclude": [
     "dist",
     "node_modules",
-    "src/data.ts",
-    "src/trie.ts"
+    "src/data.js",
+    "src/trie.js"
   ]
 }
