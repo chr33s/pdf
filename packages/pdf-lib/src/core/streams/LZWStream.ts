@@ -9,6 +9,10 @@
 import DecodeStream from "./DecodeStream.js";
 import { StreamType } from "./Stream.js";
 
+const MAX_CODE_LENGTH = 12;
+const INITIAL_CODE_LENGTH = 9;
+const MAX_DICTIONARY_SIZE = 1 << MAX_CODE_LENGTH;
+
 class LZWStream extends DecodeStream {
   #stream: StreamType;
   #cachedData: number;
@@ -36,10 +40,10 @@ class LZWStream extends DecodeStream {
     this.#cachedData = 0;
     this.#bitsCached = 0;
 
-    const maxLzwDictionarySize = 4096;
+    const maxLzwDictionarySize = MAX_DICTIONARY_SIZE;
     const lzwState = {
       earlyChange,
-      codeLength: 9,
+      codeLength: INITIAL_CODE_LENGTH,
       nextCode: 258,
       dictionaryValues: new Uint8Array(maxLzwDictionarySize),
       dictionaryLengths: new Uint16Array(maxLzwDictionarySize),
@@ -101,12 +105,17 @@ class LZWStream extends DecodeStream {
             currentSequence[j] = dictionaryValues[q];
             q = dictionaryPrevCodes[q];
           }
-        } else {
+        } else if (hasPrev) {
           currentSequence[currentSequenceLength++] = currentSequence[0];
+        } else {
+          this.eof = true;
+          this.#lzwState = undefined;
+          break;
         }
       } else if (code === 256) {
-        codeLength = 9;
+        codeLength = INITIAL_CODE_LENGTH;
         nextCode = 258;
+        prevCode = undefined;
         currentSequenceLength = 0;
         continue;
       } else {
@@ -115,18 +124,19 @@ class LZWStream extends DecodeStream {
         break;
       }
 
-      if (hasPrev) {
-        dictionaryPrevCodes[nextCode] = prevCode as number;
-        dictionaryLengths[nextCode] = dictionaryLengths[prevCode as number] + 1;
+      if (hasPrev && prevCode != null && nextCode < MAX_DICTIONARY_SIZE) {
+        dictionaryPrevCodes[nextCode] = prevCode;
+        dictionaryLengths[nextCode] = dictionaryLengths[prevCode] + 1;
         dictionaryValues[nextCode] = currentSequence[0];
         nextCode++;
-        codeLength =
-          (nextCode + earlyChange) & (nextCode + earlyChange - 1)
-            ? codeLength
-            : Math.min(
-                Math.log(nextCode + earlyChange) / 0.6931471805599453 + 1,
-                12,
-              ) | 0;
+
+        while (
+          codeLength < MAX_CODE_LENGTH &&
+          nextCode + earlyChange >= 1 << codeLength
+        ) {
+          // Increase bit-width as soon as the dictionary crosses the spec threshold.
+          codeLength++;
+        }
       }
       prevCode = code;
 
