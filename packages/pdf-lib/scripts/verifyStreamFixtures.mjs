@@ -834,15 +834,15 @@ async function main() {
   for (const dir of dataDirs) {
     const rel = relativePath(dir);
     if (rel.endsWith("core/streams/data")) {
-      await verifyStreamsData(dir);
+      verifyStreamsData(dir);
     } else if (rel.endsWith("core/embedders/data")) {
-      await verifyEmbeddersData(dir);
+      verifyEmbeddersData(dir);
     } else if (rel.endsWith("core/parser/data")) {
       await verifyParserData(dir);
     } else if (rel.endsWith("core/writers/data")) {
       await verifyWritersData(dir);
     } else if (rel.endsWith("utils/data")) {
-      await verifyUtilsData(dir);
+      verifyUtilsData(dir);
     } else {
       skipped.push(`${rel} (no verification logic)`);
     }

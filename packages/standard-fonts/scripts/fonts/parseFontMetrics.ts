@@ -35,41 +35,50 @@ type FontMetricEntry = {
   value: IFontMetrics[IFontMetricKey];
 };
 
+const parseString = (raw: string): string => raw;
+const parseNumber = (raw: string): number => Number(raw);
+const parseBoolean = (raw: string): boolean => Boolean(raw);
+const parseFontBBox = (raw: string): [number, number, number, number] =>
+  raw.split(" ").map(Number) as [number, number, number, number];
+
+const metricParsers: {
+  [K in IFontMetricKey]: (raw: string) => IFontMetrics[K];
+} = {
+  Comment: parseString,
+  FontName: parseString,
+  FullName: parseString,
+  FamilyName: parseString,
+  Weight: parseString,
+  CharacterSet: parseString,
+  Version: parseString,
+  Notice: parseString,
+  EncodingScheme: parseString,
+  ItalicAngle: parseNumber,
+  UnderlinePosition: parseNumber,
+  UnderlineThickness: parseNumber,
+  CapHeight: parseNumber,
+  XHeight: parseNumber,
+  Ascender: parseNumber,
+  Descender: parseNumber,
+  StdHW: parseNumber,
+  StdVW: parseNumber,
+  IsFixedPitch: parseBoolean,
+  FontBBox: parseFontBBox,
+};
+
+const isFontMetricKey = (value: string): value is IFontMetricKey =>
+  value in metricParsers;
+
 const parseFontMetric = (line: string): FontMetricEntry => {
-  const key = takeUntilFirstSpace(line) as IFontMetricKey;
+  const key = takeUntilFirstSpace(line);
   const rawValue = takeAfterFirstSpace(line).trim();
 
-  switch (key) {
-    case "Comment":
-    case "FontName":
-    case "FullName":
-    case "FamilyName":
-    case "Weight":
-    case "CharacterSet":
-    case "Version":
-    case "Notice":
-    case "EncodingScheme":
-      return { key, value: rawValue };
-    case "ItalicAngle":
-    case "UnderlinePosition":
-    case "UnderlineThickness":
-    case "CapHeight":
-    case "XHeight":
-    case "Ascender":
-    case "Descender":
-    case "StdHW":
-    case "StdVW":
-      return { key, value: Number(rawValue) as IFontMetrics[typeof key] };
-    case "IsFixedPitch":
-      return { key, value: Boolean(rawValue) as IFontMetrics[typeof key] };
-    case "FontBBox":
-      return {
-        key,
-        value: rawValue.split(" ").map(Number) as IFontMetrics[typeof key],
-      };
-    default:
-      return error(`Unrecognized font metric key: "${key}"`);
+  if (!isFontMetricKey(key)) {
+    return error(`Unrecognized font metric key: "${key}"`);
   }
+
+  const parse = metricParsers[key];
+  return { key, value: parse(rawValue) };
 };
 
 export const parseFontMetricsSection = (data: string): IFontMetrics => {
