@@ -6,7 +6,7 @@ import {
   beforeEach,
   describe,
   expect,
-  it,
+  test,
   vi,
 } from "vitest";
 import { PDFAttachment } from "../../src/api/pdf-document.js";
@@ -35,7 +35,7 @@ const unencryptedPdfBytes = fs.readFileSync("assets/pdfs/normal.pdf");
 const oldEncryptedPdfBytes1 = fs.readFileSync("assets/pdfs/encrypted_old.pdf");
 
 // Had to remove this file due to DMCA complaint, so commented this line out
-// along with the 2 tests that depend on it. Would be nice to find a new file
+// along with the 2 tests that depend on test. Would be nice to find a new file
 // that we could drop in here, but the tests are for non-critical functionality,
 // so this solution is okay for now.
 // const oldEncryptedPdfBytes2 = fs.readFileSync('pdf_specification.pdf');
@@ -76,7 +76,7 @@ describe("PDFDocument", () => {
       console.warn = origConsoleWarn;
     });
 
-    it("does not throw an error for unencrypted PDFs", async () => {
+    test("does not throw an error for unencrypted PDFs", async () => {
       const pdfDoc = await PDFDocument.load(unencryptedPdfBytes, {
         parseSpeed: ParseSpeeds.Fastest,
       });
@@ -84,7 +84,7 @@ describe("PDFDocument", () => {
       expect(pdfDoc.isEncrypted).toBe(false);
     });
 
-    it("throws an error for old encrypted PDFs (1)", async () => {
+    test("throws an error for old encrypted PDFs (1)", async () => {
       await expect(
         PDFDocument.load(oldEncryptedPdfBytes1, {
           parseSpeed: ParseSpeeds.Fastest,
@@ -92,7 +92,7 @@ describe("PDFDocument", () => {
       ).rejects.toThrow(new EncryptedPDFError());
     });
 
-    // it(`throws an error for old encrypted PDFs (2)`, async () => {
+    // test(`throws an error for old encrypted PDFs (2)`, async () => {
     //   await expect(
     //     PDFDocument.load(oldEncryptedPdfBytes2, {
     //       parseSpeed: ParseSpeeds.Fastest,
@@ -100,7 +100,7 @@ describe("PDFDocument", () => {
     //   ).rejects.toThrow(new EncryptedPDFError());
     // });
 
-    it("throws an error for new encrypted PDFs", async () => {
+    test("throws an error for new encrypted PDFs", async () => {
       await expect(
         PDFDocument.load(newEncryptedPdfBytes, {
           parseSpeed: ParseSpeeds.Fastest,
@@ -108,7 +108,7 @@ describe("PDFDocument", () => {
       ).rejects.toThrow(new EncryptedPDFError());
     });
 
-    it("does not throw an error for old encrypted PDFs when ignoreEncryption=true (1)", async () => {
+    test("does not throw an error for old encrypted PDFs when ignoreEncryption=true (1)", async () => {
       const pdfDoc = await PDFDocument.load(oldEncryptedPdfBytes1, {
         ignoreEncryption: true,
         parseSpeed: ParseSpeeds.Fastest,
@@ -117,7 +117,7 @@ describe("PDFDocument", () => {
       expect(pdfDoc.isEncrypted).toBe(true);
     });
 
-    // it(`does not throw an error for old encrypted PDFs when ignoreEncryption=true (2)`, async () => {
+    // test(`does not throw an error for old encrypted PDFs when ignoreEncryption=true (2)`, async () => {
     //   const pdfDoc = await PDFDocument.load(oldEncryptedPdfBytes2, {
     //     ignoreEncryption: true,
     //     parseSpeed: ParseSpeeds.Fastest,
@@ -126,7 +126,7 @@ describe("PDFDocument", () => {
     //   expect(pdfDoc.isEncrypted).toBe(true);
     // });
 
-    it("does not throw an error for new encrypted PDFs when ignoreEncryption=true", async () => {
+    test("does not throw an error for new encrypted PDFs when ignoreEncryption=true", async () => {
       const pdfDoc = await PDFDocument.load(newEncryptedPdfBytes, {
         ignoreEncryption: true,
         parseSpeed: ParseSpeeds.Fastest,
@@ -135,7 +135,7 @@ describe("PDFDocument", () => {
       expect(pdfDoc.isEncrypted).toBe(true);
     });
 
-    it("does not throw an error for invalid PDFs when throwOnInvalidObject=false", async () => {
+    test("does not throw an error for invalid PDFs when throwOnInvalidObject=false", async () => {
       await expect(
         PDFDocument.load(invalidObjectsPdfBytes, {
           ignoreEncryption: true,
@@ -145,7 +145,7 @@ describe("PDFDocument", () => {
       ).resolves.toBeInstanceOf(PDFDocument);
     });
 
-    it("throws an error for invalid PDFs when throwOnInvalidObject=true", async () => {
+    test("throws an error for invalid PDFs when throwOnInvalidObject=true", async () => {
       const expectedError = new Error(
         'Trying to parse invalid object: {"line":20,"column":13,"offset":126})',
       );
@@ -160,7 +160,7 @@ describe("PDFDocument", () => {
   });
 
   describe("embedFont() method", () => {
-    it("serializes the same value on every save", async () => {
+    test("serializes the same value on every save", async () => {
       const customFont = fs.readFileSync("assets/fonts/ubuntu/Ubuntu-B.ttf");
       const pdfDoc1 = await PDFDocument.create({ updateMetadata: false });
       const pdfDoc2 = await PDFDocument.create({ updateMetadata: false });
@@ -179,7 +179,7 @@ describe("PDFDocument", () => {
   });
 
   describe("setLanguage() method", () => {
-    it("sets the language of the document", async () => {
+    test("sets the language of the document", async () => {
       const pdfDoc = await PDFDocument.create();
       expect(pdfDoc.getLanguage()).toBeUndefined();
 
@@ -201,43 +201,43 @@ describe("PDFDocument", () => {
       pdfDoc = await PDFDocument.load(unencryptedPdfBytes, { parseSpeed });
     });
 
-    it("returns the initial page count of the document", () => {
+    test("returns the initial page count of the document", () => {
       expect(pdfDoc.getPageCount()).toBe(2);
     });
 
-    it("returns the updated page count after adding pages", () => {
+    test("returns the updated page count after adding pages", () => {
       pdfDoc.addPage();
       pdfDoc.addPage();
       expect(pdfDoc.getPageCount()).toBe(4);
     });
 
-    it("returns the updated page count after inserting pages", () => {
+    test("returns the updated page count after inserting pages", () => {
       pdfDoc.insertPage(0);
       pdfDoc.insertPage(4);
       expect(pdfDoc.getPageCount()).toBe(6);
     });
 
-    it("returns the updated page count after removing pages", () => {
+    test("returns the updated page count after removing pages", () => {
       pdfDoc.removePage(5);
       pdfDoc.removePage(0);
       expect(pdfDoc.getPageCount()).toBe(4);
     });
 
-    it("returns 0 for brand new documents", async () => {
+    test("returns 0 for brand new documents", async () => {
       const newDoc = await PDFDocument.create();
       expect(newDoc.getPageCount()).toBe(0);
     });
   });
 
   describe("addPage() method", () => {
-    it("Can insert pages in brand new documents", async () => {
+    test("Can insert pages in brand new documents", async () => {
       const pdfDoc = await PDFDocument.create();
       expect(pdfDoc.addPage()).toBeInstanceOf(PDFPage);
     });
   });
 
   describe("metadata getter methods", () => {
-    it("they can retrieve the title, author, subject, producer, creator, keywords, creation date, and modification date from a new document", async () => {
+    test("they can retrieve the title, author, subject, producer, creator, keywords, creation date, and modification date from a new document", async () => {
       const pdfDoc = await PDFDocument.create();
 
       // Everything is empty or has its initial value.
@@ -283,7 +283,7 @@ describe("PDFDocument", () => {
       expect(pdfDoc.getModificationDate()).toStrictEqual(modificationDate);
     });
 
-    it("they can retrieve the title, author, subject, producer, creator, and keywords from an existing document", async () => {
+    test("they can retrieve the title, author, subject, producer, creator, and keywords from an existing document", async () => {
       const pdfDoc = await PDFDocument.load(justMetadataPdfbytes);
 
       expect(pdfDoc.getTitle()).toBe(
@@ -303,7 +303,7 @@ describe("PDFDocument", () => {
       );
     });
 
-    it("they can retrieve the creation date and modification date from an existing document", async () => {
+    test("they can retrieve the creation date and modification date from an existing document", async () => {
       const pdfDoc = await PDFDocument.load(normalPdfBytes, {
         updateMetadata: false,
       });
@@ -318,7 +318,7 @@ describe("PDFDocument", () => {
   });
 
   describe("ViewerPreferences", () => {
-    it("defaults to an undefined ViewerPreferences dict", async () => {
+    test("defaults to an undefined ViewerPreferences dict", async () => {
       const pdfDoc = await PDFDocument.create();
 
       expect(
@@ -326,7 +326,7 @@ describe("PDFDocument", () => {
       ).toBeUndefined();
     });
 
-    it("can get/set HideToolbar, HideMenubar, HideWindowUI, FitWindow, CenterWindow, DisplayDocTitle, NonFullScreenPageMode, Direction, PrintScaling, Duplex, PickTrayByPDFSize, PrintPageRange, NumCopies from a new document", async () => {
+    test("can get/set HideToolbar, HideMenubar, HideWindowUI, FitWindow, CenterWindow, DisplayDocTitle, NonFullScreenPageMode, Direction, PrintScaling, Duplex, PickTrayByPDFSize, PrintPageRange, NumCopies from a new document", async () => {
       const pdfDoc = await PDFDocument.create();
       const viewerPrefs = pdfDoc.catalog.getOrCreateViewerPreferences();
 
@@ -389,7 +389,7 @@ describe("PDFDocument", () => {
       expect(viewerPrefs.getPrintPageRange()).toEqual([pageRange]);
     });
 
-    it("they can be retrieved from an existing document", async () => {
+    test("they can be retrieved from an existing document", async () => {
       const pdfDoc = await PDFDocument.load(withViewerPrefsPdfBytes);
       const viewerPrefs = pdfDoc.catalog.getViewerPreferences()!;
 
@@ -425,7 +425,7 @@ describe("PDFDocument", () => {
   });
 
   describe("setTitle() method with options", () => {
-    it("does not set the ViewerPreferences dict if the option is not set", async () => {
+    test("does not set the ViewerPreferences dict if the option is not set", async () => {
       const pdfDoc = await PDFDocument.create();
 
       pdfDoc.setTitle("Testing setTitle Title");
@@ -437,7 +437,7 @@ describe("PDFDocument", () => {
       expect(pdfDoc.getTitle()).toBe("Testing setTitle Title");
     });
 
-    it("creates the ViewerPreferences dict when the option is set", async () => {
+    test("creates the ViewerPreferences dict when the option is set", async () => {
       const pdfDoc = await PDFDocument.create();
 
       pdfDoc.setTitle("ViewerPrefs Test Creation", {
@@ -451,7 +451,7 @@ describe("PDFDocument", () => {
   });
 
   describe("addJavaScript() method", () => {
-    it("adds the script to the catalog", async () => {
+    test("adds the script to the catalog", async () => {
       const pdfDoc = await PDFDocument.create();
       pdfDoc.addJavaScript(
         "main",
@@ -468,7 +468,7 @@ describe("PDFDocument", () => {
       expect(JSNames.lookup(0, PDFHexString).decodeText()).toEqual("main");
     });
 
-    it("does not overwrite scripts", async () => {
+    test("does not overwrite scripts", async () => {
       const pdfDoc = await PDFDocument.create();
       pdfDoc.addJavaScript(
         "first",
@@ -489,7 +489,7 @@ describe("PDFDocument", () => {
   });
 
   describe("embedPng() method", () => {
-    it("does not prevent the PDFDocument from being modified after embedding an image", async () => {
+    test("does not prevent the PDFDocument from being modified after embedding an image", async () => {
       const pdfDoc = await PDFDocument.create();
       const pdfPage = pdfDoc.addPage();
 
@@ -509,7 +509,7 @@ describe("PDFDocument", () => {
   });
 
   describe("save() method", () => {
-    it("can called multiple times on the same PDFDocument with different changes", async () => {
+    test("can called multiple times on the same PDFDocument with different changes", async () => {
       const pdfDoc = await PDFDocument.create();
       const embeddedImage = await pdfDoc.embedPng(examplePngImage);
 
@@ -571,11 +571,11 @@ describe("PDFDocument", () => {
       pdfDoc = await srcDoc.copy();
     });
 
-    it("Returns a pdf with the same number of pages", async () => {
+    test("Returns a pdf with the same number of pages", async () => {
       expect(pdfDoc.getPageCount()).toBe(srcDoc.getPageCount());
     });
 
-    it("Can copy author, creationDate, creator, producer, subject, title, defaultWordBreaks", async () => {
+    test("Can copy author, creationDate, creator, producer, subject, title, defaultWordBreaks", async () => {
       expect(pdfDoc.getAuthor()).toBe(srcDoc.getAuthor());
       expect(pdfDoc.getCreationDate()).toStrictEqual(srcDoc.getCreationDate());
       expect(pdfDoc.getCreator()).toBe(srcDoc.getCreator());
@@ -590,7 +590,7 @@ describe("PDFDocument", () => {
   });
 
   describe("attach() method", () => {
-    it("Saves to the same value after attaching a file", async () => {
+    test("Saves to the same value after attaching a file", async () => {
       const pdfDoc1 = await PDFDocument.create({ updateMetadata: false });
       const pdfDoc2 = await PDFDocument.create({ updateMetadata: false });
 
@@ -637,7 +637,7 @@ describe("PDFDocument", () => {
   });
 
   describe("getAttachments() method", () => {
-    it("Can read attachments from an existing pdf file", async () => {
+    test("Can read attachments from an existing pdf file", async () => {
       const pdfDoc = await PDFDocument.load(hasAttachmentPdfBytes);
       const attachments = pdfDoc.getAttachments();
       expect(attachments.length).toEqual(2);
@@ -669,7 +669,7 @@ describe("PDFDocument", () => {
       expect(pdfAttachmentBytes).toEqual(Buffer.from(pdfAttachment.data));
     });
 
-    it("Can get saved and unsaved attachments", async () => {
+    test("Can get saved and unsaved attachments", async () => {
       const pdfDoc = await PDFDocument.load(hasAttachmentPdfBytes);
       const haiku = `Cradled in silence,
       sunlight warms the fragile shell —
@@ -793,11 +793,11 @@ describe("PDFDocument", () => {
         attachments = pdfDoc.getAttachments();
       });
 
-      it("should attach 3 attachments", () => {
+      test("should attach 3 attachments", () => {
         expect(attachments).toHaveLength(3);
       });
 
-      it("should attach data URL attachments", () => {
+      test("should attach data URL attachments", () => {
         const stringAttachments = attachments.filter(
           (a) => a.name === "string.txt",
         );
@@ -809,7 +809,7 @@ describe("PDFDocument", () => {
         expect(stringAttachments[0].description).toBe(description);
       });
 
-      it("should attach Uint8Array attachments", () => {
+      test("should attach Uint8Array attachments", () => {
         const stringAttachments = attachments.filter(
           (a) => a.name === "uint8array.txt",
         );
@@ -821,7 +821,7 @@ describe("PDFDocument", () => {
         expect(stringAttachments[0].description).toBe(description);
       });
 
-      it("should attach buffer attachments", () => {
+      test("should attach buffer attachments", () => {
         const stringAttachments = attachments.filter(
           (a) => a.name === "buffer.txt",
         );
@@ -836,7 +836,7 @@ describe("PDFDocument", () => {
   });
 
   describe("detach() method", () => {
-    it("removes the specified attachment", async () => {
+    test("removes the specified attachment", async () => {
       const pdfDoc = await PDFDocument.load(hasAttachmentPdfBytes);
       let attachments = pdfDoc.getAttachments();
       expect(attachments.length).toEqual(2);
@@ -851,7 +851,7 @@ describe("PDFDocument", () => {
       expect(attachments.length).toEqual(0);
     });
 
-    it("removes the attachment after saving", async () => {
+    test("removes the attachment after saving", async () => {
       const pdfDoc = await PDFDocument.load(hasAttachmentPdfBytes);
       await pdfDoc.attach(examplePngImage, "example.png", {
         mimeType: "image/png",
@@ -865,7 +865,7 @@ describe("PDFDocument", () => {
       expect(attachments.length).toEqual(2);
     });
 
-    it("does nothing if the specified attachment is not found", async () => {
+    test("does nothing if the specified attachment is not found", async () => {
       const pdfDoc = await PDFDocument.load(hasAttachmentPdfBytes);
       let attachments = pdfDoc.getAttachments();
       expect(attachments.length).toEqual(2);

@@ -4,7 +4,7 @@ import * as r from "@chr33s/restructure";
 import concat from "concat-stream";
 import assert from "node:assert";
 import fs from "node:fs";
-import { describe, it } from "vitest";
+import { describe, test } from "vitest";
 
 import CFFFont from "../src/cff/cff-font.js";
 import CFFGlyph from "../src/glyph/cff-glyph.js";
@@ -31,12 +31,12 @@ describe("font subsetting", function () {
       __dirname + "/data/OpenSans/OpenSans-Regular.ttf",
     );
 
-    it("should create a TTFSubset instance", function () {
+    test("should create a TTFSubset instance", function () {
       let subset = font.createSubset();
       assert.equal(subset.constructor.name, "TTFSubset");
     });
 
-    it("should produce a subset", async function () {
+    test("should produce a subset", async function () {
       let subset = font.createSubset();
       for (let glyph of font.glyphsForString("hello")) {
         subset.includeGlyph(glyph);
@@ -51,7 +51,7 @@ describe("font subsetting", function () {
       );
     });
 
-    it("should re-encode variation glyphs", async function () {
+    test("should re-encode variation glyphs", async function () {
       if (!fs.existsSync("/Library/Fonts/Skia.ttf")) {
         return;
       }
@@ -70,7 +70,7 @@ describe("font subsetting", function () {
       );
     });
 
-    it("should handle composite glyphs", async function () {
+    test("should handle composite glyphs", async function () {
       let subset = font.createSubset();
       subset.includeGlyph(font.glyphsForString("é")[0]);
 
@@ -89,12 +89,12 @@ describe("font subsetting", function () {
       __dirname + "/data/SourceSansPro/SourceSansPro-Regular.otf",
     );
 
-    it("should create a CFFSubset instance", function () {
+    test("should create a CFFSubset instance", function () {
       let subset = font.createSubset();
       return assert.equal(subset.constructor.name, "CFFSubset");
     });
 
-    it("should produce a subset", async function () {
+    test("should produce a subset", async function () {
       let subset = font.createSubset();
       let iterable = font.glyphsForString("hello");
       for (let i = 0; i < iterable.length; i++) {
@@ -112,7 +112,7 @@ describe("font subsetting", function () {
       );
     });
 
-    it("should handle CID fonts", async function () {
+    test("should handle CID fonts", async function () {
       let f = fontkit.openSync(
         __dirname + "/data/NotoSansCJK/NotoSansCJKkr-Regular.otf",
       );

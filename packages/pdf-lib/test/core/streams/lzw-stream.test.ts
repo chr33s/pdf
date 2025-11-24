@@ -1,5 +1,5 @@
 import fs from "node:fs";
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 
 import LZWStream from "../../../src/core/streams/lzw-stream.js";
 import Stream from "../../../src/core/streams/stream.js";
@@ -7,18 +7,16 @@ import Stream from "../../../src/core/streams/stream.js";
 const FILES = ["1", "2", "3", "4"];
 
 describe("LZWStream", () => {
-  FILES.forEach((file) => {
-    it(`can decode LZW encoded data (${file})`, () => {
-      const encoded = new Uint8Array(
-        fs.readFileSync(new URL(`./data/lzw/${file}.encoded`, import.meta.url)),
-      );
-      const decoded = new Uint8Array(
-        fs.readFileSync(new URL(`./data/lzw/${file}.decoded`, import.meta.url)),
-      );
+  test.each(FILES)("can decode LZW encoded data (%s)", (file) => {
+    const encoded = new Uint8Array(
+      fs.readFileSync(new URL(`./data/lzw/${file}.encoded`, import.meta.url)),
+    );
+    const decoded = new Uint8Array(
+      fs.readFileSync(new URL(`./data/lzw/${file}.decoded`, import.meta.url)),
+    );
 
-      const stream = new LZWStream(new Stream(encoded), undefined, 0);
+    const stream = new LZWStream(new Stream(encoded), undefined, 0);
 
-      expect(stream.decode()).toEqual(decoded);
-    });
+    expect(stream.decode()).toEqual(decoded);
   });
 });

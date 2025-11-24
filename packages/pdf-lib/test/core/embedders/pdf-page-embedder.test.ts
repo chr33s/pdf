@@ -1,5 +1,5 @@
 import fs from "node:fs";
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 import { PDFDocument } from "../../../src/api/index.js";
 import {
   PDFContext,
@@ -17,13 +17,13 @@ const examplePage = async () => {
 };
 
 describe("PDFPageEmbedder", () => {
-  it("can be constructed with PDFPageEmbedder.for(...)", async () => {
+  test("can be constructed with PDFPageEmbedder.for(...)", async () => {
     const page = await examplePage();
     const embedder = await PDFPageEmbedder.for(page.node);
     expect(embedder).toBeInstanceOf(PDFPageEmbedder);
   });
 
-  it("can embed PDF pages into PDFContexts with a predefined ref", async () => {
+  test("can embed PDF pages into PDFContexts with a predefined ref", async () => {
     const context = PDFContext.create();
     const predefinedRef = PDFRef.of(9999);
     const page = await examplePage();
@@ -36,7 +36,7 @@ describe("PDFPageEmbedder", () => {
     expect(ref).toBe(predefinedRef);
   });
 
-  it("can extract properties of the PDF page", async () => {
+  test("can extract properties of the PDF page", async () => {
     const page = await examplePage();
     const embedder = await PDFPageEmbedder.for(page.node);
 
@@ -51,7 +51,7 @@ describe("PDFPageEmbedder", () => {
     expect(embedder.height).toEqual(page.getHeight());
   });
 
-  it("calculates dimensions depending on the bounding box when given one", async () => {
+  test("calculates dimensions depending on the bounding box when given one", async () => {
     const page = await examplePage();
     const boundingBox = {
       left: 100,
@@ -65,7 +65,7 @@ describe("PDFPageEmbedder", () => {
     expect(embedder.height).toEqual(233);
   });
 
-  it("handles MediaBox coordinates in any order", async () => {
+  test("handles MediaBox coordinates in any order", async () => {
     const doc = await PDFDocument.create();
     const page = doc.addPage();
 
@@ -87,7 +87,7 @@ describe("PDFPageEmbedder", () => {
     expect(embedder.height).toBe(400); // top - bottom
   });
 
-  it("respects the provided bounding box for clipping", async () => {
+  test("respects the provided bounding box for clipping", async () => {
     const page = await examplePage();
 
     // Define a clipping region

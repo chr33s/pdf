@@ -1,9 +1,9 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 
 import { Encodings } from "../src/index.js";
 
 describe("Encodings", () => {
-  it("lists supported code points in ascending order", () => {
+  test("lists supported code points in ascending order", () => {
     const winAnsi = Encodings.WinAnsi;
     const { supportedCodePoints } = winAnsi;
 
@@ -13,7 +13,7 @@ describe("Encodings", () => {
     );
   });
 
-  it("encodes mapped code points and reports unsupported ones", () => {
+  test("encodes mapped code points and reports unsupported ones", () => {
     const encoding = Encodings.Symbol;
     const [firstSupported] = encoding.supportedCodePoints;
 

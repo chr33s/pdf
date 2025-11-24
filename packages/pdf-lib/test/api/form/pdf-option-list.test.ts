@@ -1,25 +1,25 @@
 import fs from "node:fs";
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 import { AnnotationFlags, PDFDocument } from "../../../src/index.js";
 
 const fancyFieldsPdfBytes = fs.readFileSync("assets/pdfs/fancy_fields.pdf");
 
 describe("PDFOptionList", () => {
-  it("can read its options", async () => {
+  test("can read its options", async () => {
     const pdfDoc = await PDFDocument.load(fancyFieldsPdfBytes);
     const form = pdfDoc.getForm();
     const planets = form.getOptionList("Which Are Planets? 🌎");
     expect(planets.getOptions()).toEqual(["Earth", "Mars", "Pluto", "Neptune"]);
   });
 
-  it("can read its selected value", async () => {
+  test("can read its selected value", async () => {
     const pdfDoc = await PDFDocument.load(fancyFieldsPdfBytes);
     const form = pdfDoc.getForm();
     const planets = form.getOptionList("Which Are Planets? 🌎");
     expect(planets.getSelected()).toEqual(["Mars"]);
   });
 
-  it("can clear its value", async () => {
+  test("can clear its value", async () => {
     const pdfDoc = await PDFDocument.load(fancyFieldsPdfBytes);
     const form = pdfDoc.getForm();
     const planets = form.getOptionList("Which Are Planets? 🌎");
@@ -27,7 +27,7 @@ describe("PDFOptionList", () => {
     expect(planets.getSelected()).toEqual([]);
   });
 
-  it("can select a single value", async () => {
+  test("can select a single value", async () => {
     const pdfDoc = await PDFDocument.load(fancyFieldsPdfBytes);
     const form = pdfDoc.getForm();
     const planets = form.getOptionList("Which Are Planets? 🌎");
@@ -35,7 +35,7 @@ describe("PDFOptionList", () => {
     expect(planets.getSelected()).toEqual(["Neptune"]);
   });
 
-  it("can select multiple values", async () => {
+  test("can select multiple values", async () => {
     const pdfDoc = await PDFDocument.load(fancyFieldsPdfBytes);
     const form = pdfDoc.getForm();
     const planets = form.getOptionList("Which Are Planets? 🌎");
@@ -43,14 +43,14 @@ describe("PDFOptionList", () => {
     expect(planets.getSelected()).toEqual(["Pluto", "Neptune"]);
   });
 
-  it("can't select a value not in the options list", async () => {
+  test("can't select a value not in the options list", async () => {
     const pdfDoc = await PDFDocument.load(fancyFieldsPdfBytes);
     const form = pdfDoc.getForm();
     const planets = form.getOptionList("Which Are Planets? 🌎");
     expect(() => planets.select("One Punch Man")).toThrow();
   });
 
-  it("can merge options when selecting", async () => {
+  test("can merge options when selecting", async () => {
     const pdfDoc = await PDFDocument.load(fancyFieldsPdfBytes);
     const form = pdfDoc.getForm();
     const planets = form.getOptionList("Which Are Planets? 🌎");
@@ -58,7 +58,7 @@ describe("PDFOptionList", () => {
     expect(planets.getSelected()).toEqual(["Mars", "Pluto"]);
   });
 
-  it("can read its flag states", async () => {
+  test("can read its flag states", async () => {
     const pdfDoc = await PDFDocument.load(fancyFieldsPdfBytes);
     const form = pdfDoc.getForm();
     const planets = form.getOptionList("Which Are Planets? 🌎");
@@ -71,7 +71,7 @@ describe("PDFOptionList", () => {
     expect(planets.isSorted()).toBe(false);
   });
 
-  it("produces printable widgets when added to a page", async () => {
+  test("produces printable widgets when added to a page", async () => {
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage();
 
@@ -87,7 +87,7 @@ describe("PDFOptionList", () => {
     expect(widgets()[0].hasFlag(AnnotationFlags.Print)).toBe(true);
   });
 
-  it("sets page reference when added to a page", async () => {
+  test("sets page reference when added to a page", async () => {
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage();
 

@@ -1,5 +1,5 @@
 import fs from "node:fs";
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 import {
   AnnotationFlags,
   PDFDocument,
@@ -9,7 +9,7 @@ import {
 const fancyFieldsPdfBytes = fs.readFileSync("assets/pdfs/fancy_fields.pdf");
 
 describe("PDFTextField", () => {
-  it("can read its value", async () => {
+  test("can read its value", async () => {
     const pdfDoc = await PDFDocument.load(fancyFieldsPdfBytes);
 
     const form = pdfDoc.getForm();
@@ -25,7 +25,7 @@ describe("PDFTextField", () => {
     expect(lastName.getText()).toEqual("Lightningtwirls");
   });
 
-  it("can read its alignment", async () => {
+  test("can read its alignment", async () => {
     const pdfDoc = await PDFDocument.load(fancyFieldsPdfBytes);
 
     const form = pdfDoc.getForm();
@@ -41,7 +41,7 @@ describe("PDFTextField", () => {
     expect(lastName.getAlignment()).toEqual(TextAlignment.Right);
   });
 
-  it("can write a value", async () => {
+  test("can write a value", async () => {
     const pdfDoc = await PDFDocument.load(fancyFieldsPdfBytes);
 
     const form = pdfDoc.getForm();
@@ -62,7 +62,7 @@ describe("PDFTextField", () => {
     expect(lastName.getText()).toEqual("And christmas trees! 🎄");
   });
 
-  it("can read its flag states", async () => {
+  test("can read its flag states", async () => {
     const pdfDoc = await PDFDocument.load(fancyFieldsPdfBytes);
     const form = pdfDoc.getForm();
     const prefix = form.getTextField("Prefix ⚽️");
@@ -79,7 +79,7 @@ describe("PDFTextField", () => {
     expect(prefix.isCombed()).toBe(false);
   });
 
-  it("throws an error when setting text that exceeds the max length", async () => {
+  test("throws an error when setting text that exceeds the max length", async () => {
     const pdfDoc = await PDFDocument.create();
     const form = pdfDoc.getForm();
     const textField = form.createTextField("foo.bar");
@@ -89,7 +89,7 @@ describe("PDFTextField", () => {
     expect(() => textField.setText("abcdef")).toThrow();
   });
 
-  it("throws an error when setting a max length less than the text length", async () => {
+  test("throws an error when setting a max length less than the text length", async () => {
     const pdfDoc = await PDFDocument.create();
     const form = pdfDoc.getForm();
     const textField = form.createTextField("foo.bar");
@@ -101,7 +101,7 @@ describe("PDFTextField", () => {
     expect(() => textField.setMaxLength(5)).toThrow();
   });
 
-  it("produces printable widgets when added to a page", async () => {
+  test("produces printable widgets when added to a page", async () => {
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage();
 
@@ -117,7 +117,7 @@ describe("PDFTextField", () => {
     expect(widgets()[0].hasFlag(AnnotationFlags.Print)).toBe(true);
   });
 
-  it("sets page reference when added to a page", async () => {
+  test("sets page reference when added to a page", async () => {
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage();
 
@@ -133,7 +133,7 @@ describe("PDFTextField", () => {
     expect(widgets()[0].P()).toBe(page.ref);
   });
 
-  it("sets the 'hidden' flag when passed options.hidden", async () => {
+  test("sets the 'hidden' flag when passed options.hidden", async () => {
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage();
     const form = pdfDoc.getForm();

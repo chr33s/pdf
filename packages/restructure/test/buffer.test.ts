@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 import {
   Buffer as BufferT,
   DecodeStream,
@@ -9,14 +9,14 @@ import { expectStream } from "./helpers.js";
 
 describe("Buffer", () => {
   describe("decode", () => {
-    it("should decode", () => {
+    test("should decode", () => {
       const stream = new DecodeStream(Buffer.from([0xab, 0xff, 0x1f, 0xb6]));
       const buf = new BufferT(2);
       expect(buf.decode(stream)).to.deep.equal(Buffer.from([0xab, 0xff]));
       expect(buf.decode(stream)).to.deep.equal(Buffer.from([0x1f, 0xb6]));
     });
 
-    it("should decode with parent key length", () => {
+    test("should decode with parent key length", () => {
       const stream = new DecodeStream(Buffer.from([0xab, 0xff, 0x1f, 0xb6]));
       const buf = new BufferT("len");
       expect(buf.decode(stream, { len: 3 })).to.deep.equal(
@@ -27,19 +27,19 @@ describe("Buffer", () => {
   });
 
   describe("size", () => {
-    it("should return size", () => {
+    test("should return size", () => {
       const buf = new BufferT(2);
       expect(buf.size(Buffer.from([0xab, 0xff]))).to.equal(2);
     });
 
-    it("should use defined length if no value given", () => {
+    test("should use defined length if no value given", () => {
       const array = new BufferT(10);
       expect(array.size()).to.equal(10);
     });
   });
 
   describe("encode", () => {
-    it("should encode", async () => {
+    test("should encode", async () => {
       const stream = new EncodeStream();
       const expectation = expectStream(stream, (buf) => {
         expect(buf).to.deep.equal(Buffer.from([0xab, 0xff, 0x1f, 0xb6]));
@@ -52,7 +52,7 @@ describe("Buffer", () => {
       await expectation;
     });
 
-    it("should encode length before buffer", async () => {
+    test("should encode length before buffer", async () => {
       const stream = new EncodeStream();
       const expectation = expectStream(stream, (buf) => {
         expect(buf).to.deep.equal(Buffer.from([2, 0xab, 0xff]));

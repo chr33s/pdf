@@ -1,5 +1,5 @@
 import fs from "node:fs";
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 import {
   PDFContext,
   PDFRawStream,
@@ -11,7 +11,7 @@ const readData = (file: string) =>
   new Uint8Array(fs.readFileSync(new URL(`./data/${file}`, import.meta.url)));
 
 describe("PDFXRefStreamParser", () => {
-  it("can parse XRef streams (1)", () => {
+  test("can parse XRef streams (1)", () => {
     const context = PDFContext.create();
     const dict = context.obj({
       DecodeParms: { Columns: 4, Predictor: 12 },
@@ -36,7 +36,7 @@ describe("PDFXRefStreamParser", () => {
     expect(inObjectStream.length).toBe(67);
   });
 
-  it("can parse XRef streams (2)", () => {
+  test("can parse XRef streams (2)", () => {
     const context = PDFContext.create();
     const dict = context.obj({
       DecodeParms: { Columns: 4, Predictor: 12 },
@@ -86,7 +86,7 @@ describe("PDFXRefStreamParser", () => {
     expect(inObjectStream.length).toBe(33);
   });
 
-  it("can parse XRef streams (3)", () => {
+  test("can parse XRef streams (3)", () => {
     const context = PDFContext.create();
     const dict = context.obj({
       DecodeParms: { Columns: 3, Predictor: 12 },
@@ -112,7 +112,7 @@ describe("PDFXRefStreamParser", () => {
     expect(inObjectStream.length).toBe(2);
   });
 
-  it("can parse XRef streams (4)", () => {
+  test("can parse XRef streams (4)", () => {
     const context = PDFContext.create();
     const dict = context.obj({
       Filter: "FlateDecode",
@@ -137,7 +137,7 @@ describe("PDFXRefStreamParser", () => {
     expect(inObjectStream.length).toBe(115);
   });
 
-  // it(`removes objects from the PDFContext that are marked as deleted`, () => {
+  // test(`removes objects from the PDFContext that are marked as deleted`, () => {
   //   const context = PDFContext.create();
   //   const dict = context.obj({
   //     DecodeParms: { Columns: 4, Predictor: 12 },
@@ -166,7 +166,7 @@ describe("PDFXRefStreamParser", () => {
   //   expect(context.lookup(barRef)).not.toBeUndefined();
   // });
 
-  it("prevents reparsing", () => {
+  test("prevents reparsing", () => {
     const context = PDFContext.create();
     const dict = context.obj({
       Filter: "FlateDecode",

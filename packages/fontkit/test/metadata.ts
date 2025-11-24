@@ -1,5 +1,5 @@
 import assert from "node:assert";
-import { describe, it } from "vitest";
+import { describe, test } from "vitest";
 
 import BBox from "../src/glyph/b-box.js";
 import fontkit from "./add-test-helpers-to-fontkit.js";
@@ -13,7 +13,7 @@ describe("metadata", function () {
     "NotoSans",
   );
 
-  it("has metadata properties", function () {
+  test("has metadata properties", function () {
     assert.equal(font.fullName, "Noto Sans");
     assert.equal(font.postscriptName, "NotoSans");
     assert.equal(font.familyName, "Noto Sans");
@@ -25,7 +25,7 @@ describe("metadata", function () {
     return assert.equal(font.version, "Version 1.05 uh");
   });
 
-  it("exposes some metrics", function () {
+  test("exposes some metrics", function () {
     assert.equal(font.unitsPerEm, 2048);
     assert.equal(font.ascent | 0, 2189);
     assert.equal(font.descent | 0, -600);
@@ -39,7 +39,7 @@ describe("metadata", function () {
     return assert.deepEqual(font.bbox, new BBox(-1268, -600, 2952, 2189));
   });
 
-  it("exposes tables directly", function () {
+  test("exposes tables directly", function () {
     let iterable = ["head", "hhea", "OS/2", "post"];
     for (let i = 0; i < iterable.length; i++) {
       let table = iterable[i];

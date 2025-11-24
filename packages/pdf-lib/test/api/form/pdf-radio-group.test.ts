@@ -1,5 +1,5 @@
 import fs from "node:fs";
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 import {
   AnnotationFlags,
   PDFArray,
@@ -11,7 +11,7 @@ import {
 const fancyFieldsPdfBytes = fs.readFileSync("assets/pdfs/fancy_fields.pdf");
 
 describe("PDFRadioGroup", () => {
-  it("can read its options", async () => {
+  test("can read its options", async () => {
     const pdfDoc = await PDFDocument.load(fancyFieldsPdfBytes);
     const form = pdfDoc.getForm();
     const historicalFigures = form.getRadioGroup("Historical Figures 🐺");
@@ -23,14 +23,14 @@ describe("PDFRadioGroup", () => {
     ]);
   });
 
-  it("can read its selected value", async () => {
+  test("can read its selected value", async () => {
     const pdfDoc = await PDFDocument.load(fancyFieldsPdfBytes);
     const form = pdfDoc.getForm();
     const historicalFigures = form.getRadioGroup("Historical Figures 🐺");
     expect(historicalFigures.getSelected()).toEqual("Marcus Aurelius 🏛️");
   });
 
-  it("can clear its value", async () => {
+  test("can clear its value", async () => {
     const pdfDoc = await PDFDocument.load(fancyFieldsPdfBytes);
     const form = pdfDoc.getForm();
     const historicalFigures = form.getRadioGroup("Historical Figures 🐺");
@@ -38,7 +38,7 @@ describe("PDFRadioGroup", () => {
     expect(historicalFigures.getSelected()).toBe(undefined);
   });
 
-  it("can select a value", async () => {
+  test("can select a value", async () => {
     const pdfDoc = await PDFDocument.load(fancyFieldsPdfBytes);
     const form = pdfDoc.getForm();
     const historicalFigures = form.getRadioGroup("Historical Figures 🐺");
@@ -46,7 +46,7 @@ describe("PDFRadioGroup", () => {
     expect(historicalFigures.getSelected()).toBe("Marie Curie ☢️");
   });
 
-  it("can read its flag states", async () => {
+  test("can read its flag states", async () => {
     const pdfDoc = await PDFDocument.load(fancyFieldsPdfBytes);
     const form = pdfDoc.getForm();
     const historicalFigures = form.getRadioGroup("Historical Figures 🐺");
@@ -58,7 +58,7 @@ describe("PDFRadioGroup", () => {
     expect(historicalFigures.isOffToggleable()).toBe(false);
   });
 
-  it("supports mutualExclusion=true", async () => {
+  test("supports mutualExclusion=true", async () => {
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage();
     const form = pdfDoc.getForm();
@@ -104,7 +104,7 @@ describe("PDFRadioGroup", () => {
     expect((opt.get(3) as PDFHexString).decodeText()).toBe("qux");
   });
 
-  it("supports mutualExclusion=false", async () => {
+  test("supports mutualExclusion=false", async () => {
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage();
     const form = pdfDoc.getForm();
@@ -150,7 +150,7 @@ describe("PDFRadioGroup", () => {
     expect((opt.get(3) as PDFHexString).decodeText()).toBe("qux");
   });
 
-  it("produces printable widgets when added to a page", async () => {
+  test("produces printable widgets when added to a page", async () => {
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage();
 
@@ -166,7 +166,7 @@ describe("PDFRadioGroup", () => {
     expect(widgets()[0].hasFlag(AnnotationFlags.Print)).toBe(true);
   });
 
-  it("sets page reference when added to a page", async () => {
+  test("sets page reference when added to a page", async () => {
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage();
 

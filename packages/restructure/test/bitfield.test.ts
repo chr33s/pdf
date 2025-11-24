@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 import { Bitfield, DecodeStream, EncodeStream, uint8 } from "../src/index.js";
 import { expectStream } from "./helpers.js";
 
@@ -19,11 +19,11 @@ describe("Bitfield", () => {
   const PACK = 1 << 6;
   const QUACK = 1 << 7;
 
-  it("should have the right size", () => {
+  test("should have the right size", () => {
     expect(bitfield.size()).to.equal(1);
   });
 
-  it("should decode", () => {
+  test("should decode", () => {
     const stream = new DecodeStream(
       Buffer.from([JACK | MACK | PACK | NACK | QUACK]),
     );
@@ -39,7 +39,7 @@ describe("Bitfield", () => {
     });
   });
 
-  it("should encode", async () => {
+  test("should encode", async () => {
     const stream = new EncodeStream();
     const expectation = expectStream(stream, (buf) => {
       expect(buf).to.deep.equal(

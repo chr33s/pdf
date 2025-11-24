@@ -1,4 +1,4 @@
-import { beforeAll, describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, test } from "vitest";
 
 import parser, { type CodePointTable } from "../src/parser.js";
 
@@ -9,7 +9,7 @@ beforeAll(() => {
 });
 
 describe("parser", () => {
-  it("loads metadata for basic Latin letters", () => {
+  test("loads metadata for basic Latin letters", () => {
     const capitalA = codePoints[0x0041];
     const smallA = codePoints[0x0061];
 
@@ -28,7 +28,7 @@ describe("parser", () => {
     expect(smallA?.uppercase).toEqual([0x0041]);
   });
 
-  it("marks compatibility decompositions and canonical compositions", () => {
+  test("marks compatibility decompositions and canonical compositions", () => {
     const noBreakSpace = codePoints[0x00a0];
     const combiningDiaeresis = codePoints[0x0308];
 
@@ -41,7 +41,7 @@ describe("parser", () => {
     expect(combiningDiaeresis?.compositions[0x0041]).toBe(0x00c4);
   });
 
-  it("applies derived metadata from supplemental files", () => {
+  test("applies derived metadata from supplemental files", () => {
     const combiningAcute = codePoints[0x0301];
     const aegeanSixtyThousand = codePoints[0x10130];
 
@@ -53,7 +53,7 @@ describe("parser", () => {
     expect(aegeanSixtyThousand?.numeric).toBe("60000");
   });
 
-  it("records normalization quick-check and conditional casing data", () => {
+  test("records normalization quick-check and conditional casing data", () => {
     const dottedCapitalI = codePoints[0x0130];
 
     expect(dottedCapitalI).toBeDefined();
@@ -65,7 +65,7 @@ describe("parser", () => {
     );
   });
 
-  it("fills in range entries and Arabic joining metadata", () => {
+  test("fills in range entries and Arabic joining metadata", () => {
     const cjkExtensionA = codePoints[0x3401];
     const arabicBeh = codePoints[0x0628];
 

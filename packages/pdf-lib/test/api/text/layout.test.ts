@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 
 import {
   PDFDocument,
@@ -12,7 +12,7 @@ const MIN_FONT_SIZE = 4;
 const MAX_FONT_SIZE = 500;
 
 describe("layoutMultilineText", () => {
-  it("should layout the text on one line when it fits near-perfectly", async () => {
+  test("should layout the text on one line when it fits near-perfectly", async () => {
     const pdfDoc = await PDFDocument.create();
     const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
     const alignment = TextAlignment.Left;
@@ -43,7 +43,7 @@ describe("layoutMultilineText", () => {
     }
   });
 
-  it("should layout the text on one line when it fits comfortably", async () => {
+  test("should layout the text on one line when it fits comfortably", async () => {
     const pdfDoc = await PDFDocument.create();
     const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
     const alignment = TextAlignment.Left;
@@ -74,7 +74,7 @@ describe("layoutMultilineText", () => {
     expect(multilineTextLayout.lines.length).toStrictEqual(1);
   });
 
-  it("should layout the text on multiple lines when it does not fit horizontally but there is space vertically", async () => {
+  test("should layout the text on multiple lines when it does not fit horizontally but there is space vertically", async () => {
     const pdfDoc = await PDFDocument.create();
     const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
     const alignment = TextAlignment.Left;
@@ -109,7 +109,7 @@ describe("layoutMultilineText", () => {
     }
   });
 
-  it("should never exceed the maximum font size", async () => {
+  test("should never exceed the maximum font size", async () => {
     const pdfDoc = await PDFDocument.create();
     const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
     const alignment = TextAlignment.Left;
@@ -137,7 +137,7 @@ describe("layoutMultilineText", () => {
     expect(multilineTextLayout.fontSize).toStrictEqual(MAX_FONT_SIZE);
   });
 
-  it("should respect empty lines", async () => {
+  test("should respect empty lines", async () => {
     const pdfDoc = await PDFDocument.create();
     const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
     const alignment = TextAlignment.Left;

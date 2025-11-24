@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 
 import {
   PDFContext,
@@ -10,7 +10,7 @@ import {
 } from "../../../src/index.js";
 
 describe("PDFWidgetAnnotation", () => {
-  it("returns undefined for missing (DAs)", () => {
+  test("returns undefined for missing (DAs)", () => {
     const context = PDFContext.create();
 
     const parentRef = context.nextRef();
@@ -20,7 +20,7 @@ describe("PDFWidgetAnnotation", () => {
     expect(widget.getDefaultAppearance()).toBe(undefined);
   });
 
-  it("returns normal direct appearance strings (DAs)", () => {
+  test("returns normal direct appearance strings (DAs)", () => {
     const context = PDFContext.create();
 
     const parentRef = context.nextRef();
@@ -30,7 +30,7 @@ describe("PDFWidgetAnnotation", () => {
     expect(widget.getDefaultAppearance()).toBe("/ZaDb 10 Tf 0 g");
   });
 
-  it("returns hexadecimal (non-standard) direct appearance strings (DAs)", () => {
+  test("returns hexadecimal (non-standard) direct appearance strings (DAs)", () => {
     const context = PDFContext.create();
 
     const parentRef = context.nextRef();

@@ -1,15 +1,15 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, test } from "vitest";
 
 import Stream from "../../../src/core/streams/stream.js";
 
 describe("Stream", () => {
-  it("can get the stream length", () => {
+  test("can get the stream length", () => {
     const bytes = Uint8Array.from([1, 1, 2]);
     const stream = new Stream(bytes, 0, bytes.length);
     expect(stream.length).toEqual(3);
   });
 
-  it("can detect when the stream is empty", () => {
+  test("can detect when the stream is empty", () => {
     const stream = new Stream(Uint8Array.from([]), 0, 0);
     expect(stream.isEmpty).toEqual(true);
   });
@@ -17,12 +17,12 @@ describe("Stream", () => {
   describe("can get the bytes from a stream", () => {
     const bytes = Uint8Array.from([1, 1, 2]);
 
-    it("when the current position is at or after the end", () => {
+    test("when the current position is at or after the end", () => {
       const stream = new Stream(bytes, 5);
       expect(stream.getByte()).toEqual(-1);
     });
 
-    it("when the current position is before the end", () => {
+    test("when the current position is before the end", () => {
       const stream = new Stream(bytes, 0);
       for (let pos = 0; pos < bytes.length; pos++) {
         expect(stream.getByte()).toEqual(bytes[pos]);
@@ -30,13 +30,13 @@ describe("Stream", () => {
     });
   });
 
-  it("can get unsigned sixteen bit integers", () => {
+  test("can get unsigned sixteen bit integers", () => {
     const stream = new Stream(Uint8Array.from([1, 1, 2, 2]));
     expect(stream.getUint16()).toEqual(257);
     expect(stream.getUint16()).toEqual(514);
   });
 
-  it("can get thirty-two bit integers", () => {
+  test("can get thirty-two bit integers", () => {
     const bytes = Uint8Array.from([1, 1, 1, 1, 255, 255, 255, 255, 2, 2, 2, 2]);
     const stream = new Stream(bytes);
     expect(stream.getInt32()).toEqual(16843009);
@@ -53,11 +53,11 @@ describe("Stream", () => {
     });
 
     describe("when zero length is specified", () => {
-      it("and the values are not clamped", () => {
+      test("and the values are not clamped", () => {
         expect(stream.getBytes(0, false)).toEqual(bytes);
       });
 
-      it("and the values are clamped", () => {
+      test("and the values are clamped", () => {
         const gottenBytes = stream.getBytes(0, true);
         expect(gottenBytes instanceof Uint8ClampedArray).toEqual(true);
         expect(gottenBytes.length).toEqual(stream.length);
@@ -67,12 +67,12 @@ describe("Stream", () => {
       });
     });
 
-    it("when a non-zero length is specified", () => {
+    test("when a non-zero length is specified", () => {
       expect(stream.getBytes(2, false)).toEqual(bytes.subarray(0, 2));
     });
   });
 
-  it("can peek at the next byte", () => {
+  test("can peek at the next byte", () => {
     const stream = new Stream(Uint8Array.from([1, 2]));
     expect(stream.peekByte()).toEqual(1);
     expect(stream.peekByte()).toEqual(1);
@@ -86,11 +86,11 @@ describe("Stream", () => {
       stream = new Stream(bytes);
     });
 
-    it("when the values are not clamped", () => {
+    test("when the values are not clamped", () => {
       expect(stream.peekBytes(3, false)).toEqual(bytes);
     });
 
-    it("when the values are clamped", () => {
+    test("when the values are clamped", () => {
       const peekedBytes = stream.peekBytes(3, true);
       expect(peekedBytes instanceof Uint8ClampedArray).toEqual(true);
       expect(peekedBytes.length).toEqual(3);
@@ -100,7 +100,7 @@ describe("Stream", () => {
     });
   });
 
-  it("can skip bytes", () => {
+  test("can skip bytes", () => {
     const stream = new Stream(Uint8Array.from([1, 2]));
     stream.skip(1);
     expect(stream.peekByte()).toEqual(2);
@@ -108,21 +108,21 @@ describe("Stream", () => {
     expect(stream.peekByte()).toEqual(-1);
   });
 
-  it("can reset the position pointer", () => {
+  test("can reset the position pointer", () => {
     const stream = new Stream(Uint8Array.from([1, 2]));
     stream.skip(1);
     stream.reset();
     expect(stream.peekByte()).toEqual(1);
   });
 
-  it("can create a substream", () => {
+  test("can create a substream", () => {
     const stream = new Stream(Uint8Array.from([1, 2, 3]));
     const substream = stream.makeSubStream(1, 4);
     expect(substream.length).toEqual(4);
     expect(substream.peekByte()).toEqual(2);
   });
 
-  it("can decode to bytes", () => {
+  test("can decode to bytes", () => {
     const bytes = Uint8Array.from([1, 2, 3]);
     const stream = new Stream(bytes);
     expect(stream.decode()).toEqual(bytes);

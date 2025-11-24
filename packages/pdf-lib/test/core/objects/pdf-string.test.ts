@@ -1,16 +1,16 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 
 import { PDFString } from "../../../src/core/index.js";
 import { toCharCode, typedArrayFor } from "../../../src/utils/index.js";
 
 describe("PDFString", () => {
-  it("can be constructed from PDFString.of(...)", () => {
+  test("can be constructed from PDFString.of(...)", () => {
     expect(PDFString.of("foobar")).toBeInstanceOf(PDFString);
     expect(PDFString.of(" (foo(bar))")).toBeInstanceOf(PDFString);
     expect(PDFString.of(")b\\a/z(")).toBeInstanceOf(PDFString);
   });
 
-  it("can be constructed from a Date object", () => {
+  test("can be constructed from a Date object", () => {
     const date1 = new Date("2018-06-24T01:58:37.228Z");
     expect(String(PDFString.fromDate(date1))).toBe("(D:20180624015837Z)");
 
@@ -18,14 +18,14 @@ describe("PDFString", () => {
     expect(String(PDFString.fromDate(date2))).toBe("(D:20191221070011Z)");
   });
 
-  it("can be converted to a string", () => {
+  test("can be converted to a string", () => {
     expect(PDFString.of("foobar").asString()).toBe("foobar");
 
     const date = new Date("2018-06-24T01:58:37.228Z");
     expect(PDFString.fromDate(date).asString()).toBe("D:20180624015837Z");
   });
 
-  it("can be cloned", () => {
+  test("can be cloned", () => {
     const original = PDFString.of(")b\\a/z(");
     const clone = original.clone();
     expect(clone).not.toBe(original);
@@ -33,21 +33,21 @@ describe("PDFString", () => {
   });
 
   describe("conversion to string", () => {
-    it("can be converted to a string", () => {
+    test("can be converted to a string", () => {
       expect(String(PDFString.of("foobar"))).toBe("(foobar)");
     });
 
-    it("does not escape backslashes", () => {
+    test("does not escape backslashes", () => {
       expect(String(PDFString.of("Foo\\Bar\\Qux"))).toBe("(Foo\\Bar\\Qux)");
     });
 
-    it("does not escape nested parenthesis", () => {
+    test("does not escape nested parenthesis", () => {
       expect(String(PDFString.of("(Foo((Bar))Qux)"))).toBe("((Foo((Bar))Qux))");
     });
   });
 
   describe("converting to bytes", () => {
-    it("can interpret escaped octal codes", () => {
+    test("can interpret escaped octal codes", () => {
       const literal =
         "\\376\\377\\000\\105\\000\\147\\000\\147\\000\\040\\330\\074\\337\\163";
 
@@ -63,7 +63,7 @@ describe("PDFString", () => {
       ));
     });
 
-    it("can interpret ASCII symbols", () => {
+    test("can interpret ASCII symbols", () => {
       const literal = "\\376\\377\0E\0g\0g\0 \\330<\\337s";
 
       // prettier-ignore
@@ -78,7 +78,7 @@ describe("PDFString", () => {
       ));
     });
 
-    it("can ignore line breaks", () => {
+    test("can ignore line breaks", () => {
       const literal = "\\376\\377\0E\\\n\\0g\0g\0 \\330<\\337s";
 
       // prettier-ignore
@@ -93,7 +93,7 @@ describe("PDFString", () => {
       ));
     });
 
-    it("can interpret EOLs and line breaks", () => {
+    test("can interpret EOLs and line breaks", () => {
       const literal = "a\nb\rc\\\nd\\\re";
 
       // prettier-ignore
@@ -105,7 +105,7 @@ describe("PDFString", () => {
       ));
     });
 
-    it("can interpret invalid escapes", () => {
+    test("can interpret invalid escapes", () => {
       const literal = "a\nb\rc\\xd\\;";
 
       // prettier-ignore
@@ -119,46 +119,46 @@ describe("PDFString", () => {
   });
 
   describe("decoding to string", () => {
-    it("can interpret UTF-16BE strings with escaped octal codes", () => {
+    test("can interpret UTF-16BE strings with escaped octal codes", () => {
       const literal =
         "\\376\\377\\000\\105\\000\\147\\000\\147\\000\\040\\330\\074\\337\\163";
       expect(PDFString.of(literal).decodeText()).toBe("Egg 🍳");
     });
 
-    it("can interpret UTF-16BE strings with ASCII symbols", () => {
+    test("can interpret UTF-16BE strings with ASCII symbols", () => {
       const literal = "\\376\\377\0E\0g\0g\0 \\330<\\337s";
       expect(PDFString.of(literal).decodeText()).toBe("Egg 🍳");
     });
 
-    it("can interpret UTF-16BE strings with line breaks", () => {
+    test("can interpret UTF-16BE strings with line breaks", () => {
       const literal = "\\376\\377\0E\\\n\\0g\0g\0 \\330<\\337s";
       expect(PDFString.of(literal).decodeText()).toBe("Egg 🍳");
     });
 
-    it("can interpret UTF-16LE strings with escaped octal codes", () => {
+    test("can interpret UTF-16LE strings with escaped octal codes", () => {
       const literal =
         "\\377\\376\\105\\000\\147\\000\\147\\000\\040\\000\\074\\330\\163\\337";
       expect(PDFString.of(literal).decodeText()).toBe("Egg 🍳");
     });
 
-    it("can interpret PDFDocEncoded strings", () => {
+    test("can interpret PDFDocEncoded strings", () => {
       const literal = "a\\105b\\163\\0b6";
       expect(PDFString.of(literal).decodeText()).toBe("aEbs\0b6");
     });
 
-    it("can interpret PDFDocEncoded strings with EOLs and line breaks", () => {
+    test("can interpret PDFDocEncoded strings with EOLs and line breaks", () => {
       const literal = "a\nb\rc\\\nd\\\re";
       expect(PDFString.of(literal).decodeText()).toBe("a\nb\rcde");
     });
 
-    it("can interpret PDFDocEncoded strings with ignored escapes", () => {
+    test("can interpret PDFDocEncoded strings with ignored escapes", () => {
       const literal = "a\nb\rc\\xd\\;";
       expect(PDFString.of(literal).decodeText()).toBe("a\nb\rcxd;");
     });
   });
 
   describe("decoding to date", () => {
-    it("can interpret date strings of the form D:YYYYMMDDHHmmSSOHH'mm", () => {
+    test("can interpret date strings of the form D:YYYYMMDDHHmmSSOHH'mm", () => {
       expect(PDFString.of("D:20200321165011+01'01").decodeDate()).toStrictEqual(
         new Date("2020-03-21T15:49:11Z"),
       );
@@ -170,7 +170,7 @@ describe("PDFString", () => {
       );
     });
 
-    it("can interpret date strings of the form D:YYYYMMDDHHmmSSOHH", () => {
+    test("can interpret date strings of the form D:YYYYMMDDHHmmSSOHH", () => {
       expect(PDFString.of("D:20200321165011+01").decodeDate()).toStrictEqual(
         new Date("2020-03-21T15:50:11Z"),
       );
@@ -182,56 +182,56 @@ describe("PDFString", () => {
       );
     });
 
-    it("can interpret date strings of the form D:YYYYMMDDHHmmSSO", () => {
+    test("can interpret date strings of the form D:YYYYMMDDHHmmSSO", () => {
       expect(PDFString.of("D:20200321165011Z").decodeDate()).toStrictEqual(
         new Date("2020-03-21T16:50:11Z"),
       );
     });
 
-    it("can interpret date strings of the form D:YYYYMMDDHHmmSS", () => {
+    test("can interpret date strings of the form D:YYYYMMDDHHmmSS", () => {
       expect(PDFString.of("D:20200321165011").decodeDate()).toStrictEqual(
         new Date("2020-03-21T16:50:11Z"),
       );
     });
 
-    it("can interpret date strings of the form D:YYYYMMDDHHmm", () => {
+    test("can interpret date strings of the form D:YYYYMMDDHHmm", () => {
       expect(PDFString.of("D:202003211650").decodeDate()).toStrictEqual(
         new Date("2020-03-21T16:50:00Z"),
       );
     });
 
-    it("can interpret date strings of the form D:YYYYMMDDHH", () => {
+    test("can interpret date strings of the form D:YYYYMMDDHH", () => {
       expect(PDFString.of("D:2020032116").decodeDate()).toStrictEqual(
         new Date("2020-03-21T16:00:00Z"),
       );
     });
 
-    it("can interpret date strings of the form D:YYYYMMDD", () => {
+    test("can interpret date strings of the form D:YYYYMMDD", () => {
       expect(PDFString.of("D:20200321").decodeDate()).toStrictEqual(
         new Date("2020-03-21T00:00:00Z"),
       );
     });
 
-    it("can interpret date strings of the form D:YYYYMM", () => {
+    test("can interpret date strings of the form D:YYYYMM", () => {
       expect(PDFString.of("D:202003").decodeDate()).toStrictEqual(
         new Date("2020-03-01T00:00:00Z"),
       );
     });
 
-    it("can interpret date strings of the form D:YYYY", () => {
+    test("can interpret date strings of the form D:YYYY", () => {
       expect(PDFString.of("D:2020").decodeDate()).toStrictEqual(
         new Date("2020-01-01T00:00:00Z"),
       );
     });
   });
 
-  it("can provide its size in bytes", () => {
+  test("can provide its size in bytes", () => {
     expect(PDFString.of("foobar").sizeInBytes()).toBe(8);
     expect(PDFString.of(" (foo(bar))").sizeInBytes()).toBe(13);
     expect(PDFString.of(")b\\a/z(").sizeInBytes()).toBe(9);
   });
 
-  it("can be serialized", () => {
+  test("can be serialized", () => {
     const buffer = new Uint8Array(20).fill(toCharCode(" "));
     expect(PDFString.of(")(b\\a/))z(").copyBytesInto(buffer, 3)).toBe(12);
     expect(buffer).toEqual(typedArrayFor("   ()(b\\a/))z()     "));

@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 
 import { pdfDocEncodingDecode, range } from "../../src/utils/index.js";
 
@@ -63,7 +63,7 @@ const mappings: Mapping[] = [
 ];
 
 describe("pdfDocEncodingDecode", () => {
-  it("maps all PDFDocEncoding codes from 0-255 to the correct Unicode code points", () => {
+  test("maps all PDFDocEncoding codes from 0-255 to the correct Unicode code points", () => {
     // Make sure we have defined mappings for all codes from 0-255
     expect(mappings.map(([code]) => code).sort((a, b) => a - b)).toEqual(
       range(0, 256),

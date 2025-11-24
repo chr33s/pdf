@@ -1,5 +1,5 @@
 import pako from "pako";
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 
 import {
   PDFArray,
@@ -17,7 +17,7 @@ import {
 import { mergeIntoTypedArray } from "../../src/utils/index.js";
 
 describe("PDFContext", () => {
-  it("retains assigned objects", () => {
+  test("retains assigned objects", () => {
     const context = PDFContext.create();
 
     const pdfBool = PDFBool.True;
@@ -48,18 +48,18 @@ describe("PDFContext", () => {
     expect(context.lookup(PDFRef.of(7))).toBe(pdfArray);
   });
 
-  it("does not use object number 0 during registration", () => {
+  test("does not use object number 0 during registration", () => {
     const context = PDFContext.create();
     expect(context.register(PDFBool.True)).toBe(PDFRef.of(1));
   });
 
-  it("returns the given object during lookup if it is not a PDFRef", () => {
+  test("returns the given object during lookup if it is not a PDFRef", () => {
     const context = PDFContext.create();
     const pdfNumber = PDFNumber.of(21);
     expect(context.lookup(pdfNumber)).toBe(pdfNumber);
   });
 
-  it("assigns the next highest object number during registration", () => {
+  test("assigns the next highest object number during registration", () => {
     const context = PDFContext.create();
 
     const pdfBool = PDFBool.True;
@@ -77,7 +77,7 @@ describe("PDFContext", () => {
     expect(context.lookup(numberRef)).toBe(pdfNumber);
   });
 
-  it("stream creation", () => {
+  test("stream creation", () => {
     const context = PDFContext.create();
 
     const stream = context.flateStream("stuff and things!");
@@ -100,14 +100,14 @@ describe("PDFContext", () => {
   describe("literal conversions", () => {
     const context = PDFContext.create();
 
-    it("converts null literals to the PDFNull instance", () => {
+    test("converts null literals to the PDFNull instance", () => {
       const literal = null;
       const obj = context.obj(literal);
       expect(obj).toBe(PDFNull);
       expect(context.getLiteral(obj)).toBe(literal);
     });
 
-    it("converts string literals to PDFName instances", () => {
+    test("converts string literals to PDFName instances", () => {
       const literal = "foobar";
       const obj = context.obj(literal);
       expect(obj).toBeInstanceOf(PDFName);
@@ -115,7 +115,7 @@ describe("PDFContext", () => {
       expect(context.getLiteral(obj)).toBe(literal);
     });
 
-    it("converts number literals to PDFNumber instances", () => {
+    test("converts number literals to PDFNumber instances", () => {
       const literal = -21.4e-3;
       const obj = context.obj(literal);
       expect(obj).toBeInstanceOf(PDFNumber);
@@ -123,14 +123,14 @@ describe("PDFContext", () => {
       expect(context.getLiteral(obj)).toBe(literal);
     });
 
-    it("converts boolean literals to PDFBool instances", () => {
+    test("converts boolean literals to PDFBool instances", () => {
       expect(context.obj(true)).toBe(PDFBool.True);
       expect(context.getLiteral(PDFBool.True)).toBe(true);
       expect(context.obj(false)).toBe(PDFBool.False);
       expect(context.getLiteral(PDFBool.False)).toBe(false);
     });
 
-    it("converts array literals to PDFArray instances", () => {
+    test("converts array literals to PDFArray instances", () => {
       const array = [
         PDFRef.of(21),
         true,
@@ -148,7 +148,7 @@ describe("PDFContext", () => {
       expect(context.getLiteral(obj)).toEqual(array);
     });
 
-    it("converts object literals to PDFDict instances", () => {
+    test("converts object literals to PDFDict instances", () => {
       const dict = {
         Ref: PDFRef.of(21),
         Boolean: true,
@@ -176,7 +176,7 @@ describe("PDFContext", () => {
       expect(context.getLiteral(obj)).toEqual(dict);
     });
 
-    it("converts PDFObject instances to their literal representation", () => {
+    test("converts PDFObject instances to their literal representation", () => {
       const dict = {
         Ref: PDFRef.of(21),
         Boolean: true,
@@ -219,7 +219,7 @@ describe("PDFContext", () => {
     });
   });
 
-  it('can provide a reference to a "pushGraphicsState" content stream', () => {
+  test('can provide a reference to a "pushGraphicsState" content stream', () => {
     const context = PDFContext.create();
     expect(context.enumerateIndirectObjects().length).toBe(0);
 
@@ -235,7 +235,7 @@ describe("PDFContext", () => {
     expect(context.lookup(ref1)).toBeInstanceOf(PDFContentStream);
   });
 
-  it('can provide a reference to a "popGraphicsState" content stream', () => {
+  test('can provide a reference to a "popGraphicsState" content stream', () => {
     const context = PDFContext.create();
     expect(context.enumerateIndirectObjects().length).toBe(0);
 

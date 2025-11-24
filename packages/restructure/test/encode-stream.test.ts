@@ -1,9 +1,9 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 import { EncodeStream } from "../src/index.js";
 import { expectStream } from "./helpers.js";
 
 describe("EncodeStream", () => {
-  it("should write a buffer", async () => {
+  test("should write a buffer", async () => {
     const stream = new EncodeStream();
     const expectation = expectStream(stream, (buf) => {
       expect(buf).to.deep.equal(Buffer.from([1, 2, 3]));
@@ -14,7 +14,7 @@ describe("EncodeStream", () => {
     await expectation;
   });
 
-  it("should writeUInt16BE", async () => {
+  test("should writeUInt16BE", async () => {
     const stream = new EncodeStream();
     const expectation = expectStream(stream, (buf) => {
       expect(buf).to.deep.equal(Buffer.from([0xab, 0xcd]));
@@ -25,7 +25,7 @@ describe("EncodeStream", () => {
     await expectation;
   });
 
-  it("should writeUInt16LE", async () => {
+  test("should writeUInt16LE", async () => {
     const stream = new EncodeStream();
     const expectation = expectStream(stream, (buf) => {
       expect(buf).to.deep.equal(Buffer.from([0xab, 0xcd]));
@@ -36,7 +36,7 @@ describe("EncodeStream", () => {
     await expectation;
   });
 
-  it("should writeUInt24BE", async () => {
+  test("should writeUInt24BE", async () => {
     const stream = new EncodeStream();
     const expectation = expectStream(stream, (buf) => {
       expect(buf).to.deep.equal(Buffer.from([0xab, 0xcd, 0xef]));
@@ -47,7 +47,7 @@ describe("EncodeStream", () => {
     await expectation;
   });
 
-  it("should writeUInt24LE", async () => {
+  test("should writeUInt24LE", async () => {
     const stream = new EncodeStream();
     const expectation = expectStream(stream, (buf) => {
       expect(buf).to.deep.equal(Buffer.from([0xef, 0xcd, 0xab]));
@@ -58,7 +58,7 @@ describe("EncodeStream", () => {
     await expectation;
   });
 
-  it("should writeInt24BE", async () => {
+  test("should writeInt24BE", async () => {
     const stream = new EncodeStream();
     const expectation = expectStream(stream, (buf) => {
       expect(buf).to.deep.equal(
@@ -72,7 +72,7 @@ describe("EncodeStream", () => {
     await expectation;
   });
 
-  it("should writeInt24LE", async () => {
+  test("should writeInt24LE", async () => {
     const stream = new EncodeStream();
     const expectation = expectStream(stream, (buf) => {
       expect(buf).to.deep.equal(
@@ -86,7 +86,7 @@ describe("EncodeStream", () => {
     await expectation;
   });
 
-  it("should fill", async () => {
+  test("should fill", async () => {
     const stream = new EncodeStream();
     const expectation = expectStream(stream, (buf) => {
       expect(buf).to.deep.equal(Buffer.from([10, 10, 10, 10, 10]));
@@ -98,7 +98,7 @@ describe("EncodeStream", () => {
   });
 
   describe("writeString", () => {
-    it("should encode ascii by default", async () => {
+    test("should encode ascii by default", async () => {
       const stream = new EncodeStream();
       const expected = Buffer.from("some text", "ascii");
       const expectation = expectStream(stream, (buf) => {
@@ -110,7 +110,7 @@ describe("EncodeStream", () => {
       await expectation;
     });
 
-    it("should encode ascii", async () => {
+    test("should encode ascii", async () => {
       const stream = new EncodeStream();
       const expected = Buffer.from("some text", "ascii");
       const expectation = expectStream(stream, (buf) => {
@@ -122,7 +122,7 @@ describe("EncodeStream", () => {
       await expectation;
     });
 
-    it("should encode utf8", async () => {
+    test("should encode utf8", async () => {
       const stream = new EncodeStream();
       const expected = Buffer.from("unicode! 👍", "utf8");
       const expectation = expectStream(stream, (buf) => {
@@ -134,7 +134,7 @@ describe("EncodeStream", () => {
       await expectation;
     });
 
-    it("should encode utf16le", async () => {
+    test("should encode utf16le", async () => {
       const stream = new EncodeStream();
       const expected = Buffer.from("unicode! 👍", "utf16le");
       const expectation = expectStream(stream, (buf) => {
@@ -146,7 +146,7 @@ describe("EncodeStream", () => {
       await expectation;
     });
 
-    it("should encode ucs2", async () => {
+    test("should encode ucs2", async () => {
       const stream = new EncodeStream();
       const expected = Buffer.from("unicode! 👍", "ucs2");
       const expectation = expectStream(stream, (buf) => {
@@ -158,7 +158,7 @@ describe("EncodeStream", () => {
       await expectation;
     });
 
-    it("should encode utf16be", async () => {
+    test("should encode utf16be", async () => {
       const stream = new EncodeStream();
       const expected = Buffer.from("unicode! 👍", "utf16le");
       for (let i = 0; i < expected.length - 1; i += 2) {
@@ -175,7 +175,7 @@ describe("EncodeStream", () => {
       await expectation;
     });
 
-    it("should encode macroman", async () => {
+    test("should encode macroman", async () => {
       const stream = new EncodeStream();
       const expected = Buffer.from([
         0x8a, 0x63, 0x63, 0x65, 0x6e, 0x74, 0x65, 0x64, 0x20, 0x63, 0x68, 0x87,

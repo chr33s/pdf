@@ -1,5 +1,5 @@
 import pako from "pako";
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 
 import {
   mergeIntoTypedArray,
@@ -97,7 +97,7 @@ startxref
 );
 
 describe("PDFWriter", () => {
-  it("serializes PDFContext objects using Indirect Objects and a Cross Reference table", async () => {
+  test("serializes PDFContext objects using Indirect Objects and a Cross Reference table", async () => {
     const context = PDFContext.create();
 
     const contentStream = context.flateStream(contentStreamText);

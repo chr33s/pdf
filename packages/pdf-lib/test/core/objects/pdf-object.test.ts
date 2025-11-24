@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 
 import {
   MethodNotImplementedError,
@@ -8,25 +8,25 @@ import {
 describe("PDFObject", () => {
   const pdfObject = new PDFObject();
 
-  it("does not implement clone()", () => {
+  test("does not implement clone()", () => {
     expect(() => pdfObject.clone()).toThrow(
       new MethodNotImplementedError(PDFObject.name, "clone"),
     );
   });
 
-  it("does not implement toString()", () => {
+  test("does not implement toString()", () => {
     expect(() => pdfObject.toString()).toThrow(
       new MethodNotImplementedError(PDFObject.name, "toString"),
     );
   });
 
-  it("does not implement sizeInBytes()", () => {
+  test("does not implement sizeInBytes()", () => {
     expect(() => pdfObject.sizeInBytes()).toThrow(
       new MethodNotImplementedError(PDFObject.name, "sizeInBytes"),
     );
   });
 
-  it("does not implement copyBytesInto()", () => {
+  test("does not implement copyBytesInto()", () => {
     expect(() => pdfObject.copyBytesInto(new Uint8Array(), 0)).toThrow(
       new MethodNotImplementedError(PDFObject.name, "copyBytesInto"),
     );

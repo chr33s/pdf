@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { constants, createDeflateRaw } from "node:zlib";
-import { beforeAll, describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, test } from "vitest";
 import inflate from "../src/index.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -53,32 +53,32 @@ describe("tiny-inflate", () => {
     fixed = await deflateRaw(uncompressed, { strategy: constants.Z_FIXED });
   });
 
-  it("inflates raw DEFLATE data", () => {
+  test("inflates raw DEFLATE data", () => {
     const output = Buffer.allocUnsafe(uncompressed.length);
     inflate(compressed, output);
     expect(output.equals(uncompressed)).toBe(true);
   });
 
-  it("slices oversized output buffers", () => {
+  test("slices oversized output buffers", () => {
     const output = Buffer.alloc(uncompressed.length + 1024);
     const result = inflate(compressed, output);
     expect(Buffer.from(result)).toStrictEqual(uncompressed);
     expect(result.length).toBe(uncompressed.length);
   });
 
-  it("handles uncompressed blocks", () => {
+  test("handles uncompressed blocks", () => {
     const output = Buffer.allocUnsafe(uncompressed.length);
     inflate(noCompression, output);
     expect(output.equals(uncompressed)).toBe(true);
   });
 
-  it("handles fixed Huffman blocks", () => {
+  test("handles fixed Huffman blocks", () => {
     const output = Buffer.allocUnsafe(uncompressed.length);
     inflate(fixed, output);
     expect(output.equals(uncompressed)).toBe(true);
   });
 
-  it("supports typed arrays", () => {
+  test("supports typed arrays", () => {
     const input = new Uint8Array(compressed);
     const output = new Uint8Array(uncompressed.length);
     inflate(input, output);

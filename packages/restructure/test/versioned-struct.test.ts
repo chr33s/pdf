@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 import {
   DecodeStream,
   EncodeStream,
@@ -23,7 +23,7 @@ describe("VersionedStruct", () => {
   });
 
   describe("decode", () => {
-    it("should get version from number type", () => {
+    test("should get version from number type", () => {
       const stream0 = new DecodeStream(
         Buffer.from("\x00\x05devon\x15", "binary"),
       );
@@ -44,14 +44,14 @@ describe("VersionedStruct", () => {
       });
     });
 
-    it("should throw for unknown version", () => {
+    test("should throw for unknown version", () => {
       const stream = new DecodeStream(
         Buffer.from("\x05\x05devon\x15", "binary"),
       );
       expect(() => baseStruct.decode(stream)).to.throw(/unknown version/i);
     });
 
-    it("should support common header block", () => {
+    test("should support common header block", () => {
       const struct = new VersionedStruct(uint8, {
         header: {
           age: uint8,
@@ -88,7 +88,7 @@ describe("VersionedStruct", () => {
       });
     });
 
-    it("should support parent version key", () => {
+    test("should support parent version key", () => {
       const struct = new VersionedStruct("version", {
         0: {
           name: new StringT(uint8, "ascii"),
@@ -119,7 +119,7 @@ describe("VersionedStruct", () => {
       });
     });
 
-    it("should support sub versioned structs", () => {
+    test("should support sub versioned structs", () => {
       const struct = new VersionedStruct(uint8, {
         0: {
           name: new StringT(uint8, "ascii"),
@@ -163,7 +163,7 @@ describe("VersionedStruct", () => {
       });
     });
 
-    it("should support process hook", () => {
+    test("should support process hook", () => {
       const struct = baseStruct;
       struct.process = function process() {
         (this as any).processed = true;
@@ -182,7 +182,7 @@ describe("VersionedStruct", () => {
   });
 
   describe("size", () => {
-    it("should compute the correct size", () => {
+    test("should compute the correct size", () => {
       expect(baseStruct.size({ version: 0, name: "devon", age: 21 })).to.equal(
         8,
       );
@@ -191,13 +191,13 @@ describe("VersionedStruct", () => {
       ).to.equal(14);
     });
 
-    it("should throw for unknown version", () => {
+    test("should throw for unknown version", () => {
       expect(() =>
         baseStruct.size({ version: 5, name: "devon", age: 21 }),
       ).to.throw(/unknown version/i);
     });
 
-    it("should support common header block", () => {
+    test("should support common header block", () => {
       const struct = new VersionedStruct(uint8, {
         header: {
           age: uint8,
@@ -226,7 +226,7 @@ describe("VersionedStruct", () => {
       ).to.equal(15);
     });
 
-    it("should compute the correct size with pointers", () => {
+    test("should compute the correct size with pointers", () => {
       const struct = new VersionedStruct(uint8, {
         0: {
           name: new StringT(uint8, "ascii"),
@@ -244,7 +244,7 @@ describe("VersionedStruct", () => {
       ).to.equal(15);
     });
 
-    it("should throw if no value is given", () => {
+    test("should throw if no value is given", () => {
       const struct = new VersionedStruct(uint8, {
         0: {
           name: new StringT(4, "ascii"),
@@ -262,7 +262,7 @@ describe("VersionedStruct", () => {
   });
 
   describe("encode", () => {
-    it("should encode objects to buffers", async () => {
+    test("should encode objects to buffers", async () => {
       const stream = new EncodeStream();
       const expectation = expectStream(stream, (buf) => {
         expect(buf).to.deep.equal(
@@ -281,14 +281,14 @@ describe("VersionedStruct", () => {
       await expectation;
     });
 
-    it("should throw for unknown version", () => {
+    test("should throw for unknown version", () => {
       const stream = new EncodeStream();
       expect(() =>
         baseStruct.encode(stream, { version: 5, name: "devon", age: 21 }),
       ).to.throw(/unknown version/i);
     });
 
-    it("should support common header block", async () => {
+    test("should support common header block", async () => {
       const struct = new VersionedStruct(uint8, {
         header: {
           age: uint8,
@@ -325,7 +325,7 @@ describe("VersionedStruct", () => {
       await expectation;
     });
 
-    it("should encode pointer data after structure", async () => {
+    test("should encode pointer data after structure", async () => {
       const struct = new VersionedStruct(uint8, {
         0: {
           name: new StringT(uint8, "ascii"),
@@ -355,7 +355,7 @@ describe("VersionedStruct", () => {
       await expectation;
     });
 
-    it("should support preEncode hook", async () => {
+    test("should support preEncode hook", async () => {
       const struct = baseStruct;
       struct.preEncode = function preEncode() {
         (this as any).version = (this as any).gender != null ? 1 : 0;

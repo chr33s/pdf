@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 import {
   Boolean as BooleanT,
   DecodeStream,
@@ -9,13 +9,13 @@ import { expectStream } from "./helpers.js";
 
 describe("Boolean", () => {
   describe("decode", () => {
-    it("should decode 0 as false", () => {
+    test("should decode 0 as false", () => {
       const stream = new DecodeStream(Buffer.from([0]));
       const boolean = new BooleanT(uint8);
       expect(boolean.decode(stream)).to.equal(false);
     });
 
-    it("should decode 1 as true", () => {
+    test("should decode 1 as true", () => {
       const stream = new DecodeStream(Buffer.from([1]));
       const boolean = new BooleanT(uint8);
       expect(boolean.decode(stream)).to.equal(true);
@@ -23,14 +23,14 @@ describe("Boolean", () => {
   });
 
   describe("size", () => {
-    it("should return given type size", () => {
+    test("should return given type size", () => {
       const boolean = new BooleanT(uint8);
       expect(boolean.size()).to.equal(1);
     });
   });
 
   describe("encode", () => {
-    it("should encode false as 0", async () => {
+    test("should encode false as 0", async () => {
       const stream = new EncodeStream();
       const boolean = new BooleanT(uint8);
       const expectation = expectStream(stream, (buf) => {
@@ -42,7 +42,7 @@ describe("Boolean", () => {
       await expectation;
     });
 
-    it("should encode true as 1", async () => {
+    test("should encode true as 1", async () => {
       const stream = new EncodeStream();
       const boolean = new BooleanT(uint8);
       const expectation = expectStream(stream, (buf) => {

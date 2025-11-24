@@ -1,8 +1,8 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 import compile from "../src/compile.js";
 
 describe("state machine compiler", () => {
-  it("should compile a state machine with a single literal", () => {
+  test("should compile a state machine with a single literal", () => {
     const stateMachine = compile("a = 0; b = 1; main = a;");
     const matches = Array.from(stateMachine.match([0, 0, 1, 0]));
     expect(matches).toEqual([
@@ -12,7 +12,7 @@ describe("state machine compiler", () => {
     ]);
   });
 
-  it("should compile a state machine with a concatenation", () => {
+  test("should compile a state machine with a concatenation", () => {
     const stateMachine = compile("a = 0; b = 1; main = a b;");
     const matches = Array.from(stateMachine.match([0, 0, 1, 1, 0, 1, 0]));
     expect(matches).toEqual([
@@ -21,7 +21,7 @@ describe("state machine compiler", () => {
     ]);
   });
 
-  it("should compile a state machine with an alternation", () => {
+  test("should compile a state machine with an alternation", () => {
     const stateMachine = compile("a = 0; b = 1; main = (a b) | (b a);");
     const matches = Array.from(stateMachine.match([0, 0, 1, 1, 0, 1, 0]));
     expect(matches).toEqual([
@@ -31,7 +31,7 @@ describe("state machine compiler", () => {
     ]);
   });
 
-  it("should compile a state machine with a repeat", () => {
+  test("should compile a state machine with a repeat", () => {
     const stateMachine = compile("a = 0; b = 1; main = (a b)+;");
     const matches = Array.from(stateMachine.match([0, 0, 1, 0, 1, 1, 0, 1]));
     expect(matches).toEqual([
@@ -40,7 +40,7 @@ describe("state machine compiler", () => {
     ]);
   });
 
-  it("should compile a state machine with an optional repeat", () => {
+  test("should compile a state machine with an optional repeat", () => {
     const stateMachine = compile("a = 0; b = 1; main = b a (a b)*;");
     const matches = Array.from(
       stateMachine.match([0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 0]),
@@ -51,7 +51,7 @@ describe("state machine compiler", () => {
     ]);
   });
 
-  it("should compile a state machine with an optional group", () => {
+  test("should compile a state machine with an optional group", () => {
     const stateMachine = compile("a = 0; b = 1; main = b a (a b)?;");
     const matches = Array.from(
       stateMachine.match([0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 0]),
@@ -62,7 +62,7 @@ describe("state machine compiler", () => {
     ]);
   });
 
-  it("should compile a state machine with an exact repetition", () => {
+  test("should compile a state machine with an exact repetition", () => {
     const stateMachine = compile("a = 0; b = 1; main = a{3} b;");
     const matches = Array.from(
       stateMachine.match([0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1]),
@@ -70,7 +70,7 @@ describe("state machine compiler", () => {
     expect(matches).toEqual([[3, 6, []]]);
   });
 
-  it("should compile a state machine with a minimum repetition", () => {
+  test("should compile a state machine with a minimum repetition", () => {
     const stateMachine = compile("a = 0; b = 1; main = a{3,} b;");
     const matches = Array.from(
       stateMachine.match([0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1]),
@@ -81,7 +81,7 @@ describe("state machine compiler", () => {
     ]);
   });
 
-  it("should compile a state machine with a maximum repetition", () => {
+  test("should compile a state machine with a maximum repetition", () => {
     const stateMachine = compile("a = 0; b = 1; main = a{,3} b;");
     const matches = Array.from(
       stateMachine.match([0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1]),
@@ -94,7 +94,7 @@ describe("state machine compiler", () => {
     ]);
   });
 
-  it("should compile a state machine with a minimum and maximum repetition", () => {
+  test("should compile a state machine with a minimum and maximum repetition", () => {
     const stateMachine = compile("a = 0; b = 1; main = a{3,5} b;");
     const matches = Array.from(
       stateMachine.match([
@@ -107,7 +107,7 @@ describe("state machine compiler", () => {
     ]);
   });
 
-  it("should compile a state machine with tags", () => {
+  test("should compile a state machine with tags", () => {
     const stateMachine = compile("a = 0; b = 1; main = x:(b a) | y:(a b);");
     const input = [1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0];
     const matches = Array.from(stateMachine.match(input));
@@ -134,7 +134,7 @@ describe("state machine compiler", () => {
     ]);
   });
 
-  it("should compile a state machine with external symbols", () => {
+  test("should compile a state machine with external symbols", () => {
     const stateMachine = compile("main = a b;", { a: 0, b: 1 });
     const matches = Array.from(stateMachine.match([0, 0, 1, 1, 0, 1, 0]));
     expect(matches).toEqual([

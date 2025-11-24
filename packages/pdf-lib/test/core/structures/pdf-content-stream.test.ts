@@ -1,5 +1,5 @@
 import pako from "pako";
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 
 import {
   mergeIntoTypedArray,
@@ -29,13 +29,13 @@ describe("PDFContentStream", () => {
     PDFOperator.of(Ops.EndText),
   ];
 
-  it("can be constructed from PDFContentStream.of(...)", () => {
+  test("can be constructed from PDFContentStream.of(...)", () => {
     expect(PDFContentStream.of(dict, operators, false)).toBeInstanceOf(
       PDFContentStream,
     );
   });
 
-  it("allows operators to be pushed to the end of the stream", () => {
+  test("allows operators to be pushed to the end of the stream", () => {
     const stream = PDFContentStream.of(dict, [pushGraphicsState()], false);
     stream.push(moveText(21, 99), popGraphicsState());
     expect(String(stream)).toEqual(
@@ -48,14 +48,14 @@ describe("PDFContentStream", () => {
     );
   });
 
-  it("can be cloned", () => {
+  test("can be cloned", () => {
     const original = PDFContentStream.of(dict, operators, false);
     const clone = original.clone();
     expect(clone).not.toBe(original);
     expect(String(clone)).toBe(String(original));
   });
 
-  it("can be converted to a string", () => {
+  test("can be converted to a string", () => {
     expect(String(PDFContentStream.of(dict, operators, false))).toEqual(
       "<<\n/Length 55\n>>\n" +
         "stream\n" +
@@ -68,11 +68,11 @@ describe("PDFContentStream", () => {
     );
   });
 
-  it("can provide its size in bytes", () => {
+  test("can provide its size in bytes", () => {
     expect(PDFContentStream.of(dict, operators, false).sizeInBytes()).toBe(89);
   });
 
-  it("can be serialized", () => {
+  test("can be serialized", () => {
     const stream = PDFContentStream.of(dict, operators, false);
     const buffer = new Uint8Array(stream.sizeInBytes() + 3).fill(
       toCharCode(" "),
@@ -92,7 +92,7 @@ describe("PDFContentStream", () => {
     );
   });
 
-  it("can be serialized when encoded", () => {
+  test("can be serialized when encoded", () => {
     const contents =
       "BT\n" +
       "/F1 24 Tf\n" +

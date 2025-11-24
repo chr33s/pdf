@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 
 import {
   PDFAcroTerminal,
@@ -8,7 +8,7 @@ import {
 } from "../../../src/index.js";
 
 describe("PDFAcroTerminal", () => {
-  it("returns Kids when it has them", () => {
+  test("returns Kids when it has them", () => {
     const context = PDFContext.create();
 
     const kids = context.obj(["Foo", PDFRef.of(21), 9001]);
@@ -25,7 +25,7 @@ describe("PDFAcroTerminal", () => {
     expect(Kids).toBe(kids);
   });
 
-  it("returns itself as a Kid when it has none", () => {
+  test("returns itself as a Kid when it has none", () => {
     const context = PDFContext.create();
 
     const dict = context.obj({});

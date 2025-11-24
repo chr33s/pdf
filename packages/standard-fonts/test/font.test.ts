@@ -1,16 +1,16 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 
 import { Font, FontNames } from "../src/index.js";
 
 describe("Font.load", () => {
-  it("returns memoized instances", () => {
+  test("returns memoized instances", () => {
     const firstLoad = Font.load(FontNames.Courier);
     const secondLoad = Font.load(FontNames.Courier);
 
     expect(firstLoad).toBe(secondLoad);
   });
 
-  it("computes glyph widths and kerning lookups", () => {
+  test("computes glyph widths and kerning lookups", () => {
     const font = Font.load(FontNames.Helvetica);
 
     const charMetrics = font.CharMetrics.find((metric) => metric.N === "A");
@@ -28,7 +28,7 @@ describe("Font.load", () => {
     }
   });
 
-  it("accepts canonical font name aliases", () => {
+  test("accepts canonical font name aliases", () => {
     const fromAlias = Font.load(FontNames.HelveticaBold);
     const fromLiteral = Font.load("Helvetica-Bold");
 

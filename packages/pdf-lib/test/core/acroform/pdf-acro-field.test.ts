@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 
 import {
   PDFAcroTerminal,
@@ -8,7 +8,7 @@ import {
 } from "../../../src/index.js";
 
 describe("PDFAcroField", () => {
-  it("returns undefined for missing (DAs)", () => {
+  test("returns undefined for missing (DAs)", () => {
     const context = PDFContext.create();
 
     const dict = context.obj({
@@ -20,7 +20,7 @@ describe("PDFAcroField", () => {
     expect(field.getDefaultAppearance()).toBe(undefined);
   });
 
-  it("returns normal direct appearance strings (DAs)", () => {
+  test("returns normal direct appearance strings (DAs)", () => {
     const context = PDFContext.create();
 
     const dict = context.obj({
@@ -32,7 +32,7 @@ describe("PDFAcroField", () => {
     expect(field.getDefaultAppearance()).toBe("/ZaDb 10 Tf 0 g");
   });
 
-  it("returns hexadecimal (non-standard) direct appearance strings (DAs)", () => {
+  test("returns hexadecimal (non-standard) direct appearance strings (DAs)", () => {
     const context = PDFContext.create();
 
     const dict = context.obj({
@@ -45,7 +45,7 @@ describe("PDFAcroField", () => {
   });
 
   describe("setFontSize()", () => {
-    it("throws an error if the /DA entry is missing", () => {
+    test("throws an error if the /DA entry is missing", () => {
       const context = PDFContext.create();
 
       const dict = context.obj({
@@ -57,7 +57,7 @@ describe("PDFAcroField", () => {
       expect(() => field.setFontSize(8)).toThrow();
     });
 
-    it("throw an error if the /DA string does not contain a Tf operator", () => {
+    test("throw an error if the /DA string does not contain a Tf operator", () => {
       const context = PDFContext.create();
 
       const dict = context.obj({
@@ -69,7 +69,7 @@ describe("PDFAcroField", () => {
       expect(() => field.setFontSize(8)).toThrow();
     });
 
-    it("replaces the font size of the last occurring Tf operator", () => {
+    test("replaces the font size of the last occurring Tf operator", () => {
       const context = PDFContext.create();
 
       const dict = context.obj({
@@ -84,7 +84,7 @@ describe("PDFAcroField", () => {
       );
     });
 
-    it("tolerates invalid Tfs with missing font sizes", () => {
+    test("tolerates invalid Tfs with missing font sizes", () => {
       const context = PDFContext.create();
 
       const dict = context.obj({

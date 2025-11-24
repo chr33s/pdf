@@ -1,9 +1,9 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 
 import { PNG } from "../../src/utils/png.js";
 
 describe("PNG", () => {
-  it("can load images with alpha values greater than 1", () => {
+  test("can load images with alpha values greater than 1", () => {
     // This Uint8Array contains a PNG image composed of a single pixel. It was
     // generated with the following code in a browser:
     // ```

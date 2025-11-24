@@ -1,5 +1,5 @@
 import fs from "node:fs";
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 import {
   PDFArray,
   PDFBool,
@@ -20,7 +20,7 @@ const readData = (file: string) =>
   new Uint8Array(fs.readFileSync(new URL(`./data/${file}`, import.meta.url)));
 
 describe("PDFObjectStreamParser", () => {
-  it("parses simple object streams", async () => {
+  test("parses simple object streams", async () => {
     const context = PDFContext.create();
     const dict = context.obj({
       N: 3,
@@ -34,7 +34,7 @@ describe("PDFObjectStreamParser", () => {
     expect(context.enumerateIndirectObjects().length).toBe(3);
   });
 
-  it(`can parse object streams containing the following PDF Object types: [
+  test(`can parse object streams containing the following PDF Object types: [
     PDFDictionary,
     PDFArray
     PDFName,
@@ -67,7 +67,7 @@ describe("PDFObjectStreamParser", () => {
     expect(context.lookup(PDFRef.of(9))).toBe(PDFNull);
   });
 
-  it("handles object streams with newlines separating the integer pairs", async () => {
+  test("handles object streams with newlines separating the integer pairs", async () => {
     const context = PDFContext.create();
     const dict = context.obj({
       N: 182,
@@ -81,7 +81,7 @@ describe("PDFObjectStreamParser", () => {
     expect(context.enumerateIndirectObjects().length).toBe(182);
   });
 
-  it("handles encoded object streams with PDFName filters", async () => {
+  test("handles encoded object streams with PDFName filters", async () => {
     const context = PDFContext.create();
     const dict = context.obj({
       Filter: "FlateDecode",
@@ -96,7 +96,7 @@ describe("PDFObjectStreamParser", () => {
     expect(context.enumerateIndirectObjects().length).toBe(115);
   });
 
-  it("handles encoded object streams with PDFArray filters", async () => {
+  test("handles encoded object streams with PDFArray filters", async () => {
     const context = PDFContext.create();
     const dict = context.obj({
       Filter: ["FlateDecode"],
@@ -111,7 +111,7 @@ describe("PDFObjectStreamParser", () => {
     expect(context.enumerateIndirectObjects().length).toBe(115);
   });
 
-  it("throws an error for invalid Filters", async () => {
+  test("throws an error for invalid Filters", async () => {
     const context = PDFContext.create();
     const dict = context.obj({
       Filter: 42,
@@ -126,7 +126,7 @@ describe("PDFObjectStreamParser", () => {
     ).rejects.toThrow();
   });
 
-  it("throws an error for invalid object streams", async () => {
+  test("throws an error for invalid object streams", async () => {
     const context = PDFContext.create();
     const dict = context.obj({
       N: 1,
@@ -140,7 +140,7 @@ describe("PDFObjectStreamParser", () => {
     ).rejects.toThrow();
   });
 
-  it("prevents reparsing", async () => {
+  test("prevents reparsing", async () => {
     const context = PDFContext.create();
     const dict = context.obj({
       N: 3,

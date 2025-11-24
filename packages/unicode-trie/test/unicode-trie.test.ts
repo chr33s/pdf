@@ -1,60 +1,59 @@
-import assert from "node:assert/strict";
-import { describe, it } from "vitest";
+import { describe, expect, test } from "vitest";
 
 import UnicodeTrieBuilder from "../src/builder.js";
 import UnicodeTrie from "../src/index.js";
 
 describe("unicode trie", () => {
-  it("set", () => {
+  test("set", () => {
     const trie = new UnicodeTrieBuilder(10, 666);
     trie.set(0x4567, 99);
-    assert.equal(trie.get(0x4566), 10);
-    assert.equal(trie.get(0x4567), 99);
-    assert.equal(trie.get(-1), 666);
-    assert.equal(trie.get(0x110000), 666);
+    expect(trie.get(0x4566)).toBe(10);
+    expect(trie.get(0x4567)).toBe(99);
+    expect(trie.get(-1)).toBe(666);
+    expect(trie.get(0x110000)).toBe(666);
   });
 
-  it("set -> compacted trie", () => {
+  test("set -> compacted trie", () => {
     const builder = new UnicodeTrieBuilder(10, 666);
     builder.set(0x4567, 99);
 
     const trie = builder.freeze();
-    assert.equal(trie.get(0x4566), 10);
-    assert.equal(trie.get(0x4567), 99);
-    assert.equal(trie.get(-1), 666);
-    assert.equal(trie.get(0x110000), 666);
+    expect(trie.get(0x4566)).toBe(10);
+    expect(trie.get(0x4567)).toBe(99);
+    expect(trie.get(-1)).toBe(666);
+    expect(trie.get(0x110000)).toBe(666);
   });
 
-  it("setRange", () => {
+  test("setRange", () => {
     const trie = new UnicodeTrieBuilder(10, 666);
     trie.setRange(13, 6666, 7788, false);
     trie.setRange(6000, 7000, 9900, true);
 
-    assert.equal(trie.get(12), 10);
-    assert.equal(trie.get(13), 7788);
-    assert.equal(trie.get(5999), 7788);
-    assert.equal(trie.get(6000), 9900);
-    assert.equal(trie.get(7000), 9900);
-    assert.equal(trie.get(7001), 10);
-    assert.equal(trie.get(0x110000), 666);
+    expect(trie.get(12)).toBe(10);
+    expect(trie.get(13)).toBe(7788);
+    expect(trie.get(5999)).toBe(7788);
+    expect(trie.get(6000)).toBe(9900);
+    expect(trie.get(7000)).toBe(9900);
+    expect(trie.get(7001)).toBe(10);
+    expect(trie.get(0x110000)).toBe(666);
   });
 
-  it("setRange -> compacted trie", () => {
+  test("setRange -> compacted trie", () => {
     const builder = new UnicodeTrieBuilder(10, 666);
     builder.setRange(13, 6666, 7788, false);
     builder.setRange(6000, 7000, 9900, true);
 
     const trie = builder.freeze();
-    assert.equal(trie.get(12), 10);
-    assert.equal(trie.get(13), 7788);
-    assert.equal(trie.get(5999), 7788);
-    assert.equal(trie.get(6000), 9900);
-    assert.equal(trie.get(7000), 9900);
-    assert.equal(trie.get(7001), 10);
-    assert.equal(trie.get(0x110000), 666);
+    expect(trie.get(12)).toBe(10);
+    expect(trie.get(13)).toBe(7788);
+    expect(trie.get(5999)).toBe(7788);
+    expect(trie.get(6000)).toBe(9900);
+    expect(trie.get(7000)).toBe(9900);
+    expect(trie.get(7001)).toBe(10);
+    expect(trie.get(0x110000)).toBe(666);
   });
 
-  it("toBuffer written in little-endian", () => {
+  test("toBuffer written in little-endian", () => {
     const builder = new UnicodeTrieBuilder();
     builder.set(0x4567, 99);
 
@@ -66,23 +65,23 @@ describe("unicode trie", () => {
       244, 93, 192, 190, 218, 229, 156, 12, 107, 86, 235, 125, 96, 102, 0, 129,
       15, 239, 109, 219, 204, 58, 151, 92, 52, 126, 152, 198, 14, 0,
     ]);
-    assert.equal(buf.toString("hex"), bufferExpected.toString("hex"));
+    expect(buf.toString("hex")).toBe(bufferExpected.toString("hex"));
   });
 
-  it("should work with compressed serialization format", () => {
+  test("should work with compressed serialization format", () => {
     const builder = new UnicodeTrieBuilder(10, 666);
     builder.setRange(13, 6666, 7788, false);
     builder.setRange(6000, 7000, 9900, true);
 
     const buf = builder.toBuffer();
     const trie = new UnicodeTrie(buf);
-    assert.equal(trie.get(12), 10);
-    assert.equal(trie.get(13), 7788);
-    assert.equal(trie.get(5999), 7788);
-    assert.equal(trie.get(6000), 9900);
-    assert.equal(trie.get(7000), 9900);
-    assert.equal(trie.get(7001), 10);
-    assert.equal(trie.get(0x110000), 666);
+    expect(trie.get(12)).toBe(10);
+    expect(trie.get(13)).toBe(7788);
+    expect(trie.get(5999)).toBe(7788);
+    expect(trie.get(6000)).toBe(9900);
+    expect(trie.get(7000)).toBe(9900);
+    expect(trie.get(7001)).toBe(10);
+    expect(trie.get(0x110000)).toBe(666);
   });
 
   const rangeTests = [
@@ -206,35 +205,56 @@ describe("unicode trie", () => {
     },
   ] as const;
 
-  it("should pass range tests", () => {
-    for (const test of rangeTests) {
+  type TrieLike = { get: (codePoint: number) => number };
+
+  const findMismatch = (
+    trie: TrieLike,
+    checks: readonly (readonly [number, number])[],
+  ) => {
+    let start = 0;
+    for (const [end, expected] of checks) {
+      for (let codePoint = start; codePoint < end; codePoint++) {
+        const actual = trie.get(codePoint);
+        if (actual !== expected) {
+          return { codePoint, expected, actual } as const;
+        }
+      }
+      start = end;
+    }
+    return null;
+  };
+
+  test("should pass range tests", () => {
+    for (const rangeTest of rangeTests) {
       let initialValue = 0;
       let errorValue = 0x0bad;
       let index = 0;
 
-      if (test.ranges[index][1] < 0) {
-        errorValue = test.ranges[index][2];
+      if (rangeTest.ranges[index][1] < 0) {
+        errorValue = rangeTest.ranges[index][2];
         index++;
       }
 
-      initialValue = test.ranges[index++][2];
+      initialValue = rangeTest.ranges[index++][2];
       const builder = new UnicodeTrieBuilder(initialValue, errorValue);
 
-      for (const range of test.ranges.slice(index)) {
+      for (const range of rangeTest.ranges.slice(index)) {
         builder.setRange(range[0], range[1] - 1, range[2], range[3] !== 0);
       }
 
       const frozen = builder.freeze();
 
-      let start = 0;
-      for (const check of test.check) {
-        const end = check[0];
-        while (start < end) {
-          assert.equal(builder.get(start), check[1]);
-          assert.equal(frozen.get(start), check[1]);
-          start++;
-        }
-      }
+      const builderMismatch = findMismatch(builder, rangeTest.check);
+      const builderMessage = builderMismatch
+        ? `builder mismatch at U+${builderMismatch.codePoint.toString(16)}: expected ${builderMismatch.expected}, got ${builderMismatch.actual}`
+        : undefined;
+      expect(builderMismatch, builderMessage).toBeNull();
+
+      const frozenMismatch = findMismatch(frozen, rangeTest.check);
+      const frozenMessage = frozenMismatch
+        ? `frozen mismatch at U+${frozenMismatch.codePoint.toString(16)}: expected ${frozenMismatch.expected}, got ${frozenMismatch.actual}`
+        : undefined;
+      expect(frozenMismatch, frozenMessage).toBeNull();
     }
   });
 });

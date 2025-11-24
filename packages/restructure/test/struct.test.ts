@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 import {
   DecodeStream,
   EncodeStream,
@@ -11,7 +11,7 @@ import { expectStream } from "./helpers.js";
 
 describe("Struct", () => {
   describe("decode", () => {
-    it("should decode into an object", () => {
+    test("should decode into an object", () => {
       const stream = new DecodeStream(Buffer.from("\x05devon\x15", "binary"));
       const struct = new Struct({
         name: new StringT(uint8),
@@ -21,7 +21,7 @@ describe("Struct", () => {
       expect(struct.decode(stream)).to.deep.equal({ name: "devon", age: 21 });
     });
 
-    it("should support process hook", () => {
+    test("should support process hook", () => {
       const stream = new DecodeStream(Buffer.from("\x05devon\x20", "binary"));
       const struct = new Struct({
         name: new StringT(uint8),
@@ -39,7 +39,7 @@ describe("Struct", () => {
       });
     });
 
-    it("should support function keys", () => {
+    test("should support function keys", () => {
       const stream = new DecodeStream(Buffer.from("\x05devon\x20", "binary"));
       const struct = new Struct({
         name: new StringT(uint8),
@@ -58,7 +58,7 @@ describe("Struct", () => {
   });
 
   describe("size", () => {
-    it("should compute the correct size", () => {
+    test("should compute the correct size", () => {
       const struct = new Struct({
         name: new StringT(uint8),
         age: uint8,
@@ -67,7 +67,7 @@ describe("Struct", () => {
       expect(struct.size({ name: "devon", age: 21 })).to.equal(7);
     });
 
-    it("should compute the correct size with pointers", () => {
+    test("should compute the correct size with pointers", () => {
       const struct = new Struct({
         name: new StringT(uint8),
         age: uint8,
@@ -78,7 +78,7 @@ describe("Struct", () => {
       expect(size).to.equal(14);
     });
 
-    it("should get the correct size when no value is given", () => {
+    test("should get the correct size when no value is given", () => {
       const struct = new Struct({
         name: new StringT(4),
         age: uint8,
@@ -87,7 +87,7 @@ describe("Struct", () => {
       expect(struct.size()).to.equal(5);
     });
 
-    it("should throw when getting non-fixed length size and no value is given", () => {
+    test("should throw when getting non-fixed length size and no value is given", () => {
       const struct = new Struct({
         name: new StringT(uint8),
         age: uint8,
@@ -98,7 +98,7 @@ describe("Struct", () => {
   });
 
   describe("encode", () => {
-    it("should encode objects to buffers", async () => {
+    test("should encode objects to buffers", async () => {
       const stream = new EncodeStream();
       const expectation = expectStream(stream, (buf) => {
         expect(buf).to.deep.equal(Buffer.from("\x05devon\x15", "binary"));
@@ -114,7 +114,7 @@ describe("Struct", () => {
       await expectation;
     });
 
-    it("should support preEncode hook", async () => {
+    test("should support preEncode hook", async () => {
       const stream = new EncodeStream();
       const expectation = expectStream(stream, (buf) => {
         expect(buf).to.deep.equal(Buffer.from("\x05devon\x15", "binary"));
@@ -135,7 +135,7 @@ describe("Struct", () => {
       await expectation;
     });
 
-    it("should encode pointer data after structure", async () => {
+    test("should encode pointer data after structure", async () => {
       const stream = new EncodeStream();
       const expectation = expectStream(stream, (buf) => {
         expect(buf).to.deep.equal(

@@ -1,5 +1,5 @@
 import pako from "pako";
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 
 import {
   mergeIntoTypedArray,
@@ -28,13 +28,13 @@ describe("PDFObjectStream", () => {
     [context.nextRef(), PDFString.of("Stuff and thingz")],
   ];
 
-  it("can be constructed from PDFObjectStream.of(...)", () => {
+  test("can be constructed from PDFObjectStream.of(...)", () => {
     expect(
       PDFObjectStream.withContextAndObjects(context, objects, false),
     ).toBeInstanceOf(PDFObjectStream);
   });
 
-  it("can be cloned", () => {
+  test("can be cloned", () => {
     const original = PDFObjectStream.withContextAndObjects(
       context,
       objects,
@@ -45,7 +45,7 @@ describe("PDFObjectStream", () => {
     expect(String(clone)).toBe(String(original));
   });
 
-  it("can be converted to a string", () => {
+  test("can be converted to a string", () => {
     expect(
       String(PDFObjectStream.withContextAndObjects(context, objects, false)),
     ).toEqual(
@@ -65,7 +65,7 @@ describe("PDFObjectStream", () => {
     );
   });
 
-  it("can provide its size in bytes", () => {
+  test("can provide its size in bytes", () => {
     expect(
       PDFObjectStream.withContextAndObjects(
         context,
@@ -75,7 +75,7 @@ describe("PDFObjectStream", () => {
     ).toBe(172);
   });
 
-  it("can be serialized", () => {
+  test("can be serialized", () => {
     const stream = PDFObjectStream.withContextAndObjects(
       context,
       objects,
@@ -104,7 +104,7 @@ describe("PDFObjectStream", () => {
     );
   });
 
-  it("can be serialized when encoded", () => {
+  test("can be serialized when encoded", () => {
     const contents =
       "1 0 2 4 3 9 4 15 5 24 6 31 7 39 8 44 9 47 " +
       "[ ]\n" +

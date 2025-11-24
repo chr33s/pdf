@@ -1,6 +1,6 @@
 import assert from "node:assert";
 import fs from "node:fs";
-import { describe, it } from "vitest";
+import { describe, test } from "vitest";
 import fontkit from "./add-test-helpers-to-fontkit.js";
 import { here } from "./utils/dir.decompress-jsons.js";
 
@@ -9,13 +9,13 @@ const __dirname = here(import.meta.url);
 describe("variations", function () {
   describe("Skia", function () {
     if (!fs.existsSync("/Library/Fonts/Skia.ttf")) {
-      it.skip("requires /Library/Fonts/Skia.ttf", function () {});
+      test.skip("requires /Library/Fonts/Skia.ttf", function () {});
       return;
     }
 
     let font = fontkit.openSync("/Library/Fonts/Skia.ttf");
 
-    it("should get available variation axes", function () {
+    test("should get available variation axes", function () {
       let axes = font.variationAxes;
       assert.deepEqual(Object.keys(axes), ["wght", "wdth"]);
       assert.equal(axes.wght.name, "Weight");
@@ -25,7 +25,7 @@ describe("variations", function () {
       return assert.equal(Math.round(axes.wght.max * 100) / 100, 3.2);
     });
 
-    it("should get named variation instances", function () {
+    test("should get named variation instances", function () {
       let named = font.namedVariations;
       assert.deepEqual(Object.keys(named), [
         "Black",
@@ -44,7 +44,7 @@ describe("variations", function () {
       return assert.equal(named.Bold.wdth, 1);
     });
 
-    it("should get a variation by name", function () {
+    test("should get a variation by name", function () {
       let variation = font.getVariation("Bold");
       assert.equal(variation.constructor.name, "TTFFont");
 
@@ -55,7 +55,7 @@ describe("variations", function () {
       );
     });
 
-    it("should get a variation by settings", function () {
+    test("should get a variation by settings", function () {
       let variation = font.getVariation({ wght: 0.5 });
       assert.equal(variation.constructor.name, "TTFFont");
 
@@ -66,7 +66,7 @@ describe("variations", function () {
       );
     });
 
-    it("interpolates points without delta values", function () {
+    test("interpolates points without delta values", function () {
       let variation = font.getVariation("Bold");
       let glyph = variation.glyphForCodePoint("Q".charCodeAt(0));
 
@@ -76,7 +76,7 @@ describe("variations", function () {
       );
     });
 
-    it("recomputes cbox and advance width", function () {
+    test("recomputes cbox and advance width", function () {
       let variation = font.getVariation("Bold");
       let glyph = variation.getGlyph(68); // D
 
@@ -86,7 +86,7 @@ describe("variations", function () {
   });
 
   describe("truetype variations", function () {
-    it("should support sharing all points", function () {
+    test("should support sharing all points", function () {
       let font = fontkit.openSync(__dirname + "/data/fonttest/TestGVAROne.ttf");
 
       assert.equal(
@@ -95,7 +95,7 @@ describe("variations", function () {
       );
     });
 
-    it("should support sharing enumerated points", function () {
+    test("should support sharing enumerated points", function () {
       let font = fontkit.openSync(__dirname + "/data/fonttest/TestGVARTwo.ttf");
 
       assert.equal(
@@ -104,7 +104,7 @@ describe("variations", function () {
       );
     });
 
-    it("should support sharing no points", function () {
+    test("should support sharing no points", function () {
       let font = fontkit.openSync(
         __dirname + "/data/fonttest/TestGVARThree.ttf",
       );
@@ -115,7 +115,7 @@ describe("variations", function () {
       );
     });
 
-    it("should use the HVAR table when available for variation metrics", function () {
+    test("should use the HVAR table when available for variation metrics", function () {
       let font = fontkit.openSync(
         __dirname + "/data/fonttest/TestGVARFour.ttf",
       );
@@ -128,7 +128,7 @@ describe("variations", function () {
       );
     });
 
-    it("should fall back to the last entry in an HVAR table", function () {
+    test("should fall back to the last entry in an HVAR table", function () {
       let font = fontkit.openSync(__dirname + "/data/fonttest/TestHVARTwo.ttf");
 
       assert.equal(
@@ -139,7 +139,7 @@ describe("variations", function () {
       );
     });
 
-    it("should support adjusting GPOS mark anchor points for variations", function () {
+    test("should support adjusting GPOS mark anchor points for variations", function () {
       let font = fontkit.openSync(__dirname + "/data/Mada/Mada-VF.ttf", {
         wght: 900,
       });
@@ -154,7 +154,7 @@ describe("variations", function () {
       __dirname + "/data/fonttest/AdobeVFPrototype-Subset.otf",
     );
 
-    it("applies variations to CFF2 glyphs", function () {
+    test("applies variations to CFF2 glyphs", function () {
       assert.equal(
         font.getVariation({ wght: 100 }).glyphsForString("$")[0].path.toSVG(),
         "M245.82 14.61C187.88 14.61 147.25 26.89 101.25 68.2L141.87 23.46L116.86 116.93C110.69 142.99 95.97 149.44 81.44 149.44C65.26 149.44 55.63 141.35 52.46 125.72C71.02 40.17 137.46 -13 244.46 -13C347.69 -13 435.51 46.25 435.51 156.16C435.51 229.42 405.44 295.15 271.16 349.44L247 358.79C159.98 393.45 118.52 438.64 118.52 505.55C118.52 592.21 177.71 637.22 261.9 637.22C310.84 637.22 346.11 625.66 389.56 584.63L347.76 628.64L372.77 535.16C380.4 510.11 394.48 502.66 408.47 502.66C423.83 502.66 434.27 510.48 437.17 526.38C418.07 613.84 347.53 665.1 258.91 665.1C160.66 665.1 78.39 606.22 78.39 499.85C78.39 414.41 128.01 361.14 223.54 320.5L260.54 304.59C366.66 258.56 395.38 216.91 395.38 152.46C395.38 65.35 333.64 14.61 245.82 14.61ZM267.35 330.74L267.35 758.74L240.46 758.74L240.46 330.74L267.35 330.74ZM240.18 -115L267.08 -115L267.08 330.74L240.18 330.74L240.18 -115Z",
@@ -166,7 +166,7 @@ describe("variations", function () {
       );
     });
 
-    it("substitutes GSUB features depending on variations", function () {
+    test("substitutes GSUB features depending on variations", function () {
       let glyph = font.getVariation({ wght: 900 }).layout("$").glyphs[0];
       assert.equal(glyph.name, "dollar.nostroke");
       assert.equal(

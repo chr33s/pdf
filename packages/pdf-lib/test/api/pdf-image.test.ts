@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 
 import { PDFDocument, PDFImage } from "../../src/api/index.js";
 import { PngEmbedder } from "../../src/core/index.js";
@@ -9,7 +9,7 @@ const examplePngImage =
 
 describe("PDFImage", () => {
   describe("embed() method", () => {
-    it("clears the 'embedder' field after the first call", async () => {
+    test("clears the 'embedder' field after the first call", async () => {
       const pdfDoc = await PDFDocument.create();
 
       const bytes = toUint8Array(examplePngImage);
@@ -23,7 +23,7 @@ describe("PDFImage", () => {
       expect(pdfImage[embedderVariable]).toBeUndefined();
     });
 
-    it("may be called multiple times without causing an error", async () => {
+    test("may be called multiple times without causing an error", async () => {
       const pdfDoc = await PDFDocument.create();
 
       const bytes = toUint8Array(examplePngImage);
@@ -35,7 +35,7 @@ describe("PDFImage", () => {
       await expect(pdfImage.embed()).resolves.not.toThrowError();
     });
 
-    it("may be called in parallel without causing an error", async () => {
+    test("may be called in parallel without causing an error", async () => {
       const pdfDoc = await PDFDocument.create();
 
       const bytes = toUint8Array(examplePngImage);

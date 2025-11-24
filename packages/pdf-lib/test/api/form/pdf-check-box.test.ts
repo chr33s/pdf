@@ -1,12 +1,12 @@
 import fs from "node:fs";
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 import { AnnotationFlags, PDFDocument } from "../../../src/index.js";
 
 const fancyFieldsPdfBytes = fs.readFileSync("assets/pdfs/fancy_fields.pdf");
 const pdfDocPromise = PDFDocument.load(fancyFieldsPdfBytes);
 
 describe("PDFCheckBox", () => {
-  it("can read its value", async () => {
+  test("can read its value", async () => {
     const pdfDoc = await pdfDocPromise;
 
     const form = pdfDoc.getForm();
@@ -26,7 +26,7 @@ describe("PDFCheckBox", () => {
     expect(everLetMeDown.isChecked()).toBe(false);
   });
 
-  it("can read its flag states", async () => {
+  test("can read its flag states", async () => {
     const pdfDoc = await pdfDocPromise;
 
     const form = pdfDoc.getForm();
@@ -38,7 +38,7 @@ describe("PDFCheckBox", () => {
     expect(isAFairy.isRequired()).toBe(false);
   });
 
-  it("produces printable widgets when added to a page", async () => {
+  test("produces printable widgets when added to a page", async () => {
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage();
 
@@ -54,7 +54,7 @@ describe("PDFCheckBox", () => {
     expect(widgets()[0].hasFlag(AnnotationFlags.Print)).toBe(true);
   });
 
-  it("sets page reference when added to a page", async () => {
+  test("sets page reference when added to a page", async () => {
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage();
 

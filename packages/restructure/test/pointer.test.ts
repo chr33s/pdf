@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 import {
   DecodeStream,
   EncodeStream,
@@ -11,25 +11,25 @@ import { expectStream } from "./helpers.js";
 
 describe("Pointer", () => {
   describe("decode", () => {
-    it("should handle null pointers", () => {
+    test("should handle null pointers", () => {
       const stream = new DecodeStream(Buffer.from([0]));
       const pointer = new Pointer(uint8, uint8);
       expect(pointer.decode(stream, { _startOffset: 50 })).to.equal(null);
     });
 
-    it("should use local offsets from start of parent by default", () => {
+    test("should use local offsets from start of parent by default", () => {
       const stream = new DecodeStream(Buffer.from([1, 53]));
       const pointer = new Pointer(uint8, uint8);
       expect(pointer.decode(stream, { _startOffset: 0 })).to.equal(53);
     });
 
-    it("should support immediate offsets", () => {
+    test("should support immediate offsets", () => {
       const stream = new DecodeStream(Buffer.from([1, 53]));
       const pointer = new Pointer(uint8, uint8, { type: "immediate" });
       expect(pointer.decode(stream, {})).to.equal(53);
     });
 
-    it("should support offsets relative to the parent", () => {
+    test("should support offsets relative to the parent", () => {
       const stream = new DecodeStream(Buffer.from([0, 0, 1, 53]));
       stream.pos = 2;
       const pointer = new Pointer(uint8, uint8, { type: "parent" });
@@ -38,7 +38,7 @@ describe("Pointer", () => {
       );
     });
 
-    it("should support global offsets", () => {
+    test("should support global offsets", () => {
       const stream = new DecodeStream(Buffer.from([1, 2, 4, 0, 0, 0, 53]));
       const pointer = new Pointer(uint8, uint8, { type: "global" });
       stream.pos = 2;
@@ -47,7 +47,7 @@ describe("Pointer", () => {
       ).to.equal(53);
     });
 
-    it("should support offsets relative to a property on the parent", () => {
+    test("should support offsets relative to a property on the parent", () => {
       const stream = new DecodeStream(Buffer.from([1, 0, 0, 0, 0, 53]));
       const pointer = new Pointer(uint8, uint8, { relativeTo: "parent.ptr" });
       expect(
@@ -55,13 +55,13 @@ describe("Pointer", () => {
       ).to.equal(53);
     });
 
-    it("should support returning pointer if there is no decode type", () => {
+    test("should support returning pointer if there is no decode type", () => {
       const stream = new DecodeStream(Buffer.from([4]));
       const pointer = new Pointer(uint8, "void");
       expect(pointer.decode(stream, { _startOffset: 0 })).to.equal(4);
     });
 
-    it("should support decoding pointers lazily", () => {
+    test("should support decoding pointers lazily", () => {
       const stream = new DecodeStream(Buffer.from([1, 53]));
       const struct = new Struct({
         ptr: new Pointer(uint8, uint8, { lazy: true }),
@@ -76,55 +76,55 @@ describe("Pointer", () => {
   });
 
   describe("size", () => {
-    it("should add to local pointerSize", () => {
+    test("should add to local pointerSize", () => {
       const pointer = new Pointer(uint8, uint8);
       const ctx: any = { pointerSize: 0 };
       expect(pointer.size(10, ctx)).to.equal(1);
       expect(ctx.pointerSize).to.equal(1);
     });
 
-    it("should add to immediate pointerSize", () => {
+    test("should add to immediate pointerSize", () => {
       const pointer = new Pointer(uint8, uint8, { type: "immediate" });
       const ctx: any = { pointerSize: 0 };
       expect(pointer.size(10, ctx)).to.equal(1);
       expect(ctx.pointerSize).to.equal(1);
     });
 
-    it("should add to parent pointerSize", () => {
+    test("should add to parent pointerSize", () => {
       const pointer = new Pointer(uint8, uint8, { type: "parent" });
       const ctx: any = { parent: { pointerSize: 0 } };
       expect(pointer.size(10, ctx)).to.equal(1);
       expect(ctx.parent.pointerSize).to.equal(1);
     });
 
-    it("should add to global pointerSize", () => {
+    test("should add to global pointerSize", () => {
       const pointer = new Pointer(uint8, uint8, { type: "global" });
       const ctx: any = { parent: { parent: { parent: { pointerSize: 0 } } } };
       expect(pointer.size(10, ctx)).to.equal(1);
       expect(ctx.parent.parent.parent.pointerSize).to.equal(1);
     });
 
-    it("should handle void pointers", () => {
+    test("should handle void pointers", () => {
       const pointer = new Pointer(uint8, "void");
       const ctx: any = { pointerSize: 0 };
       expect(pointer.size(new VoidPointer(uint8, 50), ctx)).to.equal(1);
       expect(ctx.pointerSize).to.equal(1);
     });
 
-    it("should throw if no type and not a void pointer", () => {
+    test("should throw if no type and not a void pointer", () => {
       const pointer = new Pointer(uint8, "void");
       const ctx: any = { pointerSize: 0 };
       expect(() => pointer.size(30, ctx)).to.throw();
     });
 
-    it("should return a fixed size without a value", () => {
+    test("should return a fixed size without a value", () => {
       const pointer = new Pointer(uint8, uint8);
       expect(pointer.size()).to.equal(1);
     });
   });
 
   describe("encode", () => {
-    it("should handle null pointers", async () => {
+    test("should handle null pointers", async () => {
       const stream = new EncodeStream();
       const expectation = expectStream(stream, (buf) => {
         expect(buf).to.deep.equal(Buffer.from([0]));
@@ -144,7 +144,7 @@ describe("Pointer", () => {
       await expectation;
     });
 
-    it("should handle local offsets", async () => {
+    test("should handle local offsets", async () => {
       const stream = new EncodeStream();
       const expectation = expectStream(stream, (buf) => {
         expect(buf).to.deep.equal(Buffer.from([1]));
@@ -167,7 +167,7 @@ describe("Pointer", () => {
       await expectation;
     });
 
-    it("should handle immediate offsets", async () => {
+    test("should handle immediate offsets", async () => {
       const stream = new EncodeStream();
       const expectation = expectStream(stream, (buf) => {
         expect(buf).to.deep.equal(Buffer.from([0]));
@@ -190,7 +190,7 @@ describe("Pointer", () => {
       await expectation;
     });
 
-    it("should handle offsets relative to parent", async () => {
+    test("should handle offsets relative to parent", async () => {
       const stream = new EncodeStream();
       const expectation = expectStream(stream, (buf) => {
         expect(buf).to.deep.equal(Buffer.from([2]));
@@ -215,7 +215,7 @@ describe("Pointer", () => {
       await expectation;
     });
 
-    it("should handle global offsets", async () => {
+    test("should handle global offsets", async () => {
       const stream = new EncodeStream();
       const expectation = expectStream(stream, (buf) => {
         expect(buf).to.deep.equal(Buffer.from([5]));
@@ -244,7 +244,7 @@ describe("Pointer", () => {
       await expectation;
     });
 
-    it("should support offsets relative to a property on the parent", async () => {
+    test("should support offsets relative to a property on the parent", async () => {
       const stream = new EncodeStream();
       const expectation = expectStream(stream, (buf) => {
         expect(buf).to.deep.equal(Buffer.from([6]));
@@ -268,7 +268,7 @@ describe("Pointer", () => {
       await expectation;
     });
 
-    it("should support void pointers", async () => {
+    test("should support void pointers", async () => {
       const stream = new EncodeStream();
       const expectation = expectStream(stream, (buf) => {
         expect(buf).to.deep.equal(Buffer.from([1]));
@@ -291,7 +291,7 @@ describe("Pointer", () => {
       await expectation;
     });
 
-    it("should throw if not a void pointer instance", () => {
+    test("should throw if not a void pointer instance", () => {
       const stream = new EncodeStream();
       const ptr = new Pointer(uint8, "void");
       const ctx: any = {

@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 import {
   DecodeStream,
   double,
@@ -234,43 +234,43 @@ const aliasCases: Array<[string, any, any]> = [
 ];
 
 describe("Number", () => {
-  aliasCases.forEach(([name, alias, target]) => {
-    it(`${name} should alias the big-endian variant`, () => {
+  test.each(aliasCases)(
+    "%s should alias the big-endian variant",
+    (name, alias, target) => {
       expect(alias).to.equal(target);
+    },
+  );
+
+  describe.each(integerCases)("$name", ({ type, buffer, expected, size }) => {
+    test("should decode", () => {
+      const stream = new DecodeStream(Buffer.from(buffer));
+      expected.forEach((value) => {
+        expect(type.decode(stream)).to.equal(value);
+      });
+    });
+
+    test("should report size", () => {
+      expect(type.size()).to.equal(size);
+    });
+
+    test("should encode", async () => {
+      const stream = new EncodeStream();
+      const expectation = expectStream(stream, (buf) => {
+        expect(buf).to.deep.equal(Buffer.from(buffer));
+      });
+
+      expected.forEach((value) => {
+        type.encode(stream, value);
+      });
+      stream.end();
+      await expectation;
     });
   });
 
-  integerCases.forEach(({ name, type, buffer, expected, size }) => {
-    describe(name, () => {
-      it("should decode", () => {
-        const stream = new DecodeStream(Buffer.from(buffer));
-        expected.forEach((value) => {
-          expect(type.decode(stream)).to.equal(value);
-        });
-      });
-
-      it("should report size", () => {
-        expect(type.size()).to.equal(size);
-      });
-
-      it("should encode", async () => {
-        const stream = new EncodeStream();
-        const expectation = expectStream(stream, (buf) => {
-          expect(buf).to.deep.equal(Buffer.from(buffer));
-        });
-
-        expected.forEach((value) => {
-          type.encode(stream, value);
-        });
-        stream.end();
-        await expectation;
-      });
-    });
-  });
-
-  floatCases.forEach(({ name, type, buffer, expected, size, precision }) => {
-    describe(name, () => {
-      it("should decode", () => {
+  describe.each(floatCases)(
+    "$name",
+    ({ type, buffer, expected, size, precision }) => {
+      test("should decode", () => {
         const stream = new DecodeStream(Buffer.from(buffer));
         const value = type.decode(stream);
         if (precision) {
@@ -280,11 +280,11 @@ describe("Number", () => {
         }
       });
 
-      it("should report size", () => {
+      test("should report size", () => {
         expect(type.size()).to.equal(size);
       });
 
-      it("should encode", async () => {
+      test("should encode", async () => {
         const stream = new EncodeStream();
         const expectation = expectStream(stream, (buf) => {
           expect(buf).to.deep.equal(Buffer.from(buffer));
@@ -294,6 +294,6 @@ describe("Number", () => {
         stream.end();
         await expectation;
       });
-    });
-  });
+    },
+  );
 });

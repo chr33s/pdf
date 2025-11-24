@@ -1,5 +1,5 @@
 import assert from "node:assert";
-import { describe, it } from "vitest";
+import { describe, test } from "vitest";
 
 import fontkit from "./add-test-helpers-to-fontkit.js";
 import { here } from "./utils/dir.js";
@@ -11,7 +11,7 @@ describe("metadata", function () {
     __dirname + "/data/OpenSans/OpenSans-Regular.ttf",
   );
 
-  it("decodes SFNT directory values correctly", function () {
+  test("decodes SFNT directory values correctly", function () {
     let dir = font.directory;
     assert.equal(dir.numTables, 19);
     assert.equal(dir.searchRange, 256);
@@ -19,7 +19,7 @@ describe("metadata", function () {
     assert.equal(dir.rangeShift, 48);
   });
 
-  it("numTables matches table collection", function () {
+  test("numTables matches table collection", function () {
     let dir = font.directory;
     assert.equal(Object.keys(dir.tables).length, dir.numTables);
   });

@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 import {
   PDFArray,
   PDFBool,
@@ -16,7 +16,7 @@ import { toCharCode, typedArrayFor } from "../../../src/utils/index.js";
 describe("PDFArray", () => {
   const context = PDFContext.create();
 
-  it("can be constructed with PDFArray.withContext(...)", () => {
+  test("can be constructed with PDFArray.withContext(...)", () => {
     expect(PDFArray.withContext(context)).toBeInstanceOf(PDFArray);
   });
 
@@ -47,7 +47,7 @@ describe("PDFArray", () => {
   pdfArray.push(pdfSubArray);
   pdfArray.push(pdfRef);
 
-  it("retains pushed objects", () => {
+  test("retains pushed objects", () => {
     expect(pdfArray.size()).toBe(8);
 
     expect(pdfArray.get(0)).toBe(pdfBool);
@@ -60,7 +60,7 @@ describe("PDFArray", () => {
     expect(pdfArray.get(7)).toBe(pdfRef);
   });
 
-  it("allows objects to be assigned to specific indices", () => {
+  test("allows objects to be assigned to specific indices", () => {
     const array = PDFArray.withContext(PDFContext.create());
     array.push(PDFName.of("a"));
     array.push(PDFName.of("b"));
@@ -70,7 +70,7 @@ describe("PDFArray", () => {
     expect(array.size()).toBe(3);
   });
 
-  it("allows objects to be inserted at specific indices", () => {
+  test("allows objects to be inserted at specific indices", () => {
     const array = PDFArray.withContext(PDFContext.create());
     array.push(PDFName.of("a"));
     array.push(PDFName.of("b"));
@@ -82,7 +82,7 @@ describe("PDFArray", () => {
     expect(array.size()).toBe(4);
   });
 
-  it("allows objects to be removed from specific indices", () => {
+  test("allows objects to be removed from specific indices", () => {
     const array = PDFArray.withContext(PDFContext.create());
     array.push(PDFName.of("a"));
     array.push(PDFName.of("b"));
@@ -93,7 +93,7 @@ describe("PDFArray", () => {
     expect(array.size()).toBe(2);
   });
 
-  it("can be converted to an Array", () => {
+  test("can be converted to an Array", () => {
     expect(pdfArray.asArray()).toEqual([
       pdfBool,
       pdfHexString,
@@ -106,24 +106,24 @@ describe("PDFArray", () => {
     ]);
   });
 
-  it("can be cloned", () => {
+  test("can be cloned", () => {
     const original = pdfArray;
     const clone = original.clone();
     expect(clone).not.toBe(original);
     expect(clone.toString()).toBe(original.toString());
   });
 
-  it("can be converted to a string", () => {
+  test("can be converted to a string", () => {
     expect(String(pdfArray)).toBe(
       "[ true <ABC123> /Foo#23Bar! null -24.179 (foobar) [ true <<\n/Foo /Bar\n>> ] 21 92 R ]",
     );
   });
 
-  it("can provide its size in bytes", () => {
+  test("can provide its size in bytes", () => {
     expect(pdfArray.sizeInBytes()).toBe(84);
   });
 
-  it("can be serialized", () => {
+  test("can be serialized", () => {
     const buffer = new Uint8Array(88).fill(toCharCode(" "));
     expect(pdfArray.copyBytesInto(buffer, 3)).toBe(84);
     expect(buffer).toEqual(

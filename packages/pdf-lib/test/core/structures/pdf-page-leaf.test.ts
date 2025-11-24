@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 
 import {
   PDFArray,
@@ -11,7 +11,7 @@ import {
 } from "../../../src/index.js";
 
 describe("PDFPageLeaf", () => {
-  it("can be constructed directly from a Map and PDFContext", () => {
+  test("can be constructed directly from a Map and PDFContext", () => {
     const context = PDFContext.create();
     const dict = new Map();
     const pageTree = PDFPageLeaf.fromMapWithContext(dict, context);
@@ -23,7 +23,7 @@ describe("PDFPageLeaf", () => {
     expect(pageTree.get(PDFName.of("Parent"))).toBeUndefined();
   });
 
-  it("is constructed with the correct Type and entries", () => {
+  test("is constructed with the correct Type and entries", () => {
     const context = PDFContext.create();
     const parentRef = PDFRef.of(1);
     const pageTree = PDFPageLeaf.withContextAndParent(context, parentRef);
@@ -35,7 +35,7 @@ describe("PDFPageLeaf", () => {
     expect(pageTree.get(PDFName.of("MediaBox"))).toBeInstanceOf(PDFArray);
   });
 
-  it("returns its Parent, Contents, Annots, BleedBox, TrimBox, Resources, MediaBox, CropBox, and Rotate entry values when they are references", () => {
+  test("returns its Parent, Contents, Annots, BleedBox, TrimBox, Resources, MediaBox, CropBox, and Rotate entry values when they are references", () => {
     const context = PDFContext.create();
 
     const parent = PDFPageTree.withContext(context);
@@ -90,7 +90,7 @@ describe("PDFPageLeaf", () => {
     expect(pageLeaf.Rotate()).toBe(rotate);
   });
 
-  it("returns its Parent, Contents, Annots, BleedBox, TrimBox, Resources, MediaBox, CropBox, and Rotate entry values when they are direct objects", () => {
+  test("returns its Parent, Contents, Annots, BleedBox, TrimBox, Resources, MediaBox, CropBox, and Rotate entry values when they are direct objects", () => {
     const context = PDFContext.create();
 
     const parent = PDFPageTree.withContext(context);
@@ -137,7 +137,7 @@ describe("PDFPageLeaf", () => {
     expect(pageLeaf.Rotate()).toBe(rotate);
   });
 
-  it("returns its Resources, MediaBox, CropBox, and Rotate entry values when they are inherited", () => {
+  test("returns its Resources, MediaBox, CropBox, and Rotate entry values when they are inherited", () => {
     const context = PDFContext.create();
 
     const resources = context.obj({});
@@ -175,7 +175,7 @@ describe("PDFPageLeaf", () => {
     expect(pageLeaf.Rotate()).toBe(rotate);
   });
 
-  it("returns its Resources, MediaBox, CropBox, and Rotate entry values after being normalized, when they are inherited", () => {
+  test("returns its Resources, MediaBox, CropBox, and Rotate entry values after being normalized, when they are inherited", () => {
     const context = PDFContext.create();
 
     const resources = context.obj({
@@ -222,7 +222,7 @@ describe("PDFPageLeaf", () => {
     expect(XObject).toBe(resources.get(PDFName.XObject));
   });
 
-  it("can set its Parent", () => {
+  test("can set its Parent", () => {
     const context = PDFContext.create();
     const parentRef = PDFRef.of(1);
     const pageTree = PDFPageLeaf.withContextAndParent(context, parentRef);
@@ -230,7 +230,7 @@ describe("PDFPageLeaf", () => {
     expect(pageTree.get(PDFName.of("Parent"))).toBe(PDFRef.of(21));
   });
 
-  it("can add content stream refs", () => {
+  test("can add content stream refs", () => {
     const context = PDFContext.create();
     const parentRef = PDFRef.of(1);
     const pageTree = PDFPageLeaf.withContextAndParent(context, parentRef);
@@ -241,7 +241,7 @@ describe("PDFPageLeaf", () => {
     expect(pageTree.Contents()!.toString()).toBe("[ 21 0 R 99 0 R ]");
   });
 
-  it("can set font dictionary refs", () => {
+  test("can set font dictionary refs", () => {
     const context = PDFContext.create();
     const parentRef = PDFRef.of(1);
     const pageTree = PDFPageLeaf.withContextAndParent(context, parentRef);
@@ -257,7 +257,7 @@ describe("PDFPageLeaf", () => {
     );
   });
 
-  it("can set XObject refs", () => {
+  test("can set XObject refs", () => {
     const context = PDFContext.create();
     const parentRef = PDFRef.of(1);
     const pageTree = PDFPageLeaf.withContextAndParent(context, parentRef);
@@ -273,7 +273,7 @@ describe("PDFPageLeaf", () => {
     );
   });
 
-  it("can set ExtGState refs and dicts", () => {
+  test("can set ExtGState refs and dicts", () => {
     const context = PDFContext.create();
     const parentRef = PDFRef.of(1);
     const pageTree = PDFPageLeaf.withContextAndParent(context, parentRef);
@@ -289,7 +289,7 @@ describe("PDFPageLeaf", () => {
     );
   });
 
-  it("can be ascended", () => {
+  test("can be ascended", () => {
     const context = PDFContext.create();
 
     const pageTree1 = PDFPageTree.withContext(context);
@@ -311,7 +311,7 @@ describe("PDFPageLeaf", () => {
     expect(visitations).toEqual([pageLeaf, pageTree2, pageTree1]);
   });
 
-  it("can be normalized with autoNormalizeCTM=false", () => {
+  test("can be normalized with autoNormalizeCTM=false", () => {
     const context = PDFContext.create();
     const parentRef = PDFRef.of(1);
     const pageTree = PDFPageLeaf.withContextAndParent(context, parentRef);
@@ -331,7 +331,7 @@ describe("PDFPageLeaf", () => {
     );
   });
 
-  it("can be normalized with autoNormalizeCTM=true", () => {
+  test("can be normalized with autoNormalizeCTM=true", () => {
     const context = PDFContext.create();
     const map = new Map();
     const pageTree = PDFPageLeaf.fromMapWithContext(map, context);

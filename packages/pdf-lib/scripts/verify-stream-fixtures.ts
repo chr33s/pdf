@@ -33,8 +33,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const testRoot = join(__dirname, "..", "test");
 
-const ok = [];
-const skipped = [];
+const ok: string[] = [];
+const skipped: string[] = [];
 
 const toPosix = (value) => value.split(sep).join("/");
 
