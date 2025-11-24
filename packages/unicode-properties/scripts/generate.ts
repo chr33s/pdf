@@ -10,7 +10,7 @@ type IndexLookup = Record<string, number>;
 const bits = (value: number): number =>
   value > 0 ? (Math.log2(value) + 1) | 0 : 0;
 
-const numericValue = (numeric?: string): number => {
+const numericValue = (numeric?: string | null): number => {
   if (!numeric) {
     return 0;
   }
@@ -45,7 +45,7 @@ const numericValue = (numeric?: string): number => {
 
 const addIndex = (
   lookup: IndexLookup,
-  key: string | undefined,
+  key: string | null | undefined,
   currentCount: number,
 ): number => {
   const normalizedKey = key ?? "";
@@ -56,8 +56,10 @@ const addIndex = (
   return currentCount;
 };
 
-const getIndex = (lookup: IndexLookup, key: string | undefined): number =>
-  lookup[key ?? ""] ?? 0;
+const getIndex = (
+  lookup: IndexLookup,
+  key: string | null | undefined,
+): number => lookup[key ?? ""] ?? 0;
 
 const srcDir = path.resolve(process.cwd(), "src");
 const trieFilePath = path.join(srcDir, "trie.ts");
@@ -123,7 +125,13 @@ for (const entry of entries) {
 }
 
 const trieBuffer = trie.toBuffer();
-const triePayload = base64.encode(pako.deflate(trieBuffer));
+const compressedTrie = pako.deflate(trieBuffer);
+const triePayload = base64.encode(
+  compressedTrie.buffer.slice(
+    compressedTrie.byteOffset,
+    compressedTrie.byteOffset + compressedTrie.byteLength,
+  ),
+);
 
 const emitModule = (value: string): string =>
   `const payload = ${JSON.stringify(value)};\nexport default payload;\n`;
@@ -139,5 +147,11 @@ const data = {
 };
 
 const dataBytes = encoder.encode(JSON.stringify(data));
-const dataPayload = base64.encode(pako.deflate(dataBytes));
+const compressedData = pako.deflate(dataBytes);
+const dataPayload = base64.encode(
+  compressedData.buffer.slice(
+    compressedData.byteOffset,
+    compressedData.byteOffset + compressedData.byteLength,
+  ),
+);
 writeFileSync(dataFilePath, emitModule(dataPayload));

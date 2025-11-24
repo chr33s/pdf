@@ -6,6 +6,8 @@ import { here } from "./utils/dir.js";
 
 const __dirname = here(import.meta.url);
 type FontInstance = ReturnType<typeof fontkit.openSync>;
+const glyphIds = (glyphs: Array<{ id: number }>) =>
+  glyphs.map((glyph) => glyph.id);
 
 describe("shaping", function () {
   const fontCache: Record<string, FontInstance> = {};
@@ -45,18 +47,12 @@ describe("shaping", function () {
 
     it("should use correct script and language when features are not specified", function () {
       let { glyphs } = font.layout("۴", "arab", "URD");
-      return assert.deepEqual(
-        glyphs.map((g) => g.id),
-        [1940],
-      );
+      return assert.deepEqual(glyphIds(glyphs), [1940]);
     });
 
     it("should use specified left-to-right direction", function () {
       let { glyphs } = font.layout("١٢٣", "arab", "ARA ", "ltr");
-      return assert.deepEqual(
-        glyphs.map((g) => g.id),
-        [446, 447, 448],
-      );
+      return assert.deepEqual(glyphIds(glyphs), [446, 447, 448]);
     });
   });
 
@@ -132,7 +128,7 @@ describe("shaping", function () {
         "\uD734\uAC00\u0020\uAC00\u002D\u002D\u0020\u0028\uC624\u002D\u002D\u0029",
       );
       return assert.deepEqual(
-        glyphs.map((g) => g.id),
+        glyphIds(glyphs),
         [58626, 47566, 62995, 47566, 14, 14, 1, 9, 54258, 14, 14, 10],
       );
     });
@@ -142,67 +138,46 @@ describe("shaping", function () {
         "\u1112\u1172\u1100\u1161\u0020\u1100\u1161\u002D\u002D\u0020\u0028\u110B\u1169\u002D\u002D\u0029",
       );
       return assert.deepEqual(
-        glyphs.map((g) => g.id),
+        glyphIds(glyphs),
         [58626, 47566, 62995, 47566, 14, 14, 1, 9, 54258, 14, 14, 10],
       );
     });
 
     it("should use OT features for non-combining <L,V,T>", function () {
       let { glyphs } = font.layout("\ua960\ud7b0\ud7cb");
-      return assert.deepEqual(
-        glyphs.map((g) => g.id),
-        [64003, 64479, 64822],
-      );
+      return assert.deepEqual(glyphIds(glyphs), [64003, 64479, 64822]);
     });
 
     it("should decompose <LV,T> to <L,V,T> if <LVT> is not supported", function () {
       // <L,V> combine at first, but the T is non-combining, so this
       // tests that the <LV> gets decomposed again in this case.
       let { glyphs } = font.layout("\u1100\u1161\ud7cb");
-      return assert.deepEqual(
-        glyphs.map((g) => g.id),
-        [63657, 64408, 64685],
-      );
+      return assert.deepEqual(glyphIds(glyphs), [63657, 64408, 64685]);
     });
 
     it("should reorder tone marks to the beginning of <L,V> syllables", function () {
       let { glyphs } = font.layout("\ua960\ud7b0\u302f");
-      return assert.deepEqual(
-        glyphs.map((g) => g.id),
-        [1436, 64378, 64574],
-      );
+      return assert.deepEqual(glyphIds(glyphs), [1436, 64378, 64574]);
     });
 
     it("should reorder tone marks to the beginning of <L,V,T> syllables", function () {
       let { glyphs } = font.layout("\ua960\ud7b0\ud7cb\u302f");
-      return assert.deepEqual(
-        glyphs.map((g) => g.id),
-        [1436, 64003, 64479, 64822],
-      );
+      return assert.deepEqual(glyphIds(glyphs), [1436, 64003, 64479, 64822]);
     });
 
     it("should reorder tone marks to the beginning of <LV> syllables", function () {
       let { glyphs } = font.layout("\uac00\u302f");
-      return assert.deepEqual(
-        glyphs.map((g) => g.id),
-        [1436, 47566],
-      );
+      return assert.deepEqual(glyphIds(glyphs), [1436, 47566]);
     });
 
     it("should reorder tone marks to the beginning of <LVT> syllables", function () {
       let { glyphs } = font.layout("\uac01\u302f");
-      return assert.deepEqual(
-        glyphs.map((g) => g.id),
-        [1436, 47567],
-      );
+      return assert.deepEqual(glyphIds(glyphs), [1436, 47567]);
     });
 
     it("should insert a dotted circle for invalid tone marks", function () {
       let { glyphs } = font.layout("\u1100\u302f\u1161");
-      return assert.deepEqual(
-        glyphs.map((g) => g.id),
-        [365, 1436, 1256, 462],
-      );
+      return assert.deepEqual(glyphIds(glyphs), [365, 1436, 1256, 462]);
     });
   });
 

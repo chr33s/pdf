@@ -27,8 +27,14 @@ export const extractLinesFromSection = (
   const endRegex = new RegExp(`^${endAt}`, "m");
 
   const startMatch = data.match(startRegex);
-  if (!startMatch) return [];
+  if (!startMatch || startMatch.index === undefined) {
+    return [];
+  }
+
   const endMatch = data.match(endRegex);
+  if (!endMatch || endMatch.index === undefined) {
+    return [];
+  }
 
   const startIdx = startMatch.index + startMatch[0].length;
 

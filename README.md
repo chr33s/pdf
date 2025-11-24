@@ -23,7 +23,6 @@ deep-equal -> fast-deep-equal
 tiny-inflate -> pako
 
 - [ ] remove @ts-nocheck
-- [ ] ensure [scripts,test] are typechecked
 
 ## Notes
 

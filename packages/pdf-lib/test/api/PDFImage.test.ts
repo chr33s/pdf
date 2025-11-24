@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { PDFDocument, PDFImage } from "../../src/api/index.js";
 import { PngEmbedder } from "../../src/core/index.js";
@@ -43,19 +43,14 @@ describe("PDFImage", () => {
       const ref = pdfDoc.context.nextRef();
       const pdfImage = PDFImage.of(ref, pdfDoc, embedder);
 
-      const task = () => pdfImage["embedTask"];
-
-      expect(task()).toBeUndefined();
+      const embedSpy = vi.spyOn(embedder, "embedIntoContext");
 
       const task1 = pdfImage.embed();
-      const firstTask = task();
-
       const task2 = pdfImage.embed();
-      const secondTask = task();
 
       await Promise.all([task1, task2]);
 
-      expect(firstTask).toEqual(secondTask);
+      expect(embedSpy).toHaveBeenCalledTimes(1);
     });
   });
 });

@@ -158,7 +158,7 @@ const equal_int = (a, s, t, length) => {
 };
 
 class UnicodeTrieBuilder {
-  constructor(initialValue, errorValue) {
+  constructor(initialValue: number | null = 0, errorValue: number | null = 0) {
     let i, j;
     if (initialValue == null) {
       initialValue = 0;
@@ -418,7 +418,7 @@ class UnicodeTrieBuilder {
     return this;
   }
 
-  get(c, fromLSCP) {
+  get(c: number, fromLSCP: boolean | null = true) {
     let i2;
     if (fromLSCP == null) {
       fromLSCP = true;

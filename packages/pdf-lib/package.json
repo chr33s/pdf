@@ -39,7 +39,7 @@
   ],
   "scripts": {
     "clean": "rm -rf dist tsconfig.tsbuildinfo scratchpad/build coverage tsBuildInfo.json apps/node-build apps/node/tsBuildInfo.json isolate*.log flamegraph.html out.pdf",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --project tsconfig.typecheck.json",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage && open coverage/index.html",
     "build": "tsc",

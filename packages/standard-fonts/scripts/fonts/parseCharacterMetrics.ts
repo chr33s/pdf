@@ -6,16 +6,9 @@ import {
 } from "./utils.ts";
 
 export interface ICharMetrics {
-  C: number;
   WX: number;
   N: string;
-  B: [number, number, number, number];
-  L: Array<[string, string]>;
 }
-
-type ICharMetricKey = keyof ICharMetrics;
-
-const byKey = (key: ICharMetricKey) => (obj) => obj.key === key;
 
 /**
  * From https://www.adobe.com/content/dam/acom/en/devnet/font/pdfs/5004.AFM_Spec.pdf :
@@ -46,54 +39,30 @@ const byKey = (key: ICharMetricKey) => (obj) => obj.key === key;
  */
 
 // prettier-ignore
-const parseMetric = (
-  // E.g. 'B 56 -45 544 651'
-  metric: string,
-) => {
-  // E.g. 'B'
-  const key = takeUntilFirstSpace(metric) as ICharMetricKey;
-
-  // E.g. '56 -45 544 651'
-  const rawValue = takeAfterFirstSpace(metric);
-  
-  return (
-      key === 'C'  ? { key, value: Number(rawValue) }
-    : key === 'WX' ? { key, value: Number(rawValue) }
-    : key === 'N'  ? { key, value: String(rawValue) }
-    : key === 'B'  ? { key, value: rawValue.split(' ').map(Number) }
-    : key === 'L'  ? { key, value: rawValue.split(' ').map(String) }
-    : error(`Unrecognized character metric key: "${String(key)}"`)
-  );
-};
-
 const parseCharMetrics = (
   // E.g. 'C 35 ; WX 600 ; N numbersign ; B 56 -45 544 651 ;'
   line: string,
 ): ICharMetrics => {
   const SEMICOLON_WITH_SURROUDING_WHITESPACE = /\s*;\s*/;
-  const NON_EMPTY = (str) => str !== "";
-
-  const metrics = line
-    // E.g. ['C 35', 'WX 600', 'N numbersign', 'B 56 -45 544 651', '']
+  const segments = line
     .split(SEMICOLON_WITH_SURROUDING_WHITESPACE)
-    // E.g. ['C 35', 'WX 600', 'N numbersign', 'B 56 -45 544 651']
-    .filter(NON_EMPTY)
-    // E.g. [
-    //        { key: 'C',  value: 35 },
-    //        { key: 'WX', value: 600 },
-    //        { key: 'N',  value: 'numbersign' },
-    //        { key: 'B',  value: [56, -45, 544, 651] }
-    //      ]
-    .map(parseMetric);
+    .map((segment) => segment.trim())
+    .filter((segment) => segment.length > 0);
 
-  // We'll leave out C, B, and L to save space in the resulting JSON
+  const metrics = new Map<string, string>();
+  for (const metric of segments) {
+    const key = takeUntilFirstSpace(metric);
+    const value = takeAfterFirstSpace(metric);
+    metrics.set(key, value);
+  }
+
+  const rawWx = metrics.get("WX") ?? error("Missing WX metric in character data");
+  const rawName = metrics.get("N") ?? error("Missing N metric in character data");
+
   return {
-    // C: metrics.find(byKey('C')).value,
-    WX: metrics.find(byKey("WX")).value,
-    N: metrics.find(byKey("N")).value,
-    // B: metrics.find(byKey('B')).value,
-    // L: metrics.filter(byKey('L')).map((l) => l.value),
-  } as ICharMetrics;
+    WX: Number(rawWx),
+    N: rawName,
+  };
 };
 
 export const parseCharMetricsSection = (data: string): ICharMetrics[] => {

@@ -5,6 +5,8 @@ import fontkit from "./addTestHelpersToFontkit.js";
 import { here } from "./utils/dir.js";
 
 const __dirname = here(import.meta.url);
+const xAdvances = (positions: Array<{ xAdvance: number }>) =>
+  positions.map((position) => position.xAdvance);
 
 describe("glyph positioning", function () {
   describe("basic positioning", function () {
@@ -24,7 +26,7 @@ describe("glyph positioning", function () {
     it("should apply opentype GPOS features", function () {
       let { positions } = font.layout("Twitter");
       return assert.deepEqual(
-        positions.map((p) => p.xAdvance),
+        xAdvances(positions),
         [502, 718, 246, 318, 324, 496, 347],
       );
     });
@@ -32,7 +34,7 @@ describe("glyph positioning", function () {
     it("should ignore duplicate features", function () {
       let { positions } = font.layout("Twitter", ["kern", "kern"]);
       return assert.deepEqual(
-        positions.map((p) => p.xAdvance),
+        xAdvances(positions),
         [502, 718, 246, 318, 324, 496, 347],
       );
     });
@@ -44,7 +46,7 @@ describe("glyph positioning", function () {
     it("should apply kerning by default", function () {
       let { positions } = font.layout("Twitter");
       return assert.deepEqual(
-        positions.map((p) => p.xAdvance),
+        xAdvances(positions),
         [535, 792, 246, 372, 402, 535, 351],
       );
     });

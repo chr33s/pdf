@@ -10,7 +10,7 @@
     "build": "tsc",
     "clean": "rm -rf dist",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --project tsconfig.typecheck.json"
   },
   "devDependencies": {
     "@types/concat-stream": "^2.0.3",

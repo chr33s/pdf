@@ -11,7 +11,7 @@
     "clean": "rm -rf dist src/grammar.ts",
     "generate": "node scripts/build-grammar.ts",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --project tsconfig.typecheck.json"
   },
   "keywords": [
     "state",

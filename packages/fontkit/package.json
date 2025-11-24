@@ -12,7 +12,7 @@
     "copy:shaper-data": "node ./scripts/copy-shaper-json.ts",
     "generate": "node src/opentype/shapers/generate-data.ts && node src/opentype/shapers/gen-use.ts && node src/opentype/shapers/gen-indic.ts",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --project tsconfig.typecheck.json"
   },
   "dependencies": {
     "@chr33s/brotli": "file:../brotli",

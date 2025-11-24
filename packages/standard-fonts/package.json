@@ -9,7 +9,7 @@
   "scripts": {
     "build": "npm run clean && npm run generate && tsc",
     "clean": "rm -rf dist {encodings_metrics,font_metrics,src}/*.json",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --project tsconfig.typecheck.json",
     "generate": "npm run generate:fonts && npm run generate:encodings",
     "generate:fonts": "node scripts/fonts/parse.ts",
     "generate:encodings": "node scripts/encodings/parse.ts",

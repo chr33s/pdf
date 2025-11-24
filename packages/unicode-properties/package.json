@@ -11,7 +11,7 @@
     "clean": "rm -rf dist src/data.ts src/trie.ts",
     "generate": "node scripts/generate.ts",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --project tsconfig.typecheck.json"
   },
   "dependencies": {
     "@chr33s/unicode-trie": "file:../unicode-trie",

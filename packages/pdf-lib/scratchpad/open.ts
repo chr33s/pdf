@@ -1,13 +1,13 @@
 import { execSync } from "node:child_process";
 
-export enum Reader {
-  Preview = "Preview",
-  Acrobat = "Adobe Acrobat",
-  AcrobatReader = "Adobe Acrobat Reader DC",
-  Foxit = "Foxit Reader",
-  Chrome = "Google Chrome",
-  Firefox = "Firefox",
-}
+export const Reader = {
+  Preview: "Preview",
+  Acrobat: "Adobe Acrobat",
+  AcrobatReader: "Adobe Acrobat Reader DC",
+  Foxit: "Foxit Reader",
+  Chrome: "Google Chrome",
+  Firefox: "Firefox",
+} as const;
 
 export const openPdf = (path: string, reader = Reader.Preview) => {
   if (process.platform === "darwin") {

@@ -81,21 +81,40 @@ udieresis     yacute         thorn          ydieresis
   .trim()
   .split(/\s+/);
 
-export const parseWin1252 = (data: string) => {
-  return data
+export type EncodingMap = Record<number, [number, string]>;
+
+type EncodingTuple = [number, number, string, string];
+
+const isValidEncodingTuple = (
+  entry: [number, number, string, string | undefined],
+): entry is EncodingTuple => {
+  const [, , , postscriptName] = entry;
+  return typeof postscriptName === "string" && postscriptName !== ".notdef";
+};
+
+export const parseWin1252 = (data: string): EncodingMap => {
+  const rows = data
     .split("\n")
     .filter((line) => line[0] !== "#")
     .filter(Boolean)
     .map((line) => line.split("\t"))
-    .map(([postscriptCode, unicodeCode, unicodeName]) => [
-      Number(unicodeCode), // Convert hex string to number
-      Number(postscriptCode), // Convert hex string to Number
-      unicodeName.substring(1), // Remove '#' prefix
-      WinAnsiCharNames[Number(postscriptCode)], // Add postscript name
-    ])
-    .filter(([, , , postscriptName]) => postscriptName !== ".notdef")
-    .reduce((acc, [unicodeCode, postscriptCode, , postscriptName]) => {
-      acc[unicodeCode] = [postscriptCode, postscriptName];
-      return acc;
-    }, {});
+    .map(([postscriptCode, unicodeCode, unicodeName]) => {
+      const unicode = Number(unicodeCode);
+      const postscript = Number(postscriptCode);
+      const postscriptName = WinAnsiCharNames[postscript];
+      return [
+        unicode,
+        postscript,
+        unicodeName.substring(1),
+        postscriptName,
+      ] as [number, number, string, string | undefined];
+    })
+    .filter(isValidEncodingTuple);
+
+  const encodings: EncodingMap = {};
+  for (const [unicodeCode, postscriptCode, , postscriptName] of rows) {
+    encodings[unicodeCode] = [postscriptCode, postscriptName];
+  }
+
+  return encodings;
 };

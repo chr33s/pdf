@@ -30,49 +30,46 @@ export interface IFontMetrics {
 
 export type IFontMetricKey = keyof IFontMetrics;
 
-const stringFontMetricKeys = [
-  "Comment",
-  "FontName",
-  "FullName",
-  "FamilyName",
-  "Weight",
-  "CharacterSet",
-  "Version",
-  "Notice",
-  "EncodingScheme",
-];
-const numericFontMetricKeys = [
-  "ItalicAngle",
-  "UnderlinePosition",
-  "UnderlineThickness",
-  "CapHeight",
-  "XHeight",
-  "Ascender",
-  "Descender",
-  "StdHW",
-  "StdVW",
-];
-const booleanFontMetricKeys = ["IsFixedPitch"];
-const arrayFontMetricKeys = ["FontBBox"];
+type FontMetricEntry = {
+  key: IFontMetricKey;
+  value: IFontMetrics[IFontMetricKey];
+};
 
-// prettier-ignore
-const parseFontMetric = (
-  // E.g. 'FontBBox -113 -250 749 801'
-  line: string,
-) => {
-  // E.g. 'FontBBox'
+const parseFontMetric = (line: string): FontMetricEntry => {
   const key = takeUntilFirstSpace(line) as IFontMetricKey;
-
-  // E.g. '-113 -250 749 801'
   const rawValue = takeAfterFirstSpace(line).trim();
 
-  return (
-      stringFontMetricKeys.includes(key)  ? { key, value: String(rawValue) }
-    : numericFontMetricKeys.includes(key) ? { key, value: Number(rawValue) }
-    : booleanFontMetricKeys.includes(key) ? { key, value: Boolean(rawValue) }
-    : arrayFontMetricKeys.includes(key)   ? { key, value: rawValue.split(' ').map(Number) }
-    : error(`Unrecognized font metric key: "${key}"`)
-  );
+  switch (key) {
+    case "Comment":
+    case "FontName":
+    case "FullName":
+    case "FamilyName":
+    case "Weight":
+    case "CharacterSet":
+    case "Version":
+    case "Notice":
+    case "EncodingScheme":
+      return { key, value: rawValue };
+    case "ItalicAngle":
+    case "UnderlinePosition":
+    case "UnderlineThickness":
+    case "CapHeight":
+    case "XHeight":
+    case "Ascender":
+    case "Descender":
+    case "StdHW":
+    case "StdVW":
+      return { key, value: Number(rawValue) as IFontMetrics[typeof key] };
+    case "IsFixedPitch":
+      return { key, value: Boolean(rawValue) as IFontMetrics[typeof key] };
+    case "FontBBox":
+      return {
+        key,
+        value: rawValue.split(" ").map(Number) as IFontMetrics[typeof key],
+      };
+    default:
+      return error(`Unrecognized font metric key: "${key}"`);
+  }
 };
 
 export const parseFontMetricsSection = (data: string): IFontMetrics => {
@@ -81,8 +78,11 @@ export const parseFontMetricsSection = (data: string): IFontMetrics => {
     endAt: "StartCharMetrics",
   }).map(parseFontMetric);
 
-  return metrics.reduce((acc, curr) => {
-    acc[curr.key] = curr.value;
-    return acc;
-  }, {}) as IFontMetrics;
+  const result: Partial<Record<IFontMetricKey, IFontMetrics[IFontMetricKey]>> =
+    {};
+  for (const metric of metrics) {
+    result[metric.key] = metric.value;
+  }
+
+  return result as IFontMetrics;
 };

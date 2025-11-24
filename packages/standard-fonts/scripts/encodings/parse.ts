@@ -4,6 +4,7 @@ import { basename, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import pako from "pako";
 
+import type { EncodingMap } from "./parseWin1252.ts";
 import { parseWin1252 } from "./parseWin1252.ts";
 import { parseZapfDingbatsOrSymbol } from "./parseZapfDingbatsOrSymbol.ts";
 
@@ -32,13 +33,19 @@ const copyFileToSrc = async (src: string) => {
 const main = async () => {
   const parent = dirname(dirname(__dirname));
 
-  const allEncodings = {};
-  for (const fontName of ["symbol", "zapfdingbats", "win1252"]) {
+  const fontNames = ["symbol", "zapfdingbats", "win1252"] as const;
+  const allEncodings: Record<(typeof fontNames)[number], EncodingMap> = {
+    symbol: {},
+    zapfdingbats: {},
+    win1252: {},
+  };
+
+  for (const fontName of fontNames) {
     const file = `${parent}/encoding_metrics/${fontName}.txt`;
     console.log("Parsing:", file);
     const data = await fs.readFile(file);
 
-    const parser =
+    const parser: (input: string) => EncodingMap =
       fontName === "win1252" ? parseWin1252 : parseZapfDingbatsOrSymbol;
     const jsonMetrics = parser(String(data));
     allEncodings[fontName] = jsonMetrics;

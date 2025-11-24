@@ -10,7 +10,7 @@
     "build": "make && tsc && cp src/brotli.wasm dist/brotli.wasm",
     "clean": "rm -rf dist",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --project tsconfig.typecheck.json"
   },
   "dependencies": {
     "base64-js": "^1.5.1"

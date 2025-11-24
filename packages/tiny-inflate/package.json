@@ -9,6 +9,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "prepare": "npm run build",
+    "typecheck": "tsc --project tsconfig.typecheck.json",
     "test": "vitest run"
   },
   "repository": {

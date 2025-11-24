@@ -5,6 +5,10 @@ import fontkit from "./addTestHelpersToFontkit.js";
 import { here } from "./utils/dir.js";
 
 const __dirname = here(import.meta.url);
+const glyphIds = (glyphs: Array<{ id: number }>) =>
+  glyphs.map((glyph) => glyph.id);
+const glyphCodePoints = (glyphs: Array<{ codePoints: number[] }>) =>
+  glyphs.map((glyph) => glyph.codePoints);
 
 describe("character to glyph mapping", function () {
   describe("basic cmap handling", function () {
@@ -18,12 +22,12 @@ describe("character to glyph mapping", function () {
     });
 
     it("should check if a character is supported", function () {
-      assert(font.hasGlyphForCodePoint("a".charCodeAt()));
+      assert(font.hasGlyphForCodePoint("a".charCodeAt(0)));
       return assert(!font.hasGlyphForCodePoint(0));
     });
 
     it("should get a glyph for a character code", function () {
-      let glyph = font.glyphForCodePoint("a".charCodeAt());
+      let glyph = font.glyphForCodePoint("a".charCodeAt(0));
       assert.equal(glyph.id, 68);
       return assert.deepEqual(glyph.codePoints, [97]);
     });
@@ -32,14 +36,14 @@ describe("character to glyph mapping", function () {
       let glyphs = font.glyphsForString("hello", []);
       assert(Array.isArray(glyphs));
       assert.equal(glyphs.length, 5);
-      assert.deepEqual(
-        glyphs.map((g) => g.id),
-        [75, 72, 79, 79, 82],
-      );
-      return assert.deepEqual(
-        glyphs.map((g) => g.codePoints),
-        [[104], [101], [108], [108], [111]],
-      );
+      assert.deepEqual(glyphIds(glyphs), [75, 72, 79, 79, 82]);
+      return assert.deepEqual(glyphCodePoints(glyphs), [
+        [104],
+        [101],
+        [108],
+        [108],
+        [111],
+      ]);
     });
 
     it("should support unicode variation selectors", function () {
@@ -47,10 +51,7 @@ describe("character to glyph mapping", function () {
       let glyphs = font.glyphsForString(
         "\u{82a6}\u{82a6}\u{E0100}\u{82a6}\u{E0101}",
       );
-      assert.deepEqual(
-        glyphs.map((g) => g.id),
-        [1, 1, 2],
-      );
+      assert.deepEqual(glyphIds(glyphs), [1, 1, 2]);
     });
 
     it("should support legacy encodings when no unicode cmap is found", function () {
@@ -59,7 +60,7 @@ describe("character to glyph mapping", function () {
       );
       let glyphs = font.glyphsForString("“ABÇĞIİÖŞÜ”");
       assert.deepEqual(
-        glyphs.map((g) => g.id),
+        glyphIds(glyphs),
         [200, 34, 35, 126, 176, 42, 178, 140, 181, 145, 201],
       );
     });
@@ -103,20 +104,14 @@ describe("character to glyph mapping", function () {
     it("should apply opentype GSUB features", function () {
       let { glyphs } = font.layout("ffi", ["dlig"]);
       assert.equal(glyphs.length, 2);
-      assert.deepEqual(
-        glyphs.map((g) => g.id),
-        [514, 36],
-      );
-      return assert.deepEqual(
-        glyphs.map((g) => g.codePoints),
-        [[102, 102], [105]],
-      );
+      assert.deepEqual(glyphIds(glyphs), [514, 36]);
+      return assert.deepEqual(glyphCodePoints(glyphs), [[102, 102], [105]]);
     });
 
     it("should enable fractions when using fraction slash", function () {
       let { glyphs } = font.layout("123 1⁄16 123");
       return assert.deepEqual(
-        glyphs.map((g) => g.id),
+        glyphIds(glyphs),
         [1088, 1089, 1090, 1, 1617, 1724, 1603, 1608, 1, 1088, 1089, 1090],
       );
     });
@@ -124,7 +119,7 @@ describe("character to glyph mapping", function () {
     it("should not break if can’t enable fractions when using fraction slash", function () {
       let { glyphs } = font.layout("a⁄b ⁄ 1⁄ ⁄2");
       return assert.deepEqual(
-        glyphs.map((g) => g.id),
+        glyphIds(glyphs),
         [28, 1724, 29, 1, 1724, 1, 1617, 1724, 1, 1724, 1604],
       );
     });
@@ -148,87 +143,76 @@ describe("character to glyph mapping", function () {
     it("should apply default AAT morx features", function () {
       let { glyphs } = font.layout("ffi 1⁄2");
       assert.equal(glyphs.length, 5);
-      assert.deepEqual(
-        glyphs.map((g) => g.id),
-        [767, 3, 20, 645, 21],
-      );
-      return assert.deepEqual(
-        glyphs.map((g) => g.codePoints),
-        [[102, 102, 105], [32], [49], [8260], [50]],
-      );
+      assert.deepEqual(glyphIds(glyphs), [767, 3, 20, 645, 21]);
+      return assert.deepEqual(glyphCodePoints(glyphs), [
+        [102, 102, 105],
+        [32],
+        [49],
+        [8260],
+        [50],
+      ]);
     });
 
     it("should apply user specified features", function () {
       let { glyphs } = font.layout("ffi 1⁄2", ["numr"]);
       assert.equal(glyphs.length, 3);
-      assert.deepEqual(
-        glyphs.map((g) => g.id),
-        [767, 3, 126],
-      );
-      return assert.deepEqual(
-        glyphs.map((g) => g.codePoints),
-        [[102, 102, 105], [32], [49, 8260, 50]],
-      );
+      assert.deepEqual(glyphIds(glyphs), [767, 3, 126]);
+      return assert.deepEqual(glyphCodePoints(glyphs), [
+        [102, 102, 105],
+        [32],
+        [49, 8260, 50],
+      ]);
     });
 
     it("should handle rtl direction", function () {
       let { glyphs } = font.layout("ffi", [], null, null, "rtl");
       assert.equal(glyphs.length, 3);
-      assert.deepEqual(
-        glyphs.map((g) => g.id),
-        [76, 73, 73],
-      );
-      return assert.deepEqual(
-        glyphs.map((g) => g.codePoints),
-        [[105], [102], [102]],
-      );
+      assert.deepEqual(glyphIds(glyphs), [76, 73, 73]);
+      return assert.deepEqual(glyphCodePoints(glyphs), [[105], [102], [102]]);
     });
 
     it("should apply indic reordering features", function () {
       let f = fontkit.openSync(__dirname + "/data/Khmer/Khmer.ttf");
       let { glyphs } = f.layout("ខ្ញុំអាចញ៉ាំកញ្ចក់បាន ដោយគ្មានបញ្ហា");
       assert.deepEqual(
-        glyphs.map((g) => g.id),
+        glyphIds(glyphs),
         [
           45, 153, 177, 112, 248, 188, 49, 296, 44, 187, 149, 44, 117, 236, 188,
           63, 3, 107, 226, 188, 69, 218, 169, 188, 63, 64, 255, 175, 188,
         ],
       );
 
-      return assert.deepEqual(
-        glyphs.map((g) => g.codePoints),
-        [
-          [6017],
-          [6098, 6025],
-          [6075],
-          [6086],
-          [6050],
-          [6070],
-          [6021],
-          [6025, 6089, 6070, 6086],
-          [6016],
-          [6025],
-          [6098, 6021],
-          [6016],
-          [6091],
-          [6036],
-          [6070],
-          [6035],
-          [32],
-          [6084],
-          [6026],
-          [6070],
-          [6041],
-          [6018],
-          [6098, 6040],
-          [6070],
-          [6035],
-          [6036],
-          [6025],
-          [6098, 6048],
-          [6070],
-        ],
-      );
+      return assert.deepEqual(glyphCodePoints(glyphs), [
+        [6017],
+        [6098, 6025],
+        [6075],
+        [6086],
+        [6050],
+        [6070],
+        [6021],
+        [6025, 6089, 6070, 6086],
+        [6016],
+        [6025],
+        [6098, 6021],
+        [6016],
+        [6091],
+        [6036],
+        [6070],
+        [6035],
+        [32],
+        [6084],
+        [6026],
+        [6070],
+        [6041],
+        [6018],
+        [6098, 6040],
+        [6070],
+        [6035],
+        [6036],
+        [6025],
+        [6098, 6048],
+        [6070],
+      ]);
     });
   });
 

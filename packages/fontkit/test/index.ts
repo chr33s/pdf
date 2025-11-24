@@ -89,7 +89,7 @@ describe("fontkit", function () {
     );
     assert.equal(collection.constructor.name, "TrueTypeCollection");
 
-    let names = collection.fonts.map((f) => f.postscriptName);
+    let names = collection.fonts.map((f: any) => f.postscriptName);
     assert.deepEqual(names, [
       "NotoSans-Bold",
       "NotoSans",
@@ -107,7 +107,7 @@ describe("fontkit", function () {
     );
     assert.equal(collection.constructor.name, "DFont");
 
-    let names = collection.fonts.map((f) => f.postscriptName);
+    let names = collection.fonts.map((f: any) => f.postscriptName);
     assert.deepEqual(names, [
       "NotoSans",
       "NotoSans-Bold",
