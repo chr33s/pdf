@@ -1,22 +1,22 @@
-import PDFObject from "../objects/PDFObject.js";
-import PDFNumber from "../objects/PDFNumber.js";
-import PDFDict from "../objects/PDFDict.js";
-import PDFName from "../objects/PDFName.js";
-import PDFArray from "../objects/PDFArray.js";
-import PDFRef from "../objects/PDFRef.js";
+import PDFObject from "../objects/pdf-object.js";
+import PDFNumber from "../objects/pdf-number.js";
+import PDFDict from "../objects/pdf-dict.js";
+import PDFName from "../objects/pdf-name.js";
+import PDFArray from "../objects/pdf-array.js";
+import PDFRef from "../objects/pdf-ref.js";
 
-import PDFAcroField from "./PDFAcroField.js";
-import PDFAcroTerminal from "./PDFAcroTerminal.js";
-import PDFAcroNonTerminal from "./PDFAcroNonTerminal.js";
-import PDFAcroButton from "./PDFAcroButton.js";
-import PDFAcroSignature from "./PDFAcroSignature.js";
-import PDFAcroChoice from "./PDFAcroChoice.js";
-import PDFAcroText from "./PDFAcroText.js";
-import PDFAcroPushButton from "./PDFAcroPushButton.js";
-import PDFAcroRadioButton from "./PDFAcroRadioButton.js";
-import PDFAcroCheckBox from "./PDFAcroCheckBox.js";
-import PDFAcroComboBox from "./PDFAcroComboBox.js";
-import PDFAcroListBox from "./PDFAcroListBox.js";
+import PDFAcroField from "./pdf-acro-field.js";
+import PDFAcroTerminal from "./pdf-acro-terminal.js";
+import PDFAcroNonTerminal from "./pdf-acro-non-terminal.js";
+import PDFAcroButton from "./pdf-acro-button.js";
+import PDFAcroSignature from "./pdf-acro-signature.js";
+import PDFAcroChoice from "./pdf-acro-choice.js";
+import PDFAcroText from "./pdf-acro-text.js";
+import PDFAcroPushButton from "./pdf-acro-push-button.js";
+import PDFAcroRadioButton from "./pdf-acro-radio-button.js";
+import PDFAcroCheckBox from "./pdf-acro-check-box.js";
+import PDFAcroComboBox from "./pdf-acro-combo-box.js";
+import PDFAcroListBox from "./pdf-acro-list-box.js";
 import { AcroButtonFlags, AcroChoiceFlags } from "./flags.js";
 
 export const createPDFAcroFields = (

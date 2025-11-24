@@ -1,8 +1,8 @@
 import assert from "node:assert";
 import { describe, it } from "vitest";
 
-import BBox from "../src/glyph/BBox.js";
-import fontkit from "./addTestHelpersToFontkit.js";
+import BBox from "../src/glyph/b-box.js";
+import fontkit from "./add-test-helpers-to-fontkit.js";
 import { here } from "./utils/dir.js";
 
 const __dirname = here(import.meta.url);

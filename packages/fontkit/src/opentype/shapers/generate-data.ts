@@ -55,5 +55,5 @@ const jsonBase64DeflatedTrie = JSON.stringify(
 );
 fs.writeFileSync(filePath, jsonBase64DeflatedTrie);
 
-const modulePath = join(__dirname, "trieData.js");
+const modulePath = join(__dirname, "trie-data.js");
 fs.writeFileSync(modulePath, `export default ${jsonBase64DeflatedTrie};\n`);

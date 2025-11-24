@@ -1,5 +1,5 @@
 import { arrayAsString } from "../utils/index.js";
-import PDFObject from "./objects/PDFObject.js";
+import PDFObject from "./objects/pdf-object.js";
 
 export class MethodNotImplementedError extends Error {
   constructor(className: string, methodName: string) {

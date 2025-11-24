@@ -11,4 +11,4 @@ export {
   default as StateMachine,
   type Match,
   type StateMachineConfig,
-} from "./StateMachine.js";
+} from "./state-machine.js";

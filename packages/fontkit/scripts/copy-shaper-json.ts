@@ -12,7 +12,7 @@ if (!existsSync(srcDir)) {
 }
 
 const dataFiles = readdirSync(srcDir).filter(
-  (file) => file.endsWith(".json") || file.endsWith("Data.js"),
+  (file) => file.endsWith(".json") || file.endsWith("-data.js"),
 );
 
 if (dataFiles.length === 0) {

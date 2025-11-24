@@ -1,7 +1,7 @@
 import assert from "node:assert";
 import { describe, it } from "vitest";
 
-import fontkit from "./addTestHelpersToFontkit.js";
+import fontkit from "./add-test-helpers-to-fontkit.js";
 import { here } from "./utils/dir.js";
 
 const __dirname = here(import.meta.url);

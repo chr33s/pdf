@@ -1,5 +1,5 @@
-import type DecodeStream from "./DecodeStream.js";
-import { NumberT } from "./Number.js";
+import type DecodeStream from "./decode-stream.js";
+import { NumberT } from "./number.js";
 
 export type LengthLike =
   | number

@@ -1,6 +1,2 @@
-node_modules
-dist
-es
-cjs
-*.zip
-npm-error.log
+node_modules/
+dist/

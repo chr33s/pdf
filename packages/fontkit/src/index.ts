@@ -1,11 +1,11 @@
 // @ts-nocheck
 
 import fontkit from "./base.js";
-import TTFFont from "./TTFFont.js";
-import WOFFFont from "./WOFFFont.js";
-import WOFF2Font from "./WOFF2Font.js";
-import TrueTypeCollection from "./TrueTypeCollection.js";
-import DFont from "./DFont.js";
+import DFont from "./d-font.js";
+import TrueTypeCollection from "./true-type-collection.js";
+import TTFFont from "./ttf-font.js";
+import WOFFFont from "./woff-font.js";
+import WOFF2Font from "./woff2-font.js";
 
 // Register font formats
 fontkit.registerFormat(TTFFont);

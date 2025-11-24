@@ -8,7 +8,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "make && tsc && cp src/brotli.wasm dist/brotli.wasm",
-    "clean": "rm -rf dist",
+    "clean": "rm -rf dist src/{brotli.d.ts,brotli.js,brotli.wasm}",
     "test": "vitest run",
     "typecheck": "tsc --project tsconfig.typecheck.json"
   },

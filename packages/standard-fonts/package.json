@@ -8,7 +8,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "npm run clean && npm run generate && tsc",
-    "clean": "rm -rf dist {encodings_metrics,font_metrics,src}/*.json",
+    "clean": "rm -rf dist {encoding-metrics,font-metrics,src}/*.json",
     "typecheck": "tsc --project tsconfig.typecheck.json",
     "generate": "npm run generate:fonts && npm run generate:encodings",
     "generate:fonts": "node scripts/fonts/parse.ts",

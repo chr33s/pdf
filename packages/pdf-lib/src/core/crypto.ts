@@ -15,13 +15,13 @@
 
 import { arrayAsString, isArrayEqual } from "../utils/arrays.js";
 import { stringAsByteArray } from "../utils/strings.js";
-import PDFBool from "./objects/PDFBool.js";
-import PDFDict from "./objects/PDFDict.js";
-import PDFName from "./objects/PDFName.js";
-import PDFNumber from "./objects/PDFNumber.js";
-import PDFString from "./objects/PDFString.js";
-import DecryptStream from "./streams/DecryptStream.js";
-import { StreamType } from "./streams/Stream.js";
+import PDFBool from "./objects/pdf-bool.js";
+import PDFDict from "./objects/pdf-dict.js";
+import PDFName from "./objects/pdf-name.js";
+import PDFNumber from "./objects/pdf-number.js";
+import PDFString from "./objects/pdf-string.js";
+import DecryptStream from "./streams/decrypt-stream.js";
+import { StreamType } from "./streams/stream.js";
 
 class ARCFourCipher {
   #s: Uint8Array;

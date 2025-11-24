@@ -1,14 +1,14 @@
 // @ts-nocheck
 
 import * as r from "@chr33s/restructure";
-import assert from "node:assert";
 import concat from "concat-stream";
+import assert from "node:assert";
 import fs from "node:fs";
 import { describe, it } from "vitest";
 
-import CFFFont from "../src/cff/CFFFont.js";
-import CFFGlyph from "../src/glyph/CFFGlyph.js";
-import fontkit from "./addTestHelpersToFontkit.js";
+import CFFFont from "../src/cff/cff-font.js";
+import CFFGlyph from "../src/glyph/cff-glyph.js";
+import fontkit from "./add-test-helpers-to-fontkit.js";
 import { here } from "./utils/dir.js";
 
 const __dirname = here(import.meta.url);

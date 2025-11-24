@@ -1,5 +1,5 @@
-encoding_metrics/
-font_metrics/
+encoding-metrics/
+font-metrics/
 scripts/
 .gitignore
 .npmignore

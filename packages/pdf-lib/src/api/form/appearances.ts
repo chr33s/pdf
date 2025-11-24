@@ -1,6 +1,6 @@
 import { PDFOperator, PDFWidgetAnnotation } from "../../core/index.js";
 import { findLastMatch } from "../../utils/index.js";
-import PDFFont from "../PDFFont.js";
+import PDFFont from "../pdf-font.js";
 import {
   cmyk,
   Color,
@@ -9,14 +9,14 @@ import {
   rgb,
   setFillingColor,
 } from "../colors.js";
-import PDFButton from "../form/PDFButton.js";
-import PDFCheckBox from "../form/PDFCheckBox.js";
-import PDFDropdown from "../form/PDFDropdown.js";
-import PDFField from "../form/PDFField.js";
-import PDFOptionList from "../form/PDFOptionList.js";
-import PDFRadioGroup from "../form/PDFRadioGroup.js";
-import PDFSignature from "../form/PDFSignature.js";
-import PDFTextField from "../form/PDFTextField.js";
+import PDFButton from "./pdf-button.js";
+import PDFCheckBox from "./pdf-check-box.js";
+import PDFDropdown from "./pdf-dropdown.js";
+import PDFField from "./pdf-field.js";
+import PDFOptionList from "./pdf-option-list.js";
+import PDFRadioGroup from "./pdf-radio-group.js";
+import PDFSignature from "./pdf-signature.js";
+import PDFTextField from "./pdf-text-field.js";
 import {
   drawButton,
   drawCheckBox,

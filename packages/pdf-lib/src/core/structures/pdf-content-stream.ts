@@ -1,0 +1,60 @@
+import PDFDict from "../objects/pdf-dict.js";
+import PDFOperator from "../operators/pdf-operator.js";
+import PDFContext from "../pdf-context.js";
+import CharCodes from "../syntax/char-codes.js";
+import PDFFlateStream from "./pdf-flate-stream.js";
+
+class PDFContentStream extends PDFFlateStream {
+  static of = (dict: PDFDict, operators: PDFOperator[], encode = true) =>
+    new PDFContentStream(dict, operators, encode);
+
+  readonly #operators: PDFOperator[];
+
+  private constructor(dict: PDFDict, operators: PDFOperator[], encode = true) {
+    super(dict, encode);
+    this.#operators = operators;
+  }
+
+  push(...operators: PDFOperator[]): void {
+    this.#operators.push(...operators);
+  }
+
+  clone(context?: PDFContext): PDFContentStream {
+    const operators: PDFOperator[] = Array.from({
+      length: this.#operators.length,
+    });
+    for (let idx = 0, len = this.#operators.length; idx < len; idx++) {
+      operators[idx] = this.#operators[idx].clone(context);
+    }
+    const { dict, encode } = this;
+    return PDFContentStream.of(dict.clone(context), operators, encode);
+  }
+
+  getContentsString(): string {
+    let value = "";
+    for (let idx = 0, len = this.#operators.length; idx < len; idx++) {
+      value += `${String(this.#operators[idx])}\n`;
+    }
+    return value;
+  }
+
+  getUnencodedContents(): Uint8Array {
+    const buffer = new Uint8Array(this.getUnencodedContentsSize());
+    let offset = 0;
+    for (let idx = 0, len = this.#operators.length; idx < len; idx++) {
+      offset += this.#operators[idx].copyBytesInto(buffer, offset);
+      buffer[offset++] = CharCodes.Newline;
+    }
+    return buffer;
+  }
+
+  getUnencodedContentsSize(): number {
+    let size = 0;
+    for (let idx = 0, len = this.#operators.length; idx < len; idx++) {
+      size += this.#operators[idx].sizeInBytes() + 1;
+    }
+    return size;
+  }
+}
+
+export default PDFContentStream;

@@ -1,8 +1,8 @@
 import buildDFA, { DFAState } from "./dfa.js";
 import { parse as parseGrammar } from "./grammar.js";
 import * as nodes from "./nodes.js";
-import StateMachine, { StateMachineConfig } from "./StateMachine.js";
-import SymbolTable from "./SymbolTable.js";
+import StateMachine, { StateMachineConfig } from "./state-machine.js";
+import SymbolTable from "./symbol-table.js";
 
 export type ExternalSymbols = Record<string, number>;
 

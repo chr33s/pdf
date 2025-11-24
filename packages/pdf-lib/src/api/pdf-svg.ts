@@ -1,0 +1,10 @@
+import PDFImage from "./pdf-image.js";
+
+export default class PDFSvg {
+  svg: string;
+  images: Record<string, PDFImage>;
+  constructor(svg: string, images: Record<string, PDFImage> = {}) {
+    this.svg = svg;
+    this.images = images;
+  }
+}

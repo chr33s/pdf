@@ -7,12 +7,12 @@ import pako from "pako";
 import {
   type ICharMetrics,
   parseCharMetricsSection,
-} from "./parseCharacterMetrics.ts";
+} from "./parse-character-metrics.ts";
 import {
   type IFontMetrics,
   parseFontMetricsSection,
-} from "./parseFontMetrics.ts";
-import { type IKernPair, parseKernPairsSection } from "./parseKernPairs.ts";
+} from "./parse-font-metrics.ts";
+import { type IKernPair, parseKernPairsSection } from "./parse-kern-pairs.ts";
 
 export interface IMetrics extends IFontMetrics {
   CharMetrics: ICharMetrics[];
@@ -30,9 +30,10 @@ const __dirname = dirname(__filename);
 
 const getAfmFilePaths = async () => {
   const parentDir = dirname(dirname(__dirname));
-  const files = await fs.readdir(`${parentDir}/font_metrics`);
+  const metricsDir = `${parentDir}/font-metrics`;
+  const files = await fs.readdir(metricsDir);
   const afmFiles = files.filter((name) => name.includes(".afm"));
-  return afmFiles.map((name) => `${parentDir}/font_metrics/${name}`);
+  return afmFiles.map((name) => `${metricsDir}/${name}`);
 };
 
 const textEncoder = new TextEncoder();
@@ -48,9 +49,29 @@ const compressJson = (json: string) => {
   return base64DeflatedJson;
 };
 
+const fontFileNameMap: Record<string, string> = {
+  "courier.compressed.json": "courier.compressed.json",
+  "courier-bold.compressed.json": "courier-bold.compressed.json",
+  "courier-oblique.compressed.json": "courier-oblique.compressed.json",
+  "courier-bold-oblique.compressed.json":
+    "courier-bold-oblique.compressed.json",
+  "helvetica.compressed.json": "helvetica.compressed.json",
+  "helvetica-bold.compressed.json": "helvetica-bold.compressed.json",
+  "helvetica-oblique.compressed.json": "helvetica-oblique.compressed.json",
+  "helvetica-bold-oblique.compressed.json":
+    "helvetica-bold-oblique.compressed.json",
+  "times-roman.compressed.json": "times-roman.compressed.json",
+  "times-bold.compressed.json": "times-bold.compressed.json",
+  "times-italic.compressed.json": "times-italic.compressed.json",
+  "times-bold-italic.compressed.json": "times-bold-italic.compressed.json",
+  "symbol.compressed.json": "symbol.compressed.json",
+  "zapf-dingbats.compressed.json": "zapf-dingbats.compressed.json",
+};
+
 const copyFileToSrc = async (src: string) => {
   const fileName = basename(src);
-  const dest = dirname(dirname(__dirname)) + "/src/" + fileName;
+  const canonicalFileName = fontFileNameMap[fileName] ?? fileName;
+  const dest = `${dirname(dirname(__dirname))}/src/${canonicalFileName}`;
   await (fs.copyFile as any)(src, dest);
 };
 

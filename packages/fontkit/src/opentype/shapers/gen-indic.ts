@@ -9,7 +9,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import pako from "pako";
 
-const MODULE_CANDIDATES = ["./indic-data.ts", "./indic-data.js"] as const;
+const MODULE_CANDIDATES = ["./indic-data.ts", "./indic-gen-data.js"] as const;
 
 const isModuleNotFoundFor = (error: unknown, modulePath: string) =>
   Boolean(
@@ -291,14 +291,14 @@ for (let i = 0; i < codepoints.length; i++) {
 
 // Trie is serialized suboptimally as JSON so it can be loaded via require,
 // allowing unicode-properties to work in the browser
-const trieFilePath = join(__dirname, "trieIndic.json");
+const trieFilePath = join(__dirname, "trie-indic.json");
 const deflatedTrie = pako.deflate(trie.toBuffer());
 const jsonBase64DeflatedTrie = JSON.stringify(
   base64.encode(toArrayBuffer(deflatedTrie)),
 );
 fs.writeFileSync(trieFilePath, jsonBase64DeflatedTrie);
 
-const trieModulePath = join(__dirname, "trieIndicData.js");
+const trieModulePath = join(__dirname, "trie-indic-data.js");
 fs.writeFileSync(trieModulePath, `export default ${jsonBase64DeflatedTrie};\n`);
 
 let stateMachine = compile(
@@ -314,7 +314,7 @@ const jsonBase64DeflatedIndic = JSON.stringify(
 );
 fs.writeFileSync(indicFilePath, jsonBase64DeflatedIndic);
 
-const indicModulePath = join(__dirname, "indicData.js");
+const indicModulePath = join(__dirname, "indic-gen-data.js");
 fs.writeFileSync(
   indicModulePath,
   `export default ${jsonBase64DeflatedIndic};\n`,

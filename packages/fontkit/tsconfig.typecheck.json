@@ -5,19 +5,7 @@
     "rootDir": "."
   },
   "include": [
-    "*.d.ts",
-    "src/**/*.ts",
-    "src/**/*.cts",
-    "src/**/*.mts",
-    "src/**/*.tsx",
-    "scripts/**/*.ts",
-    "scripts/**/*.cts",
-    "scripts/**/*.mts",
-    "scripts/**/*.tsx",
-    "test/**/*.ts",
-    "test/**/*.cts",
-    "test/**/*.mts",
-    "test/**/*.tsx"
+    "**/*.ts"
   ],
   "exclude": [
     "dist",

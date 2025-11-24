@@ -1,8 +1,2 @@
 node_modules
-.DS_Store
-font_metrics/*.json
-encoding_metrics/*.json
-src/*.json
-npm-error.log
 dist
-*.zip

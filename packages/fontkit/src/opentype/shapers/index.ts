@@ -1,10 +1,10 @@
 // @ts-nocheck
 
-import ArabicShaper from "./ArabicShaper.js";
-import DefaultShaper from "./DefaultShaper.js";
-import HangulShaper from "./HangulShaper.js";
-import IndicShaper from "./IndicShaper.js";
-import UniversalShaper from "./UniversalShaper.js";
+import ArabicShaper from "./arabic-shaper.js";
+import DefaultShaper from "./default-shaper.js";
+import HangulShaper from "./hangul-shaper.js";
+import IndicShaper from "./indic-shaper.js";
+import UniversalShaper from "./universal-shaper.js";
 
 const SHAPERS = {
   arab: ArabicShaper, // Arabic

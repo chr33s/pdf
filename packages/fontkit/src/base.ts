@@ -34,7 +34,7 @@ const fontkit = {
     formats.push(getNamedFormat(format));
   },
 
-  create: (uint8ArrayFontData, postscriptName) => {
+  create: (uint8ArrayFontData: any, postscriptName?: any) => {
     const buffer = Buffer.from(uint8ArrayFontData);
     for (let i = 0; i < formats.length; i++) {
       const format = formats[i];

@@ -2,18 +2,18 @@ import {
   UnexpectedObjectTypeError,
   UnsupportedEncodingError,
 } from "../errors.js";
-import PDFArray from "../objects/PDFArray.js";
-import PDFDict from "../objects/PDFDict.js";
-import PDFName from "../objects/PDFName.js";
-import PDFNull from "../objects/PDFNull.js";
-import PDFNumber from "../objects/PDFNumber.js";
-import PDFRawStream from "../objects/PDFRawStream.js";
-import Ascii85Stream from "./Ascii85Stream.js";
-import AsciiHexStream from "./AsciiHexStream.js";
-import FlateStream from "./FlateStream.js";
-import LZWStream from "./LZWStream.js";
-import RunLengthStream from "./RunLengthStream.js";
-import Stream, { StreamType } from "./Stream.js";
+import PDFArray from "../objects/pdf-array.js";
+import PDFDict from "../objects/pdf-dict.js";
+import PDFName from "../objects/pdf-name.js";
+import PDFNull from "../objects/pdf-null.js";
+import PDFNumber from "../objects/pdf-number.js";
+import PDFRawStream from "../objects/pdf-raw-stream.js";
+import Ascii85Stream from "./ascii85-stream.js";
+import AsciiHexStream from "./ascii-hex-stream.js";
+import FlateStream from "./flate-stream.js";
+import LZWStream from "./lzw-stream.js";
+import RunLengthStream from "./run-length-stream.js";
+import Stream, { StreamType } from "./stream.js";
 
 const decodeStream = (
   stream: StreamType,

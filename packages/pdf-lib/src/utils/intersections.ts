@@ -1,12 +1,12 @@
 import { Coordinates, GraphicElement } from "../types/index.js";
-import Arc from "./elements/Arc.js";
-import Circle from "./elements/Circle.js";
-import Ellipse from "./elements/Ellipse.js";
-import Line from "./elements/Line.js";
-import Plot from "./elements/Plot.js";
-import Point from "./elements/Point.js";
-import Rectangle from "./elements/Rectangle.js";
-import Segment from "./elements/Segment.js";
+import Arc from "./elements/arc.js";
+import Circle from "./elements/circle.js";
+import Ellipse from "./elements/ellipse.js";
+import Line from "./elements/line.js";
+import Plot from "./elements/plot.js";
+import Point from "./elements/point.js";
+import Rectangle from "./elements/rectangle.js";
+import Segment from "./elements/segment.js";
 import {
   distance,
   isColinear,

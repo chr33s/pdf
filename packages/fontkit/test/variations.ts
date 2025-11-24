@@ -1,8 +1,8 @@
 import assert from "node:assert";
 import fs from "node:fs";
 import { describe, it } from "vitest";
-import fontkit from "./addTestHelpersToFontkit.js";
-import { here } from "./utils/dir.decompressJsons.js";
+import fontkit from "./add-test-helpers-to-fontkit.js";
+import { here } from "./utils/dir.decompress-jsons.js";
 
 const __dirname = here(import.meta.url);
 

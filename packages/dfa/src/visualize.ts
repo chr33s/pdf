@@ -1,6 +1,6 @@
 import graphviz from "graphviz";
 import { build, ExternalSymbols, parse } from "./compile.js";
-import { FAIL_STATE, INITIAL_STATE } from "./StateMachine.js";
+import { FAIL_STATE, INITIAL_STATE } from "./state-machine.js";
 
 type SymbolLookup = Record<number, string>;
 

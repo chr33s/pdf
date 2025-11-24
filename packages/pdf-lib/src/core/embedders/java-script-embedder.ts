@@ -1,0 +1,34 @@
+import PDFHexString from "../objects/pdf-hex-string.js";
+import PDFContext from "../pdf-context.js";
+import PDFRef from "../objects/pdf-ref.js";
+
+class JavaScriptEmbedder {
+  static for(script: string, scriptName: string) {
+    return new JavaScriptEmbedder(script, scriptName);
+  }
+
+  readonly #script: string;
+  readonly scriptName: string;
+
+  private constructor(script: string, scriptName: string) {
+    this.#script = script;
+    this.scriptName = scriptName;
+  }
+
+  async embedIntoContext(context: PDFContext, ref?: PDFRef): Promise<PDFRef> {
+    const jsActionDict = context.obj({
+      Type: "Action",
+      S: "JavaScript",
+      JS: PDFHexString.fromText(this.#script),
+    });
+
+    if (ref) {
+      context.assign(ref, jsActionDict);
+      return ref;
+    } else {
+      return context.register(jsActionDict);
+    }
+  }
+}
+
+export default JavaScriptEmbedder;

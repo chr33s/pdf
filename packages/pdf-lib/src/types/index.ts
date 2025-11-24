@@ -1,11 +1,11 @@
-import Arc from "../utils/elements/Arc.js";
-import Circle from "../utils/elements/Circle.js";
-import Ellipse from "../utils/elements/Ellipse.js";
-import Line from "../utils/elements/Line.js";
-import Plot from "../utils/elements/Plot.js";
-import Point from "../utils/elements/Point.js";
-import Rectangle from "../utils/elements/Rectangle.js";
-import Segment from "../utils/elements/Segment.js";
+import Arc from "../utils/elements/arc.js";
+import Circle from "../utils/elements/circle.js";
+import Ellipse from "../utils/elements/ellipse.js";
+import Line from "../utils/elements/line.js";
+import Plot from "../utils/elements/plot.js";
+import Point from "../utils/elements/point.js";
+import Rectangle from "../utils/elements/rectangle.js";
+import Segment from "../utils/elements/segment.js";
 export { TransformationMatrix } from "./matrix.js";
 
 export type Size = {

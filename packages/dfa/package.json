@@ -8,7 +8,7 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "npm run clean && npm run generate && tsc",
-    "clean": "rm -rf dist src/grammar.ts",
+    "clean": "rm -rf dist src/grammar.js",
     "generate": "node scripts/build-grammar.ts",
     "test": "vitest run",
     "typecheck": "tsc --project tsconfig.typecheck.json"

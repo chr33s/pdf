@@ -253,14 +253,14 @@ function decompose(code) {
 
 // Trie is serialized suboptimally as JSON so it can be loaded via require,
 // allowing unicode-properties to work in the browser
-const trieFilePath = join(__dirname, "trieUse.json");
+const trieFilePath = join(__dirname, "trie-use.json");
 const deflatedTrie = pako.deflate(trie.toBuffer());
 const jsonBase64DeflatedTrie = JSON.stringify(
   base64.encode(toArrayBuffer(deflatedTrie)),
 );
 fs.writeFileSync(trieFilePath, jsonBase64DeflatedTrie);
 
-const trieModulePath = join(__dirname, "trieUseData.js");
+const trieModulePath = join(__dirname, "trie-use-data.js");
 fs.writeFileSync(trieModulePath, `export default ${jsonBase64DeflatedTrie};\n`);
 
 let stateMachine = compile(
@@ -283,5 +283,5 @@ const jsonBase64DeflatedUse = JSON.stringify(
 );
 fs.writeFileSync(useFilePath, jsonBase64DeflatedUse);
 
-const useModulePath = join(__dirname, "useData.js");
+const useModulePath = join(__dirname, "use-data.js");
 fs.writeFileSync(useModulePath, `export default ${jsonBase64DeflatedUse};\n`);

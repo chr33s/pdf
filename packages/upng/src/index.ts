@@ -1,3 +1,3 @@
-import UPNG from "./UPNG.js";
+import UPNG from "./upng.js";
 
 export default UPNG;

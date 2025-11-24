@@ -1,2 +1,2 @@
-export * from "./Encoding.js";
-export * from "./Font.js";
+export * from "./encoding.js";
+export * from "./font.js";

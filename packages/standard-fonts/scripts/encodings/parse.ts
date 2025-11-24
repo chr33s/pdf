@@ -4,9 +4,9 @@ import { basename, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import pako from "pako";
 
-import type { EncodingMap } from "./parseWin1252.ts";
-import { parseWin1252 } from "./parseWin1252.ts";
-import { parseZapfDingbatsOrSymbol } from "./parseZapfDingbatsOrSymbol.ts";
+import type { EncodingMap } from "./parse-win1252.ts";
+import { parseWin1252 } from "./parse-win1252.ts";
+import { parseZapfDingbatsOrSymbol } from "./parse-zapf-dingbats-or-symbol.ts";
 
 const textEncoder = new TextEncoder();
 
@@ -41,7 +41,7 @@ const main = async () => {
   };
 
   for (const fontName of fontNames) {
-    const file = `${parent}/encoding_metrics/${fontName}.txt`;
+    const file = `${parent}/encoding-metrics/${fontName}.txt`;
     console.log("Parsing:", file);
     const data = await fs.readFile(file);
 
@@ -52,15 +52,15 @@ const main = async () => {
 
     const json = JSON.stringify(jsonMetrics);
 
-    const jsonFile = `${parent}/encoding_metrics/${fontName}-encoding.json`;
+    const jsonFile = `${parent}/encoding-metrics/${fontName}-encoding.json`;
     await fs.writeFile(jsonFile, json);
   }
 
   const allJson = JSON.stringify(allEncodings);
   const allCompressedJson = compressJson(allJson);
 
-  const allJsonFile = `${parent}/encoding_metrics/all-encodings.json`;
-  const allCompressedJsonFile = `${parent}/encoding_metrics/all-encodings.compressed.json`;
+  const allJsonFile = `${parent}/encoding-metrics/all-encodings.json`;
+  const allCompressedJsonFile = `${parent}/encoding-metrics/all-encodings.compressed.json`;
 
   await fs.writeFile(allJsonFile, allJson);
   await fs.writeFile(allCompressedJsonFile, allCompressedJson);

@@ -47,7 +47,7 @@ import {
 } from "./operators.js";
 import { Rotation, degrees, toDegrees, toRadians } from "./rotations.js";
 import { combineMatrix, transformationToMatrix } from "./svg.js";
-import { svgPathToOperators } from "./svgPath.js";
+import { svgPathToOperators } from "./svg-path.js";
 
 export interface DrawTextOptions {
   color: Color;

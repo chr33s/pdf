@@ -7,5 +7,5 @@ export * from "./errors.js";
 export * from "./base64.js";
 export * from "./objects.js";
 export * from "./validators.js";
-export * from "./pdfDocEncoding.js";
-export { default as Cache } from "./Cache.js";
+export * from "./pdf-doc-encoding.js";
+export { default as Cache } from "./cache.js";

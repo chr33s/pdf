@@ -10,7 +10,7 @@ import hhea from "./hhea.js";
 import hmtx from "./hmtx.js";
 import maxp from "./maxp.js";
 import name from "./name.js";
-import OS2 from "./OS2.js";
+import OS2 from "./os2.js";
 import post from "./post.js";
 
 tables.cmap = cmap;
@@ -36,17 +36,17 @@ tables["cvt "] = cvt;
 tables.glyf = glyf;
 
 // PostScript Outlines
-import CFFFont from "../cff/CFFFont.js";
-import VORG from "./VORG.js";
+import CFFFont from "../cff/cff-font.js";
+import VORG from "./vorg.js";
 
 tables["CFF "] = CFFFont;
 tables["CFF2"] = CFFFont;
 tables.VORG = VORG;
 
 // Bitmap Glyphs
-import COLR from "./COLR.js";
-import CPAL from "./CPAL.js";
-import EBLC from "./EBLC.js";
+import COLR from "./colr.js";
+import CPAL from "./cpal.js";
+import EBLC from "./eblc.js";
 import sbix from "./sbix.js";
 
 tables.EBLC = EBLC;
@@ -56,11 +56,11 @@ tables.COLR = COLR;
 tables.CPAL = CPAL;
 
 // Advanced OpenType Tables
-import BASE from "./BASE.js";
-import GDEF from "./GDEF.js";
-import GPOS from "./GPOS.js";
-import GSUB from "./GSUB.js";
-import JSTF from "./JSTF.js";
+import BASE from "./base.js";
+import GDEF from "./gdef.js";
+import GPOS from "./gpos.js";
+import GSUB from "./gsub.js";
+import JSTF from "./jstf.js";
 
 tables.BASE = BASE;
 tables.GDEF = GDEF;
@@ -69,18 +69,18 @@ tables.GSUB = GSUB;
 tables.JSTF = JSTF;
 
 // OpenType variations tables
-import HVAR from "./HVAR.js";
+import HVAR from "./hvar.js";
 
 tables.HVAR = HVAR;
 
 // Other OpenType Tables
-import DSIG from "./DSIG.js";
+import DSIG from "./dsig.js";
 import gasp from "./gasp.js";
 import hdmx from "./hdmx.js";
 import kern from "./kern.js";
-import LTSH from "./LTSH.js";
-import PCLT from "./PCLT.js";
-import VDMX from "./VDMX.js";
+import LTSH from "./ltsh.js";
+import PCLT from "./pclt.js";
+import VDMX from "./vdmx.js";
 import vhea from "./vhea.js";
 import vmtx from "./vmtx.js";
 

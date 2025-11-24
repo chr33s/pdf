@@ -44,9 +44,7 @@ async function main(): Promise<void> {
   console.log(`Fetching Unicode data files (version ${unicodeVersion})...`);
 
   for await (const absolutePath of walk(dataDir)) {
-    if (!absolutePath.endsWith(".txt")) {
-      continue;
-    }
+    if (!absolutePath.endsWith(".txt")) continue;
 
     const relativePath = relative(dataDir, absolutePath).split("\\").join("/");
     const url = `https://www.unicode.org/Public/${unicodeVersion}/ucd/${relativePath}`;

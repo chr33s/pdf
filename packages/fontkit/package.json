@@ -8,7 +8,7 @@
   "sideEffects": false,
   "scripts": {
     "build": "npm run generate && tsc && npm run copy:shaper-data",
-    "clean": "rm -rf dist src/opentype/shapers/*.json src/opentype/shapers/*Data.js",
+    "clean": "rm -rf dist src/opentype/shapers/*.json src/opentype/shapers/*-data.js",
     "copy:shaper-data": "node ./scripts/copy-shaper-json.ts",
     "generate": "node src/opentype/shapers/generate-data.ts && node src/opentype/shapers/gen-use.ts && node src/opentype/shapers/gen-indic.ts",
     "test": "vitest run",

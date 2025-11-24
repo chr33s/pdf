@@ -1,4 +1,4 @@
-import PDFFont from "../PDFFont.js";
+import PDFFont from "../pdf-font.js";
 import { CombedTextLayoutError } from "../errors.js";
 import { TextAlignment } from "./alignment.js";
 
