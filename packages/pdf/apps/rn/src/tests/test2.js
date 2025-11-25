@@ -9,7 +9,7 @@ import { fetchAsset } from "./assets.js";
 export default async () => {
   const [ubuntuBytes, smallMarioBytes, inputPdfBytes, largePageCountPdfBytes] =
     await Promise.all([
-      fetchAsset("fonts/ubuntu/Ubuntu-R.ttf"),
+      fetchAsset("fonts/ubuntu/ubuntu-r.ttf"),
       fetchAsset("images/small_mario_resized.png"),
       fetchAsset("pdfs/linearized_with_object_streams.pdf"),
       fetchAsset("pdfs/with_large_page_count.pdf"),

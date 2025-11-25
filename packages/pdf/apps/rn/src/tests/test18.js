@@ -242,7 +242,7 @@ export default async () => {
     fetchAsset("pdfs/with_combed_fields.pdf"),
     fetchAsset("pdfs/fancy_fields.pdf"),
     fetchAsset("pdfs/with_xfa_fields.pdf"),
-    fetchAsset("fonts/ubuntu/Ubuntu-R.ttf"),
+    fetchAsset("fonts/ubuntu/ubuntu-r.ttf"),
   ]);
 
   const pdfDoc = await PDFDocument.load(formToFlattenPdf);

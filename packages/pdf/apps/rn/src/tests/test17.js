@@ -15,7 +15,7 @@ import { fetchAsset } from "./assets.js";
 export default async () => {
   const [fancyFieldsPdf, ubuntuR] = await Promise.all([
     fetchAsset("pdfs/fancy_fields.pdf"),
-    fetchAsset("fonts/ubuntu/Ubuntu-R.ttf"),
+    fetchAsset("fonts/ubuntu/ubuntu-r.ttf"),
   ]);
 
   const pdfDoc = await PDFDocument.load(fancyFieldsPdf);

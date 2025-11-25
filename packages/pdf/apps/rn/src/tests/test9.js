@@ -6,7 +6,7 @@ import { fetchAsset } from "./assets.js";
 export default async () => {
   const [inputPdfBytes, ubuntuBytes, smallMarioBytes] = await Promise.all([
     fetchAsset("pdfs/with_comments.pdf"),
-    fetchAsset("fonts/ubuntu/Ubuntu-R.ttf"),
+    fetchAsset("fonts/ubuntu/ubuntu-r.ttf"),
     fetchAsset("images/small_mario_resized.png"),
   ]);
 

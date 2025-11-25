@@ -249,7 +249,7 @@ export default async () => {
     pressStart2PBytes,
     hussar3DBytes,
   ] = await Promise.all([
-    fetchAsset("fonts/ubuntu/Ubuntu-R.ttf"),
+    fetchAsset("fonts/ubuntu/ubuntu-r.ttf"),
     fetchAsset("fonts/fantasque/OTF/FantasqueSansMono-BoldItalic.otf"),
     fetchAsset("fonts/indie_flower/IndieFlower.ttf"),
     fetchAsset("fonts/great_vibes/GreatVibes-Regular.ttf"),
