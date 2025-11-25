@@ -4,7 +4,7 @@
 - [@chr33s/codepoints](./packages/codepoints/)
 - [@chr33s/dfa](./packages/dfa/)
 - [@chr33s/font-kit](./packages/fontkit/)
-- [@chr33s/pdf-lib](./packages/pdf-lib/)
+- [@chr33s/pdf](./packages/pdf/)
 - [@chr33s/restructure](./packages/restructure/)
 - [@chr33s/standard-fonts](./packages/standard-fonts/)
 - [@chr33s/tiny-inflate](./packages/tiny-inflate/)

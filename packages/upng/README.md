@@ -3,7 +3,7 @@
 > Small, fast, and modernized PNG/APNG encoder and decoder for the `@chr33s/pdf` ecosystem.
 
 This package wraps the excellent [`UPNG.js`](https://github.com/photopea/UPNG.js) library and keeps it maintained and
-published for `@chr33s/pdf-lib` and related tools. Key differences from upstream distributions include:
+published for `@chr33s/pdf` and related tools. Key differences from upstream distributions include:
 
 - native ES module output targeting NodeNext (Node.js 18+ or a modern bundler required),
 - TypeScript source with generated declaration files bundled in the package, and

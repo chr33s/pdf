@@ -8,8 +8,8 @@
       "type": "node",
       "request": "launch",
       "name": "Launch Program",
-      "program": "${workspaceFolder}/packages/pdf-lib/scratchpad/build/scratchpad/index.js",
-      "outFiles": ["${workspaceFolder}/packages/pdf-lib/**/*.js"]
+      "program": "${workspaceFolder}/packages/pdf/scratchpad/build/scratchpad/index.js",
+      "outFiles": ["${workspaceFolder}/packages/pdf/**/*.js"]
     }
   ]
 }

@@ -4,7 +4,7 @@
 
 `@chr33s/fontkit` lives in the [`chr33s/pdf`](https://github.com/chr33s/pdf) monorepo and continues the work of the
 [Hopding/fontkit](https://github.com/Hopding/fontkit) fork of the original [`foliojs/fontkit`](https://github.com/foliojs/fontkit).
-This edition is focused on the needs of the modern `@chr33s/pdf-lib` dependency graph and offers:
+This edition is focused on the needs of the modern `@chr33s/pdf` dependency graph and offers:
 
 - native ES modules with NodeNext resolution (Node.js 18+ or a current bundler required),
 - TypeScript source with published declaration files,
@@ -13,7 +13,7 @@ This edition is focused on the needs of the modern `@chr33s/pdf-lib` dependency 
 
 # fontkit
 
-Fontkit is an advanced font engine for Node and the browser, used by [PDFKit](https://github.com/devongovett/pdfkit) and [`pdf-lib`](https://github.com/chr33s/pdf). It supports many font formats, advanced glyph substitution and layout features, glyph path extraction, color emoji glyphs, font subsetting, and more.
+Fontkit is an advanced font engine for Node and the browser, used by [PDFKit](https://github.com/devongovett/pdfkit) and [`pdf`](https://github.com/chr33s/pdf). It supports many font formats, advanced glyph substitution and layout features, glyph path extraction, color emoji glyphs, font subsetting, and more.
 
 ## Features
 

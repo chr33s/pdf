@@ -2,10 +2,10 @@
 
 > Collection of metrics and encodings for the standard 14 PDF fonts
 
-This project is a fork of [`afm`](https://github.com/chbrown/afm) and was created for use in [`@chr33s/pdf-lib`](https://github.com/chr33s/pdf). This forks exists for two primary reasons:
+This project is a fork of [`afm`](https://github.com/chbrown/afm) and was created for use in [`@chr33s/pdf`](https://github.com/chr33s/pdf). This forks exists for two primary reasons:
 
 1. The original project did not include mappings from Unicode to WinAnsi/ZapfDingbats/Symbol encodings.
-2. The font metrics included in the original project were uncompressed (not ideal for usage in `pdf-lib`).
+2. The font metrics included in the original project were uncompressed (not ideal for usage in `pdf`).
 
 ## Usage
 ```js

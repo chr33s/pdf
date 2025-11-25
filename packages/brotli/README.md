@@ -1,6 +1,6 @@
 # @chr33s/brotli
 
-> Modern ESM build of the Brotli compression utilities used by `@chr33s/pdf-lib` and the rest of this monorepo.
+> Modern ESM build of the Brotli compression utilities used by `@chr33s/pdf` and the rest of this monorepo.
 
 This package lives in the [`chr33s/pdf`](https://github.com/chr33s/pdf) workspace and is derived from the
 [Hopding/brotli.js](https://github.com/Hopding/brotli.js) fork of Google's original Brotli encoder/decoder.
