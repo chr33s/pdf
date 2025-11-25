@@ -11,7 +11,7 @@ const xAdvances = (positions: Array<{ xAdvance: number }>) =>
 describe("glyph positioning", function () {
   describe("basic positioning", function () {
     let font = fontkit.openSync(
-      __dirname + "/data/SourceSansPro/SourceSansPro-Regular.otf",
+      __dirname + "/data/source-sans-pro/source-sans-pro-regular.otf",
     );
 
     test("should get a glyph width", () =>
@@ -20,7 +20,7 @@ describe("glyph positioning", function () {
 
   describe("opentype positioning", function () {
     let font = fontkit.openSync(
-      __dirname + "/data/SourceSansPro/SourceSansPro-Regular.otf",
+      __dirname + "/data/source-sans-pro/source-sans-pro-regular.otf",
     );
 
     test("should apply opentype GPOS features", function () {
@@ -41,7 +41,7 @@ describe("glyph positioning", function () {
   });
 
   describe("AAT features", function () {
-    let font = fontkit.openSync(__dirname + "/data/Play/Play-Regular.ttf");
+    let font = fontkit.openSync(__dirname + "/data/play/play-regular.ttf");
 
     test("should apply kerning by default", function () {
       let { positions } = font.layout("Twitter");

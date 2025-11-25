@@ -14,7 +14,7 @@ import {
 } from "../../../src/index.js";
 
 const withNullEntryPdfBytes = fs.readFileSync(
-  "assets/pdfs/with_null_parent_entry.pdf",
+  "assets/pdfs/with-null-parent-entry.pdf",
 );
 
 const pageUtils = () => {

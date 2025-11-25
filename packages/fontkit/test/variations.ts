@@ -87,7 +87,9 @@ describe("variations", function () {
 
   describe("truetype variations", function () {
     test("should support sharing all points", function () {
-      let font = fontkit.openSync(__dirname + "/data/fonttest/TestGVAROne.ttf");
+      let font = fontkit.openSync(
+        __dirname + "/data/fonttest/test-gvar-one.ttf",
+      );
 
       assert.equal(
         font.getVariation({ wght: 300 }).glyphsForString("彌")[0].path.toSVG(),
@@ -96,7 +98,9 @@ describe("variations", function () {
     });
 
     test("should support sharing enumerated points", function () {
-      let font = fontkit.openSync(__dirname + "/data/fonttest/TestGVARTwo.ttf");
+      let font = fontkit.openSync(
+        __dirname + "/data/fonttest/test-gvar-two.ttf",
+      );
 
       assert.equal(
         font.getVariation({ wght: 300 }).glyphsForString("彌")[0].path.toSVG(),
@@ -106,7 +110,7 @@ describe("variations", function () {
 
     test("should support sharing no points", function () {
       let font = fontkit.openSync(
-        __dirname + "/data/fonttest/TestGVARThree.ttf",
+        __dirname + "/data/fonttest/test-gvar-three.ttf",
       );
 
       assert.equal(
@@ -117,7 +121,7 @@ describe("variations", function () {
 
     test("should use the HVAR table when available for variation metrics", function () {
       let font = fontkit.openSync(
-        __dirname + "/data/fonttest/TestGVARFour.ttf",
+        __dirname + "/data/fonttest/test-gvar-four.ttf",
       );
 
       assert.equal(
@@ -129,7 +133,9 @@ describe("variations", function () {
     });
 
     test("should fall back to the last entry in an HVAR table", function () {
-      let font = fontkit.openSync(__dirname + "/data/fonttest/TestHVARTwo.ttf");
+      let font = fontkit.openSync(
+        __dirname + "/data/fonttest/test-hvar-two.ttf",
+      );
 
       assert.equal(
         Math.round(
@@ -140,7 +146,7 @@ describe("variations", function () {
     });
 
     test("should support adjusting GPOS mark anchor points for variations", function () {
-      let font = fontkit.openSync(__dirname + "/data/Mada/Mada-VF.ttf", {
+      let font = fontkit.openSync(__dirname + "/data/mada/mada-vf.ttf", {
         wght: 900,
       });
       let run = font.layout("ف");
@@ -151,7 +157,7 @@ describe("variations", function () {
 
   describe("CFF2 variations", function () {
     let font = fontkit.openSync(
-      __dirname + "/data/fonttest/AdobeVFPrototype-Subset.otf",
+      __dirname + "/data/fonttest/adobe-vf-prototype-subset.otf",
     );
 
     test("applies variations to CFF2 glyphs", function () {

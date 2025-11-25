@@ -25,9 +25,9 @@ export default async (assets: Assets) => {
 
   const helveticaFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
   const catRidingUnicornImage = await pdfDoc.embedJpg(
-    images.jpg.cat_riding_unicorn,
+    images.jpg["cat-riding-unicorn"],
   );
-  const cmykImage = await pdfDoc.embedJpg(images.jpg.cmyk_colorspace);
+  const cmykImage = await pdfDoc.embedJpg(images.jpg["cmyk-colorspace"]);
 
   const catRidingUnicornDims = catRidingUnicornImage.scale(0.13);
   const cmykDims = cmykImage.scale(0.5);

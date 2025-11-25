@@ -7,7 +7,7 @@ import {
   StandardFonts,
 } from "../../src/index.js";
 
-const birdPng = fs.readFileSync("assets/images/greyscale_bird.png");
+const birdPng = fs.readFileSync("assets/images/greyscale-bird.png");
 
 describe("PDFDocument", () => {
   describe("getSize() method", () => {

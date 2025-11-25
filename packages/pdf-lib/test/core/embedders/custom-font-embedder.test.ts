@@ -10,7 +10,7 @@ import {
   PDFRef,
 } from "../../../src/index.js";
 
-const ubuntuFont = fs.readFileSync("./assets/fonts/ubuntu/Ubuntu-R.ttf");
+const ubuntuFont = fs.readFileSync("./assets/fonts/ubuntu/ubuntu-r.ttf");
 
 describe("CustomFontEmbedder", () => {
   test("can be constructed with CustomFontEmbedder.for(...)", async () => {

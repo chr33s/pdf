@@ -9,12 +9,14 @@ export default async (assets: Assets) => {
 
   const pdfDoc = await PDFDocument.load(
     pdfs.with_missing_endstream_eol_and_polluted_ctm,
-    { parseSpeed: ParseSpeeds.Fastest },
+    {
+      parseSpeed: ParseSpeeds.Fastest,
+    },
   );
 
   pdfDoc.registerFontkit(fontkit);
 
-  await pdfDoc.attach(pdfs.us_constitution, "us_constitution.pdf", {
+  await pdfDoc.attach(pdfs["us-constitution"], "us-constitution.pdf", {
     mimeType: "application/pdf",
     description: "Constitution of the United States 🇺🇸🦅",
     creationDate: new Date("1787/09/17"),
@@ -22,8 +24,8 @@ export default async (assets: Assets) => {
   });
 
   await pdfDoc.attach(
-    images.jpg.cat_riding_unicorn_base64,
-    "cat_riding_unicorn.jpg",
+    images.jpg["cat-riding-unicorn_base64"],
+    "cat-riding-unicorn.jpg",
     {
       mimeType: "image/jpeg",
       description: "Cool cat riding a unicorn! 🦄🐈🕶️",
@@ -40,7 +42,7 @@ export default async (assets: Assets) => {
     subset: true,
     features: { liga: false },
   });
-  const smallMarioImage = await pdfDoc.embedPng(images.png.small_mario);
+  const smallMarioImage = await pdfDoc.embedPng(images.png["small-mario"]);
   const smallMarioDims = smallMarioImage.scale(0.15);
 
   const page1 = pdfDoc.getPage(0);

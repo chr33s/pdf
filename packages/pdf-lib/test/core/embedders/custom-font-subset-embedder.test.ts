@@ -8,7 +8,7 @@ import {
   PDFHexString,
 } from "../../../src/index.js";
 
-const ubuntuFont = fs.readFileSync("./assets/fonts/ubuntu/Ubuntu-R.ttf");
+const ubuntuFont = fs.readFileSync("./assets/fonts/ubuntu/ubuntu-r.ttf");
 
 describe("CustomFontSubsetEmbedder", () => {
   test("can be constructed with CustomFontSubsetEmbedder.for(...)", async () => {

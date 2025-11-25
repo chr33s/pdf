@@ -13,7 +13,7 @@ const glyphCodePoints = (glyphs: Array<{ codePoints: number[] }>) =>
 describe("character to glyph mapping", function () {
   describe("basic cmap handling", function () {
     let font = fontkit.openSync(
-      __dirname + "/data/OpenSans/OpenSans-Regular.ttf",
+      __dirname + "/data/open-sans/open-sans-regular.ttf",
     );
 
     test("should get characterSet", function () {
@@ -47,7 +47,7 @@ describe("character to glyph mapping", function () {
     });
 
     test("should support unicode variation selectors", function () {
-      let font = fontkit.openSync(__dirname + "/data/fonttest/TestCMAP14.otf");
+      let font = fontkit.openSync(__dirname + "/data/fonttest/test-cmap14.otf");
       let glyphs = font.glyphsForString(
         "\u{82a6}\u{82a6}\u{E0100}\u{82a6}\u{E0101}",
       );
@@ -56,7 +56,7 @@ describe("character to glyph mapping", function () {
 
     test("should support legacy encodings when no unicode cmap is found", function () {
       let font = fontkit.openSync(
-        __dirname + "/data/fonttest/TestCMAPMacTurkish.ttf",
+        __dirname + "/data/fonttest/test-cmap-mac-turkish.ttf",
       );
       let glyphs = font.glyphsForString("“ABÇĞIİÖŞÜ”");
       assert.deepEqual(
@@ -68,7 +68,7 @@ describe("character to glyph mapping", function () {
 
   describe("opentype features", function () {
     let font = fontkit.openSync(
-      __dirname + "/data/SourceSansPro/SourceSansPro-Regular.otf",
+      __dirname + "/data/source-sans-pro/source-sans-pro-regular.otf",
     );
 
     test("should list available features", () =>
@@ -126,7 +126,7 @@ describe("character to glyph mapping", function () {
   });
 
   describe("AAT features", function () {
-    let font = fontkit.openSync(__dirname + "/data/Play/Play-Regular.ttf");
+    let font = fontkit.openSync(__dirname + "/data/play/play-regular.ttf");
 
     test("should list available features", () =>
       assert.deepEqual(font.availableFeatures, [
@@ -172,7 +172,7 @@ describe("character to glyph mapping", function () {
     });
 
     test("should apply indic reordering features", function () {
-      let f = fontkit.openSync(__dirname + "/data/Khmer/Khmer.ttf");
+      let f = fontkit.openSync(__dirname + "/data/khmer/khmer.ttf");
       let { glyphs } = f.layout("ខ្ញុំអាចញ៉ាំកញ្ចក់បាន ដោយគ្មានបញ្ហា");
       assert.deepEqual(
         glyphIds(glyphs),
@@ -219,14 +219,14 @@ describe("character to glyph mapping", function () {
   describe("glyph id to strings", function () {
     test("should return strings from cmap that map to a given glyph", function () {
       let font = fontkit.openSync(
-        __dirname + "/data/OpenSans/OpenSans-Regular.ttf",
+        __dirname + "/data/open-sans/open-sans-regular.ttf",
       );
       let strings = font.stringsForGlyph(68);
       assert.deepEqual(strings, ["a"]);
     });
 
     test("should return strings from AAT morx table that map to the given glyph", function () {
-      let font = fontkit.openSync(__dirname + "/data/Play/Play-Regular.ttf");
+      let font = fontkit.openSync(__dirname + "/data/play/play-regular.ttf");
       let strings = font.stringsForGlyph(767);
       assert.deepEqual(strings, ["ffi"]);
     });

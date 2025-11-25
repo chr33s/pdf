@@ -36,34 +36,39 @@ const testRoot = join(__dirname, "..", "test");
 const ok: string[] = [];
 const skipped: string[] = [];
 
-const toPosix = (value) => value.split(sep).join("/");
+const toPosix = (value: string) => value.split(sep).join("/");
 
-const relativePath = (target) => toPosix(relative(testRoot, target)) || ".";
+const relativePath = (target: string) =>
+  toPosix(relative(testRoot, target)) || ".";
 
 const cmapFontSources = {
-  "Ubuntu-R.ttf.cmap": join(
+  "ubuntu-R.ttf.cmap": join(
     __dirname,
     "..",
     "assets",
     "fonts",
     "ubuntu",
-    "Ubuntu-R.ttf",
+    "ubuntu-R.ttf",
   ),
-  "SourceHanSerifJP-Regular.otf.cmap": join(
+  "source-han-serif-jp-regular.otf.cmap": join(
     __dirname,
     "..",
     "assets",
     "fonts",
-    "source_hans_jp",
-    "SourceHanSerifJP-Regular.otf",
+    "source-hans-jp",
+    "source-han-serif-jp-regular.otf",
   ),
 };
 
-const recordSuccess = (label) => {
+const recordSuccess = (label: string) => {
   ok.push(label);
 };
 
-function compareBuffers(label, actual, expected) {
+function compareBuffers(
+  label: string,
+  actual: Uint8Array | ArrayBuffer,
+  expected: Uint8Array | ArrayBuffer,
+) {
   const viewA = actual instanceof Uint8Array ? actual : new Uint8Array(actual);
   const viewB =
     expected instanceof Uint8Array ? expected : new Uint8Array(expected);
@@ -83,7 +88,7 @@ function compareBuffers(label, actual, expected) {
   ok.push(label);
 }
 
-function decodeAscii85(text) {
+function decodeAscii85(text: string) {
   const output = [];
   let tuple = 0;
   let count = 0;
@@ -139,7 +144,7 @@ function decodeAscii85(text) {
   return Uint8Array.from(output);
 }
 
-function decodeAsciiHex(text) {
+function decodeAsciiHex(text: string) {
   let digits = "";
   for (let i = 0; i < text.length; i++) {
     const ch = text[i];
@@ -164,7 +169,7 @@ function decodeAsciiHex(text) {
   return result;
 }
 
-function decodeRunLength(data) {
+function decodeRunLength(data: Uint8Array) {
   const out = [];
   for (let i = 0; i < data.length; ) {
     const length = data[i++];
@@ -187,7 +192,7 @@ function decodeRunLength(data) {
   return Uint8Array.from(out);
 }
 
-function decodeFlate(data) {
+function decodeFlate(data: Uint8Array) {
   try {
     return new Uint8Array(inflateRawSync(data));
   } catch (rawErr) {
@@ -201,7 +206,7 @@ function decodeFlate(data) {
   }
 }
 
-function decodeLzw(data, earlyChange = 0) {
+function decodeLzw(data: Uint8Array, earlyChange = 0) {
   const maxDictSize = 4096;
   const dictionaryValues = new Uint8Array(maxDictSize);
   const dictionaryLengths = new Uint16Array(maxDictSize);
@@ -224,7 +229,7 @@ function decodeLzw(data, earlyChange = 0) {
 
   const result = [];
 
-  const readBits = (n) => {
+  const readBits = (n: number): number | null => {
     while (bitsInBuffer < n) {
       if (bytePos >= data.length) {
         return null;
@@ -272,8 +277,8 @@ function decodeLzw(data, earlyChange = 0) {
     }
 
     if (hasPrev && nextCode < maxDictSize) {
-      dictionaryPrevCodes[nextCode] = prevCode;
-      dictionaryLengths[nextCode] = dictionaryLengths[prevCode] + 1;
+      dictionaryPrevCodes[nextCode] = prevCode!;
+      dictionaryLengths[nextCode] = dictionaryLengths[prevCode!] + 1;
       dictionaryValues[nextCode] = currentSequence[0];
       nextCode++;
       const threshold = nextCode + earlyChange;
@@ -292,11 +297,12 @@ function decodeLzw(data, earlyChange = 0) {
   return Uint8Array.from(result);
 }
 
-function findDataDirs(root) {
+function findDataDirs(root: string) {
   const stack = [root];
   const dirs = [];
   while (stack.length > 0) {
     const current = stack.pop();
+    if (!current) continue;
     const entries = readdirSync(current, { withFileTypes: true });
     for (const entry of entries) {
       const fullPath = join(current, entry.name);
@@ -311,9 +317,9 @@ function findDataDirs(root) {
   return dirs.sort((a, b) => relativePath(a).localeCompare(relativePath(b)));
 }
 
-const labelFor = (dir, name) => `${relativePath(dir)}/${name}`;
+const labelFor = (dir: string, name: string) => `${relativePath(dir)}/${name}`;
 
-function verifyAscii85(dir) {
+function verifyAscii85(dir: string) {
   if (!existsSync(dir)) {
     skipped.push(`${relativePath(dir)} (missing)`);
     return;
@@ -334,7 +340,7 @@ function verifyAscii85(dir) {
   }
 }
 
-function verifyAsciiHex(dir) {
+function verifyAsciiHex(dir: string) {
   if (!existsSync(dir)) {
     skipped.push(`${relativePath(dir)} (missing)`);
     return;
@@ -355,7 +361,7 @@ function verifyAsciiHex(dir) {
   }
 }
 
-function verifyRunLength(dir) {
+function verifyRunLength(dir: string) {
   if (!existsSync(dir)) {
     skipped.push(`${relativePath(dir)} (missing)`);
     return;
@@ -382,7 +388,7 @@ function verifyRunLength(dir) {
   }
 }
 
-function verifyFlate(dir) {
+function verifyFlate(dir: string) {
   if (!existsSync(dir)) {
     skipped.push(`${relativePath(dir)} (missing)`);
     return;
@@ -418,7 +424,7 @@ function verifyFlate(dir) {
   }
 }
 
-function verifyLzw(dir) {
+function verifyLzw(dir: string) {
   if (!existsSync(dir)) {
     skipped.push(`${relativePath(dir)} (missing)`);
     return;
@@ -439,7 +445,7 @@ function verifyLzw(dir) {
   }
 }
 
-function verifyStreamsData(dir) {
+function verifyStreamsData(dir: string) {
   verifyAscii85(join(dir, "ascii85"));
   verifyAsciiHex(join(dir, "asciihex"));
   verifyRunLength(join(dir, "runlength"));
@@ -447,7 +453,7 @@ function verifyStreamsData(dir) {
   verifyLzw(join(dir, "lzw"));
 }
 
-function verifyEmbeddersData(dir) {
+function verifyEmbeddersData(dir: string) {
   if (!existsSync(dir)) {
     skipped.push(`${relativePath(dir)} (missing)`);
     return;
@@ -459,7 +465,7 @@ function verifyEmbeddersData(dir) {
   }
   files.sort();
   for (const file of files) {
-    const fontPath = cmapFontSources[file];
+    const fontPath = cmapFontSources[file as keyof typeof cmapFontSources];
     if (!fontPath || !existsSync(fontPath)) {
       skipped.push(`${relativePath(dir)}/${file} (missing font source)`);
       continue;
@@ -467,12 +473,14 @@ function verifyEmbeddersData(dir) {
     const font = fontkit.create(readFileSync(fontPath));
     const glyphs = sortedUniq(
       font.characterSet
-        .map((codePoint) => font.glyphForCodePoint(codePoint))
-        .filter((glyph) => glyph)
+        .map((codePoint: number) => font.glyphForCodePoint(codePoint))
+        .filter((glyph: any) => glyph)
         .sort(byAscendingId),
-      (glyph) => glyph.id,
+      (glyph: any) => glyph.id,
     );
-    const cmap = createCmap(glyphs, (glyph) => (glyph ? glyph.id : -1));
+    const cmap = createCmap(glyphs as any, (glyph: any) =>
+      glyph ? glyph.id : -1,
+    );
     const expected = readFileSync(join(dir, file), "utf8");
     compareBuffers(
       labelFor(dir, file),
@@ -482,13 +490,14 @@ function verifyEmbeddersData(dir) {
   }
 }
 
-async function verifyParserData(dir) {
+async function verifyParserData(dir: string) {
   if (!existsSync(dir)) {
     skipped.push(`${relativePath(dir)} (missing)`);
     return;
   }
 
-  const readData = (file) => new Uint8Array(readFileSync(join(dir, file)));
+  const readData = (file: string) =>
+    new Uint8Array(readFileSync(join(dir, file)));
 
   const objectStreamFixtures = [
     { name: "object-stream1", dict: { N: 3, First: 18 }, expectedCount: 3 },
@@ -496,8 +505,8 @@ async function verifyParserData(dir) {
       name: "object-stream2",
       dict: { N: 9, First: 44 },
       expectedCount: 9,
-      validate: (context) => {
-        const lookup = (num, type) =>
+      validate: (context: any) => {
+        const lookup = (num: number, type?: any) =>
           type
             ? context.lookup(PDFRef.of(num), type)
             : context.lookup(PDFRef.of(num));
@@ -738,7 +747,7 @@ async function verifyParserData(dir) {
   }
 }
 
-async function verifyWritersData(dir) {
+async function verifyWritersData(dir: string) {
   if (!existsSync(dir)) {
     skipped.push(`${relativePath(dir)} (missing)`);
     return;
@@ -806,7 +815,7 @@ async function verifyWritersData(dir) {
   compareBuffers(labelFor(dir, "stream-writer-1.pdf"), buffer, expected);
 }
 
-function verifyUtilsData(dir) {
+function verifyUtilsData(dir: string) {
   if (!existsSync(dir)) {
     skipped.push(`${relativePath(dir)} (missing)`);
     return;

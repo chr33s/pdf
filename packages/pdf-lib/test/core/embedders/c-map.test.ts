@@ -7,20 +7,20 @@ import { createCmap } from "../../../src/core/embedders/c-map.js";
 import { byAscendingId, sortedUniq } from "../../../src/utils/index.js";
 
 const ubuntuFont = fs.readFileSync(
-  new URL("../../../assets/fonts/ubuntu/Ubuntu-R.ttf", import.meta.url),
+  new URL("../../../assets/fonts/ubuntu/ubuntu-r.ttf", import.meta.url),
 );
 const sourceHansJpFont = fs.readFileSync(
   new URL(
-    "../../../assets/fonts/source_hans_jp/SourceHanSerifJP-Regular.otf",
+    "../../../assets/fonts/source-hans-jp/source-han-serif-jp-regular.otf",
     import.meta.url,
   ),
 );
 
 const ubuntuFontCmap = fs.readFileSync(
-  new URL("./data/Ubuntu-R.ttf.cmap", import.meta.url),
+  new URL("./data/ubuntu-R.ttf.cmap", import.meta.url),
 );
 const sourceHansJpFontCmap = fs.readFileSync(
-  new URL("./data/SourceHanSerifJP-Regular.otf.cmap", import.meta.url),
+  new URL("./data/source-han-serif-jp-regular.otf.cmap", import.meta.url),
 );
 
 const allGlyphsInFontSortedById = (font: Font) => {
@@ -33,7 +33,7 @@ const allGlyphsInFontSortedById = (font: Font) => {
 };
 
 describe("createCmap", () => {
-  test("creates CMaps for embedded Ubuntu-R font files", () => {
+  test("creates CMaps for embedded ubuntu-R font files", () => {
     const font = fontkit.create(ubuntuFont);
 
     const glyphs = allGlyphsInFontSortedById(font);
@@ -42,7 +42,7 @@ describe("createCmap", () => {
     expect(cmap).toEqual(String(ubuntuFontCmap));
   });
 
-  test("creates CMaps for embedded SourceHanSerifJP-Regular font files", () => {
+  test("creates CMaps for embedded source-han-serif-jp-regular font files", () => {
     const font = fontkit.create(sourceHansJpFont);
 
     const glyphs = allGlyphsInFontSortedById(font);

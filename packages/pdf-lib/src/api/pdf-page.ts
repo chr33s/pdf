@@ -1042,7 +1042,7 @@ export default class PDFPage {
    * ```js
    * import { degrees } from 'pdf-lib'
    *
-   * const jpgUrl = 'https://pdf-lib.js.org/assets/cat_riding_unicorn.jpg'
+   * const jpgUrl = 'https://pdf-lib.js.org/assets/cat-riding-unicorn.jpg'
    * const jpgImageBytes = await fetch(jpgUrl).then((res) => res.arrayBuffer())
    *
    * const jpgImage = await pdfDoc.embedJpg(jpgImageBytes)

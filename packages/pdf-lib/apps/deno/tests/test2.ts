@@ -20,7 +20,7 @@ export default async (assets: Assets) => {
   const ubuntuFont = await pdfDoc.embedFont(fonts.ttf.ubuntu_r, {
     subset: true,
   });
-  const smallMarioImage = await pdfDoc.embedPng(images.png.small_mario);
+  const smallMarioImage = await pdfDoc.embedPng(images.png.small - mario);
   const smallMarioDims = smallMarioImage.scale(0.18);
 
   const sourcePdfDoc = await PDFDocument.load(

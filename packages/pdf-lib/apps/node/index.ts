@@ -64,78 +64,80 @@ const readFile = (path: string) => fs.readFileSync(`../../assets/${path}`);
 const assets = {
   fonts: {
     ttf: {
-      ubuntu_r: readFile("fonts/ubuntu/Ubuntu-R.ttf"),
-      ubuntu_r_base64: String(readFile("fonts/ubuntu/Ubuntu-R.ttf.base64")),
-      bio_rhyme_r: readFile("fonts/bio_rhyme/BioRhymeExpanded-Regular.ttf"),
-      press_start_2p_r: readFile(
-        "fonts/press_start_2p/PressStart2P-Regular.ttf",
+      "ubuntu-r": readFile("fonts/ubuntu/ubuntu-r.ttf"),
+      "ubuntu-r_base64": String(readFile("fonts/ubuntu/ubuntu-r.ttf.base64")),
+      "bio-rhyme-r": readFile("fonts/bio-rhyme/bio-rhyme-expanded-regular.ttf"),
+      "press-start-2p-regular": readFile(
+        "fonts/press-start-2p/press-start-2p-regular.ttf",
       ),
-      indie_flower_r: readFile("fonts/indie_flower/IndieFlower.ttf"),
-      great_vibes_r: readFile("fonts/great_vibes/GreatVibes-Regular.ttf"),
-      nunito: readFile("fonts/nunito/Nunito-Regular.ttf"),
+      "indie-flower": readFile("fonts/indie-flower/indie-flower.ttf"),
+      "great-vibes-regular": readFile(
+        "fonts/great-vibes/great-vibes-regular.ttf",
+      ),
+      "nunito-regular": readFile("fonts/nunito/nunito-regular.ttf"),
     },
     otf: {
-      fantasque_sans_mono_bi: readFile(
-        "fonts/fantasque/OTF/FantasqueSansMono-BoldItalic.otf",
+      "fantasque-sans-mono_bi": readFile(
+        "fonts/fantasque/otf/fantasque-sans-mono-bold-italic.otf",
       ),
-      apple_storm_r: readFile("fonts/apple_storm/AppleStormCBo.otf"),
-      hussar_3d_r: readFile("fonts/hussar_3d/Hussar3DFour.otf"),
-      source_hans_jp: readFile(
-        "fonts/source_hans_jp/SourceHanSerifJP-Regular.otf",
+      "apple-storm_r": readFile("fonts/apple-storm/apple-storm-c-bo.otf"),
+      "hussar-3d_r": readFile("fonts/hussar-3d/hussar-3d-four.otf"),
+      "source-hans-jp": readFile(
+        "fonts/source-hans-jp/source-han-serif-jp-regular.otf",
       ),
     },
   },
   images: {
     jpg: {
-      cat_riding_unicorn: readFile("images/cat_riding_unicorn.jpg"),
-      cat_riding_unicorn_base64: String(
-        readFile("images/cat_riding_unicorn.jpg.base64"),
+      "cat-riding-unicorn": readFile("images/cat-riding-unicorn.jpg"),
+      "cat-riding-unicorn_base64": String(
+        readFile("images/cat-riding-unicorn.jpg.base64"),
       ),
-      minions_laughing: readFile("images/minions_laughing.jpg"),
-      cmyk_colorspace: readFile("images/cmyk_colorspace.jpg"),
+      "minions-laughing": readFile("images/minions-laughing.jpg"),
+      "cmyk-colorspace": readFile("images/cmyk-colorspace.jpg"),
     },
     png: {
-      greyscale_bird: readFile("images/greyscale_bird.png"),
-      greyscale_bird_base64_uri: String(
-        readFile("images/greyscale_bird.png.base64.uri"),
+      "greyscale-bird": readFile("images/greyscale-bird.png"),
+      "greyscale-bird_base64_uri": String(
+        readFile("images/greyscale-bird.png.base64.uri"),
       ),
-      minions_banana_alpha: readFile("images/minions_banana_alpha.png"),
-      minions_banana_no_alpha: readFile("images/minions_banana_no_alpha.png"),
-      small_mario: readFile("images/small_mario.png"),
+      "minions-banana_alpha": readFile("images/minions-banana-alpha.png"),
+      "minions-banana_no_alpha": readFile("images/minions-banana-no-alpha.png"),
+      "small-mario": readFile("images/small-mario.png"),
       etwe: readFile("images/etwe.png"),
-      self_drive: readFile("images/self_drive.png"),
-      mario_emblem: readFile("images/mario_emblem.png"),
+      "self-drive": readFile("images/self-drive.png"),
+      "mario-emblem": readFile("images/mario-emblem.png"),
     },
   },
   pdfs: {
     normal: readFile("pdfs/normal.pdf"),
     normal_base64: String(readFile("pdfs/normal.pdf.base64")),
-    with_update_sections: readFile("pdfs/with_update_sections.pdf"),
+    with_update_sections: readFile("pdfs/with-update-sections.pdf"),
     with_update_sections_base64_uri: String(
-      readFile("pdfs/with_update_sections.pdf.base64.uri"),
+      readFile("pdfs/with-update-sections.pdf.base64.uri"),
     ),
     linearized_with_object_streams: readFile(
-      "pdfs/linearized_with_object_streams.pdf",
+      "pdfs/linearized-with-object-streams.pdf",
     ),
-    with_large_page_count: readFile("pdfs/with_large_page_count.pdf"),
+    with_large_page_count: readFile("pdfs/with-large-page-count.pdf"),
     with_missing_endstream_eol_and_polluted_ctm: readFile(
       "pdfs/with_missing_endstream_eol_and_polluted_ctm.pdf",
     ),
     with_newline_whitespace_in_indirect_object_numbers: readFile(
       "pdfs/with_newline_whitespace_in_indirect_object_numbers.pdf",
     ),
-    with_comments: readFile("pdfs/with_comments.pdf"),
-    with_cropbox: readFile("pdfs/with_cropbox.pdf"),
-    us_constitution: readFile("pdfs/us_constitution.pdf"),
+    with_comments: readFile("pdfs/with-comments.pdf"),
+    with_cropbox: readFile("pdfs/with-cropbox.pdf"),
+    "us-constitution": readFile("pdfs/us-constitution.pdf"),
     simple_pdf_2_example: readFile(
-      "pdfs/pdf20examples/Simple PDF 2.0 file.pdf",
+      "pdfs/pdf20examples/simple-p-d-f-2.0-file.pdf",
     ),
-    with_combed_fields: readFile("pdfs/with_combed_fields.pdf"),
-    dod_character: readFile("pdfs/dod_character.pdf"),
-    with_xfa_fields: readFile("pdfs/with_xfa_fields.pdf"),
-    fancy_fields: readFile("pdfs/fancy_fields.pdf"),
-    form_to_flatten: readFile("pdfs/form_to_flatten.pdf"),
-    with_annots: readFile("pdfs/with_annots.pdf"),
+    with_combed_fields: readFile("pdfs/with-combed-fields.pdf"),
+    dod_character: readFile("pdfs/dod-character.pdf"),
+    with_xfa_fields: readFile("pdfs/with-xfa-fields.pdf"),
+    fancy_fields: readFile("pdfs/fancy-fields.pdf"),
+    form_to_flatten: readFile("pdfs/form-to-flatten.pdf"),
+    with_annots: readFile("pdfs/with-annots.pdf"),
   },
 };
 

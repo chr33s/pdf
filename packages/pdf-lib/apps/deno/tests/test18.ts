@@ -67,7 +67,7 @@ const loadB = async (assets: Assets) => {
   const pdfDoc = await PDFDocument.load(assets.pdfs.dod_character);
   const form = pdfDoc.getForm();
 
-  const marioImage = await pdfDoc.embedPng(assets.images.png.small_mario);
+  const marioImage = await pdfDoc.embedPng(assets.images.png.small - mario);
 
   form.getTextField("CharacterName 2").setText("Mario");
   form.getTextField("Age").setText("24 years");

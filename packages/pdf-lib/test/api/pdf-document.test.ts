@@ -32,7 +32,7 @@ const examplePngImageBase64 =
 const examplePngImage = `data:image/png;base64,${examplePngImageBase64}`;
 
 const unencryptedPdfBytes = fs.readFileSync("assets/pdfs/normal.pdf");
-const oldEncryptedPdfBytes1 = fs.readFileSync("assets/pdfs/encrypted_old.pdf");
+const oldEncryptedPdfBytes1 = fs.readFileSync("assets/pdfs/encrypted-old.pdf");
 
 // Had to remove this file due to DMCA complaint, so commented this line out
 // along with the 2 tests that depend on test. Would be nice to find a new file
@@ -40,17 +40,17 @@ const oldEncryptedPdfBytes1 = fs.readFileSync("assets/pdfs/encrypted_old.pdf");
 // so this solution is okay for now.
 // const oldEncryptedPdfBytes2 = fs.readFileSync('pdf_specification.pdf');
 
-const newEncryptedPdfBytes = fs.readFileSync("assets/pdfs/encrypted_new.pdf");
+const newEncryptedPdfBytes = fs.readFileSync("assets/pdfs/encrypted-new.pdf");
 const invalidObjectsPdfBytes = fs.readFileSync(
-  "assets/pdfs/with_invalid_objects.pdf",
+  "assets/pdfs/with-invalid-objects.pdf",
 );
-const justMetadataPdfbytes = fs.readFileSync("assets/pdfs/just_metadata.pdf");
+const justMetadataPdfbytes = fs.readFileSync("assets/pdfs/just-metadata.pdf");
 const normalPdfBytes = fs.readFileSync("assets/pdfs/normal.pdf");
 const withViewerPrefsPdfBytes = fs.readFileSync(
-  "assets/pdfs/with_viewer_prefs.pdf",
+  "assets/pdfs/with-viewer-prefs.pdf",
 );
 const hasAttachmentPdfBytes = fs.readFileSync(
-  "assets/pdfs/examples/add_attachments.pdf",
+  "assets/pdfs/examples/add-attachments.pdf",
 );
 
 describe("PDFDocument", () => {
@@ -161,7 +161,7 @@ describe("PDFDocument", () => {
 
   describe("embedFont() method", () => {
     test("serializes the same value on every save", async () => {
-      const customFont = fs.readFileSync("assets/fonts/ubuntu/Ubuntu-B.ttf");
+      const customFont = fs.readFileSync("assets/fonts/ubuntu/ubuntu-b.ttf");
       const pdfDoc1 = await PDFDocument.create({ updateMetadata: false });
       const pdfDoc2 = await PDFDocument.create({ updateMetadata: false });
 
@@ -595,34 +595,34 @@ describe("PDFDocument", () => {
       const pdfDoc2 = await PDFDocument.create({ updateMetadata: false });
 
       const jpgAttachmentBytes = fs.readFileSync(
-        "assets/images/cat_riding_unicorn.jpg",
+        "assets/images/cat-riding-unicorn.jpg",
       );
       const pdfAttachmentBytes = fs.readFileSync(
-        "assets/pdfs/us_constitution.pdf",
+        "assets/pdfs/us-constitution.pdf",
       );
 
-      await pdfDoc1.attach(jpgAttachmentBytes, "cat_riding_unicorn.jpg", {
+      await pdfDoc1.attach(jpgAttachmentBytes, "cat-riding-unicorn.jpg", {
         mimeType: "image/jpeg",
         description: "Cool cat riding a unicorn! 🦄🐈🕶️",
         creationDate: new Date("2019/12/01"),
         modificationDate: new Date("2020/04/19"),
       });
 
-      await pdfDoc1.attach(pdfAttachmentBytes, "us_constitution.pdf", {
+      await pdfDoc1.attach(pdfAttachmentBytes, "us-constitution.pdf", {
         mimeType: "application/pdf",
         description: "Constitution of the United States 🇺🇸🦅",
         creationDate: new Date("1787/09/17"),
         modificationDate: new Date("1992/05/07"),
       });
 
-      await pdfDoc2.attach(jpgAttachmentBytes, "cat_riding_unicorn.jpg", {
+      await pdfDoc2.attach(jpgAttachmentBytes, "cat-riding-unicorn.jpg", {
         mimeType: "image/jpeg",
         description: "Cool cat riding a unicorn! 🦄🐈🕶️",
         creationDate: new Date("2019/12/01"),
         modificationDate: new Date("2020/04/19"),
       });
 
-      await pdfDoc2.attach(pdfAttachmentBytes, "us_constitution.pdf", {
+      await pdfDoc2.attach(pdfAttachmentBytes, "us-constitution.pdf", {
         mimeType: "application/pdf",
         description: "Constitution of the United States 🇺🇸🦅",
         creationDate: new Date("1787/09/17"),
@@ -660,10 +660,10 @@ describe("PDFDocument", () => {
       expect(jpgAttachment.afRelationship).not.toBeDefined();
       expect(pdfAttachment.afRelationship).not.toBeDefined();
       const jpgAttachmentBytes = fs.readFileSync(
-        "assets/images/cat_riding_unicorn.jpg",
+        "assets/images/cat-riding-unicorn.jpg",
       );
       const pdfAttachmentBytes = fs.readFileSync(
-        "assets/pdfs/us_constitution.pdf",
+        "assets/pdfs/us-constitution.pdf",
       );
       expect(jpgAttachmentBytes).toEqual(Buffer.from(jpgAttachment.data));
       expect(pdfAttachmentBytes).toEqual(Buffer.from(pdfAttachment.data));
@@ -727,10 +727,10 @@ describe("PDFDocument", () => {
       expect(txtAttachment.afRelationship).toBe(AFRelationship.Supplement);
       expect(pngAttachment.afRelationship).toBe(AFRelationship.Alternative);
       const jpgAttachmentBytes = fs.readFileSync(
-        "assets/images/cat_riding_unicorn.jpg",
+        "assets/images/cat-riding-unicorn.jpg",
       );
       const pdfAttachmentBytes = fs.readFileSync(
-        "assets/pdfs/us_constitution.pdf",
+        "assets/pdfs/us-constitution.pdf",
       );
       expect(jpgAttachmentBytes).toEqual(Buffer.from(jpgAttachment.data));
       expect(pdfAttachmentBytes).toEqual(Buffer.from(pdfAttachment.data));

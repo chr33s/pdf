@@ -58,12 +58,12 @@ const getApRefs = (widget: PDFWidgetAnnotation) => {
 const flatten = <T>(arr: T[][]): T[] =>
   arr.reduce((curr, acc) => [...acc, ...curr], []);
 
-const fancyFieldsPdfBytes = fs.readFileSync("assets/pdfs/fancy_fields.pdf");
-// const sampleFormPdfBytes = fs.readFileSync('assets/pdfs/sample_form.pdf');
-// const combedPdfBytes = fs.readFileSync('assets/pdfs/with_combed_fields.pdf');
-// const dodPdfBytes = fs.readFileSync('assets/pdfs/dod_character.pdf');
-const xfaPdfBytes = fs.readFileSync("assets/pdfs/with_xfa_fields.pdf");
-const signaturePdfBytes = fs.readFileSync("assets/pdfs/with_signature.pdf");
+const fancyFieldsPdfBytes = fs.readFileSync("assets/pdfs/fancy-fields.pdf");
+// const sampleFormPdfBytes = fs.readFileSync('assets/pdfs/sample-form.pdf');
+// const combedPdfBytes = fs.readFileSync('assets/pdfs/with-combed-fields.pdf');
+// const dodPdfBytes = fs.readFileSync('assets/pdfs/dod-character.pdf');
+const xfaPdfBytes = fs.readFileSync("assets/pdfs/with-xfa-fields.pdf");
+const signaturePdfBytes = fs.readFileSync("assets/pdfs/with-signature.pdf");
 
 describe("PDFForm", () => {
   const origConsoleWarn = console.warn;
@@ -130,7 +130,7 @@ describe("PDFForm", () => {
     expect(fieldDicts).toContain(getFieldDict('Choose A Gundam 🤖'));
   });
 
-  // Need to also run this test with assets/pdfs/with_xfa_fields.pdf as it has "partial/50%" APs for checkboxes (is only missing the /Off APs)
+  // Need to also run this test with assets/pdfs/with-xfa-fields.pdf as it has "partial/50%" APs for checkboxes (is only missing the /Off APs)
   test("does not override existing appearance streams for check boxes and radio groups if they already exist", async () => {
     const pdfDoc = await PDFDocument.load(fancyFieldsPdfBytes);
     const form = pdfDoc.getForm();

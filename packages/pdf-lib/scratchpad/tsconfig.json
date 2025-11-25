@@ -2,7 +2,7 @@
   "extends": "../tsconfig.json",
   "include": ["./**/*", "../src/**/*"],
   "compilerOptions": {
-    "outDir": "./build",
+    "outDir": "./dist",
     "rootDir": null,
     "rootDirs": ["../src", "../scratchpad"]
   }

@@ -20,7 +20,7 @@ export default async (assets: Assets) => {
     StandardFonts.TimesRomanBoldItalic,
   );
   const minionsBananaImage = await pdfDoc.embedPng(
-    images.png.minions_banana_alpha,
+    images.png.minions - banana_alpha,
   );
   const minionsBananaDims = minionsBananaImage.scale(0.5);
 

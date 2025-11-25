@@ -9,7 +9,7 @@ const __dirname = here(import.meta.url);
 
 describe("metadata", function () {
   let font = fontkit.openSync(
-    __dirname + "/data/NotoSans/NotoSans.ttc",
+    __dirname + "/data/noto-sans/noto-sans.ttc",
     "NotoSans",
   );
 

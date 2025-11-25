@@ -8,7 +8,7 @@ import {
   PDFName,
 } from "../../../src/index.js";
 
-const fancyFieldsPdfBytes = fs.readFileSync("assets/pdfs/fancy_fields.pdf");
+const fancyFieldsPdfBytes = fs.readFileSync("assets/pdfs/fancy-fields.pdf");
 
 describe("PDFRadioGroup", () => {
   test("can read its options", async () => {

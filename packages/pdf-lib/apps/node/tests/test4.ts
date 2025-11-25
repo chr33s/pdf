@@ -17,7 +17,7 @@ export default async (assets: Assets) => {
   });
 
   const minionsLaughingImage = await pdfDoc.embedJpg(
-    images.jpg.minions_laughing,
+    images.jpg["minions-laughing"],
   );
   const minionsLaughingDims = minionsLaughingImage.scale(0.6);
 

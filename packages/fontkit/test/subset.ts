@@ -28,7 +28,7 @@ function encodeSubset(subset) {
 describe("font subsetting", function () {
   describe("truetype subsetting", function () {
     let font = fontkit.openSync(
-      __dirname + "/data/OpenSans/OpenSans-Regular.ttf",
+      __dirname + "/data/open-sans/open-sans-regular.ttf",
     );
 
     test("should create a TTFSubset instance", function () {
@@ -86,7 +86,7 @@ describe("font subsetting", function () {
 
   describe("CFF subsetting", function () {
     let font = fontkit.openSync(
-      __dirname + "/data/SourceSansPro/SourceSansPro-Regular.otf",
+      __dirname + "/data/source-sans-pro/source-sans-pro-regular.otf",
     );
 
     test("should create a CFFSubset instance", function () {
@@ -114,7 +114,7 @@ describe("font subsetting", function () {
 
     test("should handle CID fonts", async function () {
       let f = fontkit.openSync(
-        __dirname + "/data/NotoSansCJK/NotoSansCJKkr-Regular.otf",
+        __dirname + "/data/noto-sans-cjk/noto-sans-cj-kkr-regular.otf",
       );
       let subset = f.createSubset();
       let iterable = f.glyphsForString("갈휸");

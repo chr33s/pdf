@@ -6,7 +6,7 @@ import {
   TextAlignment,
 } from "../../../src/index.js";
 
-const fancyFieldsPdfBytes = fs.readFileSync("assets/pdfs/fancy_fields.pdf");
+const fancyFieldsPdfBytes = fs.readFileSync("assets/pdfs/fancy-fields.pdf");
 
 describe("PDFTextField", () => {
   test("can read its value", async () => {

@@ -2,7 +2,7 @@ import fs from "node:fs";
 import { describe, expect, test } from "vitest";
 import { AnnotationFlags, PDFDocument } from "../../../src/index.js";
 
-const fancyFieldsPdfBytes = fs.readFileSync("assets/pdfs/fancy_fields.pdf");
+const fancyFieldsPdfBytes = fs.readFileSync("assets/pdfs/fancy-fields.pdf");
 
 describe("PDFOptionList", () => {
   test("can read its options", async () => {

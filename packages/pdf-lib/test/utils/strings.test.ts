@@ -76,7 +76,7 @@ describe("breakTextIntoLines", () => {
 
   test("handles non-ascii code points and empty breaks", async () => {
     const sourceHansBytes = fs.readFileSync(
-      "assets/fonts/source_hans_jp/SourceHanSerifJP-Regular.otf",
+      "assets/fonts/source-hans-jp/source-han-serif-jp-regular.otf",
     );
     const sourceHansFont = await CustomFontEmbedder.for(
       fontkit,

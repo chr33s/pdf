@@ -11,7 +11,7 @@ const __dirname = here(import.meta.url);
 describe("fontkit", function () {
   test("should open a font asynchronously", () =>
     fontkit.open(
-      __dirname + "/data/OpenSans/OpenSans-Regular.ttf",
+      __dirname + "/data/open-sans/open-sans-regular.ttf",
       function (err, font) {
         assert.equal(err, null);
         return assert.equal(font.constructor.name, "TTFFont");
@@ -20,54 +20,54 @@ describe("fontkit", function () {
 
   test("should open a font synchronously", function () {
     let font = fontkit.openSync(
-      __dirname + "/data/OpenSans/OpenSans-Regular.ttf",
+      __dirname + "/data/open-sans/open-sans-regular.ttf",
     );
     return assert.equal(font.constructor.name, "TTFFont");
   });
 
   test("should open fonts of different formats", function () {
     let font = fontkit.openSync(
-      __dirname + "/data/OpenSans/OpenSans-Regular.ttf",
+      __dirname + "/data/open-sans/open-sans-regular.ttf",
     );
     assert.equal(font.constructor.name, "TTFFont");
 
     font = fontkit.openSync(
-      __dirname + "/data/SourceSansPro/SourceSansPro-Regular.otf",
+      __dirname + "/data/source-sans-pro/source-sans-pro-regular.otf",
     );
     assert.equal(font.constructor.name, "TTFFont");
 
-    font = fontkit.openSync(__dirname + "/data/NotoSans/NotoSans.ttc");
+    font = fontkit.openSync(__dirname + "/data/noto-sans/noto-sans.ttc");
     assert.equal(font.constructor.name, "TrueTypeCollection");
 
     font = fontkit.openSync(
-      __dirname + "/data/NotoSans/NotoSans.ttc",
+      __dirname + "/data/noto-sans/noto-sans.ttc",
       "NotoSans",
     );
     assert.equal(font.constructor.name, "TTFFont");
 
-    font = fontkit.openSync(__dirname + "/data/NotoSans/NotoSans.dfont");
+    font = fontkit.openSync(__dirname + "/data/noto-sans/noto-sans.dfont");
     assert.equal(font.constructor.name, "DFont");
 
     font = fontkit.openSync(
-      __dirname + "/data/NotoSans/NotoSans.dfont",
+      __dirname + "/data/noto-sans/noto-sans.dfont",
       "NotoSans",
     );
     assert.equal(font.constructor.name, "TTFFont");
 
     font = fontkit.openSync(
-      __dirname + "/data/SourceSansPro/SourceSansPro-Regular.woff",
+      __dirname + "/data/source-sans-pro/source-sans-pro-regular.woff",
     );
     assert.equal(font.constructor.name, "WOFFFont");
 
     font = fontkit.openSync(
-      __dirname + "/data/SourceSansPro/SourceSansPro-Regular.woff2",
+      __dirname + "/data/source-sans-pro/source-sans-pro-regular.woff2",
     );
     assert.equal(font.constructor.name, "WOFF2Font");
   });
 
   test("should open fonts lacking PostScript name", function () {
     let font = fontkit.openSync(
-      __dirname + "/data/Mada/Mada-Regular.subset1.ttf",
+      __dirname + "/data/mada/mada-regular.subset1.ttf",
     );
     assert.equal(font.postscriptName, null);
   });
@@ -85,7 +85,7 @@ describe("fontkit", function () {
 
   test("should get collection objects for ttc fonts", function () {
     let collection = fontkit.openSync(
-      __dirname + "/data/NotoSans/NotoSans.ttc",
+      __dirname + "/data/noto-sans/noto-sans.ttc",
     );
     assert.equal(collection.constructor.name, "TrueTypeCollection");
 
@@ -103,7 +103,7 @@ describe("fontkit", function () {
 
   test("should get collection objects for dfonts", function () {
     let collection = fontkit.openSync(
-      __dirname + "/data/NotoSans/NotoSans.dfont",
+      __dirname + "/data/noto-sans/noto-sans.dfont",
     );
     assert.equal(collection.constructor.name, "DFont");
 

@@ -4,8 +4,8 @@ import { Assets } from "../index.js";
 export default async (assets: Assets) => {
   const pdfDoc = await PDFDocument.load(assets.pdfs.dod_character);
 
-  const marioImage = await pdfDoc.embedPng(assets.images.png.small_mario);
-  const emblemImage = await pdfDoc.embedPng(assets.images.png.mario_emblem);
+  const marioImage = await pdfDoc.embedPng(assets.images.png["small-mario"]);
+  const emblemImage = await pdfDoc.embedPng(assets.images.png["mario-emblem"]);
 
   const form = pdfDoc.getForm();
 

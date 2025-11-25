@@ -218,7 +218,7 @@ const thirdPage = async (pdfDoc: PDFDocument, assets: Assets) => {
   });
 
   // add alpha-image with 'Screen' blend mode
-  const pngImage = await pdfDoc.embedPng(assets.images.png.self_drive);
+  const pngImage = await pdfDoc.embedPng(assets.images.png["self-drive"]);
   const pngDims = pngImage.scale(1.0);
 
   const cx = page.getWidth() / 2 - 70;

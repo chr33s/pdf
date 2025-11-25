@@ -10,9 +10,9 @@ const __dirname = here(import.meta.url);
 describe("glyphs", function () {
   describe("truetype glyphs", function () {
     let font = fontkit.openSync(
-      __dirname + "/data/OpenSans/OpenSans-Regular.ttf",
+      __dirname + "/data/open-sans/open-sans-regular.ttf",
     );
-    let mada = fontkit.openSync(__dirname + "/data/Mada/Mada-VF.ttf");
+    let mada = fontkit.openSync(__dirname + "/data/mada/mada-vf.ttf");
 
     test("should get a TTFGlyph", function () {
       let glyph = font.getGlyph(39); // D
@@ -87,7 +87,7 @@ describe("glyphs", function () {
 
   describe("CFF glyphs", function () {
     let font = fontkit.openSync(
-      __dirname + "/data/SourceSansPro/SourceSansPro-Regular.otf",
+      __dirname + "/data/source-sans-pro/source-sans-pro-regular.otf",
     );
 
     test("should get a CFFGlyph", function () {
@@ -197,7 +197,7 @@ describe("glyphs", function () {
 
   describe("WOFF glyphs", function () {
     let font = fontkit.openSync(
-      __dirname + "/data/SourceSansPro/SourceSansPro-Regular.woff",
+      __dirname + "/data/source-sans-pro/source-sans-pro-regular.woff",
     );
 
     test("should get a TTFGlyph", function () {
@@ -221,7 +221,7 @@ describe("glyphs", function () {
 
   describe("WOFF2 glyph", function () {
     let font = fontkit.openSync(
-      __dirname + "/data/SourceSansPro/SourceSansPro-Regular.woff2",
+      __dirname + "/data/source-sans-pro/source-sans-pro-regular.woff2",
     );
 
     test("should get a WOFF2Glyph", function () {

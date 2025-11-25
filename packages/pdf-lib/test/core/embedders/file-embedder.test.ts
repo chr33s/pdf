@@ -8,9 +8,9 @@ import {
 } from "../../../src/index.js";
 
 const catRidingUnicornJpg = fs.readFileSync(
-  "assets/images/cat_riding_unicorn.jpg",
+  "assets/images/cat-riding-unicorn.jpg",
 );
-const usConstitutionPdf = fs.readFileSync("assets/pdfs/us_constitution.pdf");
+const usConstitutionPdf = fs.readFileSync("assets/pdfs/us-constitution.pdf");
 
 describe("FileEmbedder", () => {
   test("can be constructed with FileEmbedder.for(...)", () => {
@@ -22,7 +22,7 @@ describe("FileEmbedder", () => {
     const context = PDFContext.create();
     const embedder = FileEmbedder.for(
       catRidingUnicornJpg,
-      "cat_riding_unicorn.jpg",
+      "cat-riding-unicorn.jpg",
       {
         mimeType: "image/jpeg",
         description: "Cool cat riding a unicorn! 🦄🐈🕶️",
@@ -42,7 +42,7 @@ describe("FileEmbedder", () => {
     const predefinedRef = PDFRef.of(9999);
     const embedder = FileEmbedder.for(
       usConstitutionPdf,
-      "us_constitution.pdf",
+      "us-constitution.pdf",
       {
         mimeType: "application/pdf",
         description: "Constitution of the United States 🇺🇸🦅",

@@ -5,7 +5,7 @@ import { openPdf, Reader } from "./open.js";
 void (async () => {
   const pdfDoc1 = await PDFDocument.create();
   const image1 = await pdfDoc1.embedPng(
-    fs.readFileSync("assets/images/mario_emblem.png"),
+    fs.readFileSync("assets/images/mario-emblem.png"),
   );
   const page1 = pdfDoc1.addPage();
   page1.drawImage(image1, { ...image1.scale(1.0) });
@@ -14,7 +14,7 @@ void (async () => {
 
   const pdfDoc2 = await PDFDocument.load(pdfDoc1Bytes);
   const image2 = await pdfDoc2.embedPng(
-    fs.readFileSync("assets/images/minions_banana_alpha.png"),
+    fs.readFileSync("assets/images/minions-banana_alpha.png"),
   );
   const page2 = pdfDoc2.getPage(0);
   page2.drawImage(image2, { ...image2.scale(0.5), x: 100, y: 100 });

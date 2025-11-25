@@ -8,7 +8,7 @@ const __dirname = here(import.meta.url);
 
 describe("metadata", function () {
   let font = fontkit.openSync(
-    __dirname + "/data/OpenSans/OpenSans-Regular.ttf",
+    __dirname + "/data/open-sans/open-sans-regular.ttf",
   );
 
   test("decodes SFNT directory values correctly", function () {

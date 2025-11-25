@@ -1,13 +1,5 @@
-scratchpad/build/
-apps/node-build/
 node_modules/
-coverage/
-ts3.4/
-build/
 dist/
-cjs/
-es/
-
 tsBuildInfo.json
 flamegraph.html
 npm-error.log
@@ -15,5 +7,3 @@ isolate*.log
 .DS_Store
 out.pdf
 *.tgz
-
-.vscode/settings.json

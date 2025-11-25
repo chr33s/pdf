@@ -65,7 +65,7 @@ const loadB = async (assets: Assets) => {
   const pdfDoc = await PDFDocument.load(assets.pdfs.dod_character);
   const form = pdfDoc.getForm();
 
-  const marioImage = await pdfDoc.embedPng(assets.images.png.small_mario);
+  const marioImage = await pdfDoc.embedPng(assets.images.png["small-mario"]);
 
   form.getTextField("CharacterName 2").setText("Mario");
   form.getTextField("Age").setText("24 years");
@@ -129,7 +129,7 @@ const loadD = async (assets: Assets) => {
   const pdfDoc = await PDFDocument.load(assets.pdfs.fancy_fields);
 
   pdfDoc.registerFontkit(fontkit);
-  const ubuntuFont = await pdfDoc.embedFont(assets.fonts.ttf.ubuntu_r);
+  const ubuntuFont = await pdfDoc.embedFont(assets.fonts.ttf["ubuntu-r"]);
 
   const form = pdfDoc.getForm();
 

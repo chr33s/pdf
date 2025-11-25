@@ -7,9 +7,9 @@ import {
   PDFRef,
 } from "../../../src/core/index.js";
 
-const catUnicornJpg = fs.readFileSync("./assets/images/cat_riding_unicorn.jpg");
-const minionsLaughing = fs.readFileSync("./assets/images/minions_laughing.jpg");
-const cmykJpg = fs.readFileSync("./assets/images/cmyk_colorspace.jpg");
+const catUnicornJpg = fs.readFileSync("./assets/images/cat-riding-unicorn.jpg");
+const minionsLaughing = fs.readFileSync("./assets/images/minions-laughing.jpg");
+const cmykJpg = fs.readFileSync("./assets/images/cmyk-colorspace.jpg");
 
 describe("JpegEmbedder", () => {
   test("can be constructed with JpegEmbedder.for(...)", async () => {

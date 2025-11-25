@@ -920,13 +920,13 @@ export default class PDFDocument {
    * For example:
    * ```js
    * // attachment=string
-   * await pdfDoc.attach('/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD...', 'cat_riding_unicorn.jpg', {
+   * await pdfDoc.attach('/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD...', 'cat-riding-unicorn.jpg', {
    *   mimeType: 'image/jpeg',
    *   description: 'Cool cat riding a unicorn! 🦄🐈🕶️',
    *   creationDate: new Date('2019/12/01'),
    *   modificationDate: new Date('2020/04/19'),
    * })
-   * await pdfDoc.attach('data:image/jpeg;base64,/9j/4AAQ...', 'cat_riding_unicorn.jpg', {
+   * await pdfDoc.attach('data:image/jpeg;base64,/9j/4AAQ...', 'cat-riding-unicorn.jpg', {
    *   mimeType: 'image/jpeg',
    *   description: 'Cool cat riding a unicorn! 🦄🐈🕶️',
    *   creationDate: new Date('2019/12/01'),
@@ -935,8 +935,8 @@ export default class PDFDocument {
    *
    * // attachment=Uint8Array
    * import fs from 'node:fs'
-   * const uint8Array = fs.readFileSync('cat_riding_unicorn.jpg')
-   * await pdfDoc.attach(uint8Array, 'cat_riding_unicorn.jpg', {
+   * const uint8Array = fs.readFileSync('cat-riding-unicorn.jpg')
+   * await pdfDoc.attach(uint8Array, 'cat-riding-unicorn.jpg', {
    *   mimeType: 'image/jpeg',
    *   description: 'Cool cat riding a unicorn! 🦄🐈🕶️',
    *   creationDate: new Date('2019/12/01'),
@@ -944,9 +944,9 @@ export default class PDFDocument {
    * })
    *
    * // attachment=ArrayBuffer
-   * const url = 'https://pdf-lib.js.org/assets/cat_riding_unicorn.jpg'
+   * const url = 'https://pdf-lib.js.org/assets/cat-riding-unicorn.jpg'
    * const arrayBuffer = await fetch(url).then(res => res.arrayBuffer())
-   * await pdfDoc.attach(arrayBuffer, 'cat_riding_unicorn.jpg', {
+   * await pdfDoc.attach(arrayBuffer, 'cat-riding-unicorn.jpg', {
    *   mimeType: 'image/jpeg',
    *   description: 'Cool cat riding a unicorn! 🦄🐈🕶️',
    *   creationDate: new Date('2019/12/01'),
@@ -1057,7 +1057,7 @@ export default class PDFDocument {
       const descRaw = fileSpec.lookup(PDFName.of("Desc"));
       let description: string | undefined;
 
-      if (descRaw instanceof PDFHexString) {
+      if (descRaw instanceof PDFHexString || descRaw instanceof PDFString) {
         description = descRaw.decodeText();
       }
 
@@ -1172,10 +1172,10 @@ export default class PDFDocument {
    *
    * // font=Uint8Array
    * import fs from 'node:fs'
-   * const font4 = await pdfDoc.embedFont(fs.readFileSync('Ubuntu-R.ttf'))
+   * const font4 = await pdfDoc.embedFont(fs.readFileSync('ubuntu-R.ttf'))
    *
    * // font=ArrayBuffer
-   * const url = 'https://pdf-lib.js.org/assets/ubuntu/Ubuntu-R.ttf'
+   * const url = 'https://pdf-lib.js.org/assets/ubuntu/ubuntu-R.ttf'
    * const ubuntuBytes = await fetch(url).then(res => res.arrayBuffer())
    * const font5 = await pdfDoc.embedFont(ubuntuBytes)
    * ```
@@ -1264,11 +1264,11 @@ export default class PDFDocument {
    *
    * // jpg=Uint8Array
    * import fs from 'node:fs'
-   * const uint8Array = fs.readFileSync('cat_riding_unicorn.jpg')
+   * const uint8Array = fs.readFileSync('cat-riding-unicorn.jpg')
    * const image3 = await pdfDoc.embedJpg(uint8Array)
    *
    * // jpg=ArrayBuffer
-   * const url = 'https://pdf-lib.js.org/assets/cat_riding_unicorn.jpg'
+   * const url = 'https://pdf-lib.js.org/assets/cat-riding-unicorn.jpg'
    * const arrayBuffer = await fetch(url).then(res => res.arrayBuffer())
    * const image4 = await pdfDoc.embedJpg(arrayBuffer)
    * ```
@@ -1304,11 +1304,11 @@ export default class PDFDocument {
    *
    * // png=Uint8Array
    * import fs from 'node:fs'
-   * const uint8Array = fs.readFileSync('small_mario.png')
+   * const uint8Array = fs.readFileSync('small-mario.png')
    * const image3 = await pdfDoc.embedPng(uint8Array)
    *
    * // png=ArrayBuffer
-   * const url = 'https://pdf-lib.js.org/assets/small_mario.png'
+   * const url = 'https://pdf-lib.js.org/assets/small-mario.png'
    * const arrayBuffer = await fetch(url).then(res => res.arrayBuffer())
    * const image4 = await pdfDoc.embedPng(arrayBuffer)
    * ```

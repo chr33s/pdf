@@ -63,7 +63,7 @@ export default async (assets: Assets) => {
     ...etweImg.scale(0.2),
   });
 
-  const selfDriveImg = await pdfDoc.embedPng(assets.images.png.self_drive);
+  const selfDriveImg = await pdfDoc.embedPng(assets.images.png["self-drive"]);
   page.drawImage(selfDriveImg, {
     x: page.getWidth() / 2,
     y: page.getHeight() - 80,

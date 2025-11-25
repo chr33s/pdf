@@ -100,7 +100,7 @@ export default async (assets: Assets) => {
     x: 25,
   });
 
-  const sourceHanFont = await pdfDoc.embedFont(fonts.otf.source_hans_jp);
+  const sourceHanFont = await pdfDoc.embedFont(fonts.otf["source-hans-jp"]);
 
   const sourceHanFontSize = 20;
   const sourceHanString = String.fromCodePoint(
