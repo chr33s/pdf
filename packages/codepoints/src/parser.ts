@@ -111,12 +111,18 @@ function createCodePoint(parts: string[]): CodePoint {
     NFKC_QC: 0,
   };
 
-  if (codePoint.decomposition.length && Number.isNaN(codePoint.decomposition[0])) {
+  if (
+    codePoint.decomposition.length &&
+    Number.isNaN(codePoint.decomposition[0])
+  ) {
     codePoint.isCompat = true;
     codePoint.decomposition.shift();
   }
 
-  if ((decimal && decimal !== codePoint.numeric) || (digit && digit !== codePoint.numeric)) {
+  if (
+    (decimal && decimal !== codePoint.numeric) ||
+    (digit && digit !== codePoint.numeric)
+  ) {
     throw new Error("Decimal or digit does not match numeric value");
   }
 
@@ -168,7 +174,11 @@ function readRangeFile(
   }
 }
 
-function readRawFile(ucdPath: string, filename: string, handler: (parts: string[]) => void): void {
+function readRawFile(
+  ucdPath: string,
+  filename: string,
+  handler: (parts: string[]) => void,
+): void {
   const data = readFileSync(join(ucdPath, filename), "ascii");
 
   for (const rawLine of data.split("\n")) {
@@ -186,7 +196,9 @@ function readRawFile(ucdPath: string, filename: string, handler: (parts: string[
   }
 }
 
-export default function loadCodePoints(ucdPath: string = defaultUcdPath): CodePointTable {
+export default function loadCodePoints(
+  ucdPath: string = defaultUcdPath,
+): CodePointTable {
   const codePoints: CodePointTable = [];
 
   const unicodeData = readFileSync(join(ucdPath, "UnicodeData.txt"), "ascii");
@@ -251,7 +263,8 @@ export default function loadCodePoints(ucdPath: string = defaultUcdPath): CodePo
 
   for (const codePoint of codePoints) {
     if (codePoint) {
-      codePoint.combiningClassName = combiningClasses[codePoint.combiningClass] ?? null;
+      codePoint.combiningClassName =
+        combiningClasses[codePoint.combiningClass] ?? null;
     }
   }
 

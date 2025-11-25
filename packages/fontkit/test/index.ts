@@ -1,6 +1,5 @@
-import assert from "node:assert";
 import { fileURLToPath } from "node:url";
-import { describe, test } from "vitest";
+import { describe, expect, test } from "vitest";
 
 import fontkit from "./add-test-helpers-to-fontkit.js";
 import { here } from "./utils/dir.js";
@@ -13,8 +12,8 @@ describe("fontkit", function () {
     fontkit.open(
       __dirname + "/data/open-sans/open-sans-regular.ttf",
       function (err, font) {
-        assert.equal(err, null);
-        return assert.equal(font.constructor.name, "TTFFont");
+        expect(err).toBeNull();
+        return expect(font?.constructor.name).toBe("TTFFont");
       },
     ));
 
@@ -22,75 +21,75 @@ describe("fontkit", function () {
     let font = fontkit.openSync(
       __dirname + "/data/open-sans/open-sans-regular.ttf",
     );
-    return assert.equal(font.constructor.name, "TTFFont");
+    return expect(font.constructor.name).toBe("TTFFont");
   });
 
   test("should open fonts of different formats", function () {
     let font = fontkit.openSync(
       __dirname + "/data/open-sans/open-sans-regular.ttf",
     );
-    assert.equal(font.constructor.name, "TTFFont");
+    expect(font.constructor.name).toBe("TTFFont");
 
     font = fontkit.openSync(
       __dirname + "/data/source-sans-pro/source-sans-pro-regular.otf",
     );
-    assert.equal(font.constructor.name, "TTFFont");
+    expect(font.constructor.name).toBe("TTFFont");
 
     font = fontkit.openSync(__dirname + "/data/noto-sans/noto-sans.ttc");
-    assert.equal(font.constructor.name, "TrueTypeCollection");
+    expect(font.constructor.name).toBe("TrueTypeCollection");
 
     font = fontkit.openSync(
       __dirname + "/data/noto-sans/noto-sans.ttc",
       "NotoSans",
     );
-    assert.equal(font.constructor.name, "TTFFont");
+    expect(font.constructor.name).toBe("TTFFont");
 
     font = fontkit.openSync(__dirname + "/data/noto-sans/noto-sans.dfont");
-    assert.equal(font.constructor.name, "DFont");
+    expect(font.constructor.name).toBe("DFont");
 
     font = fontkit.openSync(
       __dirname + "/data/noto-sans/noto-sans.dfont",
       "NotoSans",
     );
-    assert.equal(font.constructor.name, "TTFFont");
+    expect(font.constructor.name).toBe("TTFFont");
 
     font = fontkit.openSync(
       __dirname + "/data/source-sans-pro/source-sans-pro-regular.woff",
     );
-    assert.equal(font.constructor.name, "WOFFFont");
+    expect(font.constructor.name).toBe("WOFFFont");
 
     font = fontkit.openSync(
       __dirname + "/data/source-sans-pro/source-sans-pro-regular.woff2",
     );
-    assert.equal(font.constructor.name, "WOFF2Font");
+    expect(font.constructor.name).toBe("WOFF2Font");
   });
 
   test("should open fonts lacking PostScript name", function () {
     let font = fontkit.openSync(
       __dirname + "/data/mada/mada-regular.subset1.ttf",
     );
-    assert.equal(font.postscriptName, null);
+    expect(font.postscriptName).toBeNull();
   });
 
   test("should error when opening an invalid font asynchronously", function () {
     fontkit.open(__filename, function (err) {
-      assert(err instanceof Error);
-      assert.equal(err.message, "Unknown font format");
+      expect(err).toBeInstanceOf(Error);
+      expect(err?.message).toBe("Unknown font format");
     });
   });
 
   test("should error when opening an invalid font synchronously", function () {
-    assert.throws(() => fontkit.openSync(__filename), /Unknown font format/);
+    expect(() => fontkit.openSync(__filename)).toThrow(/Unknown font format/);
   });
 
   test("should get collection objects for ttc fonts", function () {
     let collection = fontkit.openSync(
       __dirname + "/data/noto-sans/noto-sans.ttc",
     );
-    assert.equal(collection.constructor.name, "TrueTypeCollection");
+    expect(collection.constructor.name).toBe("TrueTypeCollection");
 
     let names = collection.fonts.map((f: any) => f.postscriptName);
-    assert.deepEqual(names, [
+    expect(names).toEqual([
       "NotoSans-Bold",
       "NotoSans",
       "NotoSans-Italic",
@@ -98,17 +97,17 @@ describe("fontkit", function () {
     ]);
 
     let font = collection.getFont("NotoSans-Italic");
-    return assert.equal(font.postscriptName, "NotoSans-Italic");
+    return expect(font.postscriptName).toBe("NotoSans-Italic");
   });
 
   test("should get collection objects for dfonts", function () {
     let collection = fontkit.openSync(
       __dirname + "/data/noto-sans/noto-sans.dfont",
     );
-    assert.equal(collection.constructor.name, "DFont");
+    expect(collection.constructor.name).toBe("DFont");
 
     let names = collection.fonts.map((f: any) => f.postscriptName);
-    assert.deepEqual(names, [
+    expect(names).toEqual([
       "NotoSans",
       "NotoSans-Bold",
       "NotoSans-Italic",
@@ -116,6 +115,6 @@ describe("fontkit", function () {
     ]);
 
     let font = collection.getFont("NotoSans-Italic");
-    return assert.equal(font.postscriptName, "NotoSans-Italic");
+    return expect(font.postscriptName).toBe("NotoSans-Italic");
   });
 });

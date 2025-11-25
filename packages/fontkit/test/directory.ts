@@ -1,5 +1,4 @@
-import assert from "node:assert";
-import { describe, test } from "vitest";
+import { describe, expect, test } from "vitest";
 
 import fontkit from "./add-test-helpers-to-fontkit.js";
 import { here } from "./utils/dir.js";
@@ -13,14 +12,14 @@ describe("metadata", function () {
 
   test("decodes SFNT directory values correctly", function () {
     let dir = font.directory;
-    assert.equal(dir.numTables, 19);
-    assert.equal(dir.searchRange, 256);
-    assert.equal(dir.entrySelector, 4);
-    assert.equal(dir.rangeShift, 48);
+    expect(dir.numTables).toBe(19);
+    expect(dir.searchRange).toBe(256);
+    expect(dir.entrySelector).toBe(4);
+    expect(dir.rangeShift).toBe(48);
   });
 
   test("numTables matches table collection", function () {
     let dir = font.directory;
-    assert.equal(Object.keys(dir.tables).length, dir.numTables);
+    expect(Object.keys(dir.tables).length).toBe(dir.numTables);
   });
 });

@@ -1,5 +1,4 @@
-import assert from "node:assert";
-import { describe, test } from "vitest";
+import { describe, expect, test } from "vitest";
 
 import BBox from "../src/glyph/b-box.js";
 import fontkit from "./add-test-helpers-to-fontkit.js";
@@ -14,36 +13,35 @@ describe("metadata", function () {
   );
 
   test("has metadata properties", function () {
-    assert.equal(font.fullName, "Noto Sans");
-    assert.equal(font.postscriptName, "NotoSans");
-    assert.equal(font.familyName, "Noto Sans");
-    assert.equal(font.subfamilyName, "Regular");
-    assert.equal(
-      font.copyright,
+    expect(font.fullName).toBe("Noto Sans");
+    expect(font.postscriptName).toBe("NotoSans");
+    expect(font.familyName).toBe("Noto Sans");
+    expect(font.subfamilyName).toBe("Regular");
+    expect(font.copyright).toBe(
       "Copyright 2012 Google Inc. All Rights Reserved.",
     );
-    return assert.equal(font.version, "Version 1.05 uh");
+    return expect(font.version).toBe("Version 1.05 uh");
   });
 
   test("exposes some metrics", function () {
-    assert.equal(font.unitsPerEm, 2048);
-    assert.equal(font.ascent | 0, 2189);
-    assert.equal(font.descent | 0, -600);
-    assert.equal(font.lineGap, 0);
-    assert.equal(font.underlinePosition, -154);
-    assert.equal(font.underlineThickness, 102);
-    assert.equal(font.italicAngle, 0);
-    assert.equal(font.capHeight, 1462);
-    assert.equal(font.xHeight, 1098);
-    assert.equal(font.numGlyphs, 8708);
-    return assert.deepEqual(font.bbox, new BBox(-1268, -600, 2952, 2189));
+    expect(font.unitsPerEm).toBe(2048);
+    expect(font.ascent | 0).toBe(2189);
+    expect(font.descent | 0).toBe(-600);
+    expect(font.lineGap).toBe(0);
+    expect(font.underlinePosition).toBe(-154);
+    expect(font.underlineThickness).toBe(102);
+    expect(font.italicAngle).toBe(0);
+    expect(font.capHeight).toBe(1462);
+    expect(font.xHeight).toBe(1098);
+    expect(font.numGlyphs).toBe(8708);
+    return expect(font.bbox).toEqual(new BBox(-1268, -600, 2952, 2189));
   });
 
   test("exposes tables directly", function () {
     let iterable = ["head", "hhea", "OS/2", "post"];
     for (let i = 0; i < iterable.length; i++) {
       let table = iterable[i];
-      assert.equal(typeof font[table], "object");
+      expect(typeof font[table]).toBe("object");
     }
   });
 });

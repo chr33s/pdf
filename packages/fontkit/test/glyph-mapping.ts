@@ -1,5 +1,4 @@
-import assert from "node:assert";
-import { describe, test } from "vitest";
+import { describe, expect, test } from "vitest";
 
 import fontkit from "./add-test-helpers-to-fontkit.js";
 import { here } from "./utils/dir.js";
@@ -17,27 +16,27 @@ describe("character to glyph mapping", function () {
     );
 
     test("should get characterSet", function () {
-      assert(Array.isArray(font.characterSet));
-      return assert.equal(font.characterSet.length, 884);
+      expect(Array.isArray(font.characterSet)).toBe(true);
+      return expect(font.characterSet.length).toBe(884);
     });
 
     test("should check if a character is supported", function () {
-      assert(font.hasGlyphForCodePoint("a".charCodeAt(0)));
-      return assert(!font.hasGlyphForCodePoint(0));
+      expect(font.hasGlyphForCodePoint("a".charCodeAt(0))).toBe(true);
+      return expect(font.hasGlyphForCodePoint(0)).toBe(false);
     });
 
     test("should get a glyph for a character code", function () {
       let glyph = font.glyphForCodePoint("a".charCodeAt(0));
-      assert.equal(glyph.id, 68);
-      return assert.deepEqual(glyph.codePoints, [97]);
+      expect(glyph.id).toBe(68);
+      return expect(glyph.codePoints).toEqual([97]);
     });
 
     test("should map a string to glyphs", function () {
       let glyphs = font.glyphsForString("hello", []);
-      assert(Array.isArray(glyphs));
-      assert.equal(glyphs.length, 5);
-      assert.deepEqual(glyphIds(glyphs), [75, 72, 79, 79, 82]);
-      return assert.deepEqual(glyphCodePoints(glyphs), [
+      expect(Array.isArray(glyphs)).toBe(true);
+      expect(glyphs.length).toBe(5);
+      expect(glyphIds(glyphs)).toEqual([75, 72, 79, 79, 82]);
+      return expect(glyphCodePoints(glyphs)).toEqual([
         [104],
         [101],
         [108],
@@ -51,7 +50,7 @@ describe("character to glyph mapping", function () {
       let glyphs = font.glyphsForString(
         "\u{82a6}\u{82a6}\u{E0100}\u{82a6}\u{E0101}",
       );
-      assert.deepEqual(glyphIds(glyphs), [1, 1, 2]);
+      expect(glyphIds(glyphs)).toEqual([1, 1, 2]);
     });
 
     test("should support legacy encodings when no unicode cmap is found", function () {
@@ -59,10 +58,9 @@ describe("character to glyph mapping", function () {
         __dirname + "/data/fonttest/test-cmap-mac-turkish.ttf",
       );
       let glyphs = font.glyphsForString("“ABÇĞIİÖŞÜ”");
-      assert.deepEqual(
-        glyphIds(glyphs),
-        [200, 34, 35, 126, 176, 42, 178, 140, 181, 145, 201],
-      );
+      expect(glyphIds(glyphs)).toEqual([
+        200, 34, 35, 126, 176, 42, 178, 140, 181, 145, 201,
+      ]);
     });
   });
 
@@ -72,7 +70,7 @@ describe("character to glyph mapping", function () {
     );
 
     test("should list available features", () =>
-      assert.deepEqual(font.availableFeatures, [
+      expect(font.availableFeatures).toEqual([
         "aalt",
         "c2sc",
         "case",
@@ -103,25 +101,23 @@ describe("character to glyph mapping", function () {
 
     test("should apply opentype GSUB features", function () {
       let { glyphs } = font.layout("ffi", ["dlig"]);
-      assert.equal(glyphs.length, 2);
-      assert.deepEqual(glyphIds(glyphs), [514, 36]);
-      return assert.deepEqual(glyphCodePoints(glyphs), [[102, 102], [105]]);
+      expect(glyphs.length).toBe(2);
+      expect(glyphIds(glyphs)).toEqual([514, 36]);
+      return expect(glyphCodePoints(glyphs)).toEqual([[102, 102], [105]]);
     });
 
     test("should enable fractions when using fraction slash", function () {
       let { glyphs } = font.layout("123 1⁄16 123");
-      return assert.deepEqual(
-        glyphIds(glyphs),
-        [1088, 1089, 1090, 1, 1617, 1724, 1603, 1608, 1, 1088, 1089, 1090],
-      );
+      return expect(glyphIds(glyphs)).toEqual([
+        1088, 1089, 1090, 1, 1617, 1724, 1603, 1608, 1, 1088, 1089, 1090,
+      ]);
     });
 
     test("should not break if can’t enable fractions when using fraction slash", function () {
       let { glyphs } = font.layout("a⁄b ⁄ 1⁄ ⁄2");
-      return assert.deepEqual(
-        glyphIds(glyphs),
-        [28, 1724, 29, 1, 1724, 1, 1617, 1724, 1, 1724, 1604],
-      );
+      return expect(glyphIds(glyphs)).toEqual([
+        28, 1724, 29, 1, 1724, 1, 1617, 1724, 1, 1724, 1604,
+      ]);
     });
   });
 
@@ -129,7 +125,7 @@ describe("character to glyph mapping", function () {
     let font = fontkit.openSync(__dirname + "/data/play/play-regular.ttf");
 
     test("should list available features", () =>
-      assert.deepEqual(font.availableFeatures, [
+      expect(font.availableFeatures).toEqual([
         "tnum",
         "sups",
         "subs",
@@ -142,9 +138,9 @@ describe("character to glyph mapping", function () {
 
     test("should apply default AAT morx features", function () {
       let { glyphs } = font.layout("ffi 1⁄2");
-      assert.equal(glyphs.length, 5);
-      assert.deepEqual(glyphIds(glyphs), [767, 3, 20, 645, 21]);
-      return assert.deepEqual(glyphCodePoints(glyphs), [
+      expect(glyphs.length).toBe(5);
+      expect(glyphIds(glyphs)).toEqual([767, 3, 20, 645, 21]);
+      return expect(glyphCodePoints(glyphs)).toEqual([
         [102, 102, 105],
         [32],
         [49],
@@ -155,9 +151,9 @@ describe("character to glyph mapping", function () {
 
     test("should apply user specified features", function () {
       let { glyphs } = font.layout("ffi 1⁄2", ["numr"]);
-      assert.equal(glyphs.length, 3);
-      assert.deepEqual(glyphIds(glyphs), [767, 3, 126]);
-      return assert.deepEqual(glyphCodePoints(glyphs), [
+      expect(glyphs.length).toBe(3);
+      expect(glyphIds(glyphs)).toEqual([767, 3, 126]);
+      return expect(glyphCodePoints(glyphs)).toEqual([
         [102, 102, 105],
         [32],
         [49, 8260, 50],
@@ -166,23 +162,20 @@ describe("character to glyph mapping", function () {
 
     test("should handle rtl direction", function () {
       let { glyphs } = font.layout("ffi", [], null, null, "rtl");
-      assert.equal(glyphs.length, 3);
-      assert.deepEqual(glyphIds(glyphs), [76, 73, 73]);
-      return assert.deepEqual(glyphCodePoints(glyphs), [[105], [102], [102]]);
+      expect(glyphs.length).toBe(3);
+      expect(glyphIds(glyphs)).toEqual([76, 73, 73]);
+      return expect(glyphCodePoints(glyphs)).toEqual([[105], [102], [102]]);
     });
 
     test("should apply indic reordering features", function () {
       let f = fontkit.openSync(__dirname + "/data/khmer/khmer.ttf");
       let { glyphs } = f.layout("ខ្ញុំអាចញ៉ាំកញ្ចក់បាន ដោយគ្មានបញ្ហា");
-      assert.deepEqual(
-        glyphIds(glyphs),
-        [
-          45, 153, 177, 112, 248, 188, 49, 296, 44, 187, 149, 44, 117, 236, 188,
-          63, 3, 107, 226, 188, 69, 218, 169, 188, 63, 64, 255, 175, 188,
-        ],
-      );
+      expect(glyphIds(glyphs)).toEqual([
+        45, 153, 177, 112, 248, 188, 49, 296, 44, 187, 149, 44, 117, 236, 188,
+        63, 3, 107, 226, 188, 69, 218, 169, 188, 63, 64, 255, 175, 188,
+      ]);
 
-      return assert.deepEqual(glyphCodePoints(glyphs), [
+      return expect(glyphCodePoints(glyphs)).toEqual([
         [6017],
         [6098, 6025],
         [6075],
@@ -222,13 +215,13 @@ describe("character to glyph mapping", function () {
         __dirname + "/data/open-sans/open-sans-regular.ttf",
       );
       let strings = font.stringsForGlyph(68);
-      assert.deepEqual(strings, ["a"]);
+      expect(strings).toEqual(["a"]);
     });
 
     test("should return strings from AAT morx table that map to the given glyph", function () {
       let font = fontkit.openSync(__dirname + "/data/play/play-regular.ttf");
       let strings = font.stringsForGlyph(767);
-      assert.deepEqual(strings, ["ffi"]);
+      expect(strings).toEqual(["ffi"]);
     });
   });
 });

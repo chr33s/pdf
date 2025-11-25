@@ -1,5 +1,4 @@
-import assert from "node:assert";
-import { describe, test } from "vitest";
+import { describe, expect, test } from "vitest";
 
 import fontkit from "./add-test-helpers-to-fontkit.js";
 import { here } from "./utils/dir.js";
@@ -15,7 +14,7 @@ describe("glyph positioning", function () {
     );
 
     test("should get a glyph width", () =>
-      assert.equal(font.getGlyph(5).advanceWidth, 615));
+      expect(font.getGlyph(5).advanceWidth).toBe(615));
   });
 
   describe("opentype positioning", function () {
@@ -25,18 +24,16 @@ describe("glyph positioning", function () {
 
     test("should apply opentype GPOS features", function () {
       let { positions } = font.layout("Twitter");
-      return assert.deepEqual(
-        xAdvances(positions),
-        [502, 718, 246, 318, 324, 496, 347],
-      );
+      return expect(xAdvances(positions)).toEqual([
+        502, 718, 246, 318, 324, 496, 347,
+      ]);
     });
 
     test("should ignore duplicate features", function () {
       let { positions } = font.layout("Twitter", ["kern", "kern"]);
-      return assert.deepEqual(
-        xAdvances(positions),
-        [502, 718, 246, 318, 324, 496, 347],
-      );
+      return expect(xAdvances(positions)).toEqual([
+        502, 718, 246, 318, 324, 496, 347,
+      ]);
     });
   });
 
@@ -45,10 +42,9 @@ describe("glyph positioning", function () {
 
     test("should apply kerning by default", function () {
       let { positions } = font.layout("Twitter");
-      return assert.deepEqual(
-        xAdvances(positions),
-        [535, 792, 246, 372, 402, 535, 351],
-      );
+      return expect(xAdvances(positions)).toEqual([
+        535, 792, 246, 372, 402, 535, 351,
+      ]);
     });
   });
 });

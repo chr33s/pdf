@@ -14,8 +14,8 @@
 
 ## TODO
 
-- [ ] replace node:assert -> { expect } from "vitest" in tests
 - [ ] move packages/pdf/apps/* -> apps/
+- [ ] remove @ts-nocheck
 - [ ] Audit dependencies
 
 npm rm node-html-better-parser && npm i -S node-html-parser
@@ -33,8 +33,6 @@ tiny-inflate -> pako
 - Run `npm run apps:web:mac` and test in Safari
 - Run `npm run apps:rn:ios`
 - Run `npm run apps:rn:android`
-
-- [ ] remove @ts-nocheck
 
 ## Notes
 
