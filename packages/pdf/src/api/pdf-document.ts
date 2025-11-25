@@ -143,8 +143,8 @@ export default class PDFDocument {
    * const pdfDoc2 = await PDFDocument.load(dataUri)
    *
    * // pdf=Uint8Array
-   * import fs from 'node:fs'
-   * const uint8Array = fs.readFileSync('with_update_sections.pdf')
+   * import { readFile } from 'node:fs/promises'
+   * const uint8Array = await readFile('with_update_sections.pdf')
    * const pdfDoc3 = await PDFDocument.load(uint8Array)
    *
    * // pdf=ArrayBuffer
@@ -934,8 +934,8 @@ export default class PDFDocument {
    * })
    *
    * // attachment=Uint8Array
-   * import fs from 'node:fs'
-   * const uint8Array = fs.readFileSync('cat-riding-unicorn.jpg')
+   * import { readFile } from 'node:fs/promises'
+   * const uint8Array = await readFile('cat-riding-unicorn.jpg')
    * await pdfDoc.attach(uint8Array, 'cat-riding-unicorn.jpg', {
    *   mimeType: 'image/jpeg',
    *   description: 'Cool cat riding a unicorn! 🦄🐈🕶️',
@@ -1171,8 +1171,9 @@ export default class PDFDocument {
    * const font3 = await pdfDoc.embedFont('data:font/opentype;base64,AAEAAA...')
    *
    * // font=Uint8Array
-   * import fs from 'node:fs'
-   * const font4 = await pdfDoc.embedFont(fs.readFileSync('ubuntu-R.ttf'))
+   * import { readFile } from 'node:fs/promises'
+   * const fontBytes = await readFile('ubuntu-R.ttf')
+   * const font4 = await pdfDoc.embedFont(fontBytes)
    *
    * // font=ArrayBuffer
    * const url = 'https://pdf.js.org/assets/ubuntu/ubuntu-R.ttf'
@@ -1263,9 +1264,9 @@ export default class PDFDocument {
    * const image2 = await pdfDoc.embedJpg('data:image/jpeg;base64,/9j/4AAQ...')
    *
    * // jpg=Uint8Array
-   * import fs from 'node:fs'
-   * const uint8Array = fs.readFileSync('cat-riding-unicorn.jpg')
-   * const image3 = await pdfDoc.embedJpg(uint8Array)
+   * import { readFile } from 'node:fs/promises'
+   * const jpgBytes = await readFile('cat-riding-unicorn.jpg')
+   * const image3 = await pdfDoc.embedJpg(jpgBytes)
    *
    * // jpg=ArrayBuffer
    * const url = 'https://pdf.js.org/assets/cat-riding-unicorn.jpg'
@@ -1303,9 +1304,9 @@ export default class PDFDocument {
    * const image2 = await pdfDoc.embedPng('data:image/png;base64,iVBORw0KGg...')
    *
    * // png=Uint8Array
-   * import fs from 'node:fs'
-   * const uint8Array = fs.readFileSync('small-mario.png')
-   * const image3 = await pdfDoc.embedPng(uint8Array)
+   * import { readFile } from 'node:fs/promises'
+   * const pngBytes = await readFile('small-mario.png')
+   * const image3 = await pdfDoc.embedPng(pngBytes)
    *
    * // png=ArrayBuffer
    * const url = 'https://pdf.js.org/assets/small-mario.png'

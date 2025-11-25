@@ -1,4 +1,4 @@
-import fs from "node:fs";
+import { readFile } from "node:fs/promises";
 import { describe, expect, test } from "vitest";
 import {
   JpegEmbedder,
@@ -7,9 +7,9 @@ import {
   PDFRef,
 } from "../../../src/core/index.js";
 
-const catUnicornJpg = fs.readFileSync("./assets/images/cat-riding-unicorn.jpg");
-const minionsLaughing = fs.readFileSync("./assets/images/minions-laughing.jpg");
-const cmykJpg = fs.readFileSync("./assets/images/cmyk-colorspace.jpg");
+const catUnicornJpg = await readFile("./assets/images/cat-riding-unicorn.jpg");
+const minionsLaughing = await readFile("./assets/images/minions-laughing.jpg");
+const cmykJpg = await readFile("./assets/images/cmyk-colorspace.jpg");
 
 describe("JpegEmbedder", () => {
   test("can be constructed with JpegEmbedder.for(...)", async () => {

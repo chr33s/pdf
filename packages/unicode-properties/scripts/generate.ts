@@ -1,7 +1,7 @@
 import codePoints from "@chr33s/codepoints";
 import { builder as UnicodeTrieBuilder } from "@chr33s/unicode-trie";
 import base64 from "base64-arraybuffer";
-import { writeFileSync } from "node:fs";
+import { writeFile } from "node:fs/promises";
 import path from "node:path";
 import pako from "pako";
 
@@ -136,7 +136,7 @@ const triePayload = base64.encode(
 const emitModule = (value: string): string =>
   `const payload = ${JSON.stringify(value)};\nexport default payload;\n`;
 
-writeFileSync(trieFilePath, emitModule(triePayload));
+await writeFile(trieFilePath, emitModule(triePayload));
 
 const encoder = new TextEncoder();
 const data = {
@@ -154,4 +154,4 @@ const dataPayload = base64.encode(
     compressedData.byteOffset + compressedData.byteLength,
   ),
 );
-writeFileSync(dataFilePath, emitModule(dataPayload));
+await writeFile(dataFilePath, emitModule(dataPayload));

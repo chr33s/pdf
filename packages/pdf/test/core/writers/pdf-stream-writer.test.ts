@@ -1,4 +1,4 @@
-import fs from "node:fs";
+import { readFile } from "node:fs/promises";
 import { describe, expect, test } from "vitest";
 
 import {
@@ -9,7 +9,7 @@ import {
 } from "../../../src/index.js";
 
 const expectedPdfBytes = new Uint8Array(
-  fs.readFileSync(new URL("./data/stream-writer-1.pdf", import.meta.url)),
+  await readFile(new URL("./data/stream-writer-1.pdf", import.meta.url)),
 );
 
 const contentStreamText = `

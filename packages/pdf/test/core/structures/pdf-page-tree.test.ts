@@ -1,4 +1,4 @@
-import fs from "node:fs";
+import { readFile } from "node:fs/promises";
 import { describe, expect, test } from "vitest";
 
 import { TreeNode } from "../../../src/core/structures/pdf-page-tree.js";
@@ -13,7 +13,7 @@ import {
   PDFRef,
 } from "../../../src/index.js";
 
-const withNullEntryPdfBytes = fs.readFileSync(
+const withNullEntryPdfBytes = await readFile(
   "assets/pdfs/with-null-parent-entry.pdf",
 );
 

@@ -1,25 +1,25 @@
 import fontkit from "@chr33s/fontkit";
-import fs from "node:fs";
+import { readFile } from "node:fs/promises";
 import { describe, expect, test } from "vitest";
 import type { Font, Glyph } from "../../../src/types/fontkit.js";
 
 import { createCmap } from "../../../src/core/embedders/c-map.js";
 import { byAscendingId, sortedUniq } from "../../../src/utils/index.js";
 
-const ubuntuFont = fs.readFileSync(
+const ubuntuFont = await readFile(
   new URL("../../../assets/fonts/ubuntu/ubuntu-r.ttf", import.meta.url),
 );
-const sourceHansJpFont = fs.readFileSync(
+const sourceHansJpFont = await readFile(
   new URL(
     "../../../assets/fonts/source-hans-jp/source-han-serif-jp-regular.otf",
     import.meta.url,
   ),
 );
 
-const ubuntuFontCmap = fs.readFileSync(
+const ubuntuFontCmap = await readFile(
   new URL("./data/ubuntu-R.ttf.cmap", import.meta.url),
 );
-const sourceHansJpFontCmap = fs.readFileSync(
+const sourceHansJpFontCmap = await readFile(
   new URL("./data/source-han-serif-jp-regular.otf.cmap", import.meta.url),
 );
 

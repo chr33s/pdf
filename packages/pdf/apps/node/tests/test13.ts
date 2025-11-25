@@ -1,4 +1,4 @@
-import fs from "node:fs";
+import { readFile } from "node:fs/promises";
 
 import { PDFDocument, rgb } from "../../../src/index.js";
 import { Assets } from "../index.js";
@@ -74,7 +74,7 @@ export default async (assets: Assets) => {
   let x = 25;
   let y = 5;
   for (const path of pngSuite) {
-    const png = fs.readFileSync(`assets/images/pngsuite/${path}`);
+    const png = await readFile(`assets/images/pngsuite/${path}`);
     const img = await pdfDoc.embedPng(png);
     page.drawImage(img, { x, y, width: size, height: size });
     y += size + 5;

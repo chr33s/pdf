@@ -7,7 +7,7 @@
 import codepoints from "@chr33s/codepoints";
 import { builder as UnicodeTrieBuilder } from "@chr33s/unicode-trie";
 import * as base64 from "base64-arraybuffer";
-import fs from "node:fs";
+import fs from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import pako from "pako";
@@ -53,7 +53,7 @@ const compressedTrie = pako.deflate(trie.toBuffer());
 const jsonBase64DeflatedTrie = JSON.stringify(
   base64.encode(toArrayBuffer(compressedTrie)),
 );
-fs.writeFileSync(filePath, jsonBase64DeflatedTrie);
+await fs.writeFile(filePath, jsonBase64DeflatedTrie);
 
 const modulePath = join(__dirname, "trie-data.js");
-fs.writeFileSync(modulePath, `export default ${jsonBase64DeflatedTrie};\n`);
+await fs.writeFile(modulePath, `export default ${jsonBase64DeflatedTrie};\n`);

@@ -1,4 +1,4 @@
-import fs from "node:fs";
+import { readFile } from "node:fs/promises";
 import { describe, expect, test } from "vitest";
 import {
   PDFContext,
@@ -7,11 +7,11 @@ import {
   ReparseError,
 } from "../../../src/index.js";
 
-const readData = (file: string) =>
-  new Uint8Array(fs.readFileSync(new URL(`./data/${file}`, import.meta.url)));
+const readData = async (file: string) =>
+  new Uint8Array(await readFile(new URL(`./data/${file}`, import.meta.url)));
 
 describe("PDFXRefStreamParser", () => {
-  test("can parse XRef streams (1)", () => {
+  test("can parse XRef streams (1)", async () => {
     const context = PDFContext.create();
     const dict = context.obj({
       DecodeParms: { Columns: 4, Predictor: 12 },
@@ -20,7 +20,7 @@ describe("PDFXRefStreamParser", () => {
       Size: 319,
       W: [1, 2, 1],
     });
-    const contents = readData("xref-stream1");
+    const contents = await readData("xref-stream1");
     const stream = PDFRawStream.of(dict, contents);
 
     const entries = PDFXRefStreamParser.forStream(stream).parseIntoContext();
@@ -36,7 +36,7 @@ describe("PDFXRefStreamParser", () => {
     expect(inObjectStream.length).toBe(67);
   });
 
-  test("can parse XRef streams (2)", () => {
+  test("can parse XRef streams (2)", async () => {
     const context = PDFContext.create();
     const dict = context.obj({
       DecodeParms: { Columns: 4, Predictor: 12 },
@@ -70,7 +70,7 @@ describe("PDFXRefStreamParser", () => {
       Size: 323,
       W: [1, 2, 1],
     });
-    const contents = readData("xref-stream2");
+    const contents = await readData("xref-stream2");
     const stream = PDFRawStream.of(dict, contents);
 
     const entries = PDFXRefStreamParser.forStream(stream).parseIntoContext();
@@ -86,7 +86,7 @@ describe("PDFXRefStreamParser", () => {
     expect(inObjectStream.length).toBe(33);
   });
 
-  test("can parse XRef streams (3)", () => {
+  test("can parse XRef streams (3)", async () => {
     const context = PDFContext.create();
     const dict = context.obj({
       DecodeParms: { Columns: 3, Predictor: 12 },
@@ -96,7 +96,7 @@ describe("PDFXRefStreamParser", () => {
       Size: 325,
       W: [1, 2, 0],
     });
-    const contents = readData("xref-stream3");
+    const contents = await readData("xref-stream3");
     const stream = PDFRawStream.of(dict, contents);
 
     const entries = PDFXRefStreamParser.forStream(stream).parseIntoContext();
@@ -112,7 +112,7 @@ describe("PDFXRefStreamParser", () => {
     expect(inObjectStream.length).toBe(2);
   });
 
-  test("can parse XRef streams (4)", () => {
+  test("can parse XRef streams (4)", async () => {
     const context = PDFContext.create();
     const dict = context.obj({
       Filter: "FlateDecode",
@@ -121,7 +121,7 @@ describe("PDFXRefStreamParser", () => {
       Size: 146,
       W: [1, 2, 2],
     });
-    const contents = readData("xref-stream4");
+    const contents = await readData("xref-stream4");
     const stream = PDFRawStream.of(dict, contents);
 
     const entries = PDFXRefStreamParser.forStream(stream).parseIntoContext();
@@ -166,7 +166,7 @@ describe("PDFXRefStreamParser", () => {
   //   expect(context.lookup(barRef)).not.toBeUndefined();
   // });
 
-  test("prevents reparsing", () => {
+  test("prevents reparsing", async () => {
     const context = PDFContext.create();
     const dict = context.obj({
       Filter: "FlateDecode",
@@ -175,7 +175,7 @@ describe("PDFXRefStreamParser", () => {
       Size: 146,
       W: [1, 2, 2],
     });
-    const contents = readData("xref-stream4");
+    const contents = await readData("xref-stream4");
     const stream = PDFRawStream.of(dict, contents);
 
     const parser = PDFXRefStreamParser.forStream(stream);

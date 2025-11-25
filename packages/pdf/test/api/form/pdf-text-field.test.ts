@@ -1,4 +1,4 @@
-import fs from "node:fs";
+import { readFile } from "node:fs/promises";
 import { describe, expect, test } from "vitest";
 import {
   AnnotationFlags,
@@ -6,7 +6,7 @@ import {
   TextAlignment,
 } from "../../../src/index.js";
 
-const fancyFieldsPdfBytes = fs.readFileSync("assets/pdfs/fancy-fields.pdf");
+const fancyFieldsPdfBytes = await readFile("assets/pdfs/fancy-fields.pdf");
 
 describe("PDFTextField", () => {
   test("can read its value", async () => {

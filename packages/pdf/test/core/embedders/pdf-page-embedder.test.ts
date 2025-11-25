@@ -1,4 +1,4 @@
-import fs from "node:fs";
+import { readFile } from "node:fs/promises";
 import { describe, expect, test } from "vitest";
 import { PDFDocument } from "../../../src/api/index.js";
 import {
@@ -9,7 +9,7 @@ import {
   PDFRef,
 } from "../../../src/core/index.js";
 
-const examplePdf = fs.readFileSync("./assets/pdfs/normal.pdf");
+const examplePdf = await readFile("./assets/pdfs/normal.pdf");
 
 const examplePage = async () => {
   const doc = await PDFDocument.load(examplePdf);

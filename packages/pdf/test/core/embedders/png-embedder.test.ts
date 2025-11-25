@@ -1,4 +1,4 @@
-import fs from "node:fs";
+import { readFile } from "node:fs/promises";
 import { describe, expect, test } from "vitest";
 import {
   PDFContext,
@@ -7,9 +7,9 @@ import {
   PngEmbedder,
 } from "../../../src/core/index.js";
 
-const greyscalePng = fs.readFileSync("./assets/images/greyscale-bird.png");
-const rgbaPng = fs.readFileSync("./assets/images/minions-banana-alpha.png");
-const rgbPng = fs.readFileSync("./assets/images/minions-banana-no-alpha.png");
+const greyscalePng = await readFile("./assets/images/greyscale-bird.png");
+const rgbaPng = await readFile("./assets/images/minions-banana-alpha.png");
+const rgbPng = await readFile("./assets/images/minions-banana-no-alpha.png");
 
 describe("PngEmbedder", () => {
   test("can be constructed with PngEmbedder.for(...)", async () => {

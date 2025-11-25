@@ -1,6 +1,6 @@
 import fontkit from "@chr33s/fontkit";
 import { FontNames } from "@chr33s/standard-fonts";
-import fs from "node:fs";
+import { readFile } from "node:fs/promises";
 import { describe, expect, test } from "vitest";
 
 import {
@@ -75,7 +75,7 @@ describe("breakTextIntoLines", () => {
   });
 
   test("handles non-ascii code points and empty breaks", async () => {
-    const sourceHansBytes = fs.readFileSync(
+    const sourceHansBytes = await readFile(
       "assets/fonts/source-hans-jp/source-han-serif-jp-regular.otf",
     );
     const sourceHansFont = await CustomFontEmbedder.for(

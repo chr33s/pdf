@@ -1,4 +1,4 @@
-import fs from "node:fs";
+import { readFile } from "node:fs/promises";
 import {
   afterAll,
   beforeAll,
@@ -58,12 +58,12 @@ const getApRefs = (widget: PDFWidgetAnnotation) => {
 const flatten = <T>(arr: T[][]): T[] =>
   arr.reduce((curr, acc) => [...acc, ...curr], []);
 
-const fancyFieldsPdfBytes = fs.readFileSync("assets/pdfs/fancy-fields.pdf");
-// const sampleFormPdfBytes = fs.readFileSync('assets/pdfs/sample-form.pdf');
-// const combedPdfBytes = fs.readFileSync('assets/pdfs/with-combed-fields.pdf');
-// const dodPdfBytes = fs.readFileSync('assets/pdfs/dod-character.pdf');
-const xfaPdfBytes = fs.readFileSync("assets/pdfs/with-xfa-fields.pdf");
-const signaturePdfBytes = fs.readFileSync("assets/pdfs/with-signature.pdf");
+const fancyFieldsPdfBytes = await readFile("assets/pdfs/fancy-fields.pdf");
+// const sampleFormPdfBytes = await readFile('assets/pdfs/sample-form.pdf');
+// const combedPdfBytes = await readFile('assets/pdfs/with-combed-fields.pdf');
+// const dodPdfBytes = await readFile('assets/pdfs/dod-character.pdf');
+const xfaPdfBytes = await readFile("assets/pdfs/with-xfa-fields.pdf");
+const signaturePdfBytes = await readFile("assets/pdfs/with-signature.pdf");
 
 describe("PDFForm", () => {
   const origConsoleWarn = console.warn;

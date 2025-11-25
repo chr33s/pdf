@@ -2,12 +2,20 @@ import { describe, expect, test } from "vitest";
 
 import { compress } from "../dist/compress.js";
 import { decompress } from "../dist/decompress.js";
-import { readFileSync } from "./utils.js";
+import { readFile } from "./utils.js";
+
+const files = [
+  "alice29.txt",
+  "asyoulik.txt",
+  "lcet10.txt",
+  "plrabn12.txt",
+] as const;
+const fileEntries = await Promise.all(
+  files.map(async (file) => [file, await readFile(`data/${file}`)] as const),
+);
 
 describe("roundtrip", function () {
-  const files = ["alice29.txt", "asyoulik.txt", "lcet10.txt", "plrabn12.txt"];
-  test.each(files)("%s", function (file) {
-    const input = readFileSync(`data/${file}`);
+  test.each(fileEntries)("%s", function (_label, input) {
     const compressed = compress(input);
     const decompressed = decompress(compressed!);
     expect(input.length).toBe(decompressed!.length);

@@ -4,7 +4,7 @@ import codepoints from "@chr33s/codepoints";
 import { compile as compileModule } from "@chr33s/dfa";
 import { builder as UnicodeTrieBuilder } from "@chr33s/unicode-trie";
 import * as base64 from "base64-arraybuffer";
-import fs from "node:fs";
+import fs from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import pako from "pako";
@@ -239,6 +239,21 @@ for (let i = 0; i < codepoints.length; i++) {
   }
 }
 
+const ensureSymbol = (name: string) => {
+  if (!(name in symbols)) {
+    symbols[name] = numSymbols++;
+  }
+};
+
+for (let category of Object.keys(CATEGORIES)) {
+  ensureSymbol(category);
+  if (USE_POSITIONS[category]) {
+    for (let suffix of Object.keys(USE_POSITIONS[category])) {
+      ensureSymbol(category + suffix);
+    }
+  }
+}
+
 function decompose(code) {
   let decomposition = [];
   let codepoint = codepoints[code];
@@ -258,13 +273,16 @@ const deflatedTrie = pako.deflate(trie.toBuffer());
 const jsonBase64DeflatedTrie = JSON.stringify(
   base64.encode(toArrayBuffer(deflatedTrie)),
 );
-fs.writeFileSync(trieFilePath, jsonBase64DeflatedTrie);
+await fs.writeFile(trieFilePath, jsonBase64DeflatedTrie);
 
 const trieModulePath = join(__dirname, "trie-use-data.js");
-fs.writeFileSync(trieModulePath, `export default ${jsonBase64DeflatedTrie};\n`);
+await fs.writeFile(
+  trieModulePath,
+  `export default ${jsonBase64DeflatedTrie};\n`,
+);
 
 let stateMachine = compile(
-  fs.readFileSync(join(__dirname, "use.machine"), "utf8"),
+  await fs.readFile(join(__dirname, "use.machine"), "utf8"),
   symbols,
 );
 let json = Object.assign(
@@ -281,7 +299,7 @@ const deflatedUse = pako.deflate(useJsonBytes);
 const jsonBase64DeflatedUse = JSON.stringify(
   base64.encode(toArrayBuffer(deflatedUse)),
 );
-fs.writeFileSync(useFilePath, jsonBase64DeflatedUse);
+await fs.writeFile(useFilePath, jsonBase64DeflatedUse);
 
 const useModulePath = join(__dirname, "use-data.js");
-fs.writeFileSync(useModulePath, `export default ${jsonBase64DeflatedUse};\n`);
+await fs.writeFile(useModulePath, `export default ${jsonBase64DeflatedUse};\n`);

@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { constants, createDeflateRaw } from "node:zlib";
@@ -6,7 +6,7 @@ import { beforeAll, describe, expect, test } from "vitest";
 import inflate from "../src/index.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const uncompressed = readFileSync(join(__dirname, "lorem.txt"));
+const uncompressed = await readFile(join(__dirname, "lorem.txt"));
 
 type DeflateOptions = Parameters<typeof createDeflateRaw>[0];
 

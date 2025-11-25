@@ -1,4 +1,4 @@
-import fs from "node:fs";
+import { readFile } from "node:fs/promises";
 import { describe, expect, test } from "vitest";
 import {
   FileEmbedder,
@@ -7,10 +7,10 @@ import {
   PDFRef,
 } from "../../../src/index.js";
 
-const catRidingUnicornJpg = fs.readFileSync(
+const catRidingUnicornJpg = await readFile(
   "assets/images/cat-riding-unicorn.jpg",
 );
-const usConstitutionPdf = fs.readFileSync("assets/pdfs/us-constitution.pdf");
+const usConstitutionPdf = await readFile("assets/pdfs/us-constitution.pdf");
 
 describe("FileEmbedder", () => {
   test("can be constructed with FileEmbedder.for(...)", () => {

@@ -1,4 +1,4 @@
-import fs from "node:fs";
+import { readdir as fsReaddir, readFile as fsReadFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -29,14 +29,17 @@ export const normalize = (buffer: Uint8Array<ArrayBufferLike>) => {
   return output.subarray(0, writeIndex);
 };
 
-export function readFileSync(path: string): Uint8Array<ArrayBufferLike>;
-export function readFileSync(path: string, encoding: BufferEncoding): string;
-export function readFileSync(
+export function readFile(path: string): Promise<Buffer>;
+export function readFile(
+  path: string,
+  encoding: BufferEncoding,
+): Promise<string>;
+export function readFile(
   path: string,
   encoding?: BufferEncoding,
-): Uint8Array<ArrayBufferLike> | string {
-  return fs.readFileSync(resolve(__dirname, path), encoding);
+): Promise<Buffer | string> {
+  return fsReadFile(resolve(__dirname, path), encoding);
 }
 
-export const readdirSync = (path: string) =>
-  fs.readdirSync(resolve(__dirname, path));
+export const readdir = (path: string): Promise<string[]> =>
+  fsReaddir(resolve(__dirname, path));

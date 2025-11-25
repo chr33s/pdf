@@ -14,13 +14,25 @@
 
 ## TODO
 
-- [ ] replace *Sync() -> promises (e.g. readFileSync())
+- [ ] replace node:assert -> { expect } from "vitest" in tests
+- [ ] move packages/pdf/apps/* -> apps/
 - [ ] Audit dependencies
 
 npm rm node-html-better-parser && npm i -S node-html-parser
 crypto-js -> crypto.subtle
 deep-equal -> fast-deep-equal
 tiny-inflate -> pako
+
+- [ ] add vitest intergration tests for packages/pdf
+
+- Run `npm run apps:node 'Preview'`
+- Run `npm run apps:node 'Adobe Acrobat'`
+- Run `npm run apps:deno 'Foxit Reader'`
+- Run `npm run apps:web:mac` and test in Firefox
+- Run `npm run apps:web:mac` and test in Chrome
+- Run `npm run apps:web:mac` and test in Safari
+- Run `npm run apps:rn:ios`
+- Run `npm run apps:rn:android`
 
 - [ ] remove @ts-nocheck
 

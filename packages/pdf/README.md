@@ -727,10 +727,12 @@ following to extract the attachments:
 
 <!-- prettier-ignore -->
 ```js
+import { writeFile } from 'node:fs/promises'
+
 const pdfDoc = await PDFDocument.load(...)
 const attachments = pdfDoc.getAttachments()
 const csv = attachments.find(({ name }) => name === 'cars.csv')
-fs.writeFileSync(csv.name, csv.data)
+await writeFile(csv.name, csv.data)
 ```
 
 > NOTE: The method also finds attachments added after the last call to

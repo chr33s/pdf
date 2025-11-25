@@ -3,7 +3,7 @@
 import * as r from "@chr33s/restructure";
 import concat from "concat-stream";
 import assert from "node:assert";
-import fs from "node:fs";
+import { access } from "node:fs/promises";
 import { describe, test } from "vitest";
 
 import CFFFont from "../src/cff/cff-font.js";
@@ -12,6 +12,10 @@ import fontkit from "./add-test-helpers-to-fontkit.js";
 import { here } from "./utils/dir.js";
 
 const __dirname = here(import.meta.url);
+const SKIA_FONT_PATH = "/Library/Fonts/Skia.ttf";
+const hasSkiaFont = await access(SKIA_FONT_PATH)
+  .then(() => true)
+  .catch(() => false);
 
 function encodeSubset(subset) {
   return new Promise<Buffer>((resolve, reject) => {
@@ -27,9 +31,7 @@ function encodeSubset(subset) {
 
 describe("font subsetting", function () {
   describe("truetype subsetting", function () {
-    let font = fontkit.openSync(
-      __dirname + "/data/open-sans/open-sans-regular.ttf",
-    );
+    let font = fontkit.openSync(__dirname + "/data/open-sans/open-sans-regular.ttf");
 
     test("should create a TTFSubset instance", function () {
       let subset = font.createSubset();
@@ -45,18 +47,11 @@ describe("font subsetting", function () {
       const buf = await encodeSubset(subset);
       let f = fontkit.create(buf);
       assert.equal(f.numGlyphs, 5);
-      assert.equal(
-        f.getGlyph(1).path.toSVG(),
-        font.glyphsForString("h")[0].path.toSVG(),
-      );
+      assert.equal(f.getGlyph(1).path.toSVG(), font.glyphsForString("h")[0].path.toSVG());
     });
 
-    test("should re-encode variation glyphs", async function () {
-      if (!fs.existsSync("/Library/Fonts/Skia.ttf")) {
-        return;
-      }
-
-      let font = fontkit.openSync("/Library/Fonts/Skia.ttf", "Bold");
+    test.runIf(hasSkiaFont)("should re-encode variation glyphs", async function () {
+      let font = fontkit.openSync(SKIA_FONT_PATH, "Bold");
       let subset = font.createSubset();
       for (let glyph of font.glyphsForString("e")) {
         subset.includeGlyph(glyph);
@@ -64,10 +59,7 @@ describe("font subsetting", function () {
 
       const buf = await encodeSubset(subset);
       let f = fontkit.create(buf);
-      assert.equal(
-        f.getGlyph(1).path.toSVG(),
-        font.glyphsForString("e")[0].path.toSVG(),
-      );
+      assert.equal(f.getGlyph(1).path.toSVG(), font.glyphsForString("e")[0].path.toSVG());
     });
 
     test("should handle composite glyphs", async function () {
@@ -77,17 +69,12 @@ describe("font subsetting", function () {
       const buf = await encodeSubset(subset);
       let f = fontkit.create(buf);
       assert.equal(f.numGlyphs, 4);
-      assert.equal(
-        f.getGlyph(1).path.toSVG(),
-        font.glyphsForString("é")[0].path.toSVG(),
-      );
+      assert.equal(f.getGlyph(1).path.toSVG(), font.glyphsForString("é")[0].path.toSVG());
     });
   });
 
   describe("CFF subsetting", function () {
-    let font = fontkit.openSync(
-      __dirname + "/data/source-sans-pro/source-sans-pro-regular.otf",
-    );
+    let font = fontkit.openSync(__dirname + "/data/source-sans-pro/source-sans-pro-regular.otf");
 
     test("should create a CFFSubset instance", function () {
       let subset = font.createSubset();
@@ -106,16 +93,11 @@ describe("font subsetting", function () {
       let stream = new r.DecodeStream(buf);
       let cff = new CFFFont(stream);
       let glyph = new CFFGlyph(1, [], { stream, "CFF ": cff });
-      assert.equal(
-        glyph.path.toSVG(),
-        font.glyphsForString("h")[0].path.toSVG(),
-      );
+      assert.equal(glyph.path.toSVG(), font.glyphsForString("h")[0].path.toSVG());
     });
 
     test("should handle CID fonts", async function () {
-      let f = fontkit.openSync(
-        __dirname + "/data/noto-sans-cjk/noto-sans-cj-kkr-regular.otf",
-      );
+      let f = fontkit.openSync(__dirname + "/data/noto-sans-cjk/noto-sans-cj-kkr-regular.otf");
       let subset = f.createSubset();
       let iterable = f.glyphsForString("갈휸");
       for (let i = 0; i < iterable.length; i++) {

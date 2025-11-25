@@ -1,4 +1,4 @@
-import fs from "node:fs";
+import { readFile } from "node:fs/promises";
 import { describe, expect, test } from "vitest";
 import {
   PDFArray,
@@ -7,7 +7,7 @@ import {
   StandardFonts,
 } from "../../src/index.js";
 
-const birdPng = fs.readFileSync("assets/images/greyscale-bird.png");
+const birdPng = await readFile("assets/images/greyscale-bird.png");
 
 describe("PDFDocument", () => {
   describe("getSize() method", () => {

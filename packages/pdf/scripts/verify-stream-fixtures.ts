@@ -1,9 +1,11 @@
 #!/usr/bin/env node
 import { Buffer } from "node:buffer";
-import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { constants as fsConstants } from "node:fs";
+import { access, readFile, readdir } from "node:fs/promises";
 import { dirname, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
-import { inflateRawSync, inflateSync } from "node:zlib";
+import { promisify } from "node:util";
+import { inflate, inflateRaw } from "node:zlib";
 
 import fontkit from "@chr33s/fontkit";
 
@@ -35,6 +37,18 @@ const testRoot = join(__dirname, "..", "test");
 
 const ok: string[] = [];
 const skipped: string[] = [];
+
+const inflateRawAsync = promisify(inflateRaw);
+const inflateAsync = promisify(inflate);
+
+const pathExists = async (target: string) => {
+  try {
+    await access(target, fsConstants.F_OK);
+    return true;
+  } catch {
+    return false;
+  }
+};
 
 const toPosix = (value: string) => value.split(sep).join("/");
 
@@ -192,12 +206,12 @@ function decodeRunLength(data: Uint8Array) {
   return Uint8Array.from(out);
 }
 
-function decodeFlate(data: Uint8Array) {
+async function decodeFlate(data: Uint8Array) {
   try {
-    return new Uint8Array(inflateRawSync(data));
+    return new Uint8Array(await inflateRawAsync(data));
   } catch (rawErr) {
     try {
-      return new Uint8Array(inflateSync(data));
+      return new Uint8Array(await inflateAsync(data));
     } catch (err) {
       const rawMsg = rawErr instanceof Error ? rawErr.message : String(rawErr);
       const errMsg = err instanceof Error ? err.message : String(err);
@@ -297,13 +311,13 @@ function decodeLzw(data: Uint8Array, earlyChange = 0) {
   return Uint8Array.from(result);
 }
 
-function findDataDirs(root: string) {
+async function findDataDirs(root: string) {
   const stack = [root];
-  const dirs = [];
+  const dirs: string[] = [];
   while (stack.length > 0) {
     const current = stack.pop();
     if (!current) continue;
-    const entries = readdirSync(current, { withFileTypes: true });
+    const entries = await readdir(current, { withFileTypes: true });
     for (const entry of entries) {
       const fullPath = join(current, entry.name);
       if (entry.isDirectory()) {
@@ -319,12 +333,14 @@ function findDataDirs(root: string) {
 
 const labelFor = (dir: string, name: string) => `${relativePath(dir)}/${name}`;
 
-function verifyAscii85(dir: string) {
-  if (!existsSync(dir)) {
+async function verifyAscii85(dir: string) {
+  if (!(await pathExists(dir))) {
     skipped.push(`${relativePath(dir)} (missing)`);
     return;
   }
-  const files = readdirSync(dir).filter((file) => file.endsWith(".encoded"));
+  const files = (await readdir(dir)).filter((file) =>
+    file.endsWith(".encoded"),
+  );
   if (files.length === 0) {
     skipped.push(`${relativePath(dir)} (no encoded fixtures)`);
     return;
@@ -334,18 +350,21 @@ function verifyAscii85(dir: string) {
     const name = encoded.replace(/\.encoded$/, "");
     const encodedPath = join(dir, encoded);
     const decodedPath = join(dir, `${name}.decoded`);
-    const actual = decodeAscii85(readFileSync(encodedPath, "utf8"));
-    const expected = new Uint8Array(readFileSync(decodedPath));
+    const encodedText = await readFile(encodedPath, "utf8");
+    const actual = decodeAscii85(encodedText);
+    const expected = new Uint8Array(await readFile(decodedPath));
     compareBuffers(labelFor(dir, name), actual, expected);
   }
 }
 
-function verifyAsciiHex(dir: string) {
-  if (!existsSync(dir)) {
+async function verifyAsciiHex(dir: string) {
+  if (!(await pathExists(dir))) {
     skipped.push(`${relativePath(dir)} (missing)`);
     return;
   }
-  const files = readdirSync(dir).filter((file) => file.endsWith(".encoded"));
+  const files = (await readdir(dir)).filter((file) =>
+    file.endsWith(".encoded"),
+  );
   if (files.length === 0) {
     skipped.push(`${relativePath(dir)} (no encoded fixtures)`);
     return;
@@ -355,18 +374,21 @@ function verifyAsciiHex(dir: string) {
     const name = encoded.replace(/\.encoded$/, "");
     const encodedPath = join(dir, encoded);
     const decodedPath = join(dir, `${name}.decoded`);
-    const actual = decodeAsciiHex(readFileSync(encodedPath, "utf8"));
-    const expected = new Uint8Array(readFileSync(decodedPath));
+    const encodedText = await readFile(encodedPath, "utf8");
+    const actual = decodeAsciiHex(encodedText);
+    const expected = new Uint8Array(await readFile(decodedPath));
     compareBuffers(labelFor(dir, name), actual, expected);
   }
 }
 
-function verifyRunLength(dir: string) {
-  if (!existsSync(dir)) {
+async function verifyRunLength(dir: string) {
+  if (!(await pathExists(dir))) {
     skipped.push(`${relativePath(dir)} (missing)`);
     return;
   }
-  const files = readdirSync(dir).filter((file) => file.endsWith(".encoded"));
+  const files = (await readdir(dir)).filter((file) =>
+    file.endsWith(".encoded"),
+  );
   if (files.length === 0) {
     skipped.push(`${relativePath(dir)} (no encoded fixtures)`);
     return;
@@ -375,25 +397,26 @@ function verifyRunLength(dir: string) {
   for (const encoded of files) {
     const name = encoded.replace(/\.encoded$/, "");
     const encodedPath = join(dir, encoded);
-    const decodedBytes = decodeRunLength(
-      new Uint8Array(readFileSync(encodedPath)),
-    );
+    const encodedBytes = new Uint8Array(await readFile(encodedPath));
+    const decodedBytes = decodeRunLength(encodedBytes);
     if (name === "empty") {
       compareBuffers(labelFor(dir, name), decodedBytes, new Uint8Array(0));
       continue;
     }
     const decodedPath = join(dir, `${name}.decoded`);
-    const expected = new Uint8Array(readFileSync(decodedPath));
+    const expected = new Uint8Array(await readFile(decodedPath));
     compareBuffers(labelFor(dir, name), decodedBytes, expected);
   }
 }
 
-function verifyFlate(dir: string) {
-  if (!existsSync(dir)) {
+async function verifyFlate(dir: string) {
+  if (!(await pathExists(dir))) {
     skipped.push(`${relativePath(dir)} (missing)`);
     return;
   }
-  const files = readdirSync(dir).filter((file) => file.endsWith(".encoded"));
+  const files = (await readdir(dir)).filter((file) =>
+    file.endsWith(".encoded"),
+  );
   if (files.length === 0) {
     skipped.push(`${relativePath(dir)} (no encoded fixtures)`);
     return;
@@ -402,9 +425,10 @@ function verifyFlate(dir: string) {
   for (const encoded of files) {
     const name = encoded.replace(/\.encoded$/, "");
     const encodedPath = join(dir, encoded);
+    const encodedBytes = new Uint8Array(await readFile(encodedPath));
     if (name.includes("corrupt")) {
       try {
-        decodeFlate(readFileSync(encodedPath));
+        await decodeFlate(encodedBytes);
         throw new Error(`${labelFor(dir, name)}: expected decoder to throw`);
       } catch (err) {
         if (
@@ -418,18 +442,20 @@ function verifyFlate(dir: string) {
       continue;
     }
     const decodedPath = join(dir, `${name}.decoded`);
-    const actual = decodeFlate(readFileSync(encodedPath));
-    const expected = new Uint8Array(readFileSync(decodedPath));
+    const actual = await decodeFlate(encodedBytes);
+    const expected = new Uint8Array(await readFile(decodedPath));
     compareBuffers(labelFor(dir, name), actual, expected);
   }
 }
 
-function verifyLzw(dir: string) {
-  if (!existsSync(dir)) {
+async function verifyLzw(dir: string) {
+  if (!(await pathExists(dir))) {
     skipped.push(`${relativePath(dir)} (missing)`);
     return;
   }
-  const files = readdirSync(dir).filter((file) => file.endsWith(".encoded"));
+  const files = (await readdir(dir)).filter((file) =>
+    file.endsWith(".encoded"),
+  );
   if (files.length === 0) {
     skipped.push(`${relativePath(dir)} (no encoded fixtures)`);
     return;
@@ -439,26 +465,27 @@ function verifyLzw(dir: string) {
     const name = encoded.replace(/\.encoded$/, "");
     const encodedPath = join(dir, encoded);
     const decodedPath = join(dir, `${name}.decoded`);
-    const actual = decodeLzw(new Uint8Array(readFileSync(encodedPath)), 0);
-    const expected = new Uint8Array(readFileSync(decodedPath));
+    const encodedBytes = new Uint8Array(await readFile(encodedPath));
+    const actual = decodeLzw(encodedBytes, 0);
+    const expected = new Uint8Array(await readFile(decodedPath));
     compareBuffers(labelFor(dir, name), actual, expected);
   }
 }
 
-function verifyStreamsData(dir: string) {
-  verifyAscii85(join(dir, "ascii85"));
-  verifyAsciiHex(join(dir, "asciihex"));
-  verifyRunLength(join(dir, "runlength"));
-  verifyFlate(join(dir, "flate"));
-  verifyLzw(join(dir, "lzw"));
+async function verifyStreamsData(dir: string) {
+  await verifyAscii85(join(dir, "ascii85"));
+  await verifyAsciiHex(join(dir, "asciihex"));
+  await verifyRunLength(join(dir, "runlength"));
+  await verifyFlate(join(dir, "flate"));
+  await verifyLzw(join(dir, "lzw"));
 }
 
-function verifyEmbeddersData(dir: string) {
-  if (!existsSync(dir)) {
+async function verifyEmbeddersData(dir: string) {
+  if (!(await pathExists(dir))) {
     skipped.push(`${relativePath(dir)} (missing)`);
     return;
   }
-  const files = readdirSync(dir).filter((file) => file.endsWith(".cmap"));
+  const files = (await readdir(dir)).filter((file) => file.endsWith(".cmap"));
   if (files.length === 0) {
     skipped.push(`${relativePath(dir)} (no cmap fixtures)`);
     return;
@@ -466,11 +493,12 @@ function verifyEmbeddersData(dir: string) {
   files.sort();
   for (const file of files) {
     const fontPath = cmapFontSources[file as keyof typeof cmapFontSources];
-    if (!fontPath || !existsSync(fontPath)) {
+    if (!fontPath || !(await pathExists(fontPath))) {
       skipped.push(`${relativePath(dir)}/${file} (missing font source)`);
       continue;
     }
-    const font = fontkit.create(readFileSync(fontPath));
+    const fontBytes = await readFile(fontPath);
+    const font = fontkit.create(fontBytes);
     const glyphs = sortedUniq(
       font.characterSet
         .map((codePoint: number) => font.glyphForCodePoint(codePoint))
@@ -481,7 +509,7 @@ function verifyEmbeddersData(dir: string) {
     const cmap = createCmap(glyphs as any, (glyph: any) =>
       glyph ? glyph.id : -1,
     );
-    const expected = readFileSync(join(dir, file), "utf8");
+    const expected = await readFile(join(dir, file), "utf8");
     compareBuffers(
       labelFor(dir, file),
       Buffer.from(cmap, "utf8"),
@@ -491,13 +519,13 @@ function verifyEmbeddersData(dir: string) {
 }
 
 async function verifyParserData(dir: string) {
-  if (!existsSync(dir)) {
+  if (!(await pathExists(dir))) {
     skipped.push(`${relativePath(dir)} (missing)`);
     return;
   }
 
-  const readData = (file: string) =>
-    new Uint8Array(readFileSync(join(dir, file)));
+  const readData = async (file: string) =>
+    new Uint8Array(await readFile(join(dir, file)));
 
   const objectStreamFixtures = [
     { name: "object-stream1", dict: { N: 3, First: 18 }, expectedCount: 3 },
@@ -560,13 +588,13 @@ async function verifyParserData(dir: string) {
   ];
 
   for (const fixture of objectStreamFixtures) {
-    if (!existsSync(join(dir, fixture.name))) {
+    if (!(await pathExists(join(dir, fixture.name)))) {
       skipped.push(`${relativePath(dir)}/${fixture.name} (missing fixture)`);
       continue;
     }
     const context = PDFContext.create();
     const dict = context.obj(fixture.dict);
-    const contents = readData(fixture.name);
+    const contents = await readData(fixture.name);
     const stream = PDFRawStream.of(dict, contents);
     const parser = PDFObjectStreamParser.forStream(stream);
     await parser.parseIntoContext();
@@ -596,12 +624,12 @@ async function verifyParserData(dir: string) {
   }
 
   const invalidPath = join(dir, "object-stream-invalid");
-  if (existsSync(invalidPath)) {
+  if (await pathExists(invalidPath)) {
     const invalidContext = PDFContext.create();
     const invalidDict = invalidContext.obj({ N: 1, First: 5 });
     const invalidStream = PDFRawStream.of(
       invalidDict,
-      readData("object-stream-invalid"),
+      await readData("object-stream-invalid"),
     );
     const invalidParser = PDFObjectStreamParser.forStream(invalidStream);
     let threw = false;
@@ -680,13 +708,13 @@ async function verifyParserData(dir: string) {
 
   for (const fixture of xrefFixtures) {
     const path = join(dir, fixture.name);
-    if (!existsSync(path)) {
+    if (!(await pathExists(path))) {
       skipped.push(`${relativePath(dir)}/${fixture.name} (missing fixture)`);
       continue;
     }
     const context = PDFContext.create();
     const dict = context.obj(fixture.dict);
-    const stream = PDFRawStream.of(dict, readData(fixture.name));
+    const stream = PDFRawStream.of(dict, await readData(fixture.name));
     const parser = PDFXRefStreamParser.forStream(stream);
     const entries = parser.parseIntoContext();
     const normal = entries.filter(
@@ -723,7 +751,7 @@ async function verifyParserData(dir: string) {
       const reparseDict = reparseContext.obj(fixture.dict);
       const reparseStream = PDFRawStream.of(
         reparseDict,
-        readData(fixture.name),
+        await readData(fixture.name),
       );
       const reparseParser = PDFXRefStreamParser.forStream(reparseStream);
       reparseParser.parseIntoContext();
@@ -748,17 +776,17 @@ async function verifyParserData(dir: string) {
 }
 
 async function verifyWritersData(dir: string) {
-  if (!existsSync(dir)) {
+  if (!(await pathExists(dir))) {
     skipped.push(`${relativePath(dir)} (missing)`);
     return;
   }
   const pdfPath = join(dir, "stream-writer-1.pdf");
-  if (!existsSync(pdfPath)) {
+  if (!(await pathExists(pdfPath))) {
     skipped.push(`${relativePath(dir)}/stream-writer-1.pdf (missing fixture)`);
     return;
   }
 
-  const expected = new Uint8Array(readFileSync(pdfPath));
+  const expected = new Uint8Array(await readFile(pdfPath));
 
   const context = PDFContext.create();
 
@@ -815,12 +843,12 @@ async function verifyWritersData(dir: string) {
   compareBuffers(labelFor(dir, "stream-writer-1.pdf"), buffer, expected);
 }
 
-function verifyUtilsData(dir: string) {
-  if (!existsSync(dir)) {
+async function verifyUtilsData(dir: string) {
+  if (!(await pathExists(dir))) {
     skipped.push(`${relativePath(dir)} (missing)`);
     return;
   }
-  const files = readdirSync(dir).filter((file) => file.endsWith(".base64"));
+  const files = (await readdir(dir)).filter((file) => file.endsWith(".base64"));
   if (files.length === 0) {
     skipped.push(`${relativePath(dir)} (no base64 fixtures)`);
     return;
@@ -830,28 +858,27 @@ function verifyUtilsData(dir: string) {
     const name = encoded.replace(/\.base64$/, "");
     const encodedPath = join(dir, encoded);
     const targetPath = join(dir, name);
-    const actual = new Uint8Array(
-      Buffer.from(readFileSync(encodedPath, "utf8"), "base64"),
-    );
-    const expected = new Uint8Array(readFileSync(targetPath));
+    const base64Data = await readFile(encodedPath, "utf8");
+    const actual = new Uint8Array(Buffer.from(base64Data, "base64"));
+    const expected = new Uint8Array(await readFile(targetPath));
     compareBuffers(labelFor(dir, name), actual, expected);
   }
 }
 
 async function main() {
-  const dataDirs = findDataDirs(testRoot);
+  const dataDirs = await findDataDirs(testRoot);
   for (const dir of dataDirs) {
     const rel = relativePath(dir);
     if (rel.endsWith("core/streams/data")) {
-      verifyStreamsData(dir);
+      await verifyStreamsData(dir);
     } else if (rel.endsWith("core/embedders/data")) {
-      verifyEmbeddersData(dir);
+      await verifyEmbeddersData(dir);
     } else if (rel.endsWith("core/parser/data")) {
       await verifyParserData(dir);
     } else if (rel.endsWith("core/writers/data")) {
       await verifyWritersData(dir);
     } else if (rel.endsWith("utils/data")) {
-      verifyUtilsData(dir);
+      await verifyUtilsData(dir);
     } else {
       skipped.push(`${rel} (no verification logic)`);
     }

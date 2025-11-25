@@ -1,4 +1,4 @@
-import fs from "node:fs";
+import { readFile } from "node:fs/promises";
 import { describe, expect, test } from "vitest";
 import {
   AnnotationFlags,
@@ -8,7 +8,7 @@ import {
   PDFName,
 } from "../../../src/index.js";
 
-const fancyFieldsPdfBytes = fs.readFileSync("assets/pdfs/fancy-fields.pdf");
+const fancyFieldsPdfBytes = await readFile("assets/pdfs/fancy-fields.pdf");
 
 describe("PDFRadioGroup", () => {
   test("can read its options", async () => {

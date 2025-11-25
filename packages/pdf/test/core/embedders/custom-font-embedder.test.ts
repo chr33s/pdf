@@ -1,5 +1,5 @@
 import fontkit from "@chr33s/fontkit";
-import fs from "node:fs";
+import { readFile } from "node:fs/promises";
 import { describe, expect, test } from "vitest";
 
 import {
@@ -10,7 +10,7 @@ import {
   PDFRef,
 } from "../../../src/index.js";
 
-const ubuntuFont = fs.readFileSync("./assets/fonts/ubuntu/ubuntu-r.ttf");
+const ubuntuFont = await readFile("./assets/fonts/ubuntu/ubuntu-r.ttf");
 
 describe("CustomFontEmbedder", () => {
   test("can be constructed with CustomFontEmbedder.for(...)", async () => {

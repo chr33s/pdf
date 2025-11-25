@@ -1,8 +1,8 @@
-import fs from "node:fs";
+import { readFile } from "node:fs/promises";
 import { describe, expect, test } from "vitest";
 import { AnnotationFlags, PDFDocument } from "../../../src/index.js";
 
-const fancyFieldsPdfBytes = fs.readFileSync("assets/pdfs/fancy-fields.pdf");
+const fancyFieldsPdfBytes = await readFile("assets/pdfs/fancy-fields.pdf");
 const pdfDocPromise = PDFDocument.load(fancyFieldsPdfBytes);
 
 describe("PDFCheckBox", () => {

@@ -1,4 +1,4 @@
-import fs from "node:fs";
+import { readFile } from "node:fs/promises";
 import { describe, expect, test } from "vitest";
 import {
   PDFArray,
@@ -16,8 +16,8 @@ import {
   ReparseError,
 } from "../../../src/index.js";
 
-const readData = (file: string) =>
-  new Uint8Array(fs.readFileSync(new URL(`./data/${file}`, import.meta.url)));
+const readData = async (file: string) =>
+  new Uint8Array(await readFile(new URL(`./data/${file}`, import.meta.url)));
 
 describe("PDFObjectStreamParser", () => {
   test("parses simple object streams", async () => {
@@ -26,7 +26,7 @@ describe("PDFObjectStreamParser", () => {
       N: 3,
       First: 18,
     });
-    const contents = readData("object-stream1");
+    const contents = await readData("object-stream1");
     const stream = PDFRawStream.of(dict, contents);
 
     await PDFObjectStreamParser.forStream(stream).parseIntoContext();
@@ -50,7 +50,7 @@ describe("PDFObjectStreamParser", () => {
       N: 9,
       First: 44,
     });
-    const contents = readData("object-stream2");
+    const contents = await readData("object-stream2");
     const stream = PDFRawStream.of(dict, contents);
 
     await PDFObjectStreamParser.forStream(stream).parseIntoContext();
@@ -73,7 +73,7 @@ describe("PDFObjectStreamParser", () => {
       N: 182,
       First: 1786,
     });
-    const contents = readData("object-stream3");
+    const contents = await readData("object-stream3");
     const stream = PDFRawStream.of(dict, contents);
 
     await PDFObjectStreamParser.forStream(stream).parseIntoContext();
@@ -88,7 +88,7 @@ describe("PDFObjectStreamParser", () => {
       N: 115,
       First: 924,
     });
-    const contents = readData("object-stream4");
+    const contents = await readData("object-stream4");
     const stream = PDFRawStream.of(dict, contents);
 
     await PDFObjectStreamParser.forStream(stream).parseIntoContext();
@@ -103,7 +103,7 @@ describe("PDFObjectStreamParser", () => {
       N: 115,
       First: 924,
     });
-    const contents = readData("object-stream4");
+    const contents = await readData("object-stream4");
     const stream = PDFRawStream.of(dict, contents);
 
     await PDFObjectStreamParser.forStream(stream).parseIntoContext();
@@ -118,7 +118,7 @@ describe("PDFObjectStreamParser", () => {
       N: 115,
       First: 924,
     });
-    const contents = readData("object-stream4");
+    const contents = await readData("object-stream4");
     const stream = PDFRawStream.of(dict, contents);
 
     await expect(
@@ -132,7 +132,7 @@ describe("PDFObjectStreamParser", () => {
       N: 1,
       First: 5,
     });
-    const contents = readData("object-stream-invalid");
+    const contents = await readData("object-stream-invalid");
     const stream = PDFRawStream.of(dict, contents);
 
     await expect(
@@ -146,7 +146,7 @@ describe("PDFObjectStreamParser", () => {
       N: 3,
       First: 18,
     });
-    const contents = readData("object-stream1");
+    const contents = await readData("object-stream1");
     const stream = PDFRawStream.of(dict, contents);
 
     const parser = PDFObjectStreamParser.forStream(stream);

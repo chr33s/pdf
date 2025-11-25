@@ -1,8 +1,9 @@
-import { execSync } from "node:child_process";
-import fs from "node:fs";
+import { exec } from "node:child_process";
+import { readFile, writeFile } from "node:fs/promises";
 import os from "node:os";
 import { sep } from "node:path";
 import readline from "node:readline";
+import { promisify } from "node:util";
 
 import test1 from "./tests/test1.js";
 import test10 from "./tests/test10.js";
@@ -32,20 +33,132 @@ const prompt = "Press <enter> to run the next test...";
 const promptToContinue = () =>
   new Promise<void>((resolve) => cli.question(prompt, (_answer) => resolve()));
 
+const execAsync = promisify(exec);
+
+const assetUrl = (path: string) =>
+  new URL(`../../assets/${path}`, import.meta.url);
+const readBinaryAsset = (path: string) => readFile(assetUrl(path));
+const readTextAsset = (path: string) => readFile(assetUrl(path), "utf8");
+
+const loadAssets = async () => ({
+  fonts: {
+    ttf: {
+      "ubuntu-r": await readBinaryAsset("fonts/ubuntu/ubuntu-r.ttf"),
+      "ubuntu-r_base64": await readTextAsset(
+        "fonts/ubuntu/ubuntu-r.ttf.base64",
+      ),
+      "bio-rhyme-r": await readBinaryAsset(
+        "fonts/bio-rhyme/bio-rhyme-expanded-regular.ttf",
+      ),
+      "press-start-2p-regular": await readBinaryAsset(
+        "fonts/press-start-2p/press-start-2p-regular.ttf",
+      ),
+      "indie-flower": await readBinaryAsset(
+        "fonts/indie-flower/indie-flower.ttf",
+      ),
+      "great-vibes-regular": await readBinaryAsset(
+        "fonts/great-vibes/great-vibes-regular.ttf",
+      ),
+      "nunito-regular": await readBinaryAsset(
+        "fonts/nunito/nunito-regular.ttf",
+      ),
+    },
+    otf: {
+      "fantasque-sans-mono_bi": await readBinaryAsset(
+        "fonts/fantasque/otf/fantasque-sans-mono-bold-italic.otf",
+      ),
+      "apple-storm_r": await readBinaryAsset(
+        "fonts/apple-storm/apple-storm-c-bo.otf",
+      ),
+      "hussar-3d_r": await readBinaryAsset(
+        "fonts/hussar-3d/hussar-3d-four.otf",
+      ),
+      "source-hans-jp": await readBinaryAsset(
+        "fonts/source-hans-jp/source-han-serif-jp-regular.otf",
+      ),
+    },
+  },
+  images: {
+    jpg: {
+      "cat-riding-unicorn": await readBinaryAsset(
+        "images/cat-riding-unicorn.jpg",
+      ),
+      "cat-riding-unicorn_base64": await readTextAsset(
+        "images/cat-riding-unicorn.jpg.base64",
+      ),
+      "minions-laughing": await readBinaryAsset("images/minions-laughing.jpg"),
+      "cmyk-colorspace": await readBinaryAsset("images/cmyk-colorspace.jpg"),
+    },
+    png: {
+      "greyscale-bird": await readBinaryAsset("images/greyscale-bird.png"),
+      "greyscale-bird_base64_uri": await readTextAsset(
+        "images/greyscale-bird.png.base64.uri",
+      ),
+      "minions-banana_alpha": await readBinaryAsset(
+        "images/minions-banana-alpha.png",
+      ),
+      "minions-banana_no_alpha": await readBinaryAsset(
+        "images/minions-banana-no-alpha.png",
+      ),
+      "small-mario": await readBinaryAsset("images/small-mario.png"),
+      etwe: await readBinaryAsset("images/etwe.png"),
+      "self-drive": await readBinaryAsset("images/self-drive.png"),
+      "mario-emblem": await readBinaryAsset("images/mario-emblem.png"),
+    },
+  },
+  pdfs: {
+    normal: await readBinaryAsset("pdfs/normal.pdf"),
+    normal_base64: await readTextAsset("pdfs/normal.pdf.base64"),
+    with_update_sections: await readBinaryAsset(
+      "pdfs/with-update-sections.pdf",
+    ),
+    with_update_sections_base64_uri: await readTextAsset(
+      "pdfs/with-update-sections.pdf.base64.uri",
+    ),
+    linearized_with_object_streams: await readBinaryAsset(
+      "pdfs/linearized-with-object-streams.pdf",
+    ),
+    with_large_page_count: await readBinaryAsset(
+      "pdfs/with-large-page-count.pdf",
+    ),
+    with_missing_endstream_eol_and_polluted_ctm: await readBinaryAsset(
+      "pdfs/with_missing_endstream_eol_and_polluted_ctm.pdf",
+    ),
+    with_newline_whitespace_in_indirect_object_numbers: await readBinaryAsset(
+      "pdfs/with_newline_whitespace_in_indirect_object_numbers.pdf",
+    ),
+    with_comments: await readBinaryAsset("pdfs/with-comments.pdf"),
+    with_cropbox: await readBinaryAsset("pdfs/with-cropbox.pdf"),
+    "us-constitution": await readBinaryAsset("pdfs/us-constitution.pdf"),
+    simple_pdf_2_example: await readBinaryAsset(
+      "pdfs/pdf20examples/simple-p-d-f-2.0-file.pdf",
+    ),
+    with_combed_fields: await readBinaryAsset("pdfs/with-combed-fields.pdf"),
+    dod_character: await readBinaryAsset("pdfs/dod-character.pdf"),
+    with_xfa_fields: await readBinaryAsset("pdfs/with-xfa-fields.pdf"),
+    fancy_fields: await readBinaryAsset("pdfs/fancy-fields.pdf"),
+    form_to_flatten: await readBinaryAsset("pdfs/form-to-flatten.pdf"),
+    with_annots: await readBinaryAsset("pdfs/with-annots.pdf"),
+  },
+});
+
+const assets = await loadAssets();
+export type Assets = typeof assets;
+
 // This needs to be more sophisticated to work on Linux as well.
-const openPdf = (path: string, _reader?: string) => {
+const openPdf = async (path: string, _reader?: string) => {
   if (process.platform === "darwin") {
-    execSync(`open -a "${_reader || "Preview"}" '${path}'`);
-    // execSync(`open -a "Preview" '${path}'`);
-    // execSync(`open -a "Adobe Acrobat" '${path}'`);
-    // execSync(`open -a "Foxit Reader" '${path}'`);
-    // execSync(`open -a "Google Chrome" '${path}'`);
-    // execSync(`open -a "Firefox" '${path}'`);
+    await execAsync(`open -a "${_reader || "Preview"}" '${path}'`);
+    // await execAsync(`open -a "Preview" '${path}'`);
+    // await execAsync(`open -a "Adobe Acrobat" '${path}'`);
+    // await execAsync(`open -a "Foxit Reader" '${path}'`);
+    // await execAsync(`open -a "Google Chrome" '${path}'`);
+    // await execAsync(`open -a "Firefox" '${path}'`);
   } else if (process.platform === "win32") {
     // Opens with the default PDF Reader, has room for improvement
-    execSync(`start ${path}`);
+    await execAsync(`start ${path}`);
   } else if (process.platform === "linux") {
-    execSync(`xdg-open ${path}`);
+    await execAsync(`xdg-open ${path}`);
   } else {
     console.warn(
       `No script found for ${process.platform} platform. Please report this.`,
@@ -53,95 +166,11 @@ const openPdf = (path: string, _reader?: string) => {
   }
 };
 
-const writePdfToTmp = (pdf: Uint8Array) => {
+const writePdfToTmp = async (pdf: Uint8Array) => {
   const path = `${os.tmpdir()}${sep}${Date.now()}.pdf`;
-  fs.writeFileSync(path, pdf);
+  await writeFile(path, pdf);
   return path;
 };
-
-const readFile = (path: string) => fs.readFileSync(`../../assets/${path}`);
-
-const assets = {
-  fonts: {
-    ttf: {
-      "ubuntu-r": readFile("fonts/ubuntu/ubuntu-r.ttf"),
-      "ubuntu-r_base64": String(readFile("fonts/ubuntu/ubuntu-r.ttf.base64")),
-      "bio-rhyme-r": readFile("fonts/bio-rhyme/bio-rhyme-expanded-regular.ttf"),
-      "press-start-2p-regular": readFile(
-        "fonts/press-start-2p/press-start-2p-regular.ttf",
-      ),
-      "indie-flower": readFile("fonts/indie-flower/indie-flower.ttf"),
-      "great-vibes-regular": readFile(
-        "fonts/great-vibes/great-vibes-regular.ttf",
-      ),
-      "nunito-regular": readFile("fonts/nunito/nunito-regular.ttf"),
-    },
-    otf: {
-      "fantasque-sans-mono_bi": readFile(
-        "fonts/fantasque/otf/fantasque-sans-mono-bold-italic.otf",
-      ),
-      "apple-storm_r": readFile("fonts/apple-storm/apple-storm-c-bo.otf"),
-      "hussar-3d_r": readFile("fonts/hussar-3d/hussar-3d-four.otf"),
-      "source-hans-jp": readFile(
-        "fonts/source-hans-jp/source-han-serif-jp-regular.otf",
-      ),
-    },
-  },
-  images: {
-    jpg: {
-      "cat-riding-unicorn": readFile("images/cat-riding-unicorn.jpg"),
-      "cat-riding-unicorn_base64": String(
-        readFile("images/cat-riding-unicorn.jpg.base64"),
-      ),
-      "minions-laughing": readFile("images/minions-laughing.jpg"),
-      "cmyk-colorspace": readFile("images/cmyk-colorspace.jpg"),
-    },
-    png: {
-      "greyscale-bird": readFile("images/greyscale-bird.png"),
-      "greyscale-bird_base64_uri": String(
-        readFile("images/greyscale-bird.png.base64.uri"),
-      ),
-      "minions-banana_alpha": readFile("images/minions-banana-alpha.png"),
-      "minions-banana_no_alpha": readFile("images/minions-banana-no-alpha.png"),
-      "small-mario": readFile("images/small-mario.png"),
-      etwe: readFile("images/etwe.png"),
-      "self-drive": readFile("images/self-drive.png"),
-      "mario-emblem": readFile("images/mario-emblem.png"),
-    },
-  },
-  pdfs: {
-    normal: readFile("pdfs/normal.pdf"),
-    normal_base64: String(readFile("pdfs/normal.pdf.base64")),
-    with_update_sections: readFile("pdfs/with-update-sections.pdf"),
-    with_update_sections_base64_uri: String(
-      readFile("pdfs/with-update-sections.pdf.base64.uri"),
-    ),
-    linearized_with_object_streams: readFile(
-      "pdfs/linearized-with-object-streams.pdf",
-    ),
-    with_large_page_count: readFile("pdfs/with-large-page-count.pdf"),
-    with_missing_endstream_eol_and_polluted_ctm: readFile(
-      "pdfs/with_missing_endstream_eol_and_polluted_ctm.pdf",
-    ),
-    with_newline_whitespace_in_indirect_object_numbers: readFile(
-      "pdfs/with_newline_whitespace_in_indirect_object_numbers.pdf",
-    ),
-    with_comments: readFile("pdfs/with-comments.pdf"),
-    with_cropbox: readFile("pdfs/with-cropbox.pdf"),
-    "us-constitution": readFile("pdfs/us-constitution.pdf"),
-    simple_pdf_2_example: readFile(
-      "pdfs/pdf20examples/simple-p-d-f-2.0-file.pdf",
-    ),
-    with_combed_fields: readFile("pdfs/with-combed-fields.pdf"),
-    dod_character: readFile("pdfs/dod-character.pdf"),
-    with_xfa_fields: readFile("pdfs/with-xfa-fields.pdf"),
-    fancy_fields: readFile("pdfs/fancy-fields.pdf"),
-    form_to_flatten: readFile("pdfs/form-to-flatten.pdf"),
-    with_annots: readFile("pdfs/with-annots.pdf"),
-  },
-};
-
-export type Assets = typeof assets;
 
 // This script can be executed with 0, 1, or 2 CLI arguments:
 //   $ node index.js
@@ -177,10 +206,10 @@ const main = async () => {
     for (const test of tests) {
       console.log(`Running test #${idx}`);
       const pdfBytes = await test(assets);
-      const path = writePdfToTmp(pdfBytes);
+      const path = await writePdfToTmp(pdfBytes);
       console.log(`> PDF file written to: ${path}`);
 
-      openPdf(path, reader);
+      await openPdf(path, reader);
       idx += 1;
       await promptToContinue();
       console.log();

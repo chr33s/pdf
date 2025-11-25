@@ -1,9 +1,9 @@
-import fs from "node:fs";
+import { readFile } from "node:fs/promises";
 import { describe, expect, test } from "vitest";
 import { decodeFromBase64DataUri } from "../../src/utils/index.js";
 
-const pdfBytes = fs.readFileSync(new URL("./data/simple.pdf", import.meta.url));
-const pdfBase64Bytes = fs.readFileSync(
+const pdfBytes = await readFile(new URL("./data/simple.pdf", import.meta.url));
+const pdfBase64Bytes = await readFile(
   new URL("./data/simple.pdf.base64", import.meta.url),
 );
 const pdfBase64String = pdfBase64Bytes.toString();

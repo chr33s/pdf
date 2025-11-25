@@ -176,10 +176,12 @@ Note that many of the API methods are now asynchronous and return promises, so y
   2. When copying large numbers of pages, it could result in redundant objects being created. This new page copying API should eliminate that.
 
   ```js
+  import { readFile } from 'node:fs/promises'
+
   async function mergePdfs(pdfsToMerge: string[]) {
     const mergedPdf = await PDFDocument.create();
     for (const pdfCopyDoc of pdfsToMerge) {
-      const pdfBytes = fs.readFileSync(pdfCopyDoc);
+      const pdfBytes = await readFile(pdfCopyDoc);
       const pdf = await PDFDocument.load(pdfBytes);
       const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
       copiedPages.forEach((page) => {

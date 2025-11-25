@@ -4,7 +4,7 @@ import codepoints from "@chr33s/codepoints";
 import { compile as compileModule } from "@chr33s/dfa";
 import { builder as UnicodeTrieBuilder } from "@chr33s/unicode-trie";
 import * as base64 from "base64-arraybuffer";
-import fs from "node:fs";
+import fs from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import pako from "pako";
@@ -296,13 +296,16 @@ const deflatedTrie = pako.deflate(trie.toBuffer());
 const jsonBase64DeflatedTrie = JSON.stringify(
   base64.encode(toArrayBuffer(deflatedTrie)),
 );
-fs.writeFileSync(trieFilePath, jsonBase64DeflatedTrie);
+await fs.writeFile(trieFilePath, jsonBase64DeflatedTrie);
 
 const trieModulePath = join(__dirname, "trie-indic-data.js");
-fs.writeFileSync(trieModulePath, `export default ${jsonBase64DeflatedTrie};\n`);
+await fs.writeFile(
+  trieModulePath,
+  `export default ${jsonBase64DeflatedTrie};\n`,
+);
 
 let stateMachine = compile(
-  fs.readFileSync(join(__dirname, "indic.machine"), "utf8"),
+  await fs.readFile(join(__dirname, "indic.machine"), "utf8"),
   symbols,
 );
 
@@ -312,10 +315,10 @@ const deflatedIndic = pako.deflate(stateMachineJsonBytes);
 const jsonBase64DeflatedIndic = JSON.stringify(
   base64.encode(toArrayBuffer(deflatedIndic)),
 );
-fs.writeFileSync(indicFilePath, jsonBase64DeflatedIndic);
+await fs.writeFile(indicFilePath, jsonBase64DeflatedIndic);
 
 const indicModulePath = join(__dirname, "indic-gen-data.js");
-fs.writeFileSync(
+await fs.writeFile(
   indicModulePath,
   `export default ${jsonBase64DeflatedIndic};\n`,
 );

@@ -1,19 +1,24 @@
 import assert from "node:assert";
-import fs from "node:fs";
+import { access } from "node:fs/promises";
 import { describe, test } from "vitest";
 import fontkit from "./add-test-helpers-to-fontkit.js";
 import { here } from "./utils/dir.decompress-jsons.js";
 
 const __dirname = here(import.meta.url);
 
-describe("variations", function () {
-  describe("Skia", function () {
-    if (!fs.existsSync("/Library/Fonts/Skia.ttf")) {
-      test.skip("requires /Library/Fonts/Skia.ttf", function () {});
-      return;
-    }
+const SKIA_FONT_PATH = "/Library/Fonts/Skia.ttf";
+const hasSkiaFont = await access(SKIA_FONT_PATH)
+  .then(() => true)
+  .catch(() => false);
 
-    let font = fontkit.openSync("/Library/Fonts/Skia.ttf");
+describe("variations", function () {
+  describe.runIf(hasSkiaFont)("Skia", function () {
+    let font: any; // NOTE: workaround runIf vitest issue
+    try {
+      font = fontkit.openSync(SKIA_FONT_PATH);
+    } catch {
+      // noop
+    }
 
     test("should get available variation axes", function () {
       let axes = font.variationAxes;
@@ -87,9 +92,7 @@ describe("variations", function () {
 
   describe("truetype variations", function () {
     test("should support sharing all points", function () {
-      let font = fontkit.openSync(
-        __dirname + "/data/fonttest/test-gvar-one.ttf",
-      );
+      let font = fontkit.openSync(__dirname + "/data/fonttest/test-gvar-one.ttf");
 
       assert.equal(
         font.getVariation({ wght: 300 }).glyphsForString("彌")[0].path.toSVG(),
@@ -98,9 +101,7 @@ describe("variations", function () {
     });
 
     test("should support sharing enumerated points", function () {
-      let font = fontkit.openSync(
-        __dirname + "/data/fonttest/test-gvar-two.ttf",
-      );
+      let font = fontkit.openSync(__dirname + "/data/fonttest/test-gvar-two.ttf");
 
       assert.equal(
         font.getVariation({ wght: 300 }).glyphsForString("彌")[0].path.toSVG(),
@@ -109,9 +110,7 @@ describe("variations", function () {
     });
 
     test("should support sharing no points", function () {
-      let font = fontkit.openSync(
-        __dirname + "/data/fonttest/test-gvar-three.ttf",
-      );
+      let font = fontkit.openSync(__dirname + "/data/fonttest/test-gvar-three.ttf");
 
       assert.equal(
         font.getVariation({ wght: 300 }).glyphsForString("彌")[0].path.toSVG(),
@@ -120,27 +119,19 @@ describe("variations", function () {
     });
 
     test("should use the HVAR table when available for variation metrics", function () {
-      let font = fontkit.openSync(
-        __dirname + "/data/fonttest/test-gvar-four.ttf",
-      );
+      let font = fontkit.openSync(__dirname + "/data/fonttest/test-gvar-four.ttf");
 
       assert.equal(
-        Math.round(
-          font.getVariation({ wght: 150 }).glyphsForString("O")[0].advanceWidth,
-        ),
+        Math.round(font.getVariation({ wght: 150 }).glyphsForString("O")[0].advanceWidth),
         706,
       );
     });
 
     test("should fall back to the last entry in an HVAR table", function () {
-      let font = fontkit.openSync(
-        __dirname + "/data/fonttest/test-hvar-two.ttf",
-      );
+      let font = fontkit.openSync(__dirname + "/data/fonttest/test-hvar-two.ttf");
 
       assert.equal(
-        Math.round(
-          font.getVariation({ wght: 400 }).glyphsForString("A")[0].advanceWidth,
-        ),
+        Math.round(font.getVariation({ wght: 400 }).glyphsForString("A")[0].advanceWidth),
         584,
       );
     });
@@ -156,9 +147,7 @@ describe("variations", function () {
   });
 
   describe("CFF2 variations", function () {
-    let font = fontkit.openSync(
-      __dirname + "/data/fonttest/adobe-vf-prototype-subset.otf",
-    );
+    let font = fontkit.openSync(__dirname + "/data/fonttest/adobe-vf-prototype-subset.otf");
 
     test("applies variations to CFF2 glyphs", function () {
       assert.equal(

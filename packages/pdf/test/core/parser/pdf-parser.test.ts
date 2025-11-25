@@ -1,4 +1,4 @@
-import fs from "node:fs";
+import { readFile } from "node:fs/promises";
 import {
   afterAll,
   beforeAll,
@@ -160,7 +160,7 @@ describe("PDFParser", () => {
   });
 
   test("can parse PDF files with comments and stuff preceding the header", async () => {
-    const pdfBytes = fs.readFileSync(
+    const pdfBytes = await readFile(
       "./assets/pdfs/pdf20examples/pdf-2.0-with-offset-start.pdf",
     );
 
@@ -173,9 +173,7 @@ describe("PDFParser", () => {
   });
 
   test("can parse PDF files with comments stuff following the header", async () => {
-    const pdfBytes = fs.readFileSync(
-      "./assets/pdfs/stuff-following-header.pdf",
-    );
+    const pdfBytes = await readFile("./assets/pdfs/stuff-following-header.pdf");
 
     const parser = PDFParser.forBytesWithOptions(pdfBytes);
     const context = await parser.parseDocument();
@@ -186,7 +184,7 @@ describe("PDFParser", () => {
   });
 
   test("can parse PDF files with missing xref table, trailer dict, and trailer", async () => {
-    const pdfBytes = fs.readFileSync(
+    const pdfBytes = await readFile(
       "./assets/pdfs/missing-xref-trailer-dict.pdf",
     );
 
@@ -199,7 +197,7 @@ describe("PDFParser", () => {
   });
 
   test("can parse PDF files with invalid xref table", async () => {
-    const pdfBytes = fs.readFileSync("./assets/pdfs/normal.pdf");
+    const pdfBytes = await readFile("./assets/pdfs/normal.pdf");
 
     const parser = PDFParser.forBytesWithOptions(pdfBytes);
     const context = await parser.parseDocument();
@@ -210,7 +208,7 @@ describe("PDFParser", () => {
   });
 
   test("can parse PDF files without object streams or update sections", async () => {
-    const pdfBytes = fs.readFileSync("./assets/pdfs/normal.pdf");
+    const pdfBytes = await readFile("./assets/pdfs/normal.pdf");
 
     const parser = PDFParser.forBytesWithOptions(pdfBytes);
     const context = await parser.parseDocument();
@@ -221,7 +219,7 @@ describe("PDFParser", () => {
   });
 
   test("can parse PDF files with update sections", async () => {
-    const pdfBytes = fs.readFileSync("./assets/pdfs/with-update-sections.pdf");
+    const pdfBytes = await readFile("./assets/pdfs/with-update-sections.pdf");
 
     const parser = PDFParser.forBytesWithOptions(pdfBytes);
     const context = await parser.parseDocument();
@@ -232,7 +230,7 @@ describe("PDFParser", () => {
   });
 
   test("can parse PDF files with comments", async () => {
-    const pdfBytes = fs.readFileSync("./assets/pdfs/with-comments.pdf");
+    const pdfBytes = await readFile("./assets/pdfs/with-comments.pdf");
 
     const parser = PDFParser.forBytesWithOptions(pdfBytes);
     const context = await parser.parseDocument();
@@ -243,7 +241,7 @@ describe("PDFParser", () => {
   });
 
   test("prevents double parsing", async () => {
-    const pdfBytes = fs.readFileSync("./assets/pdfs/normal.pdf");
+    const pdfBytes = await readFile("./assets/pdfs/normal.pdf");
 
     const parser = PDFParser.forBytesWithOptions(pdfBytes);
 
@@ -254,7 +252,7 @@ describe("PDFParser", () => {
   });
 
   test("can parse PDF files with binary jibberish between indirect objects", async () => {
-    const pdfBytes = fs.readFileSync("./assets/pdfs/giraffe.pdf");
+    const pdfBytes = await readFile("./assets/pdfs/giraffe.pdf");
 
     const parser = PDFParser.forBytesWithOptions(pdfBytes);
     const context = await parser.parseDocument();
@@ -265,7 +263,7 @@ describe("PDFParser", () => {
   });
 
   test("can fix incorrect values for /Root", async () => {
-    const pdfBytes = fs.readFileSync("./assets/pdfs/invalid-root-ref.pdf");
+    const pdfBytes = await readFile("./assets/pdfs/invalid-root-ref.pdf");
 
     const parser = PDFParser.forBytesWithOptions(pdfBytes);
     const context = await parser.parseDocument();
@@ -277,9 +275,7 @@ describe("PDFParser", () => {
   });
 
   test("can parse files containing indirect objects missing their 'endobj' keyword", async () => {
-    const pdfBytes = fs.readFileSync(
-      "./assets/pdfs/missing-endobj-keyword.pdf",
-    );
+    const pdfBytes = await readFile("./assets/pdfs/missing-endobj-keyword.pdf");
 
     const parser = PDFParser.forBytesWithOptions(pdfBytes);
     const context = await parser.parseDocument();
@@ -290,7 +286,7 @@ describe("PDFParser", () => {
   });
 
   test("can parse files with containing large arrays with most 'null' values", async () => {
-    const pdfBytes = fs.readFileSync("./assets/pdfs/bixby-guide.pdf");
+    const pdfBytes = await readFile("./assets/pdfs/bixby-guide.pdf");
 
     const parser = PDFParser.forBytesWithOptions(pdfBytes);
     const context = await parser.parseDocument();
@@ -306,7 +302,7 @@ describe("PDFParser", () => {
   });
 
   test('can parse files with invalid stream EOLs: "stream \r\n', async () => {
-    const pdfBytes = fs.readFileSync(
+    const pdfBytes = await readFile(
       "./assets/pdfs/with-invalid-stream-eol.pdf",
     );
 

@@ -1,4 +1,7 @@
-import { execSync } from "node:child_process";
+import { exec } from "node:child_process";
+import { promisify } from "node:util";
+
+const execAsync = promisify(exec);
 
 export const Reader = {
   Preview: "Preview",
@@ -9,9 +12,9 @@ export const Reader = {
   Firefox: "Firefox",
 } as const;
 
-export const openPdf = (path: string, reader = Reader.Preview) => {
+export const openPdf = async (path: string, reader = Reader.Preview) => {
   if (process.platform === "darwin") {
-    execSync(`open -a "${reader}" ${path}`);
+    await execAsync(`open -a "${reader}" ${path}`);
   } else {
     const msg1 =
       "Note: Automatically opening PDFs currently only works on Macs. If you're using a Windows or Linux machine, please consider contributing to expand support for this feature";

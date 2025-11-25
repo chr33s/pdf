@@ -2,6 +2,7 @@
   "name": "@chr33s/pdf-monorepo",
   "version": "3.0.0",
   "scripts": {
+    "all": "run () { for cmd in clean build check test; do npm run workspace -- \"$cmd\" || return $?; done; }; run",
     "check": "oxfmt --check && oxlint --type-aware",
     "fix": "oxfmt && oxlint --type-aware --fix",
     "workspace": "run () { for pkg in brotli codepoints dfa restructure standard-fonts tiny-inflate unicode-trie unicode-properties upng fontkit pdf; do npm --workspace=packages/$pkg run \"$@\" --if-present || return $?; done; }; run \"$@\""
