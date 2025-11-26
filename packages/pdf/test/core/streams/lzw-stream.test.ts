@@ -15,8 +15,8 @@ describe("LZWStream", () => {
       await readFile(new URL(`./data/lzw/${file}.decoded`, import.meta.url)),
     );
 
-    const stream = new LZWStream(new Stream(encoded), undefined, 0);
+    const stream = new LZWStream(new Stream(encoded), decoded.length, 0);
 
-    expect(stream.decode()).toEqual(decoded);
+    expect(stream.decode()).toStrictEqual(decoded);
   });
 });

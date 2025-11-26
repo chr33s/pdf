@@ -12,11 +12,15 @@ import { StreamType } from "./stream.js";
 const MAX_CODE_LENGTH = 12;
 const INITIAL_CODE_LENGTH = 9;
 const MAX_DICTIONARY_SIZE = 1 << MAX_CODE_LENGTH;
+const MAX_ZERO_PAD_BYTES = 1 << 14;
 
 class LZWStream extends DecodeStream {
   #stream: StreamType;
   #cachedData: number;
   #bitsCached: number;
+  #expectedLength?: number;
+  #zeroPadBytesUsed: number;
+  #sawEod: boolean;
   #lzwState?: {
     earlyChange: 0 | 1;
     codeLength: number;
@@ -39,6 +43,9 @@ class LZWStream extends DecodeStream {
     this.#stream = stream;
     this.#cachedData = 0;
     this.#bitsCached = 0;
+    this.#expectedLength = maybeLength;
+    this.#zeroPadBytesUsed = 0;
+    this.#sawEod = false;
 
     const maxLzwDictionarySize = MAX_DICTIONARY_SIZE;
     const lzwState = {
@@ -88,12 +95,9 @@ class LZWStream extends DecodeStream {
 
     for (i = 0; i < blockSize; i++) {
       const code = this.#readBits(codeLength);
-
-      // Explicitly check for EOF
       if (code === null) {
         break;
       }
-
       const hasPrev = currentSequenceLength > 0;
       if (code < 256) {
         currentSequence[0] = code as number;
@@ -105,37 +109,34 @@ class LZWStream extends DecodeStream {
             currentSequence[j] = dictionaryValues[q];
             q = dictionaryPrevCodes[q];
           }
-        } else if (hasPrev) {
-          currentSequence[currentSequenceLength++] = currentSequence[0];
         } else {
-          this.eof = true;
-          this.#lzwState = undefined;
-          break;
+          currentSequence[currentSequenceLength++] = currentSequence[0];
         }
       } else if (code === 256) {
         codeLength = INITIAL_CODE_LENGTH;
         nextCode = 258;
-        prevCode = undefined;
         currentSequenceLength = 0;
+        prevCode = undefined;
         continue;
       } else {
         this.eof = true;
         this.#lzwState = undefined;
+        this.#sawEod = true;
         break;
       }
 
-      if (hasPrev && prevCode != null && nextCode < MAX_DICTIONARY_SIZE) {
-        dictionaryPrevCodes[nextCode] = prevCode;
-        dictionaryLengths[nextCode] = dictionaryLengths[prevCode] + 1;
+      if (hasPrev && nextCode < MAX_DICTIONARY_SIZE) {
+        const prev = prevCode!;
+        dictionaryPrevCodes[nextCode] = prev;
+        dictionaryLengths[nextCode] = dictionaryLengths[prev] + 1;
         dictionaryValues[nextCode] = currentSequence[0];
         nextCode++;
-
-        while (
-          codeLength < MAX_CODE_LENGTH &&
-          nextCode + earlyChange >= 1 << codeLength
-        ) {
-          // Increase bit-width as soon as the dictionary crosses the spec threshold.
-          codeLength++;
+        const threshold = nextCode + earlyChange;
+        if ((threshold & (threshold - 1)) === 0) {
+          codeLength = Math.min(
+            ((Math.log(threshold) / Math.LN2) | 0) + 1,
+            MAX_CODE_LENGTH,
+          );
         }
       }
       prevCode = code;
@@ -150,6 +151,16 @@ class LZWStream extends DecodeStream {
       for (j = 0; j < currentSequenceLength; j++) {
         buffer[currentBufferLength++] = currentSequence[j];
       }
+
+      if (
+        this.#expectedLength !== undefined &&
+        currentBufferLength >= this.#expectedLength
+      ) {
+        this.bufferLength = this.#expectedLength;
+        this.eof = true;
+        this.#lzwState = undefined;
+        break;
+      }
     }
     lzwState.nextCode = nextCode;
     lzwState.codeLength = codeLength;
@@ -163,7 +174,7 @@ class LZWStream extends DecodeStream {
     let bitsCached = this.#bitsCached;
     let cachedData = this.#cachedData;
     while (bitsCached < n) {
-      const c = this.#stream.getByte();
+      const c = this.#readByteWithPadding();
       if (c === -1) {
         this.eof = true;
         return null;
@@ -174,6 +185,28 @@ class LZWStream extends DecodeStream {
     this.#bitsCached = bitsCached -= n;
     this.#cachedData = cachedData;
     return (cachedData >>> bitsCached) & ((1 << n) - 1);
+  }
+
+  #readByteWithPadding() {
+    const byte = this.#stream.getByte();
+    if (byte !== -1) {
+      return byte;
+    }
+
+    if (this.#sawEod) {
+      return -1;
+    }
+
+    if (this.#expectedLength === undefined) {
+      return -1;
+    }
+
+    if (this.#zeroPadBytesUsed < MAX_ZERO_PAD_BYTES) {
+      this.#zeroPadBytesUsed++;
+      return 0;
+    }
+
+    return -1;
   }
 }
 
