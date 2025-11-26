@@ -1,11 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { describe, expect, test } from "vitest";
-import {
-  JpegEmbedder,
-  PDFContext,
-  PDFRawStream,
-  PDFRef,
-} from "../../../src/core/index.js";
+import { JpegEmbedder, PDFContext, PDFRawStream, PDFRef } from "../../../src/core/index.js";
 
 const catUnicornJpg = await readFile("./assets/images/cat-riding-unicorn.jpg");
 const minionsLaughing = await readFile("./assets/images/minions-laughing.jpg");

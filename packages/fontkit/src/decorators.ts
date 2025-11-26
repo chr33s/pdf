@@ -3,11 +3,7 @@
  * the results are lazily computed once, and then cached.
  * @private
  */
-export function cache(
-  target: object,
-  key: PropertyKey,
-  descriptor: PropertyDescriptor,
-) {
+export function cache(target: object, key: PropertyKey, descriptor: PropertyDescriptor) {
   if (!descriptor) {
     return target;
   }
@@ -28,10 +24,7 @@ export function cache(
     return {
       get(this: Record<PropertyKey, unknown>) {
         let cache = new Map();
-        function memoized(
-          this: Record<PropertyKey, unknown>,
-          ...args: unknown[]
-        ) {
+        function memoized(this: Record<PropertyKey, unknown>, ...args: unknown[]) {
           let key = args.length > 0 ? args[0] : "value";
           if (cache.has(key)) {
             return cache.get(key);

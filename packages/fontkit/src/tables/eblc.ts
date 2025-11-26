@@ -65,13 +65,9 @@ let IndexSubtableArray = new r.Struct({
 });
 
 let BitmapSizeTable = new r.Struct({
-  indexSubTableArray: new r.Pointer(
-    r.uint32,
-    new r.Array(IndexSubtableArray, 1),
-    {
-      type: "parent",
-    },
-  ),
+  indexSubTableArray: new r.Pointer(r.uint32, new r.Array(IndexSubtableArray, 1), {
+    type: "parent",
+  }),
   indexTablesSize: r.uint32,
   numberOfIndexSubTables: r.uint32,
   colorRef: r.uint32,

@@ -28,12 +28,9 @@ class VariableSizeNumber {
 }
 
 let MapDataEntry = new r.Struct({
-  entry: new VariableSizeNumber(
-    (t) => ((t.parent.entryFormat & 0x0030) >> 4) + 1,
-  ),
+  entry: new VariableSizeNumber((t) => ((t.parent.entryFormat & 0x0030) >> 4) + 1),
   outerIndex: (t) => t.entry >> ((t.parent.entryFormat & 0x000f) + 1),
-  innerIndex: (t) =>
-    t.entry & ((1 << ((t.parent.entryFormat & 0x000f) + 1)) - 1),
+  innerIndex: (t) => t.entry & ((1 << ((t.parent.entryFormat & 0x000f) + 1)) - 1),
 });
 
 let DeltaSetIndexMap = new r.Struct({

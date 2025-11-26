@@ -69,9 +69,7 @@ describe("Quantizer.stats and estats", () => {
   });
 
   it("estats produces expected structure and stable eigenvector", () => {
-    const img = new Uint8Array([
-      255, 0, 0, 255, 0, 255, 0, 255, 0, 0, 255, 255,
-    ]);
+    const img = new Uint8Array([255, 0, 0, 255, 0, 255, 0, 255, 0, 0, 255, 255]);
     const stats = Quantizer.stats(img, 0, img.length);
     const est = Quantizer.estats(stats);
 
@@ -175,24 +173,12 @@ describe("Quantizer.getKDtree and getNearest", () => {
   it("getNearest returns a leaf whose color is close to the query", () => {
     const [root, leafs] = Quantizer.getKDtree(img, 4);
     const qColor = [1, 0.1, 0.1, 1]; // close to red
-    const nearest = Quantizer.getNearest(
-      root,
-      qColor[0],
-      qColor[1],
-      qColor[2],
-      qColor[3],
-    );
+    const nearest = Quantizer.getNearest(root, qColor[0], qColor[1], qColor[2], qColor[3]);
 
     expect(leafs.includes(nearest)).toBe(true);
 
     // Check that returned leaf has reasonable distance to its mean q
-    const dist = Quantizer.dist(
-      nearest.est.q,
-      qColor[0],
-      qColor[1],
-      qColor[2],
-      qColor[3],
-    );
+    const dist = Quantizer.dist(nearest.est.q, qColor[0], qColor[1], qColor[2], qColor[3]);
     expect(dist).toBeLessThan(0.5); // arbitrary sanity bound
   });
 });
@@ -200,9 +186,7 @@ describe("Quantizer.getKDtree and getNearest", () => {
 describe("Quantizer palette update and nearest search", () => {
   it("updatePalette recomputes palette entries as means of assigned pixels", () => {
     // Image: 4 pixels. First two red-ish, last two green-ish.
-    const sb = new Uint8Array([
-      250, 0, 0, 255, 255, 10, 0, 255, 0, 240, 0, 255, 5, 255, 10, 255,
-    ]);
+    const sb = new Uint8Array([250, 0, 0, 255, 255, 10, 0, 255, 0, 240, 0, 255, 5, 255, 10, 255]);
 
     // Two palette entries: start as midpoints
     const plte = new Uint8Array([
@@ -257,9 +241,7 @@ describe("Quantizer palette update and nearest search", () => {
     ]);
 
     // Palette: exact red, green, blue
-    const plte = new Uint8Array([
-      255, 0, 0, 255, 0, 255, 0, 255, 0, 0, 255, 255,
-    ]);
+    const plte = new Uint8Array([255, 0, 0, 255, 0, 255, 0, 255, 0, 0, 255, 255]);
 
     const inds = new Uint8Array(sb.length >> 2);
     // Start with some arbitrary indices
@@ -273,9 +255,7 @@ describe("Quantizer palette update and nearest search", () => {
   });
 
   it("kmeans runs a single iteration and returns an error value", () => {
-    const sb = new Uint8Array([
-      255, 0, 0, 255, 250, 0, 10, 255, 0, 255, 0, 255, 0, 245, 10, 255,
-    ]);
+    const sb = new Uint8Array([255, 0, 0, 255, 250, 0, 10, 255, 0, 255, 0, 255, 0, 245, 10, 255]);
     const plte = new Uint8Array([255, 0, 0, 255, 0, 255, 0, 255]);
     const inds = new Uint8Array([0, 0, 1, 1]);
 
@@ -305,9 +285,7 @@ describe("Quantizer.remap", () => {
 describe("Quantizer.quantize end-to-end", () => {
   it("quantizes a tiny image to 2 colors and returns expected shape", () => {
     // Simple 4-pixel RGBA image: two reds, two greens
-    const img = new Uint8Array([
-      255, 0, 0, 255, 250, 10, 0, 255, 0, 255, 0, 255, 5, 240, 10, 255,
-    ]);
+    const img = new Uint8Array([255, 0, 0, 255, 250, 10, 0, 255, 0, 255, 0, 255, 5, 240, 10, 255]);
     const abuf = img.buffer;
 
     const ps = 2; // target palette size
@@ -335,9 +313,7 @@ describe("Quantizer.quantize end-to-end", () => {
   });
 
   it("can run with kmeans refinement enabled", () => {
-    const img = new Uint8Array([
-      255, 0, 0, 255, 250, 10, 0, 255, 0, 255, 0, 255, 5, 240, 10, 255,
-    ]);
+    const img = new Uint8Array([255, 0, 0, 255, 250, 10, 0, 255, 0, 255, 0, 255, 5, 240, 10, 255]);
     const result = Quantizer.quantize(img.buffer, 2, true);
 
     // Same basic structural expectations

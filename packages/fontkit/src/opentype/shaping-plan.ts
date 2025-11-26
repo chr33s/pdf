@@ -4,11 +4,7 @@ import type GlyphInfo from "./glyph-info.js";
 import type OTProcessor from "./ot-processor.js";
 
 type Stage = string[] | StageCallback;
-type StageCallback = (
-  font: FontLike,
-  glyphs: GlyphInfo[],
-  plan: ShapingPlan,
-) => void;
+type StageCallback = (font: FontLike, glyphs: GlyphInfo[], plan: ShapingPlan) => void;
 
 /**
  * ShapingPlans are used by the OpenType shapers to store which
@@ -27,11 +23,7 @@ export default class ShapingPlan {
   globalFeatures: Record<string, boolean>;
   allFeatures: Record<string, number>;
 
-  constructor(
-    font: FontLike,
-    script: string | string[] | null,
-    direction: string,
-  ) {
+  constructor(font: FontLike, script: string | string[] | null, direction: string) {
     this.font = font;
     this.script = script;
     this.direction = direction;
@@ -66,10 +58,7 @@ export default class ShapingPlan {
   /**
    * Add features to the last stage
    */
-  add(
-    arg: string | string[] | { global?: string[]; local?: string[] },
-    global = true,
-  ): void {
+  add(arg: string | string[] | { global?: string[]; local?: string[] }, global = true): void {
     if (this.stages.length === 0) {
       this.stages.push([]);
     }
@@ -90,11 +79,7 @@ export default class ShapingPlan {
    * Add a new stage
    */
   addStage(
-    arg:
-      | string
-      | string[]
-      | { global?: string[]; local?: string[] }
-      | StageCallback,
+    arg: string | string[] | { global?: string[]; local?: string[] } | StageCallback,
     global?: boolean,
   ): void {
     if (typeof arg === "function") {
@@ -140,11 +125,7 @@ export default class ShapingPlan {
   /**
    * Executes the planned stages using the given OTProcessor
    */
-  process(
-    processor: OTProcessor,
-    glyphs: GlyphInfo[],
-    positions?: GlyphPosition[] | null,
-  ): void {
+  process(processor: OTProcessor, glyphs: GlyphInfo[], positions?: GlyphPosition[] | null): void {
     for (let stage of this.stages) {
       if (typeof stage === "function") {
         if (!positions) {

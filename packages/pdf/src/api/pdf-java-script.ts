@@ -1,11 +1,5 @@
 import JavaScriptEmbedder from "../core/embedders/java-script-embedder.js";
-import {
-  PDFArray,
-  PDFDict,
-  PDFHexString,
-  PDFName,
-  PDFRef,
-} from "../core/index.js";
+import { PDFArray, PDFDict, PDFHexString, PDFName, PDFRef } from "../core/index.js";
 import Embeddable from "./embeddable.js";
 import PDFDocument from "./pdf-document.js";
 
@@ -36,11 +30,7 @@ export default class PDFJavaScript implements Embeddable {
   #alreadyEmbedded = false;
   readonly #embedder: JavaScriptEmbedder;
 
-  private constructor(
-    ref: PDFRef,
-    doc: PDFDocument,
-    embedder: JavaScriptEmbedder,
-  ) {
+  private constructor(ref: PDFRef, doc: PDFDocument, embedder: JavaScriptEmbedder) {
     this.ref = ref;
     this.doc = doc;
     this.#embedder = embedder;
@@ -59,10 +49,7 @@ export default class PDFJavaScript implements Embeddable {
     if (!this.#alreadyEmbedded) {
       const { catalog, context } = this.doc;
 
-      const ref = await this.#embedder.embedIntoContext(
-        this.doc.context,
-        this.ref,
-      );
+      const ref = await this.#embedder.embedIntoContext(this.doc.context, this.ref);
 
       if (!catalog.has(PDFName.of("Names"))) {
         catalog.set(PDFName.of("Names"), context.obj({}));

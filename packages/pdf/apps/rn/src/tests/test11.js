@@ -39,9 +39,7 @@ const breakLinesIntoGroups = (lines, lineHeight, maxHeight) => {
 };
 
 export default async () => {
-  const sourceHanBytes = await fetchAsset(
-    "fonts/source_hans_jp/SourceHanSerifJP-Regular.otf",
-  );
+  const sourceHanBytes = await fetchAsset("fonts/source_hans_jp/SourceHanSerifJP-Regular.otf");
 
   const pdfDoc = await PDFDocument.create();
 
@@ -67,12 +65,7 @@ export default async () => {
         are UTF-8).
       `;
 
-  const descriptionLines = breakTextIntoLines(
-    description,
-    16,
-    helveticaFont,
-    600,
-  );
+  const descriptionLines = breakTextIntoLines(description, 16, helveticaFont, 600);
 
   const titlePage = pdfDoc.addPage([650, 700]);
   titlePage.drawText(title, {
@@ -91,15 +84,8 @@ export default async () => {
   const sourceHanFont = await pdfDoc.embedFont(sourceHanBytes);
 
   const sourceHanFontSize = 20;
-  const sourceHanString = String.fromCodePoint(
-    ...sourceHanFont.getCharacterSet().reverse(),
-  );
-  const sourceHanLines = breakTextIntoLines(
-    sourceHanString,
-    sourceHanFontSize,
-    sourceHanFont,
-    600,
-  );
+  const sourceHanString = String.fromCodePoint(...sourceHanFont.getCharacterSet().reverse());
+  const sourceHanLines = breakTextIntoLines(sourceHanString, sourceHanFontSize, sourceHanFont, 600);
   const sourceHanLineGroups = breakLinesIntoGroups(
     sourceHanLines,
     sourceHanFont.heightAtSize(sourceHanFontSize) + 10,

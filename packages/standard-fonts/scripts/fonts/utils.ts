@@ -1,8 +1,6 @@
-export const takeUntilFirstSpace = (str: string): string =>
-  str.substring(0, str.indexOf(" "));
+export const takeUntilFirstSpace = (str: string): string => str.substring(0, str.indexOf(" "));
 
-export const takeAfterFirstSpace = (str: string): string =>
-  str.substring(str.indexOf(" ") + 1);
+export const takeAfterFirstSpace = (str: string): string => str.substring(str.indexOf(" ") + 1);
 
 export const error = (msg: string) => {
   throw new Error(msg);

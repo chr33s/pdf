@@ -57,12 +57,7 @@ class PDFParser extends PDFObjectParser {
     capNumbers = false,
     cryptoFactory?: CipherTransformFactory,
   ) {
-    super(
-      ByteStream.of(pdfBytes),
-      PDFContext.create(),
-      capNumbers,
-      cryptoFactory,
-    );
+    super(ByteStream.of(pdfBytes), PDFContext.create(), capNumbers, cryptoFactory);
     this.#objectsPerTick = objectsPerTick;
     this.#throwOnInvalidObject = throwOnInvalidObject;
     this.#warnOnInvalidObjects = warnOnInvalidObjects;
@@ -99,8 +94,7 @@ class PDFParser extends PDFObjectParser {
 
   #maybeRecoverRoot(): void {
     const isValidCatalog = (obj?: PDFObject) =>
-      obj instanceof PDFDict &&
-      obj.lookup(PDFName.of("Type")) === PDFName.of("Catalog");
+      obj instanceof PDFDict && obj.lookup(PDFName.of("Type")) === PDFName.of("Catalog");
 
     const catalog = this.context.lookup(this.context.trailerInfo.Root);
 
@@ -181,10 +175,7 @@ class PDFParser extends PDFObjectParser {
       object instanceof PDFRawStream &&
       object.dict.lookup(PDFName.of("Type")) === PDFName.of("ObjStm")
     ) {
-      await PDFObjectStreamParser.forStream(
-        object,
-        this.#shouldWaitForTick,
-      ).parseIntoContext();
+      await PDFObjectStreamParser.forStream(object, this.#shouldWaitForTick).parseIntoContext();
     } else if (
       object instanceof PDFRawStream &&
       object.dict.lookup(PDFName.of("Type")) === PDFName.of("XRef")
@@ -207,8 +198,7 @@ class PDFParser extends PDFObjectParser {
 
     const ref = this.#parseIndirectObjectHeader();
 
-    if (this.#warnOnInvalidObjects)
-      console.warn(`Invalid object ref: ${String(ref)}`);
+    if (this.#warnOnInvalidObjects) console.warn(`Invalid object ref: ${String(ref)}`);
 
     this.skipWhitespaceAndComments();
     const start = this.bytes.offset();

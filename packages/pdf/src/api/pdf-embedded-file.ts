@@ -1,11 +1,5 @@
 import FileEmbedder from "../core/embedders/file-embedder.js";
-import {
-  PDFArray,
-  PDFDict,
-  PDFHexString,
-  PDFName,
-  PDFRef,
-} from "../core/index.js";
+import { PDFArray, PDFDict, PDFHexString, PDFName, PDFRef } from "../core/index.js";
 import Embeddable from "./embeddable.js";
 import PDFDocument from "./pdf-document.js";
 
@@ -53,10 +47,7 @@ export default class PDFEmbeddedFile implements Embeddable {
    */
   async embed(): Promise<void> {
     if (!this.#alreadyEmbedded) {
-      const ref = await this.#embedder.embedIntoContext(
-        this.doc.context,
-        this.ref,
-      );
+      const ref = await this.#embedder.embedIntoContext(this.doc.context, this.ref);
 
       if (!this.doc.catalog.has(PDFName.of("Names"))) {
         this.doc.catalog.set(PDFName.of("Names"), this.doc.context.obj({}));

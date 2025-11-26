@@ -43,11 +43,7 @@ export class Pointer extends Base<any> {
       return relativeTo(ctx) ?? 0;
     }
 
-    return (
-      relativeTo
-        .split(".")
-        .reduce((obj: any, prop: string) => obj?.[prop], ctx) ?? 0
-    );
+    return relativeTo.split(".").reduce((obj: any, prop: string) => obj?.[prop], ctx) ?? 0;
   }
 
   decode(stream: DecodeStream, ctx: any): any {

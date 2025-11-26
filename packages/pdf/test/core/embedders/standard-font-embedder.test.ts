@@ -21,10 +21,7 @@ describe("StandardFontEmbedder", () => {
 
   test("can use a custom font name", () => {
     const customName = "Roboto 2";
-    const embedder = StandardFontEmbedder.for(
-      FontNames.HelveticaOblique,
-      customName,
-    );
+    const embedder = StandardFontEmbedder.for(FontNames.HelveticaOblique, customName);
     expect(embedder.customName).toBe(customName);
   });
 

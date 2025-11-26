@@ -4,10 +4,7 @@ import { pdfDocEncodingDecode, range } from "../../src/utils/index.js";
 
 type Mapping = [number, string];
 
-const identityMapping = (code: number): Mapping => [
-  code,
-  String.fromCodePoint(code),
-];
+const identityMapping = (code: number): Mapping => [code, String.fromCodePoint(code)];
 
 // Define mappings (see "Table D.2 – PDFDocEncoding Character Set" of the PDF spec)
 const mappings: Mapping[] = [
@@ -65,9 +62,7 @@ const mappings: Mapping[] = [
 describe("pdfDocEncodingDecode", () => {
   test("maps all PDFDocEncoding codes from 0-255 to the correct Unicode code points", () => {
     // Make sure we have defined mappings for all codes from 0-255
-    expect(mappings.map(([code]) => code).sort((a, b) => a - b)).toEqual(
-      range(0, 256),
-    );
+    expect(mappings.map(([code]) => code).sort((a, b) => a - b)).toEqual(range(0, 256));
 
     // Now make sure that `pdfDocEncodingDecode` decodes everything correctly
     mappings.forEach(([input1, expected1]) => {

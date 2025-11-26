@@ -7,8 +7,7 @@ import { AcroButtonFlags } from "./flags.js";
 import { InvalidAcroFieldValueError } from "../errors.js";
 
 class PDFAcroRadioButton extends PDFAcroButton {
-  static fromDict = (dict: PDFDict, ref: PDFRef) =>
-    new PDFAcroRadioButton(dict, ref);
+  static fromDict = (dict: PDFDict, ref: PDFRef) => new PDFAcroRadioButton(dict, ref);
 
   static create = (context: PDFContext) => {
     const dict = context.obj({

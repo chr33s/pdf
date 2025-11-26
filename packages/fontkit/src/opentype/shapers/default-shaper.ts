@@ -15,11 +15,7 @@ const DIRECTIONAL_FEATURES: Record<"ltr" | "rtl", string[]> = {
 export default class DefaultShaper {
   static zeroMarkWidths: "BEFORE_GPOS" | "AFTER_GPOS" | "NONE" = "AFTER_GPOS";
 
-  static plan(
-    plan: ShapingPlan,
-    glyphs: GlyphInfo[],
-    features: Record<string, boolean>,
-  ): void {
+  static plan(plan: ShapingPlan, glyphs: GlyphInfo[], features: Record<string, boolean>): void {
     // Plan the features we want to apply
     this.planPreprocessing(plan);
     this.planFeatures(plan);
@@ -69,10 +65,7 @@ export default class DefaultShaper {
         }
 
         // Apply denominator
-        while (
-          end < glyphs.length &&
-          unicode.isDigit(glyphs[end].codePoints[0])
-        ) {
+        while (end < glyphs.length && unicode.isDigit(glyphs[end].codePoints[0])) {
           glyphs[end].features.dnom = true;
           glyphs[end].features.frac = true;
           end++;

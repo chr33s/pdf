@@ -6,5 +6,4 @@ const imageAlignment = {
 
 export const ImageAlignment = imageAlignment;
 
-export type ImageAlignment =
-  (typeof imageAlignment)[keyof typeof imageAlignment];
+export type ImageAlignment = (typeof imageAlignment)[keyof typeof imageAlignment];

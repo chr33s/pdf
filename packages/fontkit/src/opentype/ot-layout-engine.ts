@@ -97,11 +97,7 @@ export default class OTLayoutEngine {
         return null;
       }
 
-      this.plan.process(
-        this.GPOSProcessor,
-        this.glyphInfos,
-        glyphRun.positions,
-      );
+      this.plan.process(this.GPOSProcessor, this.glyphInfos, glyphRun.positions);
     }
 
     if (this.shaper?.zeroMarkWidths === "AFTER_GPOS") {
@@ -136,10 +132,7 @@ export default class OTLayoutEngine {
     this.shaper = null;
   }
 
-  getAvailableFeatures(
-    script?: string | null,
-    language?: string | null,
-  ): string[] {
+  getAvailableFeatures(script?: string | null, language?: string | null): string[] {
     let features: string[] = [];
 
     if (this.GSUBProcessor) {

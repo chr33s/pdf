@@ -1,10 +1,5 @@
 import { describe, expect, test } from "vitest";
-import {
-  Buffer as BufferT,
-  DecodeStream,
-  EncodeStream,
-  uint8,
-} from "../src/index.js";
+import { Buffer as BufferT, DecodeStream, EncodeStream, uint8 } from "../src/index.js";
 import { expectStream } from "./helpers.js";
 
 describe("Buffer", () => {
@@ -19,9 +14,7 @@ describe("Buffer", () => {
     test("should decode with parent key length", () => {
       const stream = new DecodeStream(Buffer.from([0xab, 0xff, 0x1f, 0xb6]));
       const buf = new BufferT("len");
-      expect(buf.decode(stream, { len: 3 })).to.deep.equal(
-        Buffer.from([0xab, 0xff, 0x1f]),
-      );
+      expect(buf.decode(stream, { len: 3 })).to.deep.equal(Buffer.from([0xab, 0xff, 0x1f]));
       expect(buf.decode(stream, { len: 1 })).to.deep.equal(Buffer.from([0xb6]));
     });
   });

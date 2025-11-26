@@ -143,14 +143,7 @@ export const transformationToMatrix = (
     case "scaleY": {
       // [sx 0 0 sy 0 0]
       const [sx, sy = sx] = args;
-      return [
-        name === "scaleY" ? 1 : sx,
-        0,
-        0,
-        name === "scaleX" ? 1 : sy,
-        0,
-        0,
-      ];
+      return [name === "scaleY" ? 1 : sx, 0, 0, name === "scaleX" ? 1 : sy, 0, 0];
     }
     case "translate":
     case "translateX":
@@ -158,14 +151,7 @@ export const transformationToMatrix = (
       // [1 0 0 1 tx ty]
       const [tx, ty = tx] = args;
       // -ty is necessary because the pdf's y axis is inverted
-      return [
-        1,
-        0,
-        0,
-        1,
-        name === "translateY" ? 0 : tx,
-        name === "translateX" ? 0 : -ty,
-      ];
+      return [1, 0, 0, 1, name === "translateY" ? 0 : tx, name === "translateX" ? 0 : -ty];
     }
     case "rotate": {
       // [cos(a) sin(a) -sin(a) cos(a) 0 0]
@@ -243,20 +229,14 @@ const runnersToPage = (
     const fontSize = element.svgAttributes.fontSize || 12;
 
     /** This will find the best font for the provided style in the list */
-    const getBestFont = (
-      style: InheritedAttributes,
-      fonts: { [fontName: string]: PDFFont },
-    ) => {
+    const getBestFont = (style: InheritedAttributes, fonts: { [fontName: string]: PDFFont }) => {
       const family = style.fontFamily;
       if (!family) return undefined;
-      const isBold =
-        style.fontWeight === "bold" || Number(style.fontWeight) >= 700;
+      const isBold = style.fontWeight === "bold" || Number(style.fontWeight) >= 700;
       const isItalic = style.fontStyle === "italic";
       const getFont = (bold: boolean, italic: boolean, fontFamily: string) =>
         fonts[fontFamily + (bold ? "_bold" : "") + (italic ? "_italic" : "")];
-      const key = Object.keys(fonts).find((fontFamily) =>
-        fontFamily.startsWith(family),
-      );
+      const key = Object.keys(fonts).find((fontFamily) => fontFamily.startsWith(family));
       return (
         getFont(isBold, isItalic, family) ||
         getFont(isBold, false, family) ||
@@ -266,19 +246,14 @@ const runnersToPage = (
       );
     };
 
-    const font =
-      options.fonts && getBestFont(element.svgAttributes, options.fonts);
-    const textWidth = (font || page.getFont()[0]).widthOfTextAtSize(
-      text,
-      fontSize,
-    );
+    const font = options.fonts && getBestFont(element.svgAttributes, options.fonts);
+    const textWidth = (font || page.getFont()[0]).widthOfTextAtSize(text, fontSize);
 
     const textHeight = (font || page.getFont()[0]).heightAtSize(fontSize);
     const overLineHeight = (font || page.getFont()[0]).heightAtSize(fontSize, {
       descender: false,
     });
-    const offsetX =
-      anchor === "middle" ? textWidth / 2 : anchor === "end" ? textWidth : 0;
+    const offsetX = anchor === "middle" ? textWidth / 2 : anchor === "end" ? textWidth : 0;
 
     let offsetY = 0;
     switch (dominantBaseline) {
@@ -356,11 +331,7 @@ const runnersToPage = (
       opacity: element.svgAttributes.fillOpacity,
       fillRule: element.svgAttributes.fillRule,
       // drawSvgPath already handle the page y coord correctly, so we can undo the svg parsing correction
-      matrix: combineTransformation(
-        element.svgAttributes.matrix,
-        "scale",
-        [1, -1],
-      ),
+      matrix: combineTransformation(element.svgAttributes.matrix, "scale", [1, -1]),
       clipSpaces: element.svgAttributes.clipSpaces,
       blendMode: element.svgAttributes.blendMode || options.blendMode,
     });
@@ -404,11 +375,9 @@ const runnersToPage = (
       borderLineCap: element.svgAttributes.strokeLineCap,
       color: element.svgAttributes.fill,
       opacity: element.svgAttributes.fillOpacity,
-      matrix: combineTransformation(
-        element.svgAttributes.matrix,
-        "translateY",
-        [element.svgAttributes.height],
-      ),
+      matrix: combineTransformation(element.svgAttributes.matrix, "translateY", [
+        element.svgAttributes.height,
+      ]),
       clipSpaces: element.svgAttributes.clipSpaces,
       blendMode: element.svgAttributes.blendMode || options.blendMode,
     });
@@ -491,21 +460,9 @@ const parseAttributes = (
   const fillOpacityRaw = styleOrAttribute(attributes, style, "fill-opacity");
   const opacityRaw = styleOrAttribute(attributes, style, "opacity");
   const strokeRaw = parseColor(styleOrAttribute(attributes, style, "stroke"));
-  const strokeOpacityRaw = styleOrAttribute(
-    attributes,
-    style,
-    "stroke-opacity",
-  );
-  const strokeLineCapRaw = styleOrAttribute(
-    attributes,
-    style,
-    "stroke-linecap",
-  );
-  const strokeLineJoinRaw = styleOrAttribute(
-    attributes,
-    style,
-    "stroke-linejoin",
-  );
+  const strokeOpacityRaw = styleOrAttribute(attributes, style, "stroke-opacity");
+  const strokeLineCapRaw = styleOrAttribute(attributes, style, "stroke-linecap");
+  const strokeLineJoinRaw = styleOrAttribute(attributes, style, "stroke-linejoin");
   const fillRuleRaw = styleOrAttribute(attributes, style, "fill-rule");
   const strokeWidthRaw = styleOrAttribute(attributes, style, "stroke-width");
   const fontFamilyRaw = styleOrAttribute(attributes, style, "font-family");
@@ -534,18 +491,15 @@ const parseAttributes = (
     fontSize: parseFloatValue(fontSizeRaw) ?? inherited.fontSize,
     fill: fillRaw?.rgb || inherited.fill,
     fillOpacity:
-      parseFloatValue(fillOpacityRaw || opacityRaw || fillRaw?.alpha) ??
-      inherited.fillOpacity,
+      parseFloatValue(fillOpacityRaw || opacityRaw || fillRaw?.alpha) ?? inherited.fillOpacity,
     fillRule: FillRuleMap[fillRuleRaw] || inherited.fillRule,
     stroke: strokeRaw?.rgb || inherited.stroke,
     strokeWidth: parseFloatValue(strokeWidthRaw) ?? inherited.strokeWidth,
     strokeOpacity:
       parseFloatValue(strokeOpacityRaw || opacityRaw || strokeRaw?.alpha) ??
       inherited.strokeOpacity,
-    strokeLineCap:
-      StrokeLineCapMap[strokeLineCapRaw] || inherited.strokeLineCap,
-    strokeLineJoin:
-      StrokeLineJoinMap[strokeLineJoinRaw] || inherited.strokeLineJoin,
+    strokeLineCap: StrokeLineCapMap[strokeLineCapRaw] || inherited.strokeLineCap,
+    strokeLineJoin: StrokeLineJoinMap[strokeLineJoinRaw] || inherited.strokeLineJoin,
     width: width || inherited.width,
     height: height || inherited.height,
     rotation: inherited.rotation,
@@ -559,9 +513,7 @@ const parseAttributes = (
   const svgAttributes: SVGAttributes = {
     src: attributes.src || attributes.href || attributes["xlink:href"],
     textAnchor: attributes["text-anchor"],
-    dominantBaseline: attributes[
-      "dominant-baseline"
-    ] as SVGAttributes["dominantBaseline"],
+    dominantBaseline: attributes["dominant-baseline"] as SVGAttributes["dominantBaseline"],
     preserveAspectRatio: attributes.preserveAspectRatio,
   };
 
@@ -599,11 +551,7 @@ const parseAttributes = (
         .split(/\s*,\s*|\s+/)
         .filter((value) => value.length > 0)
         .map((value) => parseFloat(value));
-      newMatrix = combineTransformation(
-        newMatrix,
-        name as TransformationName,
-        args,
-      );
+      newMatrix = combineTransformation(newMatrix, name as TransformationName, args);
       parsed = regexTransform.exec(transformList);
     }
   }
@@ -667,10 +615,8 @@ const getFittingRectangle = (
   }
   const originalRatio = originalWidth / originalHeight;
   const targetRatio = targetWidth / targetHeight;
-  const width =
-    targetRatio > originalRatio ? originalRatio * targetHeight : targetWidth;
-  const height =
-    targetRatio >= originalRatio ? targetHeight : targetWidth / originalRatio;
+  const width = targetRatio > originalRatio ? originalRatio * targetHeight : targetWidth;
+  const height = targetRatio >= originalRatio ? targetHeight : targetWidth / originalRatio;
   const dx = targetWidth - width;
   const dy = targetHeight - height;
   const [x, y] = (() => {
@@ -711,8 +657,7 @@ const getAspectRatioTransformation = (
   clipBox: TransformationMatrix;
   content: TransformationMatrix;
 } => {
-  const [preserveAspectRatio, meetOrSlice = "meet"] =
-    preserveAspectRatioProp.split(" ");
+  const [preserveAspectRatio, meetOrSlice = "meet"] = preserveAspectRatioProp.split(" ");
   const scaleX = targetWidth / originalWidth;
   const scaleY = targetHeight / originalHeight;
   const boxScale = combineTransformation(matrix, "scale", [scaleX, scaleY]);
@@ -775,19 +720,9 @@ const parseHTMLNode = (
   if (node.nodeType === NodeType.COMMENT_NODE) return [];
   else if (node.nodeType === NodeType.TEXT_NODE) return [];
   else if (node.tagName === "g") {
-    return parseGroupNode(
-      node as HTMLElement & { tagName: "g" },
-      inherited,
-      matrix,
-      clipSpaces,
-    );
+    return parseGroupNode(node as HTMLElement & { tagName: "g" }, inherited, matrix, clipSpaces);
   } else if (node.tagName === "svg") {
-    return parseSvgNode(
-      node as HTMLElement & { tagName: "svg" },
-      inherited,
-      matrix,
-      clipSpaces,
-    );
+    return parseSvgNode(node as HTMLElement & { tagName: "svg" }, inherited, matrix, clipSpaces);
   } else {
     if (node.tagName === "polygon") {
       node.tagName = "path";
@@ -831,15 +766,14 @@ const parseSvgNode = (
 
   let newMatrix = combineTransformation(matrix, "translate", [x, y]);
 
-  const { clipBox: clipBoxTransform, content: contentTransform } =
-    getAspectRatioTransformation(
-      newMatrix,
-      viewBox.width,
-      viewBox.height,
-      parseFloat(node.attributes.width),
-      parseFloat(node.attributes.height),
-      node.attributes.preserveAspectRatio,
-    );
+  const { clipBox: clipBoxTransform, content: contentTransform } = getAspectRatioTransformation(
+    newMatrix,
+    viewBox.width,
+    viewBox.height,
+    parseFloat(node.attributes.width),
+    parseFloat(node.attributes.height),
+    node.attributes.preserveAspectRatio,
+  );
 
   const topLeft = applyTransformation(clipBoxTransform, {
     x: 0,
@@ -868,18 +802,13 @@ const parseSvgNode = (
     bottomLeft,
   };
 
-  newMatrix = combineTransformation(contentTransform, "translate", [
-    -viewBox.x,
-    -viewBox.y,
-  ]);
+  newMatrix = combineTransformation(contentTransform, "translate", [-viewBox.x, -viewBox.y]);
 
   node.childNodes.forEach((child) => {
-    const parsedNodes = parseHTMLNode(
-      child,
-      { ...attributes.inherited, viewBox },
-      newMatrix,
-      [...clipSpaces, baseClipSpace],
-    );
+    const parsedNodes = parseHTMLNode(child, { ...attributes.inherited, viewBox }, newMatrix, [
+      ...clipSpaces,
+      baseClipSpace,
+    ]);
     result.push(...parsedNodes);
   });
   return result;
@@ -894,14 +823,7 @@ const parseGroupNode = (
   const attributes = parseAttributes(node, inherited, matrix);
   const result: SVGElement[] = [];
   node.childNodes.forEach((child) => {
-    result.push(
-      ...parseHTMLNode(
-        child,
-        attributes.inherited,
-        attributes.matrix,
-        clipSpaces,
-      ),
-    );
+    result.push(...parseHTMLNode(child, attributes.inherited, attributes.matrix, clipSpaces));
   });
   return result;
 };
@@ -947,9 +869,7 @@ const parseBlendMode = (blendMode?: string): BlendMode | undefined => {
 
 const parseViewBox = (viewBox?: string): Box | undefined => {
   if (!viewBox) return;
-  const [xViewBox = 0, yViewBox = 0, widthViewBox = 1, heightViewBox = 1] = (
-    viewBox || ""
-  )
+  const [xViewBox = 0, yViewBox = 0, widthViewBox = 1, heightViewBox = 1] = (viewBox || "")
     .split(" ")
     .map((val) => parseFloatValue(val));
   return {
@@ -1001,17 +921,12 @@ export const drawSvg = (
   const widthRaw = styleOrAttribute(attributes, style, "width", "");
   const heightRaw = styleOrAttribute(attributes, style, "height", "");
 
-  const width =
-    options.width !== undefined ? options.width : parseFloat(widthRaw);
-  const height =
-    options.height !== undefined ? options.height : parseFloat(heightRaw);
+  const width = options.width !== undefined ? options.width : parseFloat(widthRaw);
+  const height = options.height !== undefined ? options.height : parseFloat(heightRaw);
 
   // it's important to add the viewBox to allow svg resizing through the options
   if (!attributes.viewBox) {
-    svgNode.setAttribute(
-      "viewBox",
-      `0 0 ${widthRaw || width} ${heightRaw || height}`,
-    );
+    svgNode.setAttribute("viewBox", `0 0 ${widthRaw || width} ${heightRaw || height}`);
   }
 
   if (options.width || options.height) {
@@ -1027,14 +942,7 @@ export const drawSvg = (
     );
   }
 
-  const baseTransformation: TransformationMatrix = [
-    1,
-    0,
-    0,
-    1,
-    options.x || 0,
-    options.y || 0,
-  ];
+  const baseTransformation: TransformationMatrix = [1, 0, 0, 1, options.x || 0, options.y || 0];
 
   const elements = parse(svgNode.outerHTML, options, size, baseTransformation);
 

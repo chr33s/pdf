@@ -2,11 +2,7 @@ import type { DecodeStream, EncodeStream } from "@chr33s/restructure";
 import * as r from "@chr33s/restructure";
 import { resolveLength } from "@chr33s/restructure";
 import { ItemVariationStore } from "../tables/variations.js";
-import {
-  ExpertCharset,
-  ExpertSubsetCharset,
-  ISOAdobeCharset,
-} from "./cff-charsets.js";
+import { ExpertCharset, ExpertSubsetCharset, ISOAdobeCharset } from "./cff-charsets.js";
 import CFFDict, { type DictContext } from "./cff-dict.js";
 import { ExpertEncoding, StandardEncoding } from "./cff-encodings.js";
 import CFFIndex from "./cff-index.js";
@@ -21,11 +17,7 @@ type DictParent = Record<string, unknown> & {
 };
 
 interface RestructType<TValue = unknown> {
-  decode(
-    stream: DecodeStream,
-    parent?: unknown,
-    operands?: OperandList,
-  ): TValue;
+  decode(stream: DecodeStream, parent?: unknown, operands?: OperandList): TValue;
   size(value: TValue, ctx?: unknown): number | [number, number];
   encode(stream: EncodeStream | null, value: TValue, ctx?: unknown): unknown;
 }
@@ -41,11 +33,7 @@ class PredefinedOp<TValue = unknown> {
     this.#type = type;
   }
 
-  decode(
-    stream: DecodeStream,
-    parent?: Record<string, unknown>,
-    operands: OperandList = [],
-  ) {
+  decode(stream: DecodeStream, parent?: Record<string, unknown>, operands: OperandList = []) {
     const lookupIndex = operands[0];
     if (lookupIndex != null && this.#predefinedOps[lookupIndex]) {
       return this.#predefinedOps[lookupIndex];
@@ -68,10 +56,7 @@ class PredefinedOp<TValue = unknown> {
       return index;
     }
 
-    return this.#type.encode(stream, value, ctx) as
-      | OperandValue
-      | OperandValue[]
-      | undefined;
+    return this.#type.encode(stream, value, ctx) as OperandValue | OperandValue[] | undefined;
   }
 }
 
@@ -181,11 +166,7 @@ let FDSelect = new r.VersionedStruct(r.uint8, {
 
 let ptr = new CFFPointer(CFFPrivateDict);
 class CFFPrivateOp {
-  decode(
-    stream: DecodeStream,
-    parent?: Record<string, unknown>,
-    operands: OperandList = [],
-  ) {
+  decode(stream: DecodeStream, parent?: Record<string, unknown>, operands: OperandList = []) {
     if (!parent) {
       throw new Error("CFF Private DICT requires a parent context");
     }
@@ -199,16 +180,11 @@ class CFFPrivateOp {
     return ptr.decode(stream, dictParent, [operands[1]]);
   }
 
-  encode(
-    stream: EncodeStream | null,
-    dict: unknown,
-    ctx?: DictContext | Record<string, unknown>,
-  ) {
+  encode(stream: EncodeStream | null, dict: unknown, ctx?: DictContext | Record<string, unknown>) {
     const parentDict = dict as Record<string, any>;
     const ctxRecord = (ctx as DictContext) ?? ({} as DictContext);
     const privateSize = CFFPrivateDict.size(parentDict, ctxRecord, false);
-    const pointerValues =
-      ptr.encode(stream, parentDict, ctxRecord as Record<string, any>) ?? [];
+    const pointerValues = ptr.encode(stream, parentDict, ctxRecord as Record<string, any>) ?? [];
     const pointerOperand = pointerValues[0] ?? 0;
     return [privateSize, pointerOperand];
   }

@@ -48,8 +48,7 @@ describe("PDFString", () => {
 
   describe("converting to bytes", () => {
     test("can interpret escaped octal codes", () => {
-      const literal =
-        "\\376\\377\\000\\105\\000\\147\\000\\147\\000\\040\\330\\074\\337\\163";
+      const literal = "\\376\\377\\000\\105\\000\\147\\000\\147\\000\\040\\330\\074\\337\\163";
 
       // prettier-ignore
       expect(PDFString.of(literal).asBytes()).toEqual(Uint8Array.of(
@@ -120,8 +119,7 @@ describe("PDFString", () => {
 
   describe("decoding to string", () => {
     test("can interpret UTF-16BE strings with escaped octal codes", () => {
-      const literal =
-        "\\376\\377\\000\\105\\000\\147\\000\\147\\000\\040\\330\\074\\337\\163";
+      const literal = "\\376\\377\\000\\105\\000\\147\\000\\147\\000\\040\\330\\074\\337\\163";
       expect(PDFString.of(literal).decodeText()).toBe("Egg 🍳");
     });
 
@@ -136,8 +134,7 @@ describe("PDFString", () => {
     });
 
     test("can interpret UTF-16LE strings with escaped octal codes", () => {
-      const literal =
-        "\\377\\376\\105\\000\\147\\000\\147\\000\\040\\000\\074\\330\\163\\337";
+      const literal = "\\377\\376\\105\\000\\147\\000\\147\\000\\040\\000\\074\\330\\163\\337";
       expect(PDFString.of(literal).decodeText()).toBe("Egg 🍳");
     });
 
@@ -213,15 +210,11 @@ describe("PDFString", () => {
     });
 
     test("can interpret date strings of the form D:YYYYMM", () => {
-      expect(PDFString.of("D:202003").decodeDate()).toStrictEqual(
-        new Date("2020-03-01T00:00:00Z"),
-      );
+      expect(PDFString.of("D:202003").decodeDate()).toStrictEqual(new Date("2020-03-01T00:00:00Z"));
     });
 
     test("can interpret date strings of the form D:YYYY", () => {
-      expect(PDFString.of("D:2020").decodeDate()).toStrictEqual(
-        new Date("2020-01-01T00:00:00Z"),
-      );
+      expect(PDFString.of("D:2020").decodeDate()).toStrictEqual(new Date("2020-01-01T00:00:00Z"));
     });
   });
 

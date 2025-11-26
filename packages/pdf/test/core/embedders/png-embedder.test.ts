@@ -1,11 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { describe, expect, test } from "vitest";
-import {
-  PDFContext,
-  PDFRawStream,
-  PDFRef,
-  PngEmbedder,
-} from "../../../src/core/index.js";
+import { PDFContext, PDFRawStream, PDFRef, PngEmbedder } from "../../../src/core/index.js";
 
 const greyscalePng = await readFile("./assets/images/greyscale-bird.png");
 const rgbaPng = await readFile("./assets/images/minions-banana-alpha.png");

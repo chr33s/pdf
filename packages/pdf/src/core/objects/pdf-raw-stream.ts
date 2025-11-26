@@ -5,20 +5,13 @@ import PDFDict from "./pdf-dict.js";
 import PDFStream from "./pdf-stream.js";
 
 class PDFRawStream extends PDFStream {
-  static of = (
-    dict: PDFDict,
-    contents: Uint8Array,
-    transform?: CipherTransform,
-  ) => new PDFRawStream(dict, contents, transform);
+  static of = (dict: PDFDict, contents: Uint8Array, transform?: CipherTransform) =>
+    new PDFRawStream(dict, contents, transform);
 
   contents: Uint8Array;
   readonly transform?: CipherTransform;
 
-  private constructor(
-    dict: PDFDict,
-    contents: Uint8Array,
-    transform?: CipherTransform,
-  ) {
+  private constructor(dict: PDFDict, contents: Uint8Array, transform?: CipherTransform) {
     super(dict);
     this.contents = contents;
     this.transform = transform;

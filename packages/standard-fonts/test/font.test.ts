@@ -22,9 +22,7 @@ describe("Font.load", () => {
     );
     expect(kernPair).toBeDefined();
     if (kernPair) {
-      expect(font.getXAxisKerningForPair(kernPair[0], kernPair[1])).toBe(
-        kernPair[2],
-      );
+      expect(font.getXAxisKerningForPair(kernPair[0], kernPair[1])).toBe(kernPair[2]);
     }
   });
 

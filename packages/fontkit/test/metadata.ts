@@ -7,19 +7,14 @@ import { here } from "./utils/dir.js";
 const __dirname = here(import.meta.url);
 
 describe("metadata", function () {
-  let font = fontkit.openSync(
-    __dirname + "/data/noto-sans/noto-sans.ttc",
-    "NotoSans",
-  );
+  let font = fontkit.openSync(__dirname + "/data/noto-sans/noto-sans.ttc", "NotoSans");
 
   test("has metadata properties", function () {
     expect(font.fullName).toBe("Noto Sans");
     expect(font.postscriptName).toBe("NotoSans");
     expect(font.familyName).toBe("Noto Sans");
     expect(font.subfamilyName).toBe("Regular");
-    expect(font.copyright).toBe(
-      "Copyright 2012 Google Inc. All Rights Reserved.",
-    );
+    expect(font.copyright).toBe("Copyright 2012 Google Inc. All Rights Reserved.");
     return expect(font.version).toBe("Version 1.05 uh");
   });
 

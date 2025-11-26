@@ -1,11 +1,6 @@
 import BBox from "./b-box.js";
 
-type PathCommandName =
-  | "moveTo"
-  | "lineTo"
-  | "quadraticCurveTo"
-  | "bezierCurveTo"
-  | "closePath";
+type PathCommandName = "moveTo" | "lineTo" | "quadraticCurveTo" | "bezierCurveTo" | "closePath";
 
 type PathCommand = {
   command: PathCommandName;
@@ -56,8 +51,7 @@ export default class Path {
    * @return {string}
    */
   toFunction(): (ctx: Record<string, (...args: number[]) => unknown>) => void {
-    return (ctx) =>
-      this.commands.forEach((c) => ctx[c.command].apply(ctx, c.args));
+    return (ctx) => this.commands.forEach((c) => ctx[c.command].apply(ctx, c.args));
   }
 
   /**
@@ -158,8 +152,7 @@ export default class Path {
 
           for (const axis of [0, 1] as const) {
             const b = 6 * p0[axis] - 12 * p1[axis] + 6 * p2[axis];
-            const a =
-              -3 * p0[axis] + 9 * p1[axis] - 9 * p2[axis] + 3 * p3[axis];
+            const a = -3 * p0[axis] + 9 * p1[axis] - 9 * p2[axis] + 3 * p3[axis];
             const cCoef = 3 * p1[axis] - 3 * p0[axis];
 
             if (a === 0) {
@@ -185,10 +178,7 @@ export default class Path {
             }
 
             const sqrt = Math.sqrt(b2ac);
-            const roots: number[] = [
-              (-b + sqrt) / (2 * a),
-              (-b - sqrt) / (2 * a),
-            ];
+            const roots: number[] = [(-b + sqrt) / (2 * a), (-b - sqrt) / (2 * a)];
 
             for (const t of roots) {
               if (t > 0 && t < 1) {
@@ -236,14 +226,7 @@ export default class Path {
   /**
    * Transforms the path by the given matrix.
    */
-  transform(
-    m0: number,
-    m1: number,
-    m2: number,
-    m3: number,
-    m4: number,
-    m5: number,
-  ): Path {
+  transform(m0: number, m1: number, m2: number, m3: number, m4: number, m5: number): Path {
     return this.mapPoints((x, y) => {
       const newX = m0 * x + m2 * y + m4;
       const newY = m1 * x + m3 * y + m5;

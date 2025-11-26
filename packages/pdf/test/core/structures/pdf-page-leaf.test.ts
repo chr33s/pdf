@@ -248,13 +248,9 @@ describe("PDFPageLeaf", () => {
 
     const Font = PDFName.of("Font");
     pageTree.setFontDictionary(PDFName.of("Foo"), PDFRef.of(21));
-    expect(pageTree.Resources()!.get(Font)!.toString()).toBe(
-      "<<\n/Foo 21 0 R\n>>",
-    );
+    expect(pageTree.Resources()!.get(Font)!.toString()).toBe("<<\n/Foo 21 0 R\n>>");
     pageTree.setFontDictionary(PDFName.of("Bar"), PDFRef.of(99));
-    expect(pageTree.Resources()!.get(Font)!.toString()).toBe(
-      "<<\n/Foo 21 0 R\n/Bar 99 0 R\n>>",
-    );
+    expect(pageTree.Resources()!.get(Font)!.toString()).toBe("<<\n/Foo 21 0 R\n/Bar 99 0 R\n>>");
   });
 
   test("can set XObject refs", () => {
@@ -264,13 +260,9 @@ describe("PDFPageLeaf", () => {
 
     const XObject = PDFName.of("XObject");
     pageTree.setXObject(PDFName.of("Foo"), PDFRef.of(21));
-    expect(pageTree.Resources()!.get(XObject)!.toString()).toBe(
-      "<<\n/Foo 21 0 R\n>>",
-    );
+    expect(pageTree.Resources()!.get(XObject)!.toString()).toBe("<<\n/Foo 21 0 R\n>>");
     pageTree.setXObject(PDFName.of("Bar"), PDFRef.of(99));
-    expect(pageTree.Resources()!.get(XObject)!.toString()).toBe(
-      "<<\n/Foo 21 0 R\n/Bar 99 0 R\n>>",
-    );
+    expect(pageTree.Resources()!.get(XObject)!.toString()).toBe("<<\n/Foo 21 0 R\n/Bar 99 0 R\n>>");
   });
 
   test("can set ExtGState refs and dicts", () => {
@@ -280,9 +272,7 @@ describe("PDFPageLeaf", () => {
 
     const ExtGState = PDFName.of("ExtGState");
     pageTree.setExtGState(PDFName.of("Foo"), PDFRef.of(21));
-    expect(pageTree.Resources()!.get(ExtGState)!.toString()).toBe(
-      "<<\n/Foo 21 0 R\n>>",
-    );
+    expect(pageTree.Resources()!.get(ExtGState)!.toString()).toBe("<<\n/Foo 21 0 R\n>>");
     pageTree.setExtGState(PDFName.of("Bar"), context.obj({ CA: 0.1 }));
     expect(pageTree.Resources()!.get(ExtGState)!.toString()).toBe(
       "<<\n/Foo 21 0 R\n/Bar <<\n/CA 0.1\n>>\n>>",
@@ -347,9 +337,7 @@ describe("PDFPageLeaf", () => {
 
     const pushRef = context.getPushGraphicsStateContentStream();
     const popRef = context.getPopGraphicsStateContentStream();
-    expect(pageTree.Contents()!.toString()).toBe(
-      `[ ${String(pushRef)} 21 0 R ${String(popRef)} ]`,
-    );
+    expect(pageTree.Contents()!.toString()).toBe(`[ ${String(pushRef)} 21 0 R ${String(popRef)} ]`);
     expect(pageTree.Resources()!.toString()).toBe(
       "<<\n/Font <<\n>>\n/XObject <<\n>>\n/ExtGState <<\n>>\n>>",
     );

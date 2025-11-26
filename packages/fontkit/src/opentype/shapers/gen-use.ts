@@ -11,17 +11,11 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const textEncoder = new TextEncoder();
 
 const toArrayBuffer = (view: Uint8Array): ArrayBuffer =>
-  view.buffer.slice(
-    view.byteOffset,
-    view.byteOffset + view.byteLength,
-  ) as ArrayBuffer;
+  view.buffer.slice(view.byteOffset, view.byteOffset + view.byteLength) as ArrayBuffer;
 
 const compile = (compileModule as any)?.default ?? compileModule;
 
-const CATEGORIES: Record<
-  string,
-  Array<string | number | Record<string, any>>
-> = {
+const CATEGORIES: Record<string, Array<string | number | Record<string, any>>> = {
   B: [
     { UISC: "Number" },
     { UISC: "Avagraha", UGC: "Lo" },
@@ -39,19 +33,12 @@ const CATEGORIES: Record<
   CGJ: [0x034f],
   CM: ["Nukta", "Gemination_Mark", "Consonant_Killer"],
   CS: ["Consonant_With_Stacker"],
-  F: [
-    { UISC: "Consonant_Final", UGC: { not: "Lo" } },
-    { UISC: "Consonant_Succeeding_Repha" },
-  ],
+  F: [{ UISC: "Consonant_Final", UGC: { not: "Lo" } }, { UISC: "Consonant_Succeeding_Repha" }],
   FM: ["Syllable_Modifier"],
   GB: ["Consonant_Placeholder", 0x2015, 0x2022, 0x25fb, 0x25fc, 0x25fd, 0x25fe],
   H: ["Virama", "Invisible_Stacker"],
   HN: ["Number_Joiner"],
-  IND: [
-    "Consonant_Dead",
-    "Modifying_Letter",
-    { UGC: "Po", U: { not: [0x104e, 0x2022] } },
-  ],
+  IND: ["Consonant_Dead", "Modifying_Letter", { UGC: "Po", U: { not: [0x104e, 0x2022] } }],
   M: [{ UISC: "Consonant_Medial", UGC: { not: "Lo" } }],
   N: ["Brahmi_Joining_Number"],
   R: ["Consonant_Preceding_Repha", "Consonant_Prefixed"],
@@ -74,8 +61,8 @@ const CATEGORIES: Record<
     "Visarga",
   ],
   VS: [
-    0xfe00, 0xfe01, 0xfe02, 0xfe03, 0xfe04, 0xfe05, 0xfe06, 0xfe07, 0xfe08,
-    0xfe09, 0xfe0a, 0xfe0b, 0xfe0c, 0xfe0d, 0xfe0e, 0xfe0f,
+    0xfe00, 0xfe01, 0xfe02, 0xfe03, 0xfe04, 0xfe05, 0xfe06, 0xfe07, 0xfe08, 0xfe09, 0xfe0a, 0xfe0b,
+    0xfe0c, 0xfe0d, 0xfe0e, 0xfe0f,
   ],
   WJ: [0x2060],
   ZWJ: ["Joiner"],
@@ -276,21 +263,13 @@ function decompose(code: number): number[] {
 // allowing unicode-properties to work in the browser
 const trieFilePath = join(__dirname, "trie-use.json");
 const deflatedTrie = pako.deflate(trie.toBuffer());
-const jsonBase64DeflatedTrie = JSON.stringify(
-  base64.encode(toArrayBuffer(deflatedTrie)),
-);
+const jsonBase64DeflatedTrie = JSON.stringify(base64.encode(toArrayBuffer(deflatedTrie)));
 await fs.writeFile(trieFilePath, jsonBase64DeflatedTrie);
 
 const trieModulePath = join(__dirname, "trie-use-data.js");
-await fs.writeFile(
-  trieModulePath,
-  `export default ${jsonBase64DeflatedTrie};\n`,
-);
+await fs.writeFile(trieModulePath, `export default ${jsonBase64DeflatedTrie};\n`);
 
-let stateMachine = compile(
-  await fs.readFile(join(__dirname, "use.machine"), "utf8"),
-  symbols,
-);
+let stateMachine = compile(await fs.readFile(join(__dirname, "use.machine"), "utf8"), symbols);
 let json = Object.assign(
   {
     categories: Object.keys(symbols),
@@ -302,9 +281,7 @@ let json = Object.assign(
 const useFilePath = join(__dirname, "use.json");
 const useJsonBytes = textEncoder.encode(JSON.stringify(json));
 const deflatedUse = pako.deflate(useJsonBytes);
-const jsonBase64DeflatedUse = JSON.stringify(
-  base64.encode(toArrayBuffer(deflatedUse)),
-);
+const jsonBase64DeflatedUse = JSON.stringify(base64.encode(toArrayBuffer(deflatedUse)));
 await fs.writeFile(useFilePath, jsonBase64DeflatedUse);
 
 const useModulePath = join(__dirname, "use-data.js");

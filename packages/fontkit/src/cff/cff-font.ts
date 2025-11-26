@@ -11,9 +11,7 @@ class CFFFont {
   declare nameIndex: string[];
   declare stringIndex: string[];
   declare isCIDFont: boolean;
-  declare globalSubrIndex: Array<
-    { offset: number; length: number } | undefined
-  >;
+  declare globalSubrIndex: Array<{ offset: number; length: number } | undefined>;
   declare hdrSize: number;
   declare length: number;
   declare header: Record<string, unknown>;
@@ -37,10 +35,7 @@ class CFFFont {
     return CFFTop.size(value);
   }
 
-  static encode(
-    stream: EncodeStream | null,
-    value: Record<string, unknown> | Buffer,
-  ) {
+  static encode(stream: EncodeStream | null, value: Record<string, unknown> | Buffer) {
     if (!stream) {
       return;
     }
@@ -176,9 +171,7 @@ class CFFFont {
           }
         }
       default:
-        throw new Error(
-          `Unknown FDSelect version: ${this.topDict.FDSelect.version}`,
-        );
+        throw new Error(`Unknown FDSelect version: ${this.topDict.FDSelect.version}`);
     }
   }
 

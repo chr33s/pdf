@@ -24,15 +24,10 @@ async function ensureDir(path: string): Promise<void> {
   await mkdir(path, { recursive: true });
 }
 
-async function downloadFile(
-  source: string,
-  destination: string,
-): Promise<void> {
+async function downloadFile(source: string, destination: string): Promise<void> {
   const response = await fetch(source);
   if (!response.ok) {
-    throw new Error(
-      `Failed to download ${source}: ${response.status} ${response.statusText}`,
-    );
+    throw new Error(`Failed to download ${source}: ${response.status} ${response.statusText}`);
   }
 
   const arrayBuffer = await response.arrayBuffer();
@@ -57,14 +52,8 @@ async function main(): Promise<void> {
     const newStats = await stat(absolutePath);
     const sizeChange = newStats.size - previousSize;
     const changeLabel =
-      sizeChange === 0
-        ? "unchanged"
-        : sizeChange > 0
-          ? `+${sizeChange}`
-          : `${sizeChange}`;
-    console.log(
-      `Downloaded ${relativePath} (${newStats.size} bytes, ${changeLabel})`,
-    );
+      sizeChange === 0 ? "unchanged" : sizeChange > 0 ? `+${sizeChange}` : `${sizeChange}`;
+    console.log(`Downloaded ${relativePath} (${newStats.size} bytes, ${changeLabel})`);
   }
 }
 

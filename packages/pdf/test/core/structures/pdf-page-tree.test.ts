@@ -13,9 +13,7 @@ import {
   PDFRef,
 } from "../../../src/index.js";
 
-const withNullEntryPdfBytes = await readFile(
-  "assets/pdfs/with-null-parent-entry.pdf",
-);
+const withNullEntryPdfBytes = await readFile("assets/pdfs/with-null-parent-entry.pdf");
 
 const pageUtils = () => {
   const context = PDFContext.create();

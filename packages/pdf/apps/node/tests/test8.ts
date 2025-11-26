@@ -1,20 +1,12 @@
-import {
-  ParseSpeeds,
-  PDFDocument,
-  rgb,
-  StandardFonts,
-} from "../../../src/index.js";
+import { ParseSpeeds, PDFDocument, rgb, StandardFonts } from "../../../src/index.js";
 import { Assets } from "../index.js";
 
 export default async (assets: Assets) => {
   const { pdfs } = assets;
 
-  const pdfDoc = await PDFDocument.load(
-    pdfs.with_newline_whitespace_in_indirect_object_numbers,
-    {
-      parseSpeed: ParseSpeeds.Fastest,
-    },
-  );
+  const pdfDoc = await PDFDocument.load(pdfs.with_newline_whitespace_in_indirect_object_numbers, {
+    parseSpeed: ParseSpeeds.Fastest,
+  });
 
   const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
 

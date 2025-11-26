@@ -14,31 +14,22 @@ const xAdvances = (positions: Array<{ xAdvance: number }> | null) => {
 
 describe("glyph positioning", function () {
   describe("basic positioning", function () {
-    let font = fontkit.openSync(
-      __dirname + "/data/source-sans-pro/source-sans-pro-regular.otf",
-    );
+    let font = fontkit.openSync(__dirname + "/data/source-sans-pro/source-sans-pro-regular.otf");
 
-    test("should get a glyph width", () =>
-      expect(font.getGlyph(5).advanceWidth).toBe(615));
+    test("should get a glyph width", () => expect(font.getGlyph(5).advanceWidth).toBe(615));
   });
 
   describe("opentype positioning", function () {
-    let font = fontkit.openSync(
-      __dirname + "/data/source-sans-pro/source-sans-pro-regular.otf",
-    );
+    let font = fontkit.openSync(__dirname + "/data/source-sans-pro/source-sans-pro-regular.otf");
 
     test("should apply opentype GPOS features", function () {
       let { positions } = font.layout("Twitter");
-      return expect(xAdvances(positions)).toEqual([
-        502, 718, 246, 318, 324, 496, 347,
-      ]);
+      return expect(xAdvances(positions)).toEqual([502, 718, 246, 318, 324, 496, 347]);
     });
 
     test("should ignore duplicate features", function () {
       let { positions } = font.layout("Twitter", ["kern", "kern"]);
-      return expect(xAdvances(positions)).toEqual([
-        502, 718, 246, 318, 324, 496, 347,
-      ]);
+      return expect(xAdvances(positions)).toEqual([502, 718, 246, 318, 324, 496, 347]);
     });
   });
 
@@ -47,9 +38,7 @@ describe("glyph positioning", function () {
 
     test("should apply kerning by default", function () {
       let { positions } = font.layout("Twitter");
-      return expect(xAdvances(positions)).toEqual([
-        535, 792, 246, 372, 402, 535, 351,
-      ]);
+      return expect(xAdvances(positions)).toEqual([535, 792, 246, 372, 402, 535, 351]);
     });
   });
 });

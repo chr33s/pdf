@@ -55,8 +55,7 @@ export default class UnicodeLayoutEngine {
     // adjust bounding box for ligature glyphs
     if (base.codePoints.length > 1) {
       // LTR. TODO: RTL support.
-      baseBox.minX +=
-        ((base.codePoints.length - 1) * baseBox.width) / base.codePoints.length;
+      baseBox.minX += ((base.codePoints.length - 1) * baseBox.width) / base.codePoints.length;
     }
 
     let xOffset = -positions[clusterStart].xAdvance;
@@ -98,8 +97,7 @@ export default class UnicodeLayoutEngine {
 
           default: // Attached_Below, Attached_Above, Below, Above, other
             // center align
-            position.xOffset +=
-              baseBox.minX + (baseBox.width - markBox.width) / 2 - markBox.minX;
+            position.xOffset += baseBox.minX + (baseBox.width - markBox.width) / 2 - markBox.minX;
         }
 
         // y positioning
@@ -111,10 +109,7 @@ export default class UnicodeLayoutEngine {
           case "Attached_Below_Left":
           case "Attached_Below":
             // add a small gap between the glyphs if they are not attached
-            if (
-              combiningClass === "Attached_Below_Left" ||
-              combiningClass === "Attached_Below"
-            ) {
+            if (combiningClass === "Attached_Below_Left" || combiningClass === "Attached_Below") {
               baseBox.minY += yGap;
             }
 
@@ -129,10 +124,7 @@ export default class UnicodeLayoutEngine {
           case "Attached_Above":
           case "Attached_Above_Right":
             // add a small gap between the glyphs if they are not attached
-            if (
-              combiningClass === "Attached_Above" ||
-              combiningClass === "Attached_Above_Right"
-            ) {
+            if (combiningClass === "Attached_Above" || combiningClass === "Attached_Above_Right") {
               baseBox.maxY += yGap;
             }
 

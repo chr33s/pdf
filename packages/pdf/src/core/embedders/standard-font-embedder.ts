@@ -1,10 +1,4 @@
-import {
-  Encodings,
-  EncodingType,
-  Font,
-  FontNames,
-  type FontName,
-} from "@chr33s/standard-fonts";
+import { Encodings, EncodingType, Font, FontNames, type FontName } from "@chr33s/standard-fonts";
 
 import { toCodePoint, toHexString } from "../../utils/index.js";
 import PDFHexString from "../objects/pdf-hex-string.js";
@@ -68,10 +62,7 @@ class StandardFontEmbedder {
     return totalWidth * scale;
   }
 
-  heightOfFontAtSize(
-    size: number,
-    options: { descender?: boolean } = {},
-  ): number {
+  heightOfFontAtSize(size: number, options: { descender?: boolean } = {}): number {
     const { descender = true } = options;
 
     const { Ascender, Descender, FontBBox } = this.font;
@@ -97,8 +88,7 @@ class StandardFontEmbedder {
       Subtype: "Type1",
       BaseFont: this.customName || this.fontName,
 
-      Encoding:
-        this.encoding === Encodings.WinAnsi ? "WinAnsiEncoding" : undefined,
+      Encoding: this.encoding === Encodings.WinAnsi ? "WinAnsiEncoding" : undefined,
     });
 
     if (ref) {
@@ -141,9 +131,7 @@ class StandardFontEmbedder {
 
     const [firstSupported] = this.encoding.supportedCodePoints;
     if (firstSupported === undefined) {
-      throw new Error(
-        `Encoding ${this.encoding.name} does not expose any glyphs`,
-      );
+      throw new Error(`Encoding ${this.encoding.name} does not expose any glyphs`);
     }
 
     return this.encoding.encodeUnicodeCodePoint(firstSupported);

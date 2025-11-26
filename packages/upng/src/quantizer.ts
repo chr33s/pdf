@@ -16,11 +16,7 @@ export class Quantizer {
     },
   };
 
-  static quantize(
-    abuf: ArrayBuffer,
-    ps: number,
-    doKmeans?: boolean,
-  ): QuantizeResult {
+  static quantize(abuf: ArrayBuffer, ps: number, doKmeans?: boolean): QuantizeResult {
     const sb = new Uint8Array(abuf);
     const tb = sb.slice(0);
     const tb32 = new Uint32Array(tb.buffer);
@@ -60,8 +56,7 @@ export class Quantizer {
         const a = sb[i + 3] * (1 / 255);
 
         nd = root;
-        while (nd.left)
-          nd = Quantizer.planeDst(nd.est, r, g, b, a) <= 0 ? nd.left : nd.right;
+        while (nd.left) nd = Quantizer.planeDst(nd.est, r, g, b, a) <= 0 ? nd.left : nd.right;
         inds[i >> 2] = nd.ind;
         tb32[i >> 2] = nd.est.rgba;
       }
@@ -104,8 +99,7 @@ export class Quantizer {
       sums[qi + 2] += sb[i + 2];
       sums[qi + 3] += sb[i + 3];
     }
-    for (let i = 0; i < plte.length; i++)
-      plte[i] = Math.round(sums[i] / cnts[i >>> 2]);
+    for (let i = 0; i < plte.length; i++) plte[i] = Math.round(sums[i] / cnts[i >>> 2]);
   }
 
   static findNearest(sb: Uint8Array, inds: Uint8Array, plte: Uint8Array) {
@@ -194,14 +188,7 @@ export class Quantizer {
       if (maxL < err) break;
       const node = leafs[mi];
 
-      const s0 = Quantizer.splitPixels(
-        nimg,
-        nimg32,
-        node.i0,
-        node.i1,
-        node.est.e,
-        node.est.eMq255,
-      );
+      const s0 = Quantizer.splitPixels(nimg, nimg32, node.i0, node.i1, node.est.e, node.est.eMq255);
       const s0wrong = node.i0 >= s0 || node.i1 <= s0;
       if (s0wrong) {
         node.est.L = 0;
@@ -302,12 +289,7 @@ export class Quantizer {
     return i0 + 4;
   }
   static vecDot(nimg: Uint8Array, i: number, e: number[]) {
-    return (
-      nimg[i] * e[0] +
-      nimg[i + 1] * e[1] +
-      nimg[i + 2] * e[2] +
-      nimg[i + 3] * e[3]
-    );
+    return nimg[i] * e[0] + nimg[i + 1] * e[1] + nimg[i + 2] * e[2] + nimg[i + 3] * e[3];
   }
   static stats(nimg: Uint8Array, i0: number, i1: number) {
     const R = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];

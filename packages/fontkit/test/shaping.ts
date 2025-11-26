@@ -5,21 +5,13 @@ import { here } from "./utils/dir.js";
 
 const __dirname = here(import.meta.url);
 type FontInstance = ReturnType<typeof fontkit.openSync>;
-const glyphIds = (glyphs: Array<{ id: number }>) =>
-  glyphs.map((glyph) => glyph.id);
+const glyphIds = (glyphs: Array<{ id: number }>) => glyphs.map((glyph) => glyph.id);
 
 describe("shaping", function () {
   const fontCache: Record<string, FontInstance> = {};
-  const testFont = (
-    description: string,
-    font: string,
-    text: string,
-    output: string,
-  ) => {
+  const testFont = (description: string, font: string, text: string, output: string) => {
     test(description, function () {
-      let f =
-        fontCache[font] ||
-        (fontCache[font] = fontkit.openSync(__dirname + "/data/" + font));
+      let f = fontCache[font] || (fontCache[font] = fontkit.openSync(__dirname + "/data/" + font));
       let { glyphs, positions } = f.layout(text);
       if (!positions) {
         throw new Error("Expected layout positions to be available");
@@ -121,9 +113,7 @@ describe("shaping", function () {
   });
 
   describe("hangul shaper", function () {
-    let font = fontkit.openSync(
-      __dirname + "/data/noto-sans-cjk/noto-sans-cj-kkr-regular.otf",
-    );
+    let font = fontkit.openSync(__dirname + "/data/noto-sans-cjk/noto-sans-cj-kkr-regular.otf");
 
     test("should use composed versions if supported by the font", function () {
       let { glyphs } = font.layout(
@@ -184,210 +174,45 @@ describe("shaping", function () {
   describe("indic shaper", function () {
     describe("shapes Kannada text", function () {
       // Tests from https://github.com/unicode-org/text-rendering-tests
-      testFont(
-        "SHKNDA-1/1",
-        "noto-sans/noto-serif-kannada-regular.ttf",
-        "ಲ್ಲಿ",
-        "250+1550|126+0",
-      );
-      testFont(
-        "SHKNDA-1/2",
-        "noto-sans/noto-serif-kannada-regular.ttf",
-        "ಟ್ಸ್",
-        "194+2092|130+96",
-      );
-      testFont(
-        "SHKNDA-1/3",
-        "noto-sans/noto-serif-kannada-regular.ttf",
-        "ಳಿ",
-        "257+1441",
-      );
-      testFont(
-        "SHKNDA-1/4",
-        "noto-sans/noto-serif-kannada-regular.ttf",
-        "ಡಿ",
-        "235+1565",
-      );
-      testFont(
-        "SHKNDA-1/5",
-        "noto-sans/noto-serif-kannada-regular.ttf",
-        "ಮೆ",
-        "295+2196",
-      );
-      testFont(
-        "SHKNDA-1/6",
-        "noto-sans/noto-serif-kannada-regular.ttf",
-        "ರಿ",
-        "249+1289",
-      );
-      testFont(
-        "SHKNDA-1/7",
-        "noto-sans/noto-serif-kannada-regular.ttf",
-        "ಖ್ಯೆ",
-        "272+1733|124+164",
-      );
-      testFont(
-        "SHKNDA-1/8",
-        "noto-sans/noto-serif-kannada-regular.ttf",
-        "ಫ್ರಿ",
-        "244+1505|125+170",
-      );
-      testFont(
-        "SHKNDA-1/9",
-        "noto-sans/noto-serif-kannada-regular.ttf",
-        "ನೆ",
-        "290+1422",
-      );
-      testFont(
-        "SHKNDA-1/10",
-        "noto-sans/noto-serif-kannada-regular.ttf",
-        "ಗಿ",
-        "225+1271",
-      );
-      testFont(
-        "SHKNDA-1/11",
-        "noto-sans/noto-serif-kannada-regular.ttf",
-        "ಷ್ಟಿ",
-        "253+1528|109+141",
-      );
-      testFont(
-        "SHKNDA-1/12",
-        "noto-sans/noto-serif-kannada-regular.ttf",
-        "ಯಿಂ",
-        "248+2564|73+1205",
-      );
-      testFont(
-        "SHKNDA-1/13",
-        "noto-sans/noto-serif-kannada-regular.ttf",
-        "ಚೀ",
-        "228+1569|35+845",
-      );
-      testFont(
-        "SHKNDA-1/14",
-        "noto-sans/noto-serif-kannada-regular.ttf",
-        "ನಿ",
-        "242+1389",
-      );
-      testFont(
-        "SHKNDA-1/15",
-        "noto-sans/noto-serif-kannada-regular.ttf",
-        "ಗ್ಲಿ",
-        "225+1271|126+0",
-      );
-      testFont(
-        "SHKNDA-1/16",
-        "noto-sans/noto-serif-kannada-regular.ttf",
-        "ಷಿ",
-        "253+1528",
-      );
-      testFont(
-        "SHKNDA-1/17",
-        "noto-sans/noto-serif-kannada-regular.ttf",
-        "ಗೆ",
-        "273+1276",
-      );
-      testFont(
-        "SHKNDA-1/18",
-        "noto-sans/noto-serif-kannada-regular.ttf",
-        "ದ್ವಿ",
-        "240+1516|127+57",
-      );
-      testFont(
-        "SHKNDA-1/19",
-        "noto-sans/noto-serif-kannada-regular.ttf",
-        "ತೀ",
-        "238+1255|35+845",
-      );
-      testFont(
-        "SHKNDA-1/20",
-        "noto-sans/noto-serif-kannada-regular.ttf",
-        "ಮಿ",
-        "247+2186",
-      );
-      testFont(
-        "SHKNDA-1/21",
-        "noto-sans/noto-serif-kannada-regular.ttf",
-        "ಲಿ",
-        "250+1550",
-      );
-      testFont(
-        "SHKNDA-1/22",
-        "noto-sans/noto-serif-kannada-regular.ttf",
-        "ಗಿ",
-        "225+1271",
-      );
-      testFont(
-        "SHKNDA-1/23",
-        "noto-sans/noto-serif-kannada-regular.ttf",
-        "ನ್",
-        "203+1911",
-      );
-      testFont(
-        "SHKNDA-1/24",
-        "noto-sans/noto-serif-kannada-regular.ttf",
-        "ಬಿ",
-        "245+1579",
-      );
-      testFont(
-        "SHKNDA-1/25",
-        "noto-sans/noto-serif-kannada-regular.ttf",
-        "ಲಿ",
-        "250+1550",
-      );
+      testFont("SHKNDA-1/1", "noto-sans/noto-serif-kannada-regular.ttf", "ಲ್ಲಿ", "250+1550|126+0");
+      testFont("SHKNDA-1/2", "noto-sans/noto-serif-kannada-regular.ttf", "ಟ್ಸ್", "194+2092|130+96");
+      testFont("SHKNDA-1/3", "noto-sans/noto-serif-kannada-regular.ttf", "ಳಿ", "257+1441");
+      testFont("SHKNDA-1/4", "noto-sans/noto-serif-kannada-regular.ttf", "ಡಿ", "235+1565");
+      testFont("SHKNDA-1/5", "noto-sans/noto-serif-kannada-regular.ttf", "ಮೆ", "295+2196");
+      testFont("SHKNDA-1/6", "noto-sans/noto-serif-kannada-regular.ttf", "ರಿ", "249+1289");
+      testFont("SHKNDA-1/7", "noto-sans/noto-serif-kannada-regular.ttf", "ಖ್ಯೆ", "272+1733|124+164");
+      testFont("SHKNDA-1/8", "noto-sans/noto-serif-kannada-regular.ttf", "ಫ್ರಿ", "244+1505|125+170");
+      testFont("SHKNDA-1/9", "noto-sans/noto-serif-kannada-regular.ttf", "ನೆ", "290+1422");
+      testFont("SHKNDA-1/10", "noto-sans/noto-serif-kannada-regular.ttf", "ಗಿ", "225+1271");
+      testFont("SHKNDA-1/11", "noto-sans/noto-serif-kannada-regular.ttf", "ಷ್ಟಿ", "253+1528|109+141");
+      testFont("SHKNDA-1/12", "noto-sans/noto-serif-kannada-regular.ttf", "ಯಿಂ", "248+2564|73+1205");
+      testFont("SHKNDA-1/13", "noto-sans/noto-serif-kannada-regular.ttf", "ಚೀ", "228+1569|35+845");
+      testFont("SHKNDA-1/14", "noto-sans/noto-serif-kannada-regular.ttf", "ನಿ", "242+1389");
+      testFont("SHKNDA-1/15", "noto-sans/noto-serif-kannada-regular.ttf", "ಗ್ಲಿ", "225+1271|126+0");
+      testFont("SHKNDA-1/16", "noto-sans/noto-serif-kannada-regular.ttf", "ಷಿ", "253+1528");
+      testFont("SHKNDA-1/17", "noto-sans/noto-serif-kannada-regular.ttf", "ಗೆ", "273+1276");
+      testFont("SHKNDA-1/18", "noto-sans/noto-serif-kannada-regular.ttf", "ದ್ವಿ", "240+1516|127+57");
+      testFont("SHKNDA-1/19", "noto-sans/noto-serif-kannada-regular.ttf", "ತೀ", "238+1255|35+845");
+      testFont("SHKNDA-1/20", "noto-sans/noto-serif-kannada-regular.ttf", "ಮಿ", "247+2186");
+      testFont("SHKNDA-1/21", "noto-sans/noto-serif-kannada-regular.ttf", "ಲಿ", "250+1550");
+      testFont("SHKNDA-1/22", "noto-sans/noto-serif-kannada-regular.ttf", "ಗಿ", "225+1271");
+      testFont("SHKNDA-1/23", "noto-sans/noto-serif-kannada-regular.ttf", "ನ್", "203+1911");
+      testFont("SHKNDA-1/24", "noto-sans/noto-serif-kannada-regular.ttf", "ಬಿ", "245+1579");
+      testFont("SHKNDA-1/25", "noto-sans/noto-serif-kannada-regular.ttf", "ಲಿ", "250+1550");
       testFont(
         "SHKNDA-1/26",
         "noto-sans/noto-serif-kannada-regular.ttf",
         "ನ್ನಿಂ",
         "242+1389|118+158|73+1205",
       );
-      testFont(
-        "SHKNDA-1/27",
-        "noto-sans/noto-serif-kannada-regular.ttf",
-        "ಲ್ಲಿ",
-        "250+1550|126+0",
-      );
-      testFont(
-        "SHKNDA-1/28",
-        "noto-sans/noto-serif-kannada-regular.ttf",
-        "ಧಿ",
-        "241+1516",
-      );
-      testFont(
-        "SHKNDA-1/29",
-        "noto-sans/noto-serif-kannada-regular.ttf",
-        "ಪೌ",
-        "168+1514|34+773",
-      );
-      testFont(
-        "SHKNDA-1/30",
-        "noto-sans/noto-serif-kannada-regular.ttf",
-        "ವಿಂ",
-        "251+1533|73+1205",
-      );
-      testFont(
-        "SHKNDA-1/31",
-        "noto-sans/noto-serif-kannada-regular.ttf",
-        "ಡಿ",
-        "235+1565",
-      );
-      testFont(
-        "SHKNDA-1/32",
-        "noto-sans/noto-serif-kannada-regular.ttf",
-        "ಟಿ",
-        "233+1621",
-      );
-      testFont(
-        "SHKNDA-1/33",
-        "noto-sans/noto-serif-kannada-regular.ttf",
-        "ನಿ",
-        "242+1389",
-      );
-      testFont(
-        "SHKNDA-1/34",
-        "noto-sans/noto-serif-kannada-regular.ttf",
-        "ಧಿ",
-        "241+1516",
-      );
+      testFont("SHKNDA-1/27", "noto-sans/noto-serif-kannada-regular.ttf", "ಲ್ಲಿ", "250+1550|126+0");
+      testFont("SHKNDA-1/28", "noto-sans/noto-serif-kannada-regular.ttf", "ಧಿ", "241+1516");
+      testFont("SHKNDA-1/29", "noto-sans/noto-serif-kannada-regular.ttf", "ಪೌ", "168+1514|34+773");
+      testFont("SHKNDA-1/30", "noto-sans/noto-serif-kannada-regular.ttf", "ವಿಂ", "251+1533|73+1205");
+      testFont("SHKNDA-1/31", "noto-sans/noto-serif-kannada-regular.ttf", "ಡಿ", "235+1565");
+      testFont("SHKNDA-1/32", "noto-sans/noto-serif-kannada-regular.ttf", "ಟಿ", "233+1621");
+      testFont("SHKNDA-1/33", "noto-sans/noto-serif-kannada-regular.ttf", "ನಿ", "242+1389");
+      testFont("SHKNDA-1/34", "noto-sans/noto-serif-kannada-regular.ttf", "ಧಿ", "241+1516");
 
       testFont(
         "SHKNDA-2/1",
@@ -675,78 +500,23 @@ describe("shaping", function () {
     });
 
     describe("shapes Telugu text", function () {
-      testFont(
-        "HB-TELU-1",
-        "noto-sans/noto-sans-telugu-regular.ttf",
-        "కై",
-        "326+1065",
-      );
-      testFont(
-        "HB-TELU-2",
-        "noto-sans/noto-sans-telugu-regular.ttf",
-        "క్",
-        "102+1065",
-      );
-      testFont(
-        "HB-TELU-3",
-        "noto-sans/noto-sans-telugu-regular.ttf",
-        "క్కై",
-        "326+1065|511+1079",
-      );
-      testFont(
-        "HB-TELU-4",
-        "noto-sans/noto-sans-telugu-regular.ttf",
-        "క్ర",
-        "21+1065|549+0",
-      );
-      testFont(
-        "HB-TELU-5",
-        "noto-sans/noto-sans-telugu-regular.ttf",
-        "క్రి",
-        "174+1065|549+0",
-      );
-      testFont(
-        "HB-TELU-6",
-        "noto-sans/noto-sans-telugu-regular.ttf",
-        "క్రై",
-        "326+1065|496+860",
-      );
-      testFont(
-        "HB-TELU-7",
-        "noto-sans/noto-sans-telugu-regular.ttf",
-        "క్ర్",
-        "102+1065|549+0",
-      );
+      testFont("HB-TELU-1", "noto-sans/noto-sans-telugu-regular.ttf", "కై", "326+1065");
+      testFont("HB-TELU-2", "noto-sans/noto-sans-telugu-regular.ttf", "క్", "102+1065");
+      testFont("HB-TELU-3", "noto-sans/noto-sans-telugu-regular.ttf", "క్కై", "326+1065|511+1079");
+      testFont("HB-TELU-4", "noto-sans/noto-sans-telugu-regular.ttf", "క్ర", "21+1065|549+0");
+      testFont("HB-TELU-5", "noto-sans/noto-sans-telugu-regular.ttf", "క్రి", "174+1065|549+0");
+      testFont("HB-TELU-6", "noto-sans/noto-sans-telugu-regular.ttf", "క్రై", "326+1065|496+860");
+      testFont("HB-TELU-7", "noto-sans/noto-sans-telugu-regular.ttf", "క్ర్", "102+1065|549+0");
       testFont(
         "HB-TELU-8",
         "noto-sans/noto-sans-telugu-regular.ttf",
         "క్ర్క",
         "21+1065|549+0|511+1079",
       );
-      testFont(
-        "HB-TELU-9",
-        "noto-sans/noto-sans-telugu-regular.ttf",
-        "క్ష",
-        "101+1065",
-      );
-      testFont(
-        "HB-TELU-10",
-        "noto-sans/noto-sans-telugu-regular.ttf",
-        "క్ష్",
-        "137+1065",
-      );
-      testFont(
-        "HB-TELU-11",
-        "noto-sans/noto-sans-telugu-regular.ttf",
-        "క్ష్ణ",
-        "21+1065|605+0",
-      );
-      testFont(
-        "HB-TELU-12",
-        "noto-sans/noto-sans-telugu-regular.ttf",
-        "ఽం",
-        "56+1208|5+1038",
-      );
+      testFont("HB-TELU-9", "noto-sans/noto-sans-telugu-regular.ttf", "క్ష", "101+1065");
+      testFont("HB-TELU-10", "noto-sans/noto-sans-telugu-regular.ttf", "క్ష్", "137+1065");
+      testFont("HB-TELU-11", "noto-sans/noto-sans-telugu-regular.ttf", "క్ష్ణ", "21+1065|605+0");
+      testFont("HB-TELU-12", "noto-sans/noto-sans-telugu-regular.ttf", "ఽం", "56+1208|5+1038");
     });
 
     describe("shapes Tamil text", function () {
@@ -756,12 +526,7 @@ describe("shaping", function () {
         "தமிழ்நாடு",
         "25+1689|29+1762|42+537|94+1762|26+1616|41+1311|112+2078",
       );
-      testFont(
-        "HB-TAML-2",
-        "noto-sans/noto-sans-tamil-regular.ttf",
-        "ஓர்",
-        "16+2018|90+1311",
-      );
+      testFont("HB-TAML-2", "noto-sans/noto-sans-tamil-regular.ttf", "ஓர்", "16+2018|90+1311");
       testFont(
         "HB-TAML-3",
         "noto-sans/noto-sans-tamil-regular.ttf",
@@ -966,12 +731,7 @@ describe("shaping", function () {
         "பெயர்",
         "46+1846|28+1593|30+1972|90+1311",
       );
-      testFont(
-        "HB-TAML-37",
-        "noto-sans/noto-sans-tamil-regular.ttf",
-        "ஆம்",
-        "7+2690|88+1762",
-      );
+      testFont("HB-TAML-37", "noto-sans/noto-sans-tamil-regular.ttf", "ஆம்", "7+2690|88+1762");
       testFont(
         "HB-TAML-38",
         "noto-sans/noto-sans-tamil-regular.ttf",
@@ -996,18 +756,8 @@ describe("shaping", function () {
         "மாற்றப்பட்டது.",
         "29+1762|41+1311|91+1788|32+1792|87+1593|28+1593|82+1419|23+1419|116+2234|164+549",
       );
-      testFont(
-        "HB-TAML-42",
-        "noto-sans/noto-sans-tamil-regular.ttf",
-        "ஸ்ரீ",
-        "147+3100",
-      );
-      testFont(
-        "HB-TAML-43",
-        "noto-sans/noto-sans-tamil-regular.ttf",
-        "க்ஷ",
-        "76+3795",
-      );
+      testFont("HB-TAML-42", "noto-sans/noto-sans-tamil-regular.ttf", "ஸ்ரீ", "147+3100");
+      testFont("HB-TAML-43", "noto-sans/noto-sans-tamil-regular.ttf", "க்ஷ", "76+3795");
     });
 
     describe("shapes Devanagari text", function () {
@@ -1129,18 +879,8 @@ describe("shaping", function () {
       });
 
       describe("misc", function () {
-        testFont(
-          "HB-DEVA-misc-1",
-          "noto-sans/noto-sans-devanagari-regular.ttf",
-          "क",
-          "25+1561",
-        );
-        testFont(
-          "HB-DEVA-misc-2",
-          "noto-sans/noto-sans-devanagari-regular.ttf",
-          "क़",
-          "92+1561",
-        );
+        testFont("HB-DEVA-misc-1", "noto-sans/noto-sans-devanagari-regular.ttf", "क", "25+1561");
+        testFont("HB-DEVA-misc-2", "noto-sans/noto-sans-devanagari-regular.ttf", "क़", "92+1561");
         testFont(
           "HB-DEVA-misc-3",
           "noto-sans/noto-sans-devanagari-regular.ttf",
@@ -1159,12 +899,7 @@ describe("shaping", function () {
           "क्क",
           "183+1104|25+1561",
         );
-        testFont(
-          "HB-DEVA-misc-6",
-          "noto-sans/noto-sans-devanagari-regular.ttf",
-          "क्र",
-          "254+1561",
-        );
+        testFont("HB-DEVA-misc-6", "noto-sans/noto-sans-devanagari-regular.ttf", "क्र", "254+1561");
         testFont(
           "HB-DEVA-misc-7",
           "noto-sans/noto-sans-devanagari-regular.ttf",
@@ -1177,12 +912,7 @@ describe("shaping", function () {
           "क्र्‍",
           "327+1204|3+0",
         );
-        testFont(
-          "HB-DEVA-misc-9",
-          "noto-sans/noto-sans-devanagari-regular.ttf",
-          "क्ष",
-          "179+1458",
-        );
+        testFont("HB-DEVA-misc-9", "noto-sans/noto-sans-devanagari-regular.ttf", "क्ष", "179+1458");
         testFont(
           "HB-DEVA-misc-10",
           "noto-sans/noto-sans-devanagari-regular.ttf",
@@ -1243,42 +973,22 @@ describe("shaping", function () {
           "र्क्रि",
           "585+530|254+1561|606+0",
         );
-        testFont(
-          "HB-DEVA-misc-20",
-          "noto-sans/noto-sans-devanagari-regular.ttf",
-          "र्‍",
-          "209+818",
-        );
+        testFont("HB-DEVA-misc-20", "noto-sans/noto-sans-devanagari-regular.ttf", "र्‍", "209+818");
         testFont(
           "HB-DEVA-misc-21",
           "noto-sans/noto-sans-devanagari-regular.ttf",
           "ि",
           "67+530|135+1044",
         );
-        testFont(
-          "HB-DEVA-misc-22",
-          "noto-sans/noto-sans-devanagari-regular.ttf",
-          "फ़्र",
-          "314+1579",
-        );
-        testFont(
-          "HB-DEVA-misc-23",
-          "noto-sans/noto-sans-devanagari-regular.ttf",
-          "फ्र",
-          "275+1579",
-        );
+        testFont("HB-DEVA-misc-22", "noto-sans/noto-sans-devanagari-regular.ttf", "फ़्र", "314+1579");
+        testFont("HB-DEVA-misc-23", "noto-sans/noto-sans-devanagari-regular.ttf", "फ्र", "275+1579");
         testFont(
           "HB-DEVA-misc-24",
           "noto-sans/noto-sans-devanagari-regular.ttf",
           "द्दि",
           "560+530|511+1105",
         );
-        testFont(
-          "HB-DEVA-misc-25",
-          "noto-sans/noto-sans-devanagari-regular.ttf",
-          "क्ष",
-          "179+1458",
-        );
+        testFont("HB-DEVA-misc-25", "noto-sans/noto-sans-devanagari-regular.ttf", "क्ष", "179+1458");
         testFont(
           "HB-DEVA-misc-26",
           "noto-sans/noto-sans-devanagari-regular.ttf",
@@ -1421,48 +1131,13 @@ describe("shaping", function () {
     });
 
     describe("shapes Bengali text", function () {
-      testFont(
-        "HB-BENG-1",
-        "noto-sans/noto-sans-bengali-regular.ttf",
-        "অ্য",
-        "7+1828|198+523",
-      );
-      testFont(
-        "HB-BENG-2",
-        "noto-sans/noto-sans-bengali-regular.ttf",
-        "ক",
-        "19+1653",
-      );
-      testFont(
-        "HB-BENG-3",
-        "noto-sans/noto-sans-bengali-regular.ttf",
-        "ক়",
-        "96+1653",
-      );
-      testFont(
-        "HB-BENG-4",
-        "noto-sans/noto-sans-bengali-regular.ttf",
-        "কি",
-        "54+545|19+1653",
-      );
-      testFont(
-        "HB-BENG-5",
-        "noto-sans/noto-sans-bengali-regular.ttf",
-        "ক্",
-        "19+1653|64@-453,0+0",
-      );
-      testFont(
-        "HB-BENG-6",
-        "noto-sans/noto-sans-bengali-regular.ttf",
-        "ক্ক",
-        "280+1575",
-      );
-      testFont(
-        "HB-BENG-7",
-        "noto-sans/noto-sans-bengali-regular.ttf",
-        "ক্র",
-        "199+1905",
-      );
+      testFont("HB-BENG-1", "noto-sans/noto-sans-bengali-regular.ttf", "অ্য", "7+1828|198+523");
+      testFont("HB-BENG-2", "noto-sans/noto-sans-bengali-regular.ttf", "ক", "19+1653");
+      testFont("HB-BENG-3", "noto-sans/noto-sans-bengali-regular.ttf", "ক়", "96+1653");
+      testFont("HB-BENG-4", "noto-sans/noto-sans-bengali-regular.ttf", "কি", "54+545|19+1653");
+      testFont("HB-BENG-5", "noto-sans/noto-sans-bengali-regular.ttf", "ক্", "19+1653|64@-453,0+0");
+      testFont("HB-BENG-6", "noto-sans/noto-sans-bengali-regular.ttf", "ক্ক", "280+1575");
+      testFont("HB-BENG-7", "noto-sans/noto-sans-bengali-regular.ttf", "ক্র", "199+1905");
       testFont(
         "HB-BENG-8",
         "noto-sans/noto-sans-bengali-regular.ttf",
@@ -1481,42 +1156,12 @@ describe("shaping", function () {
         "ক্‍ক",
         "130+1397|3+0|19+1653",
       );
-      testFont(
-        "HB-BENG-11",
-        "noto-sans/noto-sans-bengali-regular.ttf",
-        "দ্য",
-        "36+1235|198+523",
-      );
-      testFont(
-        "HB-BENG-12",
-        "noto-sans/noto-sans-bengali-regular.ttf",
-        "ন্ক",
-        "149+756|19+1653",
-      );
-      testFont(
-        "HB-BENG-13",
-        "noto-sans/noto-sans-bengali-regular.ttf",
-        "ন্ধ",
-        "360+1586",
-      );
-      testFont(
-        "HB-BENG-14",
-        "noto-sans/noto-sans-bengali-regular.ttf",
-        "ন্ব",
-        "260+1253",
-      );
-      testFont(
-        "HB-BENG-15",
-        "noto-sans/noto-sans-bengali-regular.ttf",
-        "ন্য",
-        "38+1236|198+523",
-      );
-      testFont(
-        "HB-BENG-16",
-        "noto-sans/noto-sans-bengali-regular.ttf",
-        "ন্র",
-        "219+1357",
-      );
+      testFont("HB-BENG-11", "noto-sans/noto-sans-bengali-regular.ttf", "দ্য", "36+1235|198+523");
+      testFont("HB-BENG-12", "noto-sans/noto-sans-bengali-regular.ttf", "ন্ক", "149+756|19+1653");
+      testFont("HB-BENG-13", "noto-sans/noto-sans-bengali-regular.ttf", "ন্ধ", "360+1586");
+      testFont("HB-BENG-14", "noto-sans/noto-sans-bengali-regular.ttf", "ন্ব", "260+1253");
+      testFont("HB-BENG-15", "noto-sans/noto-sans-bengali-regular.ttf", "ন্য", "38+1236|198+523");
+      testFont("HB-BENG-16", "noto-sans/noto-sans-bengali-regular.ttf", "ন্র", "219+1357");
       testFont(
         "HB-BENG-17",
         "noto-sans/noto-sans-bengali-regular.ttf",
@@ -1565,12 +1210,7 @@ describe("shaping", function () {
         "ন্‍র",
         "149+756|3+0|45+1221",
       );
-      testFont(
-        "HB-BENG-25",
-        "noto-sans/noto-sans-bengali-regular.ttf",
-        "য্",
-        "44+1282|64+0",
-      );
+      testFont("HB-BENG-25", "noto-sans/noto-sans-bengali-regular.ttf", "য্", "44+1282|64+0");
       testFont(
         "HB-BENG-26",
         "noto-sans/noto-sans-bengali-regular.ttf",
@@ -1595,36 +1235,11 @@ describe("shaping", function () {
         "র্ন্‍",
         "45+1221|64+0|38+1236|64+0|3+0",
       );
-      testFont(
-        "HB-BENG-30",
-        "noto-sans/noto-sans-bengali-regular.ttf",
-        "র্ব্ব",
-        "263+2001|127+0",
-      );
-      testFont(
-        "HB-BENG-31",
-        "noto-sans/noto-sans-bengali-regular.ttf",
-        "শ্য",
-        "47+1386|198+523",
-      );
-      testFont(
-        "HB-BENG-32",
-        "noto-sans/noto-sans-bengali-regular.ttf",
-        "ষ্য",
-        "48+1296|198+523",
-      );
-      testFont(
-        "HB-BENG-33",
-        "noto-sans/noto-sans-bengali-regular.ttf",
-        "স্য",
-        "49+1397|198+523",
-      );
-      testFont(
-        "HB-BENG-34",
-        "noto-sans/noto-sans-bengali-regular.ttf",
-        "ি",
-        "54+545|575+1044",
-      );
+      testFont("HB-BENG-30", "noto-sans/noto-sans-bengali-regular.ttf", "র্ব্ব", "263+2001|127+0");
+      testFont("HB-BENG-31", "noto-sans/noto-sans-bengali-regular.ttf", "শ্য", "47+1386|198+523");
+      testFont("HB-BENG-32", "noto-sans/noto-sans-bengali-regular.ttf", "ষ্য", "48+1296|198+523");
+      testFont("HB-BENG-33", "noto-sans/noto-sans-bengali-regular.ttf", "স্য", "49+1397|198+523");
+      testFont("HB-BENG-34", "noto-sans/noto-sans-bengali-regular.ttf", "ি", "54+545|575+1044");
       testFont(
         "HB-BENG-35",
         "noto-sans/noto-sans-bengali-regular.ttf",
@@ -1709,30 +1324,15 @@ describe("shaping", function () {
         "ৱ্ভ",
         "85+1221|64+0|42+1476",
       );
-      testFont(
-        "HB-BENG-49",
-        "noto-sans/noto-sans-bengali-regular.ttf",
-        "অৗ",
-        "7+1828|66+545",
-      );
-      testFont(
-        "HB-BENG-50",
-        "noto-sans/noto-sans-bengali-regular.ttf",
-        "ন্ত্র",
-        "365+1403",
-      );
+      testFont("HB-BENG-49", "noto-sans/noto-sans-bengali-regular.ttf", "অৗ", "7+1828|66+545");
+      testFont("HB-BENG-50", "noto-sans/noto-sans-bengali-regular.ttf", "ন্ত্র", "365+1403");
       testFont(
         "HB-BENG-51",
         "noto-sans/noto-sans-bengali-regular.ttf",
         "ত্যু",
         "34+1447|518@-222,0+0|198+523",
       );
-      testFont(
-        "HB-BENG-52",
-        "noto-sans/noto-sans-bengali-regular.ttf",
-        "চ্য্র",
-        "135+1014|225+1408",
-      );
+      testFont("HB-BENG-52", "noto-sans/noto-sans-bengali-regular.ttf", "চ্য্র", "135+1014|225+1408");
       testFont(
         "HB-BENG-53",
         "noto-sans/noto-sans-bengali-regular.ttf",
@@ -1742,12 +1342,7 @@ describe("shaping", function () {
     });
 
     describe("shapes Gurmukhi text", function () {
-      testFont(
-        "HB-GURU-1",
-        "noto-sans/noto-sans-gurmukhi-regular.ttf",
-        "ਕ੍ਹ",
-        "17+1273|111@75,0+0",
-      );
+      testFont("HB-GURU-1", "noto-sans/noto-sans-gurmukhi-regular.ttf", "ਕ੍ਹ", "17+1273|111@75,0+0");
       testFont(
         "HB-GURU-2",
         "noto-sans/noto-sans-gurmukhi-regular.ttf",
@@ -1757,132 +1352,27 @@ describe("shaping", function () {
     });
 
     describe("shapes Gujarati text", function () {
-      testFont(
-        "HB-GURU-1",
-        "noto-sans/noto-sans-gujarati-regular.ttf",
-        "ગ્ષ",
-        "132+839|52+1183",
-      );
-      testFont(
-        "HB-GURU-1",
-        "noto-sans/noto-sans-gujarati-regular.ttf",
-        "ગ્સ",
-        "132+839|53+1457",
-      );
-      testFont(
-        "HB-GURU-1",
-        "noto-sans/noto-sans-gujarati-regular.ttf",
-        "ગ્હ",
-        "132+839|54+1296",
-      );
-      testFont(
-        "HB-GURU-1",
-        "noto-sans/noto-sans-gujarati-regular.ttf",
-        "ઘ્ક",
-        "133+899|21+1047",
-      );
-      testFont(
-        "HB-GURU-1",
-        "noto-sans/noto-sans-gujarati-regular.ttf",
-        "ઘ્ખ",
-        "133+899|22+1528",
-      );
-      testFont(
-        "HB-GURU-1",
-        "noto-sans/noto-sans-gujarati-regular.ttf",
-        "ઘ્ગ",
-        "133+899|23+1339",
-      );
-      testFont(
-        "HB-GURU-1",
-        "noto-sans/noto-sans-gujarati-regular.ttf",
-        "ઘ્ઘ",
-        "133+729|24+1271",
-      );
-      testFont(
-        "HB-GURU-1",
-        "noto-sans/noto-sans-gujarati-regular.ttf",
-        "ઘ્ઙ",
-        "133+899|25+1004",
-      );
-      testFont(
-        "HB-GURU-1",
-        "noto-sans/noto-sans-gujarati-regular.ttf",
-        "ઘ્ચ",
-        "133+899|26+1353",
-      );
-      testFont(
-        "HB-GURU-1",
-        "noto-sans/noto-sans-gujarati-regular.ttf",
-        "ઘ્છ",
-        "133+899|27+1512",
-      );
-      testFont(
-        "HB-GURU-1",
-        "noto-sans/noto-sans-gujarati-regular.ttf",
-        "ઘ્જ",
-        "133+899|28+1786",
-      );
-      testFont(
-        "HB-GURU-1",
-        "noto-sans/noto-sans-gujarati-regular.ttf",
-        "ઘ્ઝ",
-        "133+899|29+1430",
-      );
-      testFont(
-        "HB-GURU-1",
-        "noto-sans/noto-sans-gujarati-regular.ttf",
-        "ઘ્ઞ",
-        "133+899|30+1417",
-      );
-      testFont(
-        "HB-GURU-1",
-        "noto-sans/noto-sans-gujarati-regular.ttf",
-        "ઘ્ટ",
-        "133+899|31+923",
-      );
-      testFont(
-        "HB-GURU-1",
-        "noto-sans/noto-sans-gujarati-regular.ttf",
-        "ઘ્ઠ",
-        "133+899|32+1059",
-      );
-      testFont(
-        "HB-GURU-1",
-        "noto-sans/noto-sans-gujarati-regular.ttf",
-        "ઘ્ડ",
-        "133+899|33+986",
-      );
-      testFont(
-        "HB-GURU-1",
-        "noto-sans/noto-sans-gujarati-regular.ttf",
-        "ઘ્ઢ",
-        "133+899|34+1056",
-      );
-      testFont(
-        "HB-GURU-1",
-        "noto-sans/noto-sans-gujarati-regular.ttf",
-        "ઘ્ણ",
-        "133+899|35+1683",
-      );
-      testFont(
-        "HB-GURU-1",
-        "noto-sans/noto-sans-gujarati-regular.ttf",
-        "ઘ્ત",
-        "133+899|36+1173",
-      );
-      testFont(
-        "HB-GURU-1",
-        "noto-sans/noto-sans-gujarati-regular.ttf",
-        "ઘ્થ",
-        "133+899|37+1280",
-      );
-      testFont(
-        "HB-GURU-1",
-        "noto-sans/noto-sans-gujarati-regular.ttf",
-        "ઘ્દ",
-        "133+899|38+956",
-      );
+      testFont("HB-GURU-1", "noto-sans/noto-sans-gujarati-regular.ttf", "ગ્ષ", "132+839|52+1183");
+      testFont("HB-GURU-1", "noto-sans/noto-sans-gujarati-regular.ttf", "ગ્સ", "132+839|53+1457");
+      testFont("HB-GURU-1", "noto-sans/noto-sans-gujarati-regular.ttf", "ગ્હ", "132+839|54+1296");
+      testFont("HB-GURU-1", "noto-sans/noto-sans-gujarati-regular.ttf", "ઘ્ક", "133+899|21+1047");
+      testFont("HB-GURU-1", "noto-sans/noto-sans-gujarati-regular.ttf", "ઘ્ખ", "133+899|22+1528");
+      testFont("HB-GURU-1", "noto-sans/noto-sans-gujarati-regular.ttf", "ઘ્ગ", "133+899|23+1339");
+      testFont("HB-GURU-1", "noto-sans/noto-sans-gujarati-regular.ttf", "ઘ્ઘ", "133+729|24+1271");
+      testFont("HB-GURU-1", "noto-sans/noto-sans-gujarati-regular.ttf", "ઘ્ઙ", "133+899|25+1004");
+      testFont("HB-GURU-1", "noto-sans/noto-sans-gujarati-regular.ttf", "ઘ્ચ", "133+899|26+1353");
+      testFont("HB-GURU-1", "noto-sans/noto-sans-gujarati-regular.ttf", "ઘ્છ", "133+899|27+1512");
+      testFont("HB-GURU-1", "noto-sans/noto-sans-gujarati-regular.ttf", "ઘ્જ", "133+899|28+1786");
+      testFont("HB-GURU-1", "noto-sans/noto-sans-gujarati-regular.ttf", "ઘ્ઝ", "133+899|29+1430");
+      testFont("HB-GURU-1", "noto-sans/noto-sans-gujarati-regular.ttf", "ઘ્ઞ", "133+899|30+1417");
+      testFont("HB-GURU-1", "noto-sans/noto-sans-gujarati-regular.ttf", "ઘ્ટ", "133+899|31+923");
+      testFont("HB-GURU-1", "noto-sans/noto-sans-gujarati-regular.ttf", "ઘ્ઠ", "133+899|32+1059");
+      testFont("HB-GURU-1", "noto-sans/noto-sans-gujarati-regular.ttf", "ઘ્ડ", "133+899|33+986");
+      testFont("HB-GURU-1", "noto-sans/noto-sans-gujarati-regular.ttf", "ઘ્ઢ", "133+899|34+1056");
+      testFont("HB-GURU-1", "noto-sans/noto-sans-gujarati-regular.ttf", "ઘ્ણ", "133+899|35+1683");
+      testFont("HB-GURU-1", "noto-sans/noto-sans-gujarati-regular.ttf", "ઘ્ત", "133+899|36+1173");
+      testFont("HB-GURU-1", "noto-sans/noto-sans-gujarati-regular.ttf", "ઘ્થ", "133+899|37+1280");
+      testFont("HB-GURU-1", "noto-sans/noto-sans-gujarati-regular.ttf", "ઘ્દ", "133+899|38+956");
     });
 
     describe("shapes Malayalam text", function () {
@@ -1898,12 +1388,7 @@ describe("shaping", function () {
         "അഥൎവ്വം",
         "6+3058|36+1835|208+1963|73@-1864,0+0|4+927",
       );
-      testFont(
-        "HB-MLYM-3",
-        "noto-sans/noto-sans-malayalam-regular.ttf",
-        "ക്‍",
-        "101+2470",
-      );
+      testFont("HB-MLYM-3", "noto-sans/noto-sans-malayalam-regular.ttf", "ക്‍", "101+2470");
       testFont(
         "HB-MLYM-4",
         "noto-sans/noto-sans-malayalam-regular.ttf",
@@ -1922,24 +1407,9 @@ describe("shaping", function () {
         "കുറ്റ്യാടി",
         "20+2125|62+679|203+1271|229+697|59+1033|30+1152|60+467",
       );
-      testFont(
-        "HB-MLYM-7",
-        "noto-sans/noto-sans-malayalam-regular.ttf",
-        "കെ",
-        "66+1465|20+2125",
-      );
-      testFont(
-        "HB-MLYM-8",
-        "noto-sans/noto-sans-malayalam-regular.ttf",
-        "കേ",
-        "67+1219|20+2125",
-      );
-      testFont(
-        "HB-MLYM-9",
-        "noto-sans/noto-sans-malayalam-regular.ttf",
-        "കൈ",
-        "68+2935|20+2125",
-      );
+      testFont("HB-MLYM-7", "noto-sans/noto-sans-malayalam-regular.ttf", "കെ", "66+1465|20+2125");
+      testFont("HB-MLYM-8", "noto-sans/noto-sans-malayalam-regular.ttf", "കേ", "67+1219|20+2125");
+      testFont("HB-MLYM-9", "noto-sans/noto-sans-malayalam-regular.ttf", "കൈ", "68+2935|20+2125");
       testFont(
         "HB-MLYM-10",
         "noto-sans/noto-sans-malayalam-regular.ttf",
@@ -1976,66 +1446,26 @@ describe("shaping", function () {
         "ക്ത്ര",
         "146+409|148+3707",
       );
-      testFont(
-        "HB-MLYM-16",
-        "noto-sans/noto-sans-malayalam-regular.ttf",
-        "ക്യ",
-        "20+2125|144+497",
-      );
-      testFont(
-        "HB-MLYM-17",
-        "noto-sans/noto-sans-malayalam-regular.ttf",
-        "ക്വ",
-        "20+2125|145+467",
-      );
-      testFont(
-        "HB-MLYM-18",
-        "noto-sans/noto-sans-malayalam-regular.ttf",
-        "ഖ്യ",
-        "21+2047|144+497",
-      );
-      testFont(
-        "HB-MLYM-19",
-        "noto-sans/noto-sans-malayalam-regular.ttf",
-        "ഖ്ര",
-        "146+469|21+2047",
-      );
+      testFont("HB-MLYM-16", "noto-sans/noto-sans-malayalam-regular.ttf", "ക്യ", "20+2125|144+497");
+      testFont("HB-MLYM-17", "noto-sans/noto-sans-malayalam-regular.ttf", "ക്വ", "20+2125|145+467");
+      testFont("HB-MLYM-18", "noto-sans/noto-sans-malayalam-regular.ttf", "ഖ്യ", "21+2047|144+497");
+      testFont("HB-MLYM-19", "noto-sans/noto-sans-malayalam-regular.ttf", "ഖ്ര", "146+469|21+2047");
       testFont(
         "HB-MLYM-20",
         "noto-sans/noto-sans-malayalam-regular.ttf",
         "ഗ്ദ്ധ്രോ",
         "22+1837|72+0|67+1219|146+444|183+2428|59+1033",
       );
-      testFont(
-        "HB-MLYM-21",
-        "noto-sans/noto-sans-malayalam-regular.ttf",
-        "ട്ട",
-        "167+1152",
-      );
+      testFont("HB-MLYM-21", "noto-sans/noto-sans-malayalam-regular.ttf", "ട്ട", "167+1152");
       testFont(
         "HB-MLYM-22",
         "noto-sans/noto-sans-malayalam-regular.ttf",
         "ട്ടു്",
         "167+1206|225+719|72+0",
       );
-      testFont(
-        "HB-MLYM-23",
-        "noto-sans/noto-sans-malayalam-regular.ttf",
-        "ണ്‍",
-        "96+3110",
-      );
-      testFont(
-        "HB-MLYM-24",
-        "noto-sans/noto-sans-malayalam-regular.ttf",
-        "ണ്ട",
-        "174+2995",
-      );
-      testFont(
-        "HB-MLYM-25",
-        "noto-sans/noto-sans-malayalam-regular.ttf",
-        "ത്ത",
-        "179+3603",
-      );
+      testFont("HB-MLYM-23", "noto-sans/noto-sans-malayalam-regular.ttf", "ണ്‍", "96+3110");
+      testFont("HB-MLYM-24", "noto-sans/noto-sans-malayalam-regular.ttf", "ണ്ട", "174+2995");
+      testFont("HB-MLYM-25", "noto-sans/noto-sans-malayalam-regular.ttf", "ത്ത", "179+3603");
       testFont(
         "HB-MLYM-26",
         "noto-sans/noto-sans-malayalam-regular.ttf",
@@ -2048,24 +1478,9 @@ describe("shaping", function () {
         "ത്തൊ",
         "66+1465|179+3603|59+1033",
       );
-      testFont(
-        "HB-MLYM-28",
-        "noto-sans/noto-sans-malayalam-regular.ttf",
-        "ദ്ദ",
-        "182+1310",
-      );
-      testFont(
-        "HB-MLYM-29",
-        "noto-sans/noto-sans-malayalam-regular.ttf",
-        "ന്‍",
-        "97+2173",
-      );
-      testFont(
-        "HB-MLYM-30",
-        "noto-sans/noto-sans-malayalam-regular.ttf",
-        "ന്ത",
-        "189+2734",
-      );
+      testFont("HB-MLYM-28", "noto-sans/noto-sans-malayalam-regular.ttf", "ദ്ദ", "182+1310");
+      testFont("HB-MLYM-29", "noto-sans/noto-sans-malayalam-regular.ttf", "ന്‍", "97+2173");
+      testFont("HB-MLYM-30", "noto-sans/noto-sans-malayalam-regular.ttf", "ന്ത", "189+2734");
       testFont(
         "HB-MLYM-31",
         "noto-sans/noto-sans-malayalam-regular.ttf",
@@ -2078,12 +1493,7 @@ describe("shaping", function () {
         "ന്ത്ര്യ",
         "146+499|189+2734|144+497",
       );
-      testFont(
-        "HB-MLYM-33",
-        "noto-sans/noto-sans-malayalam-regular.ttf",
-        "പ്ര",
-        "146+420|41+1835",
-      );
+      testFont("HB-MLYM-33", "noto-sans/noto-sans-malayalam-regular.ttf", "പ്ര", "146+420|41+1835");
       testFont(
         "HB-MLYM-34",
         "noto-sans/noto-sans-malayalam-regular.ttf",
@@ -2096,12 +1506,7 @@ describe("shaping", function () {
         "മുഖ്യമന്ത്രി",
         "45+1485|62+679|21+2047|144+497|45+1485|146+499|189+2734|60+467",
       );
-      testFont(
-        "HB-MLYM-36",
-        "noto-sans/noto-sans-malayalam-regular.ttf",
-        "മ്പ",
-        "199+2447",
-      );
+      testFont("HB-MLYM-36", "noto-sans/noto-sans-malayalam-regular.ttf", "മ്പ", "199+2447");
       testFont(
         "HB-MLYM-37",
         "noto-sans/noto-sans-malayalam-regular.ttf",
@@ -2120,72 +1525,32 @@ describe("shaping", function () {
         "യ്ക്കു",
         "46+2120|72+0|147+3010|62+679",
       );
-      testFont(
-        "HB-MLYM-40",
-        "noto-sans/noto-sans-malayalam-regular.ttf",
-        "യ്യ",
-        "202+2120",
-      );
-      testFont(
-        "HB-MLYM-41",
-        "noto-sans/noto-sans-malayalam-regular.ttf",
-        "ര്",
-        "47+1507|72+0",
-      );
-      testFont(
-        "HB-MLYM-42",
-        "noto-sans/noto-sans-malayalam-regular.ttf",
-        "ര്‍",
-        "98+1507",
-      );
+      testFont("HB-MLYM-40", "noto-sans/noto-sans-malayalam-regular.ttf", "യ്യ", "202+2120");
+      testFont("HB-MLYM-41", "noto-sans/noto-sans-malayalam-regular.ttf", "ര്", "47+1507|72+0");
+      testFont("HB-MLYM-42", "noto-sans/noto-sans-malayalam-regular.ttf", "ര്‍", "98+1507");
       testFont(
         "HB-MLYM-43",
         "noto-sans/noto-sans-malayalam-regular.ttf",
         "ര്ക",
         "47+1507|72+0|20+2125",
       );
-      testFont(
-        "HB-MLYM-44",
-        "noto-sans/noto-sans-malayalam-regular.ttf",
-        "ര്യ",
-        "47+1507|144+497",
-      );
+      testFont("HB-MLYM-44", "noto-sans/noto-sans-malayalam-regular.ttf", "ര്യ", "47+1507|144+497");
       testFont(
         "HB-MLYM-45",
         "noto-sans/noto-sans-malayalam-regular.ttf",
         "ര്‍വ്വ",
         "98+1507|208+1963",
       );
-      testFont(
-        "HB-MLYM-46",
-        "noto-sans/noto-sans-malayalam-regular.ttf",
-        "ല്‍",
-        "99+2454",
-      );
-      testFont(
-        "HB-MLYM-47",
-        "noto-sans/noto-sans-malayalam-regular.ttf",
-        "ല്യ",
-        "49+1759|144+497",
-      );
-      testFont(
-        "HB-MLYM-48",
-        "noto-sans/noto-sans-malayalam-regular.ttf",
-        "ല്ല",
-        "205+1759",
-      );
+      testFont("HB-MLYM-46", "noto-sans/noto-sans-malayalam-regular.ttf", "ല്‍", "99+2454");
+      testFont("HB-MLYM-47", "noto-sans/noto-sans-malayalam-regular.ttf", "ല്യ", "49+1759|144+497");
+      testFont("HB-MLYM-48", "noto-sans/noto-sans-malayalam-regular.ttf", "ല്ല", "205+1759");
       testFont(
         "HB-MLYM-49",
         "noto-sans/noto-sans-malayalam-regular.ttf",
         "ല്ലാം",
         "205+1759|59+1033|4+927",
       );
-      testFont(
-        "HB-MLYM-50",
-        "noto-sans/noto-sans-malayalam-regular.ttf",
-        "വ്വ",
-        "208+1963",
-      );
+      testFont("HB-MLYM-50", "noto-sans/noto-sans-malayalam-regular.ttf", "വ്വ", "208+1963");
       testFont(
         "HB-MLYM-51",
         "noto-sans/noto-sans-malayalam-regular.ttf",
@@ -2228,24 +1593,14 @@ describe("shaping", function () {
         "ഹാര്‍ഡ്‌വെയര്‍",
         "56+2437|59+1033|98+1507|32+2505|72+0|3+0|66+1465|52+1963|46+2120|98+1507",
       );
-      testFont(
-        "HB-MLYM-58",
-        "noto-sans/noto-sans-malayalam-regular.ttf",
-        "ള്‍",
-        "100+2139",
-      );
+      testFont("HB-MLYM-58", "noto-sans/noto-sans-malayalam-regular.ttf", "ള്‍", "100+2139");
       testFont(
         "HB-MLYM-59",
         "noto-sans/noto-sans-malayalam-regular.ttf",
         "ള്യം",
         "50+1466|229+697|4+927",
       );
-      testFont(
-        "HB-MLYM-60",
-        "noto-sans/noto-sans-malayalam-regular.ttf",
-        "ള്ള",
-        "206+2906",
-      );
+      testFont("HB-MLYM-60", "noto-sans/noto-sans-malayalam-regular.ttf", "ള്ള", "206+2906");
       testFont(
         "HB-MLYM-61",
         "noto-sans/noto-sans-malayalam-regular.ttf",
@@ -2270,12 +1625,7 @@ describe("shaping", function () {
         "യ‍്യ",
         "46+2120|3+0|144+497",
       );
-      testFont(
-        "HB-MLYM-65",
-        "noto-sans/noto-sans-malayalam-regular.ttf",
-        "സ്റ്റ്",
-        "214+2505|72+0",
-      );
+      testFont("HB-MLYM-65", "noto-sans/noto-sans-malayalam-regular.ttf", "സ്റ്റ്", "214+2505|72+0");
     });
 
     describe("shapes Oriya text", function () {
@@ -2297,36 +1647,16 @@ describe("shaping", function () {
         "ନ୍ତ୍ବ",
         "206+1298|525@-280,0+0",
       );
-      testFont(
-        "HB-ORYA-4",
-        "noto-sans/noto-sans-oriya-regular.ttf",
-        "ନ୍ତ୍ର",
-        "38+1298|161@-280,0+0",
-      );
+      testFont("HB-ORYA-4", "noto-sans/noto-sans-oriya-regular.ttf", "ନ୍ତ୍ର", "38+1298|161@-280,0+0");
       testFont(
         "HB-ORYA-5",
         "noto-sans/noto-sans-oriya-regular.ttf",
         "ନ୍ତ୍ର୍ଯ",
         "38+1298|161@-280,0+0|162+768",
       );
-      testFont(
-        "HB-ORYA-6",
-        "noto-sans/noto-sans-oriya-regular.ttf",
-        "ସ୍ତ୍ର",
-        "51+1317|161+0",
-      );
-      testFont(
-        "HB-ORYA-7",
-        "noto-sans/noto-sans-oriya-regular.ttf",
-        "ମୁଁ",
-        "43+1327|4+0|58+0",
-      );
-      testFont(
-        "HB-ORYA-8",
-        "noto-sans/noto-sans-oriya-regular.ttf",
-        "ମୁଂ",
-        "43+1327|58+0|5+618",
-      );
+      testFont("HB-ORYA-6", "noto-sans/noto-sans-oriya-regular.ttf", "ସ୍ତ୍ର", "51+1317|161+0");
+      testFont("HB-ORYA-7", "noto-sans/noto-sans-oriya-regular.ttf", "ମୁଁ", "43+1327|4+0|58+0");
+      testFont("HB-ORYA-8", "noto-sans/noto-sans-oriya-regular.ttf", "ମୁଂ", "43+1327|58+0|5+618");
     });
 
     describe("shapes Khmer text", function () {
@@ -2336,72 +1666,27 @@ describe("shaping", function () {
         "ខ្មែ",
         "108+588|45+1300|169+0",
       );
-      testFont(
-        "HB-KHMR-2",
-        "noto-sans/noto-sans-khmer-regular.ttf",
-        "ជា",
-        "51+1300|96+588",
-      );
+      testFont("HB-KHMR-2", "noto-sans/noto-sans-khmer-regular.ttf", "ជា", "51+1300|96+588");
       testFont(
         "HB-KHMR-3",
         "noto-sans/noto-sans-khmer-regular.ttf",
         "ថ្ងៃ",
         "109+588|60+1300|148+0",
       );
-      testFont(
-        "HB-KHMR-4",
-        "noto-sans/noto-sans-khmer-regular.ttf",
-        "មា",
-        "68+1300|96+588",
-      );
-      testFont(
-        "HB-KHMR-5",
-        "noto-sans/noto-sans-khmer-regular.ttf",
-        "ម្ពុ",
-        "68+1300|167+0|177+0",
-      );
-      testFont(
-        "HB-KHMR-6",
-        "noto-sans/noto-sans-khmer-regular.ttf",
-        "រ",
-        "70+588",
-      );
-      testFont(
-        "HB-KHMR-7",
-        "noto-sans/noto-sans-khmer-regular.ttf",
-        "រី",
-        "70+588|194+0",
-      );
-      testFont(
-        "HB-KHMR-8",
-        "noto-sans/noto-sans-khmer-regular.ttf",
-        "រ៍",
-        "70+588|199+0",
-      );
+      testFont("HB-KHMR-4", "noto-sans/noto-sans-khmer-regular.ttf", "មា", "68+1300|96+588");
+      testFont("HB-KHMR-5", "noto-sans/noto-sans-khmer-regular.ttf", "ម្ពុ", "68+1300|167+0|177+0");
+      testFont("HB-KHMR-6", "noto-sans/noto-sans-khmer-regular.ttf", "រ", "70+588");
+      testFont("HB-KHMR-7", "noto-sans/noto-sans-khmer-regular.ttf", "រី", "70+588|194+0");
+      testFont("HB-KHMR-8", "noto-sans/noto-sans-khmer-regular.ttf", "រ៍", "70+588|199+0");
       testFont(
         "HB-KHMR-9",
         "noto-sans/noto-sans-khmer-regular.ttf",
         "សៅ",
         "107+588|75+1900|111+588",
       );
-      testFont(
-        "HB-KHMR-10",
-        "noto-sans/noto-sans-khmer-regular.ttf",
-        "រ្ឥ",
-        "70+588|124+0|81+1300",
-      );
-      testFont(
-        "HB-KHMR-11",
-        "noto-sans/noto-sans-khmer-regular.ttf",
-        "ងឹ្ឈ",
-        "48+1300|99+0|152+588",
-      );
-      testFont(
-        "HB-KHMR-12",
-        "noto-sans/noto-sans-khmer-regular.ttf",
-        "ង្ឈឹ",
-        "48+1300|152+588|99+0",
-      );
+      testFont("HB-KHMR-10", "noto-sans/noto-sans-khmer-regular.ttf", "រ្ឥ", "70+588|124+0|81+1300");
+      testFont("HB-KHMR-11", "noto-sans/noto-sans-khmer-regular.ttf", "ងឹ្ឈ", "48+1300|99+0|152+588");
+      testFont("HB-KHMR-12", "noto-sans/noto-sans-khmer-regular.ttf", "ង្ឈឹ", "48+1300|152+588|99+0");
       testFont(
         "HB-KHMR-13",
         "noto-sans/noto-sans-khmer-regular.ttf",
@@ -2426,12 +1711,7 @@ describe("shaping", function () {
         "ម‌៉្លេះ",
         "107+588|68+1300|3+0|115+0|172+0|113+850",
       );
-      testFont(
-        "HB-KHMR-17",
-        "noto-sans/noto-sans-khmer-regular.ttf",
-        "ប៊័",
-        "64+1300|116+0|122+0",
-      );
+      testFont("HB-KHMR-17", "noto-sans/noto-sans-khmer-regular.ttf", "ប៊័", "64+1300|116+0|122+0");
       testFont(
         "HB-KHMR-18",
         "noto-sans/noto-sans-khmer-regular.ttf",
@@ -2462,12 +1742,7 @@ describe("shaping", function () {
         "កៅ្រ",
         "171+588|107+588|44+1300|111+588",
       );
-      testFont(
-        "HB-KHMR-23",
-        "noto-sans/noto-sans-khmer-regular.ttf",
-        "ព៑ា",
-        "66+1300|123+0|96+588",
-      );
+      testFont("HB-KHMR-23", "noto-sans/noto-sans-khmer-regular.ttf", "ព៑ា", "66+1300|123+0|96+588");
 
       testFont(
         "decomposes split matras",
@@ -2505,12 +1780,7 @@ describe("shaping", function () {
         "ᬙᭀ",
         "66+990|29+2155|57+916",
       );
-      testFont(
-        "SHBALI-1/5",
-        "noto-sans/noto-sans-balinese-regular.ttf",
-        "ᬚᬿ",
-        "67+990|30+1800",
-      );
+      testFont("SHBALI-1/5", "noto-sans/noto-sans-balinese-regular.ttf", "ᬚᬿ", "67+990|30+1800");
       testFont(
         "SHBALI-1/6",
         "noto-sans/noto-sans-balinese-regular.ttf",
@@ -2553,12 +1823,7 @@ describe("shaping", function () {
         "ᬓ᭄ᬓᬽ",
         "23+2275|129+0|70@35,0+0|170@5,0+0|57+916",
       );
-      testFont(
-        "SHBALI-1/13",
-        "noto-sans/noto-sans-balinese-regular.ttf",
-        "ᬓᬾ",
-        "66+990|23+2275",
-      );
+      testFont("SHBALI-1/13", "noto-sans/noto-sans-balinese-regular.ttf", "ᬓᬾ", "66+990|23+2275");
       testFont(
         "SHBALI-1/14",
         "noto-sans/noto-sans-balinese-regular.ttf",
@@ -2583,12 +1848,7 @@ describe("shaping", function () {
         "ᬓᭀ",
         "66+990|23+2275|57+916",
       );
-      testFont(
-        "SHBALI-1/18",
-        "noto-sans/noto-sans-balinese-regular.ttf",
-        "ᬓᬾ",
-        "66+990|23+2275",
-      );
+      testFont("SHBALI-1/18", "noto-sans/noto-sans-balinese-regular.ttf", "ᬓᬾ", "66+990|23+2275");
       testFont(
         "SHBALI-1/19",
         "noto-sans/noto-sans-balinese-regular.ttf",

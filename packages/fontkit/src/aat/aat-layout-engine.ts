@@ -1,7 +1,4 @@
-import type {
-  FeatureSelectionMap,
-  FeatureTupleInput,
-} from "./aat-feature-map.js";
+import type { FeatureSelectionMap, FeatureTupleInput } from "./aat-feature-map.js";
 import * as AATFeatureMap from "./aat-feature-map.js";
 import type { FontLike, Glyph } from "./aat-morx-processor.js";
 import AATMorxProcessor from "./aat-morx-processor.js";
@@ -55,16 +52,13 @@ export default class AATLayoutEngine {
       glyphRun.glyphs.reverse();
     }
 
-    const features: FeatureSelectionMap = AATFeatureMap.mapOTToAAT(
-      glyphRun.features,
-    );
+    const features: FeatureSelectionMap = AATFeatureMap.mapOTToAAT(glyphRun.features);
 
     this.#morxProcessor.process(glyphRun.glyphs, features);
   }
 
   getAvailableFeatures(_script: string, _language: string): string[] {
-    const supportedFeatures =
-      this.#morxProcessor.getSupportedFeatures() as FeatureTupleInput[];
+    const supportedFeatures = this.#morxProcessor.getSupportedFeatures() as FeatureTupleInput[];
     return AATFeatureMap.mapAATToOT(supportedFeatures);
   }
 
@@ -79,15 +73,8 @@ export default class AATLayoutEngine {
     return result;
   }
 
-  #addStrings(
-    glyphs: number[],
-    index: number,
-    strings: Set<string>,
-    current: string,
-  ): void {
-    const codePoints = this.#font._cmapProcessor.codePointsForGlyph(
-      glyphs[index],
-    );
+  #addStrings(glyphs: number[], index: number, strings: Set<string>, current: string): void {
+    const codePoints = this.#font._cmapProcessor.codePointsForGlyph(glyphs[index]);
 
     for (const codePoint of codePoints) {
       const nextString = current + String.fromCodePoint(codePoint);

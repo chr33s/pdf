@@ -1,9 +1,4 @@
-import {
-  CustomFontEmbedder,
-  PDFHexString,
-  PDFRef,
-  StandardFontEmbedder,
-} from "../core/index.js";
+import { CustomFontEmbedder, PDFHexString, PDFRef, StandardFontEmbedder } from "../core/index.js";
 import { assertIs, assertOrUndefined } from "../utils/index.js";
 import Embeddable from "./embeddable.js";
 import PDFDocument from "./pdf-document.js";

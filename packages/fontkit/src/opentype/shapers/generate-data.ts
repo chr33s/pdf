@@ -13,10 +13,7 @@ import pako from "pako";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const toArrayBuffer = (view: Uint8Array): ArrayBuffer =>
-  view.buffer.slice(
-    view.byteOffset,
-    view.byteOffset + view.byteLength,
-  ) as ArrayBuffer;
+  view.buffer.slice(view.byteOffset, view.byteOffset + view.byteLength) as ArrayBuffer;
 
 const ShapingClasses = {
   Non_Joining: 0,
@@ -35,16 +32,10 @@ let trie = new UnicodeTrieBuilder();
 for (let i = 0; i < codepoints.length; i++) {
   let codepoint = codepoints[i];
   if (codepoint) {
-    if (
-      codepoint.joiningGroup === "ALAPH" ||
-      codepoint.joiningGroup === "DALATH RISH"
-    ) {
+    if (codepoint.joiningGroup === "ALAPH" || codepoint.joiningGroup === "DALATH RISH") {
       const group = codepoint.joiningGroup as ShapingClassKey;
       trie.set(codepoint.code, ShapingClasses[group] + 1);
-    } else if (
-      codepoint.joiningType &&
-      codepoint.joiningType in ShapingClasses
-    ) {
+    } else if (codepoint.joiningType && codepoint.joiningType in ShapingClasses) {
       const type = codepoint.joiningType as ShapingClassKey;
       trie.set(codepoint.code, ShapingClasses[type] + 1);
     }
@@ -55,9 +46,7 @@ for (let i = 0; i < codepoints.length; i++) {
 // allowing unicode-properties to work in the browser
 const filePath = join(__dirname, "trie.json");
 const compressedTrie = pako.deflate(trie.toBuffer());
-const jsonBase64DeflatedTrie = JSON.stringify(
-  base64.encode(toArrayBuffer(compressedTrie)),
-);
+const jsonBase64DeflatedTrie = JSON.stringify(base64.encode(toArrayBuffer(compressedTrie)));
 await fs.writeFile(filePath, jsonBase64DeflatedTrie);
 
 const modulePath = join(__dirname, "trie-data.js");

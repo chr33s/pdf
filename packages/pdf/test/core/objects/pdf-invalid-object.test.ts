@@ -27,8 +27,6 @@ describe("PDFInvalidObject", () => {
   test("can be serialized", () => {
     const buffer = new Uint8Array(11).fill(0);
     expect(PDFInvalidObject.of(data).copyBytesInto(buffer, 3)).toBe(7);
-    expect(buffer).toEqual(
-      new Uint8Array([0, 0, 0, 12, 39, 92, 38, 38, 28, 49, 0]),
-    );
+    expect(buffer).toEqual(new Uint8Array([0, 0, 0, 12, 39, 92, 38, 38, 28, 49, 0]));
   });
 });

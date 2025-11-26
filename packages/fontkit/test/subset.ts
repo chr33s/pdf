@@ -28,9 +28,7 @@ function encodeSubset(subset: Subset) {
 
 describe("font subsetting", function () {
   describe("truetype subsetting", function () {
-    let font = fontkit.openSync(
-      __dirname + "/data/open-sans/open-sans-regular.ttf",
-    );
+    let font = fontkit.openSync(__dirname + "/data/open-sans/open-sans-regular.ttf");
 
     test("should create a TTFSubset instance", function () {
       let subset = font.createSubset();
@@ -46,27 +44,20 @@ describe("font subsetting", function () {
       const buf = await encodeSubset(subset);
       let f = fontkit.create(buf);
       expect(f.numGlyphs).toBe(5);
-      expect(f.getGlyph(1).path.toSVG()).toBe(
-        font.glyphsForString("h")[0].path.toSVG(),
-      );
+      expect(f.getGlyph(1).path.toSVG()).toBe(font.glyphsForString("h")[0].path.toSVG());
     });
 
-    test.runIf(hasSkiaFont)(
-      "should re-encode variation glyphs",
-      async function () {
-        let font = fontkit.openSync(SKIA_FONT_PATH, "Bold");
-        let subset = font.createSubset();
-        for (let glyph of font.glyphsForString("e")) {
-          subset.includeGlyph(glyph);
-        }
+    test.runIf(hasSkiaFont)("should re-encode variation glyphs", async function () {
+      let font = fontkit.openSync(SKIA_FONT_PATH, "Bold");
+      let subset = font.createSubset();
+      for (let glyph of font.glyphsForString("e")) {
+        subset.includeGlyph(glyph);
+      }
 
-        const buf = await encodeSubset(subset);
-        let f = fontkit.create(buf);
-        expect(f.getGlyph(1).path.toSVG()).toBe(
-          font.glyphsForString("e")[0].path.toSVG(),
-        );
-      },
-    );
+      const buf = await encodeSubset(subset);
+      let f = fontkit.create(buf);
+      expect(f.getGlyph(1).path.toSVG()).toBe(font.glyphsForString("e")[0].path.toSVG());
+    });
 
     test("should handle composite glyphs", async function () {
       let subset = font.createSubset();
@@ -75,16 +66,12 @@ describe("font subsetting", function () {
       const buf = await encodeSubset(subset);
       let f = fontkit.create(buf);
       expect(f.numGlyphs).toBe(4);
-      expect(f.getGlyph(1).path.toSVG()).toBe(
-        font.glyphsForString("é")[0].path.toSVG(),
-      );
+      expect(f.getGlyph(1).path.toSVG()).toBe(font.glyphsForString("é")[0].path.toSVG());
     });
   });
 
   describe("CFF subsetting", function () {
-    let font = fontkit.openSync(
-      __dirname + "/data/source-sans-pro/source-sans-pro-regular.otf",
-    );
+    let font = fontkit.openSync(__dirname + "/data/source-sans-pro/source-sans-pro-regular.otf");
 
     test("should create a CFFSubset instance", function () {
       let subset = font.createSubset();
@@ -101,15 +88,11 @@ describe("font subsetting", function () {
 
       const buf = await encodeSubset(subset);
       let subsetFont = fontkit.create(buf);
-      expect(subsetFont.getGlyph(1).path.toSVG()).toBe(
-        font.glyphsForString("h")[0].path.toSVG(),
-      );
+      expect(subsetFont.getGlyph(1).path.toSVG()).toBe(font.glyphsForString("h")[0].path.toSVG());
     });
 
     test("should handle CID fonts", async function () {
-      let f = fontkit.openSync(
-        __dirname + "/data/noto-sans-cjk/noto-sans-cj-kkr-regular.otf",
-      );
+      let f = fontkit.openSync(__dirname + "/data/noto-sans-cjk/noto-sans-cj-kkr-regular.otf");
       let subset = f.createSubset();
       let iterable = f.glyphsForString("갈휸");
       for (let i = 0; i < iterable.length; i++) {
@@ -124,15 +107,10 @@ describe("font subsetting", function () {
         throw new Error("Subset font is missing a CFF table");
       }
 
-      let cffBuffer = buf.subarray(
-        cffEntry.offset,
-        cffEntry.offset + cffEntry.length,
-      );
+      let cffBuffer = buf.subarray(cffEntry.offset, cffEntry.offset + cffEntry.length);
 
       let cff = new CFFFont(new r.DecodeStream(cffBuffer));
-      expect(subsetFont.getGlyph(1).path.toSVG()).toBe(
-        f.glyphsForString("갈")[0].path.toSVG(),
-      );
+      expect(subsetFont.getGlyph(1).path.toSVG()).toBe(f.glyphsForString("갈")[0].path.toSVG());
       expect(cff.topDict.FDArray.length).toBe(2);
       expect(cff.topDict.FDSelect.fds).toEqual([0, 1, 1]);
     });

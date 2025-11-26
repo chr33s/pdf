@@ -25,11 +25,7 @@ export const stringAsByteArray = (str: string): Uint8Array => {
   return buffer;
 };
 
-export const copyStringIntoBuffer = (
-  str: string,
-  buffer: Uint8Array,
-  offset: number,
-): number => {
+export const copyStringIntoBuffer = (str: string, buffer: Uint8Array, offset: number): number => {
   const length = str.length;
   for (let idx = 0; idx < length; idx++) {
     buffer[offset++] = str.charCodeAt(idx);
@@ -40,8 +36,7 @@ export const copyStringIntoBuffer = (
 export const addRandomSuffix = (prefix: string, suffixLength = 4) =>
   `${prefix}-${Math.floor(Math.random() * 10 ** suffixLength)}`;
 
-export const escapeRegExp = (str: string) =>
-  str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+export const escapeRegExp = (str: string) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 export const cleanText = (text: string) =>
   text.replace(/\t|\u0085|\u2028|\u2029/g, "    ").replace(/[\b\v]/g, "");
@@ -148,8 +143,7 @@ export const breakTextIntoLines = (
 };
 
 // See section "7.9.4 Dates" of the PDF specification
-const dateRegex =
-  /^D:(\d\d\d\d)(\d\d)?(\d\d)?(\d\d)?(\d\d)?(\d\d)?([+\-Z])?(\d\d)?'?(\d\d)?'?$/;
+const dateRegex = /^D:(\d\d\d\d)(\d\d)?(\d\d)?(\d\d)?(\d\d)?(\d\d)?([+\-Z])?(\d\d)?'?(\d\d)?'?$/;
 
 export const parseDate = (dateStr: string): Date | undefined => {
   const match = dateStr.match(dateRegex);
@@ -170,11 +164,8 @@ export const parseDate = (dateStr: string): Date | undefined => {
   ] = match;
 
   // http://www.ecma-international.org/ecma-262/5.1/#sec-15.9.1.15
-  const tzOffset =
-    offsetSign === "Z" ? "Z" : `${offsetSign}${offsetHours}:${offsetMins}`;
-  const date = new Date(
-    `${year}-${month}-${day}T${hours}:${mins}:${secs}${tzOffset}`,
-  );
+  const tzOffset = offsetSign === "Z" ? "Z" : `${offsetSign}${offsetHours}:${offsetMins}`;
+  const date = new Date(`${year}-${month}-${day}T${hours}:${mins}:${secs}${tzOffset}`);
 
   return date;
 };

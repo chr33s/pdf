@@ -1,8 +1,4 @@
-import type {
-  DecodeStream,
-  EncodeStream,
-  PointerOptions,
-} from "@chr33s/restructure";
+import type { DecodeStream, EncodeStream, PointerOptions } from "@chr33s/restructure";
 import * as r from "@chr33s/restructure";
 import type { OperandValue } from "./cff-operand.js";
 export default class CFFPointer extends r.Pointer {
@@ -15,16 +11,8 @@ export default class CFFPointer extends r.Pointer {
   }
 
   decode(stream: DecodeStream, parent?: Record<string, any>): unknown;
-  decode(
-    stream: DecodeStream,
-    parent?: Record<string, any>,
-    operands?: number[],
-  ): unknown;
-  decode(
-    stream: DecodeStream,
-    parent: Record<string, any> = {},
-    operands: number[] = [],
-  ): unknown {
+  decode(stream: DecodeStream, parent?: Record<string, any>, operands?: number[]): unknown;
+  decode(stream: DecodeStream, parent: Record<string, any> = {}, operands: number[] = []): unknown {
     this.offsetType = {
       decode: () => operands[0],
     };
@@ -33,11 +21,7 @@ export default class CFFPointer extends r.Pointer {
   }
 
   encode(stream: EncodeStream, value: unknown, ctx: Record<string, any>): void;
-  encode(
-    stream: EncodeStream | null,
-    value: unknown,
-    ctx?: Record<string, any>,
-  ): OperandValue[];
+  encode(stream: EncodeStream | null, value: unknown, ctx?: Record<string, any>): OperandValue[];
   encode(
     stream: EncodeStream | null,
     value: unknown,

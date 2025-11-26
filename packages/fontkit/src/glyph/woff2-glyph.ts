@@ -37,10 +37,8 @@ export default class WOFF2Glyph extends TTFGlyph {
         ] as const;
 
         for (const [x, y] of corners) {
-          const transformedX =
-            x * component.scaleX + y * component.scale01 + component.dx;
-          const transformedY =
-            y * component.scaleY + x * component.scale10 + component.dy;
+          const transformedX = x * component.scaleX + y * component.scale01 + component.dx;
+          const transformedY = y * component.scaleY + x * component.scale10 + component.dy;
           bbox.addPoint(transformedX, transformedY);
         }
       }

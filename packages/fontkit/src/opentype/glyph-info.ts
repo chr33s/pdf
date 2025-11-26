@@ -23,12 +23,7 @@ export default class GlyphInfo {
   isLigature!: boolean;
   isMark!: boolean;
 
-  constructor(
-    font: FontLike,
-    id: number,
-    codePoints: number[] = [],
-    features?: FeatureInit,
-  ) {
+  constructor(font: FontLike, id: number, codePoints: number[] = [], features?: FeatureInit) {
     this._font = font;
     this.codePoints = codePoints;
 
@@ -74,8 +69,7 @@ export default class GlyphInfo {
         ? OTProcessor.prototype.getClassID(id, GDEF.markAttachClassDef)
         : 0;
     } else {
-      this.isMark =
-        this.codePoints.length > 0 && this.codePoints.every(unicode.isMark);
+      this.isMark = this.codePoints.length > 0 && this.codePoints.every(unicode.isMark);
       this.isBase = !this.isMark;
       this.isLigature = this.codePoints.length > 1;
       this.markAttachmentType = 0;

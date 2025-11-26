@@ -148,10 +148,6 @@ for (let script in UNICODE_SCRIPTS) {
   }
 }
 
-function fromUnicode(script: string): UnicodeScriptValue | undefined {
-  return UNICODE_SCRIPTS[script];
-}
-
 export function fromOpenType(tag: string): string | undefined {
   return OPENTYPE_SCRIPTS[tag];
 }

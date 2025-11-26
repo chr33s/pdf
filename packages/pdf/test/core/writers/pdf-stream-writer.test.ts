@@ -1,12 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { describe, expect, test } from "vitest";
 
-import {
-  PDFContext,
-  PDFName,
-  PDFRef,
-  PDFStreamWriter,
-} from "../../../src/index.js";
+import { PDFContext, PDFName, PDFRef, PDFStreamWriter } from "../../../src/index.js";
 
 const expectedPdfBytes = new Uint8Array(
   await readFile(new URL("./data/stream-writer-1.pdf", import.meta.url)),

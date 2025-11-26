@@ -362,10 +362,10 @@ type FeatureSelector<Name extends FeatureName> = Exclude<
   "code" | "exclusive"
 >;
 
-function feature<
-  Name extends FeatureName,
-  Selector extends FeatureSelector<Name>,
->(name: Name, selector: Selector): FeatureTuple {
+function feature<Name extends FeatureName, Selector extends FeatureSelector<Name>>(
+  name: Name,
+  selector: Selector,
+): FeatureTuple {
   const definition = features[name];
   return [definition.code, definition[selector] as number];
 }
@@ -482,10 +482,7 @@ const OTMapping: Record<string, FeatureTuple> = {
 
 // Add cv01-cv99 features
 for (let i = 1; i <= 99; i++) {
-  OTMapping[`cv${`00${i}`.slice(-2)}`] = [
-    features.characterAlternatives.code,
-    i,
-  ];
+  OTMapping[`cv${`00${i}`.slice(-2)}`] = [features.characterAlternatives.code, i];
 }
 
 // create inverse mapping
@@ -555,9 +552,7 @@ export function mapAATToOT(
     for (let k = 0; k < featureList.length; k++) {
       const f = mapFeatureStrings(featureList[k]);
       const r =
-        f[0] != null && f[1] != null && AATMapping[f[0]]
-          ? AATMapping[f[0]][f[1]]
-          : undefined;
+        f[0] != null && f[1] != null && AATMapping[f[0]] ? AATMapping[f[0]][f[1]] : undefined;
       if (r) {
         res[r] = true;
       }
@@ -570,14 +565,9 @@ export function mapAATToOT(
           continue;
         }
 
-        const f = mapFeatureStrings([
-          type as FeatureTypeInput,
-          setting as FeatureSettingInput,
-        ]);
+        const f = mapFeatureStrings([type as FeatureTypeInput, setting as FeatureSettingInput]);
         const r =
-          f[0] != null && f[1] != null && AATMapping[f[0]]
-            ? AATMapping[f[0]][f[1]]
-            : undefined;
+          f[0] != null && f[1] != null && AATMapping[f[0]] ? AATMapping[f[0]][f[1]] : undefined;
         if (r) {
           res[r] = true;
         }

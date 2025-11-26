@@ -4,16 +4,13 @@ import fontkit from "./add-test-helpers-to-fontkit.js";
 import { here } from "./utils/dir.js";
 
 const __dirname = here(import.meta.url);
-const glyphIds = (glyphs: Array<{ id: number }>) =>
-  glyphs.map((glyph) => glyph.id);
+const glyphIds = (glyphs: Array<{ id: number }>) => glyphs.map((glyph) => glyph.id);
 const glyphCodePoints = (glyphs: Array<{ codePoints: number[] }>) =>
   glyphs.map((glyph) => glyph.codePoints);
 
 describe("character to glyph mapping", function () {
   describe("basic cmap handling", function () {
-    let font = fontkit.openSync(
-      __dirname + "/data/open-sans/open-sans-regular.ttf",
-    );
+    let font = fontkit.openSync(__dirname + "/data/open-sans/open-sans-regular.ttf");
 
     test("should get characterSet", function () {
       expect(Array.isArray(font.characterSet)).toBe(true);
@@ -36,38 +33,24 @@ describe("character to glyph mapping", function () {
       expect(Array.isArray(glyphs)).toBe(true);
       expect(glyphs.length).toBe(5);
       expect(glyphIds(glyphs)).toEqual([75, 72, 79, 79, 82]);
-      return expect(glyphCodePoints(glyphs)).toEqual([
-        [104],
-        [101],
-        [108],
-        [108],
-        [111],
-      ]);
+      return expect(glyphCodePoints(glyphs)).toEqual([[104], [101], [108], [108], [111]]);
     });
 
     test("should support unicode variation selectors", function () {
       let font = fontkit.openSync(__dirname + "/data/fonttest/test-cmap14.otf");
-      let glyphs = font.glyphsForString(
-        "\u{82a6}\u{82a6}\u{E0100}\u{82a6}\u{E0101}",
-      );
+      let glyphs = font.glyphsForString("\u{82a6}\u{82a6}\u{E0100}\u{82a6}\u{E0101}");
       expect(glyphIds(glyphs)).toEqual([1, 1, 2]);
     });
 
     test("should support legacy encodings when no unicode cmap is found", function () {
-      let font = fontkit.openSync(
-        __dirname + "/data/fonttest/test-cmap-mac-turkish.ttf",
-      );
+      let font = fontkit.openSync(__dirname + "/data/fonttest/test-cmap-mac-turkish.ttf");
       let glyphs = font.glyphsForString("“ABÇĞIİÖŞÜ”");
-      expect(glyphIds(glyphs)).toEqual([
-        200, 34, 35, 126, 176, 42, 178, 140, 181, 145, 201,
-      ]);
+      expect(glyphIds(glyphs)).toEqual([200, 34, 35, 126, 176, 42, 178, 140, 181, 145, 201]);
     });
   });
 
   describe("opentype features", function () {
-    let font = fontkit.openSync(
-      __dirname + "/data/source-sans-pro/source-sans-pro-regular.otf",
-    );
+    let font = fontkit.openSync(__dirname + "/data/source-sans-pro/source-sans-pro-regular.otf");
 
     test("should list available features", () =>
       expect(font.availableFeatures).toEqual([
@@ -140,24 +123,14 @@ describe("character to glyph mapping", function () {
       let { glyphs } = font.layout("ffi 1⁄2");
       expect(glyphs.length).toBe(5);
       expect(glyphIds(glyphs)).toEqual([767, 3, 20, 645, 21]);
-      return expect(glyphCodePoints(glyphs)).toEqual([
-        [102, 102, 105],
-        [32],
-        [49],
-        [8260],
-        [50],
-      ]);
+      return expect(glyphCodePoints(glyphs)).toEqual([[102, 102, 105], [32], [49], [8260], [50]]);
     });
 
     test("should apply user specified features", function () {
       let { glyphs } = font.layout("ffi 1⁄2", ["numr"]);
       expect(glyphs.length).toBe(3);
       expect(glyphIds(glyphs)).toEqual([767, 3, 126]);
-      return expect(glyphCodePoints(glyphs)).toEqual([
-        [102, 102, 105],
-        [32],
-        [49, 8260, 50],
-      ]);
+      return expect(glyphCodePoints(glyphs)).toEqual([[102, 102, 105], [32], [49, 8260, 50]]);
     });
 
     test("should handle rtl direction", function () {
@@ -171,8 +144,8 @@ describe("character to glyph mapping", function () {
       let f = fontkit.openSync(__dirname + "/data/khmer/khmer.ttf");
       let { glyphs } = f.layout("ខ្ញុំអាចញ៉ាំកញ្ចក់បាន ដោយគ្មានបញ្ហា");
       expect(glyphIds(glyphs)).toEqual([
-        45, 153, 177, 112, 248, 188, 49, 296, 44, 187, 149, 44, 117, 236, 188,
-        63, 3, 107, 226, 188, 69, 218, 169, 188, 63, 64, 255, 175, 188,
+        45, 153, 177, 112, 248, 188, 49, 296, 44, 187, 149, 44, 117, 236, 188, 63, 3, 107, 226, 188,
+        69, 218, 169, 188, 63, 64, 255, 175, 188,
       ]);
 
       return expect(glyphCodePoints(glyphs)).toEqual([
@@ -211,9 +184,7 @@ describe("character to glyph mapping", function () {
 
   describe("glyph id to strings", function () {
     test("should return strings from cmap that map to a given glyph", function () {
-      let font = fontkit.openSync(
-        __dirname + "/data/open-sans/open-sans-regular.ttf",
-      );
+      let font = fontkit.openSync(__dirname + "/data/open-sans/open-sans-regular.ttf");
       let strings = font.stringsForGlyph(68);
       expect(strings).toEqual(["a"]);
     });

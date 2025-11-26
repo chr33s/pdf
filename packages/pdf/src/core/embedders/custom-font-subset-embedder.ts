@@ -1,16 +1,6 @@
-import {
-  Font,
-  Fontkit,
-  Glyph,
-  Subset,
-  TypeFeatures,
-} from "../../types/fontkit.js";
+import { Font, Fontkit, Glyph, Subset, TypeFeatures } from "../../types/fontkit.js";
 
-import {
-  Cache,
-  mergeUint8Arrays,
-  toHexStringOfMinLength,
-} from "../../utils/index.js";
+import { Cache, mergeUint8Arrays, toHexStringOfMinLength } from "../../utils/index.js";
 import PDFHexString from "../objects/pdf-hex-string.js";
 import CustomFontEmbedder from "./custom-font-embedder.js";
 
@@ -27,12 +17,7 @@ class CustomFontSubsetEmbedder extends CustomFontEmbedder {
     fontFeatures?: TypeFeatures,
   ) {
     const font = fontkit.create(fontData);
-    return new CustomFontSubsetEmbedder(
-      font,
-      fontData,
-      customFontName,
-      fontFeatures,
-    );
+    return new CustomFontSubsetEmbedder(font, fontData, customFontName, fontFeatures);
   }
 
   readonly #subset: Subset;

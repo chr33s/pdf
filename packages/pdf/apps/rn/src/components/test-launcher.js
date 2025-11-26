@@ -1,13 +1,5 @@
 import React, { Component } from "react";
-import {
-  StyleSheet,
-  SafeAreaView,
-  Text,
-  View,
-  Button,
-  Platform,
-  ScrollView,
-} from "react-native";
+import { StyleSheet, SafeAreaView, Text, View, Button, Platform, ScrollView } from "react-native";
 
 import test1 from "../tests/test1.js";
 import test2 from "../tests/test2.js";
@@ -71,9 +63,7 @@ export default class TestLauncher extends Component {
     return (
       <SafeAreaView style={styles.container}>
         <Text style={styles.text}>Tap a button to launch a test</Text>
-        <Text style={styles.subText}>
-          {lastRunTest && `(Just ran Test ${lastRunTest})`}
-        </Text>
+        <Text style={styles.subText}>{lastRunTest && `(Just ran Test ${lastRunTest})`}</Text>
         <ScrollView>
           <TestButton test={[1, test1]} longRunning />
           <TestButton test={[2, test2]} longRunning />

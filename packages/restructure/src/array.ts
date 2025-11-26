@@ -11,11 +11,7 @@ export default class ArrayT<T = unknown, TResult = T[]> extends Base<TResult> {
   public length?: LengthLike;
   public lengthType: LengthType;
 
-  constructor(
-    type: any,
-    length?: LengthLike,
-    lengthType: LengthType = "count",
-  ) {
+  constructor(type: any, length?: LengthLike, lengthType: LengthType = "count") {
     super();
     this.type = type;
     this.length = length;
@@ -66,9 +62,7 @@ export default class ArrayT<T = unknown, TResult = T[]> extends Base<TResult> {
 
   size(array?: T[], ctx?: any, includePointers = true): number {
     if (!array) {
-      return (
-        this.type.size(null, ctx) * resolveLength(this.length, undefined, ctx)
-      );
+      return this.type.size(null, ctx) * resolveLength(this.length, undefined, ctx);
     }
 
     let total = 0;

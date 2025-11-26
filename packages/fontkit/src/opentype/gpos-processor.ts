@@ -125,10 +125,7 @@ export default class GPOSProcessor extends OTProcessor {
               return false;
             }
 
-            let class1 = this.getClassID(
-              this.glyphIterator.cur.id,
-              table.classDef1,
-            );
+            let class1 = this.getClassID(this.glyphIterator.cur.id, table.classDef1);
             let class2 = this.getClassID(nextGlyph.id, table.classDef2);
             if (class1 === -1 || class2 === -1) {
               return false;
@@ -154,16 +151,12 @@ export default class GPOSProcessor extends OTProcessor {
           return false;
         }
 
-        let curRecord =
-          table.entryExitRecords[this.coverageIndex(table.coverage)];
+        let curRecord = table.entryExitRecords[this.coverageIndex(table.coverage)];
         if (!curRecord || !curRecord.exitAnchor) {
           return false;
         }
 
-        let nextRecord =
-          table.entryExitRecords[
-            this.coverageIndex(table.coverage, nextGlyph.id)
-          ];
+        let nextRecord = table.entryExitRecords[this.coverageIndex(table.coverage, nextGlyph.id)];
         if (!nextRecord || !nextRecord.entryAnchor) {
           return false;
         }
@@ -300,9 +293,7 @@ export default class GPOSProcessor extends OTProcessor {
         const markLigatureID = markGlyph.ligatureID ?? 0;
         const ligGlyphLigatureID = ligGlyph.ligatureID ?? 0;
         const compIndex =
-          markLigatureID &&
-          ligGlyphLigatureID === markLigatureID &&
-          markLigatureComponent > 0
+          markLigatureID && ligGlyphLigatureID === markLigatureID && markLigatureComponent > 0
             ? Math.min(markLigatureComponent, ligGlyph.codePoints.length) - 1
             : ligGlyph.codePoints.length - 1;
 
@@ -428,11 +419,7 @@ export default class GPOSProcessor extends OTProcessor {
     return { x, y };
   }
 
-  applyFeatures(
-    userFeatures: string[],
-    glyphs: GlyphInfo[],
-    advances?: GlyphPosition[],
-  ): void {
+  applyFeatures(userFeatures: string[], glyphs: GlyphInfo[], advances?: GlyphPosition[]): void {
     super.applyFeatures(userFeatures, glyphs, advances);
 
     for (let i = 0; i < this.glyphs.length; i++) {

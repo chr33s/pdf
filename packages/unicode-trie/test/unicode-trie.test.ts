@@ -59,11 +59,10 @@ describe("unicode trie", () => {
 
     const buf = builder.toBuffer();
     const bufferExpected = Buffer.from([
-      0, 72, 0, 0, 0, 0, 0, 0, 128, 36, 0, 0, 123, 123, 206, 144, 235, 128, 2,
-      143, 67, 96, 225, 171, 23, 55, 54, 38, 231, 47, 44, 127, 233, 90, 109,
-      194, 92, 246, 126, 197, 131, 223, 31, 56, 102, 78, 154, 20, 108, 117, 88,
-      244, 93, 192, 190, 218, 229, 156, 12, 107, 86, 235, 125, 96, 102, 0, 129,
-      15, 239, 109, 219, 204, 58, 151, 92, 52, 126, 152, 198, 14, 0,
+      0, 72, 0, 0, 0, 0, 0, 0, 128, 36, 0, 0, 123, 123, 206, 144, 235, 128, 2, 143, 67, 96, 225,
+      171, 23, 55, 54, 38, 231, 47, 44, 127, 233, 90, 109, 194, 92, 246, 126, 197, 131, 223, 31, 56,
+      102, 78, 154, 20, 108, 117, 88, 244, 93, 192, 190, 218, 229, 156, 12, 107, 86, 235, 125, 96,
+      102, 0, 129, 15, 239, 109, 219, 204, 58, 151, 92, 52, 126, 152, 198, 14, 0,
     ]);
     expect(buf.toString("hex")).toBe(bufferExpected.toString("hex"));
   });
@@ -207,10 +206,7 @@ describe("unicode trie", () => {
 
   type TrieLike = { get: (codePoint: number) => number };
 
-  const findMismatch = (
-    trie: TrieLike,
-    checks: readonly (readonly [number, number])[],
-  ) => {
+  const findMismatch = (trie: TrieLike, checks: readonly (readonly [number, number])[]) => {
     let start = 0;
     for (const [end, expected] of checks) {
       for (let codePoint = start; codePoint < end; codePoint++) {

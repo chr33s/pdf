@@ -1,14 +1,6 @@
 import fontkit from "@chr33s/fontkit";
 import { readFile } from "node:fs/promises";
-import {
-  afterAll,
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  test,
-  vi,
-} from "vitest";
+import { afterAll, beforeAll, beforeEach, describe, expect, test, vi } from "vitest";
 import { PDFAttachment } from "../../src/api/pdf-document.js";
 import {
   AFRelationship,
@@ -41,27 +33,18 @@ const oldEncryptedPdfBytes1 = await readFile("assets/pdfs/encrypted-old.pdf");
 // const oldEncryptedPdfBytes2 = await readFile('pdf_specification.pdf');
 
 const newEncryptedPdfBytes = await readFile("assets/pdfs/encrypted-new.pdf");
-const invalidObjectsPdfBytes = await readFile(
-  "assets/pdfs/with-invalid-objects.pdf",
-);
+const invalidObjectsPdfBytes = await readFile("assets/pdfs/with-invalid-objects.pdf");
 const justMetadataPdfbytes = await readFile("assets/pdfs/just-metadata.pdf");
 const normalPdfBytes = await readFile("assets/pdfs/normal.pdf");
-const withViewerPrefsPdfBytes = await readFile(
-  "assets/pdfs/with-viewer-prefs.pdf",
-);
-const hasAttachmentPdfBytes = await readFile(
-  "assets/pdfs/examples/add-attachments.pdf",
-);
+const withViewerPrefsPdfBytes = await readFile("assets/pdfs/with-viewer-prefs.pdf");
+const hasAttachmentPdfBytes = await readFile("assets/pdfs/examples/add-attachments.pdf");
 
 describe("PDFDocument", () => {
   describe("load() method", () => {
     const origConsoleWarn = console.warn;
 
     beforeAll(() => {
-      const ignoredWarnings = [
-        "Trying to parse invalid object:",
-        "Invalid object ref:",
-      ];
+      const ignoredWarnings = ["Trying to parse invalid object:", "Invalid object ref:"];
       console.warn = vi.fn((...args) => {
         const isIgnored = ignoredWarnings.find((iw) => args[0].includes(iw));
         if (!isIgnored) origConsoleWarn(...args);
@@ -302,12 +285,8 @@ describe("PDFDocument", () => {
         updateMetadata: false,
       });
 
-      expect(pdfDoc.getCreationDate()).toEqual(
-        new Date("2018-01-04T01:05:06.000Z"),
-      );
-      expect(pdfDoc.getModificationDate()).toEqual(
-        new Date("2018-01-04T01:05:06.000Z"),
-      );
+      expect(pdfDoc.getCreationDate()).toEqual(new Date("2018-01-04T01:05:06.000Z"));
+      expect(pdfDoc.getModificationDate()).toEqual(new Date("2018-01-04T01:05:06.000Z"));
     });
   });
 
@@ -315,9 +294,7 @@ describe("PDFDocument", () => {
     test("defaults to an undefined ViewerPreferences dict", async () => {
       const pdfDoc = await PDFDocument.create();
 
-      expect(
-        pdfDoc.catalog.lookupMaybe(PDFName.of("ViewerPreferences"), PDFDict),
-      ).toBeUndefined();
+      expect(pdfDoc.catalog.lookupMaybe(PDFName.of("ViewerPreferences"), PDFDict)).toBeUndefined();
     });
 
     test("can get/set HideToolbar, HideMenubar, HideWindowUI, FitWindow, CenterWindow, DisplayDocTitle, NonFullScreenPageMode, Direction, PrintScaling, Duplex, PickTrayByPDFSize, PrintPageRange, NumCopies from a new document", async () => {
@@ -331,9 +308,7 @@ describe("PDFDocument", () => {
       expect(viewerPrefs.getFitWindow()).toBe(false);
       expect(viewerPrefs.getCenterWindow()).toBe(false);
       expect(viewerPrefs.getDisplayDocTitle()).toBe(false);
-      expect(viewerPrefs.getNonFullScreenPageMode()).toBe(
-        NonFullScreenPageMode.UseNone,
-      );
+      expect(viewerPrefs.getNonFullScreenPageMode()).toBe(NonFullScreenPageMode.UseNone);
       expect(viewerPrefs.getReadingDirection()).toBe(ReadingDirection.L2R);
       expect(viewerPrefs.getPrintScaling()).toBe(PrintScaling.AppDefault);
       expect(viewerPrefs.getDuplex()).toBeUndefined();
@@ -367,9 +342,7 @@ describe("PDFDocument", () => {
       expect(viewerPrefs.getFitWindow()).toBe(true);
       expect(viewerPrefs.getCenterWindow()).toBe(true);
       expect(viewerPrefs.getDisplayDocTitle()).toBe(true);
-      expect(viewerPrefs.getNonFullScreenPageMode()).toBe(
-        NonFullScreenPageMode.UseOutlines,
-      );
+      expect(viewerPrefs.getNonFullScreenPageMode()).toBe(NonFullScreenPageMode.UseOutlines);
       expect(viewerPrefs.getReadingDirection()).toBe(ReadingDirection.R2L);
       expect(viewerPrefs.getPrintScaling()).toBe(PrintScaling.None);
       expect(viewerPrefs.getDuplex()).toBe(Duplex.DuplexFlipLongEdge);
@@ -424,9 +397,7 @@ describe("PDFDocument", () => {
 
       pdfDoc.setTitle("Testing setTitle Title");
 
-      expect(
-        pdfDoc.catalog.lookupMaybe(PDFName.of("ViewerPreferences"), PDFDict),
-      ).toBeUndefined();
+      expect(pdfDoc.catalog.lookupMaybe(PDFName.of("ViewerPreferences"), PDFDict)).toBeUndefined();
 
       expect(pdfDoc.getTitle()).toBe("Testing setTitle Title");
     });
@@ -438,19 +409,14 @@ describe("PDFDocument", () => {
         showInWindowTitleBar: true,
       });
 
-      expect(
-        pdfDoc.catalog.lookupMaybe(PDFName.of("ViewerPreferences"), PDFDict),
-      );
+      expect(pdfDoc.catalog.lookupMaybe(PDFName.of("ViewerPreferences"), PDFDict));
     });
   });
 
   describe("addJavaScript() method", () => {
     test("adds the script to the catalog", async () => {
       const pdfDoc = await PDFDocument.create();
-      pdfDoc.addJavaScript(
-        "main",
-        'console.show(); console.println("Hello World");',
-      );
+      pdfDoc.addJavaScript("main", 'console.show(); console.println("Hello World");');
       await pdfDoc.flush();
 
       expect(pdfDoc.catalog.has(PDFName.of("Names")));
@@ -464,14 +430,8 @@ describe("PDFDocument", () => {
 
     test("does not overwrite scripts", async () => {
       const pdfDoc = await PDFDocument.create();
-      pdfDoc.addJavaScript(
-        "first",
-        'console.show(); console.println("First");',
-      );
-      pdfDoc.addJavaScript(
-        "second",
-        'console.show(); console.println("Second");',
-      );
+      pdfDoc.addJavaScript("first", 'console.show(); console.println("First");');
+      pdfDoc.addJavaScript("second", 'console.show(); console.println("Second");');
       await pdfDoc.flush();
 
       const Names = pdfDoc.catalog.lookup(PDFName.of("Names"), PDFDict);
@@ -573,9 +533,7 @@ describe("PDFDocument", () => {
       expect(pdfDoc.getAuthor()).toBe(srcDoc.getAuthor());
       expect(pdfDoc.getCreationDate()).toStrictEqual(srcDoc.getCreationDate());
       expect(pdfDoc.getCreator()).toBe(srcDoc.getCreator());
-      expect(pdfDoc.getModificationDate()).toStrictEqual(
-        srcDoc.getModificationDate(),
-      );
+      expect(pdfDoc.getModificationDate()).toStrictEqual(srcDoc.getModificationDate());
       expect(pdfDoc.getProducer()).toBe(srcDoc.getProducer());
       expect(pdfDoc.getSubject()).toBe(srcDoc.getSubject());
       expect(pdfDoc.getTitle()).toBe(srcDoc.getTitle());
@@ -588,12 +546,8 @@ describe("PDFDocument", () => {
       const pdfDoc1 = await PDFDocument.create({ updateMetadata: false });
       const pdfDoc2 = await PDFDocument.create({ updateMetadata: false });
 
-      const jpgAttachmentBytes = await readFile(
-        "assets/images/cat-riding-unicorn.jpg",
-      );
-      const pdfAttachmentBytes = await readFile(
-        "assets/pdfs/us-constitution.pdf",
-      );
+      const jpgAttachmentBytes = await readFile("assets/images/cat-riding-unicorn.jpg");
+      const pdfAttachmentBytes = await readFile("assets/pdfs/us-constitution.pdf");
 
       await pdfDoc1.attach(jpgAttachmentBytes, "cat-riding-unicorn.jpg", {
         mimeType: "image/jpeg",
@@ -643,22 +597,14 @@ describe("PDFDocument", () => {
       )!;
       expect(pdfAttachment).toBeDefined();
       expect(jpgAttachment).toBeDefined();
-      expect(jpgAttachment.description).toBe(
-        "Cool cat riding a unicorn! 🦄🐈🕶️",
-      );
-      expect(pdfAttachment.description).toBe(
-        "Constitution of the United States 🇺🇸🦅",
-      );
+      expect(jpgAttachment.description).toBe("Cool cat riding a unicorn! 🦄🐈🕶️");
+      expect(pdfAttachment.description).toBe("Constitution of the United States 🇺🇸🦅");
       expect(jpgAttachment.mimeType).toBe("image/jpeg");
       expect(pdfAttachment.mimeType).toBe("application/pdf");
       expect(jpgAttachment.afRelationship).not.toBeDefined();
       expect(pdfAttachment.afRelationship).not.toBeDefined();
-      const jpgAttachmentBytes = await readFile(
-        "assets/images/cat-riding-unicorn.jpg",
-      );
-      const pdfAttachmentBytes = await readFile(
-        "assets/pdfs/us-constitution.pdf",
-      );
+      const jpgAttachmentBytes = await readFile("assets/images/cat-riding-unicorn.jpg");
+      const pdfAttachmentBytes = await readFile("assets/pdfs/us-constitution.pdf");
       expect(jpgAttachmentBytes).toEqual(Buffer.from(jpgAttachment.data));
       expect(pdfAttachmentBytes).toEqual(Buffer.from(pdfAttachment.data));
     });
@@ -693,24 +639,14 @@ describe("PDFDocument", () => {
       const pdfAttachment = attachments.find(
         (attachment) => attachment.name === "us_constitution.pdf",
       )!;
-      const txtAttachment = attachments.find(
-        (attachment) => attachment.name === "haiku.txt",
-      )!;
-      const pngAttachment = attachments.find(
-        (attachment) => attachment.name === "example.png",
-      )!;
+      const txtAttachment = attachments.find((attachment) => attachment.name === "haiku.txt")!;
+      const pngAttachment = attachments.find((attachment) => attachment.name === "example.png")!;
       expect(pdfAttachment).toBeDefined();
       expect(jpgAttachment).toBeDefined();
       expect(txtAttachment).toBeDefined();
-      expect(jpgAttachment.description).toBe(
-        "Cool cat riding a unicorn! 🦄🐈🕶️",
-      );
-      expect(pdfAttachment.description).toBe(
-        "Constitution of the United States 🇺🇸🦅",
-      );
-      expect(txtAttachment.description).toBe(
-        "🥚 Haikus are short. So is the life of an egg. 🍳",
-      );
+      expect(jpgAttachment.description).toBe("Cool cat riding a unicorn! 🦄🐈🕶️");
+      expect(pdfAttachment.description).toBe("Constitution of the United States 🇺🇸🦅");
+      expect(txtAttachment.description).toBe("🥚 Haikus are short. So is the life of an egg. 🍳");
       expect(pngAttachment.description).toBe("An example image");
       expect(jpgAttachment.mimeType).toBe("image/jpeg");
       expect(pdfAttachment.mimeType).toBe("application/pdf");
@@ -720,18 +656,13 @@ describe("PDFDocument", () => {
       expect(pdfAttachment.afRelationship).not.toBeDefined();
       expect(txtAttachment.afRelationship).toBe(AFRelationship.Supplement);
       expect(pngAttachment.afRelationship).toBe(AFRelationship.Alternative);
-      const jpgAttachmentBytes = await readFile(
-        "assets/images/cat-riding-unicorn.jpg",
-      );
-      const pdfAttachmentBytes = await readFile(
-        "assets/pdfs/us-constitution.pdf",
-      );
+      const jpgAttachmentBytes = await readFile("assets/images/cat-riding-unicorn.jpg");
+      const pdfAttachmentBytes = await readFile("assets/pdfs/us-constitution.pdf");
       expect(jpgAttachmentBytes).toEqual(Buffer.from(jpgAttachment.data));
       expect(pdfAttachmentBytes).toEqual(Buffer.from(pdfAttachment.data));
       expect(new TextDecoder().decode(txtAttachment.data)).toBe(haiku);
-      const expectedImageBytes = Uint8Array.from(
-        atob(examplePngImageBase64),
-        (c) => c.charCodeAt(0),
+      const expectedImageBytes = Uint8Array.from(atob(examplePngImageBase64), (c) =>
+        c.charCodeAt(0),
       );
       expect(pngAttachment.data).toEqual(expectedImageBytes);
       expect(jpgAttachment.creationDate).toBeDefined();
@@ -766,15 +697,11 @@ describe("PDFDocument", () => {
           afRelationship,
         });
 
-        await pdfDoc.attach(
-          new TextEncoder().encode(attachment),
-          "uint8array.txt",
-          {
-            mimeType,
-            description,
-            afRelationship,
-          },
-        );
+        await pdfDoc.attach(new TextEncoder().encode(attachment), "uint8array.txt", {
+          mimeType,
+          description,
+          afRelationship,
+        });
 
         await pdfDoc.attach(Buffer.from(attachment), "buffer.txt", {
           mimeType,
@@ -792,9 +719,7 @@ describe("PDFDocument", () => {
       });
 
       test("should attach data URL attachments", () => {
-        const stringAttachments = attachments.filter(
-          (a) => a.name === "string.txt",
-        );
+        const stringAttachments = attachments.filter((a) => a.name === "string.txt");
         expect(stringAttachments.length).toBe(1);
         const extracted = new TextDecoder().decode(stringAttachments[0].data);
         expect(extracted).toEqual(attachment);
@@ -804,9 +729,7 @@ describe("PDFDocument", () => {
       });
 
       test("should attach Uint8Array attachments", () => {
-        const stringAttachments = attachments.filter(
-          (a) => a.name === "uint8array.txt",
-        );
+        const stringAttachments = attachments.filter((a) => a.name === "uint8array.txt");
         expect(stringAttachments.length).toBe(1);
         const extracted = new TextDecoder().decode(stringAttachments[0].data);
         expect(extracted).toEqual(attachment);
@@ -816,9 +739,7 @@ describe("PDFDocument", () => {
       });
 
       test("should attach buffer attachments", () => {
-        const stringAttachments = attachments.filter(
-          (a) => a.name === "buffer.txt",
-        );
+        const stringAttachments = attachments.filter((a) => a.name === "buffer.txt");
         expect(stringAttachments.length).toBe(1);
         const extracted = new TextDecoder().decode(stringAttachments[0].data);
         expect(extracted).toEqual(attachment);

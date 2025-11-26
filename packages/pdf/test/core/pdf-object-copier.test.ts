@@ -77,10 +77,7 @@ describe("PDFObjectCopier", () => {
   test("copies PDFArrays, including their indirect references", () => {
     // Arrange
     const src = PDFContext.create();
-    const origArray = src.obj([
-      PDFString.of("stuff and things"),
-      PDFRef.of(13),
-    ]);
+    const origArray = src.obj([PDFString.of("stuff and things"), PDFRef.of(13)]);
     src.register(origArray);
 
     src.assign(PDFRef.of(13), src.obj({ Foo: 1, Bar: PDFRef.of(17) }));
@@ -190,10 +187,7 @@ describe("PDFObjectCopier", () => {
     // Arrange
     const src = PDFContext.create();
     const origRef = PDFRef.of(21);
-    src.assign(
-      origRef,
-      src.obj({ Foo: PDFString.of("stuff and things"), Bar: PDFRef.of(13) }),
-    );
+    src.assign(origRef, src.obj({ Foo: PDFString.of("stuff and things"), Bar: PDFRef.of(13) }));
 
     src.assign(PDFRef.of(13), src.obj([1, PDFRef.of(17)]));
 
@@ -330,9 +324,7 @@ describe("PDFObjectCopier", () => {
     PDFObjectCopier.for(src, dest).copy(dict);
 
     // Assert
-    expect(dest.enumerateIndirectObjects().length).toBe(
-      src.enumerateIndirectObjects().length,
-    );
+    expect(dest.enumerateIndirectObjects().length).toBe(src.enumerateIndirectObjects().length);
   });
 
   test("copies all types of PDFObjects", () => {

@@ -1,17 +1,12 @@
 import { describe, expect, test } from "vitest";
 
-import {
-  MethodNotImplementedError,
-  PDFObject,
-} from "../../../src/core/index.js";
+import { MethodNotImplementedError, PDFObject } from "../../../src/core/index.js";
 
 describe("PDFObject", () => {
   const pdfObject = new PDFObject();
 
   test("does not implement clone()", () => {
-    expect(() => pdfObject.clone()).toThrow(
-      new MethodNotImplementedError(PDFObject.name, "clone"),
-    );
+    expect(() => pdfObject.clone()).toThrow(new MethodNotImplementedError(PDFObject.name, "clone"));
   });
 
   test("does not implement toString()", () => {

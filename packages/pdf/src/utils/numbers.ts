@@ -15,8 +15,7 @@ export const numberToString = (num: number) => {
       const negative = num < 0;
       if (negative) num *= -1;
       num *= Math.pow(10, e - 1);
-      numStr =
-        "0." + "0".repeat(Math.max(e - 1, 0)) + num.toString().substring(2);
+      numStr = "0." + "0".repeat(Math.max(e - 1, 0)) + num.toString().substring(2);
       if (negative) numStr = "-" + numStr;
     }
   } else {

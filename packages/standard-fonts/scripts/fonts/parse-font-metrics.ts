@@ -66,8 +66,7 @@ const metricParsers: {
   FontBBox: parseFontBBox,
 };
 
-const isFontMetricKey = (value: string): value is IFontMetricKey =>
-  value in metricParsers;
+const isFontMetricKey = (value: string): value is IFontMetricKey => value in metricParsers;
 
 const parseFontMetric = (line: string): FontMetricEntry => {
   const key = takeUntilFirstSpace(line);
@@ -87,8 +86,7 @@ export const parseFontMetricsSection = (data: string): IFontMetrics => {
     endAt: "StartCharMetrics",
   }).map(parseFontMetric);
 
-  const result: Partial<Record<IFontMetricKey, IFontMetrics[IFontMetricKey]>> =
-    {};
+  const result: Partial<Record<IFontMetricKey, IFontMetrics[IFontMetricKey]>> = {};
   for (const metric of metrics) {
     result[metric.key] = metric.value;
   }

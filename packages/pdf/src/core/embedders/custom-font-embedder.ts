@@ -1,11 +1,6 @@
 import { Font, Fontkit, Glyph, TypeFeatures } from "../../types/fontkit.js";
 
-import {
-  byAscendingId,
-  Cache,
-  sortedUniq,
-  toHexStringOfMinLength,
-} from "../../utils/index.js";
+import { byAscendingId, Cache, sortedUniq, toHexStringOfMinLength } from "../../utils/index.js";
 import PDFHexString from "../objects/pdf-hex-string.js";
 import PDFRef from "../objects/pdf-ref.js";
 import PDFString from "../objects/pdf-string.js";
@@ -78,10 +73,7 @@ class CustomFontEmbedder {
     return totalWidth * scale;
   }
 
-  heightOfFontAtSize(
-    size: number,
-    options: { descender?: boolean } = {},
-  ): number {
+  heightOfFontAtSize(size: number, options: { descender?: boolean } = {}): number {
     const { descender = true } = options;
 
     const { ascent, descent, bbox } = this.font;
@@ -102,15 +94,11 @@ class CustomFontEmbedder {
   }
 
   embedIntoContext(context: PDFContext, ref?: PDFRef): Promise<PDFRef> {
-    this.baseFontName =
-      this.customName || context.addRandomSuffix(this.fontName);
+    this.baseFontName = this.customName || context.addRandomSuffix(this.fontName);
     return this.embedFontDict(context, ref);
   }
 
-  protected async embedFontDict(
-    context: PDFContext,
-    ref?: PDFRef,
-  ): Promise<PDFRef> {
+  protected async embedFontDict(context: PDFContext, ref?: PDFRef): Promise<PDFRef> {
     const cidFontDictRef = await this.embedCIDFontDict(context);
     const unicodeCMapRef = this.embedUnicodeCmap(context);
 

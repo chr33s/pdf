@@ -1,10 +1,4 @@
-import {
-  bytesFor,
-  Cache,
-  reverseArray,
-  sizeInBytes,
-  sum,
-} from "../../utils/index.js";
+import { bytesFor, Cache, reverseArray, sizeInBytes, sum } from "../../utils/index.js";
 import PDFDict from "../objects/pdf-dict.js";
 import PDFName from "../objects/pdf-name.js";
 import PDFRef from "../objects/pdf-ref.js";
@@ -69,9 +63,7 @@ class PDFCrossRefStream extends PDFFlateStream {
 
     this.#entries = entries || [];
     this.#entryTuplesCache = Cache.populatedBy(this.#computeEntryTuples);
-    this.#maxByteWidthsCache = Cache.populatedBy(
-      this.#computeMaxEntryByteWidths,
-    );
+    this.#maxByteWidthsCache = Cache.populatedBy(this.#computeMaxEntryByteWidths);
     this.#indexCache = Cache.populatedBy(this.#computeIndex);
 
     dict.set(PDFName.of("Type"), PDFName.of("XRef"));
@@ -106,11 +98,7 @@ class PDFCrossRefStream extends PDFFlateStream {
 
   clone(context?: PDFContext): PDFCrossRefStream {
     const { dict, encode } = this;
-    return PDFCrossRefStream.of(
-      dict.clone(context),
-      this.#entries.slice(),
-      encode,
-    );
+    return PDFCrossRefStream.of(dict.clone(context), this.#entries.slice(), encode);
   }
 
   getContentsString(): string {
@@ -118,11 +106,7 @@ class PDFCrossRefStream extends PDFFlateStream {
     const byteWidths = this.#maxByteWidthsCache.access();
     let value = "";
 
-    for (
-      let entryIdx = 0, entriesLen = entryTuples.length;
-      entryIdx < entriesLen;
-      entryIdx++
-    ) {
+    for (let entryIdx = 0, entriesLen = entryTuples.length; entryIdx < entriesLen; entryIdx++) {
       const [first, second, third] = entryTuples[entryIdx];
 
       const firstBytes = reverseArray(bytesFor(first));
@@ -149,11 +133,7 @@ class PDFCrossRefStream extends PDFFlateStream {
     const buffer = new Uint8Array(this.getUnencodedContentsSize());
 
     let offset = 0;
-    for (
-      let entryIdx = 0, entriesLen = entryTuples.length;
-      entryIdx < entriesLen;
-      entryIdx++
-    ) {
+    for (let entryIdx = 0, entriesLen = entryTuples.length; entryIdx < entriesLen; entryIdx++) {
       const [first, second, third] = entryTuples[entryIdx];
 
       const firstBytes = reverseArray(bytesFor(first));

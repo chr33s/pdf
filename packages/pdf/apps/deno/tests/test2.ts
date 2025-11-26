@@ -23,9 +23,7 @@ export default async (assets: Assets) => {
   const smallMarioImage = await pdfDoc.embedPng(images.png.small - mario);
   const smallMarioDims = smallMarioImage.scale(0.18);
 
-  const sourcePdfDoc = await PDFDocument.load(
-    assets.pdfs.with_large_page_count,
-  );
+  const sourcePdfDoc = await PDFDocument.load(assets.pdfs.with_large_page_count);
   const sourcePdfPage = sourcePdfDoc.getPage(73);
 
   const embeddedPageFigure = {

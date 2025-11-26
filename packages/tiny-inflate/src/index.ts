@@ -55,12 +55,7 @@ function readSourceByte(state: DataState): number {
   return state.source[state.sourceIndex++];
 }
 
-function buildBitsBase(
-  bits: Uint8Array,
-  base: Uint16Array,
-  delta: number,
-  first: number,
-): void {
+function buildBitsBase(bits: Uint8Array, base: Uint16Array, delta: number, first: number): void {
   for (let i = 0; i < delta; i++) bits[i] = 0;
   for (let i = 0; i < 30 - delta; i++) bits[i + delta] = (i / delta) | 0;
 
@@ -90,12 +85,7 @@ function buildFixedTrees(lengthTree: Tree, distanceTree: Tree): void {
   for (let i = 0; i < 32; i++) distanceTree.trans[i] = i;
 }
 
-function buildTree(
-  tree: Tree,
-  lengths: Uint8Array,
-  offset: number,
-  count: number,
-): void {
+function buildTree(tree: Tree, lengths: Uint8Array, offset: number, count: number): void {
   for (let i = 0; i < 16; i++) tree.table[i] = 0;
 
   for (let i = 0; i < count; i++) tree.table[lengths[offset + i]]++;
@@ -171,11 +161,7 @@ function decodeSymbol(state: DataState, tree: Tree): number {
   return tree.trans[sum + cur];
 }
 
-function decodeTrees(
-  state: DataState,
-  lengthTree: Tree,
-  distanceTree: Tree,
-): void {
+function decodeTrees(state: DataState, lengthTree: Tree, distanceTree: Tree): void {
   const hlit = readBits(state, 5, 257);
   const hdist = readBits(state, 5, 1);
   const hclen = readBits(state, 4, 4);
@@ -215,11 +201,7 @@ function decodeTrees(
   buildTree(distanceTree, codeLengths, hlit, hdist);
 }
 
-function inflateBlockData(
-  state: DataState,
-  lengthTree: Tree,
-  distanceTree: Tree,
-): number {
+function inflateBlockData(state: DataState, lengthTree: Tree, distanceTree: Tree): number {
   while (true) {
     const symbol = decodeSymbol(state, lengthTree);
 
@@ -231,17 +213,9 @@ function inflateBlockData(
     }
 
     const lengthSymbol = symbol - 257;
-    const length = readBits(
-      state,
-      lengthBits[lengthSymbol],
-      lengthBase[lengthSymbol],
-    );
+    const length = readBits(state, lengthBits[lengthSymbol], lengthBase[lengthSymbol]);
     const distanceSymbol = decodeSymbol(state, distanceTree);
-    const distance = readBits(
-      state,
-      distanceBits[distanceSymbol],
-      distanceBase[distanceSymbol],
-    );
+    const distance = readBits(state, distanceBits[distanceSymbol], distanceBase[distanceSymbol]);
     const start = state.destLen - distance;
     const end = start + length;
 

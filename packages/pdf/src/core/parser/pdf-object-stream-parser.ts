@@ -8,23 +8,15 @@ import ByteStream from "./byte-stream.js";
 import PDFObjectParser from "./pdf-object-parser.js";
 
 class PDFObjectStreamParser extends PDFObjectParser {
-  static forStream = (
-    rawStream: PDFRawStream,
-    shouldWaitForTick?: () => boolean,
-  ) => {
+  static forStream = (rawStream: PDFRawStream, shouldWaitForTick?: () => boolean) => {
     try {
       return new PDFObjectStreamParser(rawStream, shouldWaitForTick);
     } catch (error) {
-      return new FailedPDFObjectStreamParser(
-        error,
-      ) as unknown as PDFObjectStreamParser;
+      return new FailedPDFObjectStreamParser(error) as unknown as PDFObjectStreamParser;
     }
   };
 
-  private constructor(
-    rawStream: PDFRawStream,
-    shouldWaitForTick?: () => boolean,
-  ) {
+  private constructor(rawStream: PDFRawStream, shouldWaitForTick?: () => boolean) {
     super(ByteStream.fromPDFRawStream(rawStream), rawStream.dict.context);
 
     const { dict } = rawStream;

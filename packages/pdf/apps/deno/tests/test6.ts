@@ -7,12 +7,9 @@ import { degrees, ParseSpeeds, PDFDocument, rgb } from "../../../dist/index.js";
 export default async (assets: Assets) => {
   const { pdfs, images, fonts } = assets;
 
-  const pdfDoc = await PDFDocument.load(
-    pdfs.with_missing_endstream_eol_and_polluted_ctm,
-    {
-      parseSpeed: ParseSpeeds.Fastest,
-    },
-  );
+  const pdfDoc = await PDFDocument.load(pdfs.with_missing_endstream_eol_and_polluted_ctm, {
+    parseSpeed: ParseSpeeds.Fastest,
+  });
 
   pdfDoc.registerFontkit(fontkit);
 
@@ -23,16 +20,12 @@ export default async (assets: Assets) => {
     modificationDate: new Date("1992/05/07"),
   });
 
-  await pdfDoc.attach(
-    images.jpg["cat-riding-unicorn_base64"],
-    "cat-riding-unicorn.jpg",
-    {
-      mimeType: "image/jpeg",
-      description: "Cool cat riding a unicorn! 🦄🐈🕶️",
-      creationDate: new Date("2019/12/01"),
-      modificationDate: new Date("2020/04/19"),
-    },
-  );
+  await pdfDoc.attach(images.jpg["cat-riding-unicorn_base64"], "cat-riding-unicorn.jpg", {
+    mimeType: "image/jpeg",
+    description: "Cool cat riding a unicorn! 🦄🐈🕶️",
+    creationDate: new Date("2019/12/01"),
+    modificationDate: new Date("2020/04/19"),
+  });
 
   const nunitoLigaFont = await pdfDoc.embedFont(fonts.ttf.nunito, {
     subset: true,

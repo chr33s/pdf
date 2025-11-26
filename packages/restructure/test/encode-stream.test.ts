@@ -61,9 +61,7 @@ describe("EncodeStream", () => {
   test("should writeInt24BE", async () => {
     const stream = new EncodeStream();
     const expectation = expectStream(stream, (buf) => {
-      expect(buf).to.deep.equal(
-        Buffer.from([0xff, 0xab, 0x24, 0xab, 0xcd, 0xef]),
-      );
+      expect(buf).to.deep.equal(Buffer.from([0xff, 0xab, 0x24, 0xab, 0xcd, 0xef]));
     });
 
     stream.writeInt24BE(-21724);
@@ -75,9 +73,7 @@ describe("EncodeStream", () => {
   test("should writeInt24LE", async () => {
     const stream = new EncodeStream();
     const expectation = expectStream(stream, (buf) => {
-      expect(buf).to.deep.equal(
-        Buffer.from([0x24, 0xab, 0xff, 0xef, 0xcd, 0xab]),
-      );
+      expect(buf).to.deep.equal(Buffer.from([0x24, 0xab, 0xff, 0xef, 0xcd, 0xab]));
     });
 
     stream.writeInt24LE(-21724);
@@ -178,8 +174,8 @@ describe("EncodeStream", () => {
     test("should encode macroman", async () => {
       const stream = new EncodeStream();
       const expected = Buffer.from([
-        0x8a, 0x63, 0x63, 0x65, 0x6e, 0x74, 0x65, 0x64, 0x20, 0x63, 0x68, 0x87,
-        0x72, 0x61, 0x63, 0x74, 0x65, 0x72, 0x73,
+        0x8a, 0x63, 0x63, 0x65, 0x6e, 0x74, 0x65, 0x64, 0x20, 0x63, 0x68, 0x87, 0x72, 0x61, 0x63,
+        0x74, 0x65, 0x72, 0x73,
       ]);
       const expectation = expectStream(stream, (buf) => {
         expect(buf).to.deep.equal(expected);

@@ -21,8 +21,7 @@ const afRelationship = {
 
 export const AFRelationship = afRelationship;
 
-export type AFRelationship =
-  (typeof afRelationship)[keyof typeof afRelationship];
+export type AFRelationship = (typeof afRelationship)[keyof typeof afRelationship];
 
 export interface EmbeddedFileOptions {
   mimeType?: string;
@@ -33,11 +32,7 @@ export interface EmbeddedFileOptions {
 }
 
 class FileEmbedder {
-  static for(
-    bytes: Uint8Array,
-    fileName: string,
-    options: EmbeddedFileOptions = {},
-  ) {
+  static for(bytes: Uint8Array, fileName: string, options: EmbeddedFileOptions = {}) {
     return new FileEmbedder(bytes, fileName, options);
   }
 
@@ -45,36 +40,22 @@ class FileEmbedder {
   readonly fileName: string;
   readonly options: EmbeddedFileOptions;
 
-  private constructor(
-    fileData: Uint8Array,
-    fileName: string,
-    options: EmbeddedFileOptions = {},
-  ) {
+  private constructor(fileData: Uint8Array, fileName: string, options: EmbeddedFileOptions = {}) {
     this.#fileData = fileData;
     this.fileName = fileName;
     this.options = options;
   }
 
   async embedIntoContext(context: PDFContext, ref?: PDFRef): Promise<PDFRef> {
-    const {
-      mimeType,
-      description,
-      creationDate,
-      modificationDate,
-      afRelationship,
-    } = this.options;
+    const { mimeType, description, creationDate, modificationDate, afRelationship } = this.options;
 
     const embeddedFileStream = context.flateStream(this.#fileData, {
       Type: "EmbeddedFile",
       Subtype: mimeType ?? undefined,
       Params: {
         Size: this.#fileData.length,
-        CreationDate: creationDate
-          ? PDFString.fromDate(creationDate)
-          : undefined,
-        ModDate: modificationDate
-          ? PDFString.fromDate(modificationDate)
-          : undefined,
+        CreationDate: creationDate ? PDFString.fromDate(creationDate) : undefined,
+        ModDate: modificationDate ? PDFString.fromDate(modificationDate) : undefined,
       },
     });
     const embeddedFileStreamRef = context.register(embeddedFileStream);

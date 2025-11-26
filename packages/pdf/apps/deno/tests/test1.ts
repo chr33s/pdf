@@ -55,11 +55,7 @@ export default async (assets: Assets) => {
     afRelationship: AFRelationship.Data,
   });
 
-  const csvString = [
-    "Year,Make,Model",
-    "1997,Ford,E350",
-    "2000,Mercury,Cougar",
-  ].join("\n");
+  const csvString = ["Year,Make,Model", "1997,Ford,E350", "2000,Mercury,Cougar"].join("\n");
   await pdfDoc.attach(typedArrayFor(csvString), "cars.csv", {
     mimeType: "text/csv",
     description: "Some car info 🚗",
@@ -72,10 +68,7 @@ export default async (assets: Assets) => {
 
   const size = 750;
 
-  pdfDoc.addJavaScript(
-    "main",
-    'console.show(); console.println("Hello World!")',
-  );
+  pdfDoc.addJavaScript("main", 'console.show(); console.println("Hello World!")');
 
   /********************** Page 1 **********************/
 
@@ -144,9 +137,7 @@ export default async (assets: Assets) => {
   page1.setFontSize(32);
   page1.setLineHeight(32);
   page1.moveTo(size / 2 + 5, size - 5 - 25);
-  page1.drawText(
-    [...ipsumLines, ...ipsumLines, ...ipsumLines, ...ipsumLines].join("\n"),
-  );
+  page1.drawText([...ipsumLines, ...ipsumLines, ...ipsumLines, ...ipsumLines].join("\n"));
   page1.pushOperators(popGraphicsState());
 
   // Lower-left quadrant
@@ -248,9 +239,7 @@ export default async (assets: Assets) => {
     lineHeight: 20,
   });
 
-  const fantasqueFont = await pdfDoc.embedFont(
-    fonts.otf.fantasque - sans - mono_bi,
-  );
+  const fantasqueFont = await pdfDoc.embedFont(fonts.otf.fantasque - sans - mono_bi);
   page2.drawText(ipsumLines.join("\n"), {
     y: size - 105,
     size: 25,
@@ -296,12 +285,9 @@ export default async (assets: Assets) => {
     lineHeight: 15,
   });
 
-  const pressStart2PFont = await pdfDoc.embedFont(
-    fonts.ttf["press-start-2p_r"],
-    {
-      subset: true,
-    },
-  );
+  const pressStart2PFont = await pdfDoc.embedFont(fonts.ttf["press-start-2p_r"], {
+    subset: true,
+  });
   page2.drawText(ipsumLines.join("\n"), {
     y: size - 575,
     size: 15,
@@ -326,19 +312,11 @@ export default async (assets: Assets) => {
 
   const { jpg, png } = assets.images;
 
-  const catRidingUnicornImage = await pdfDoc.embedJpg(
-    jpg["cat-riding-unicorn_base64"],
-  );
+  const catRidingUnicornImage = await pdfDoc.embedJpg(jpg["cat-riding-unicorn_base64"]);
   const minionsLaughingImage = await pdfDoc.embedJpg(jpg["minions-laughing"]);
-  const greyscaleBirdImage = await pdfDoc.embedPng(
-    png["greyscale-bird_base64_uri"],
-  );
-  const minionsBananaAlphaImage = await pdfDoc.embedPng(
-    png["minions-banana_alpha"],
-  );
-  const minionsBananaNoAlphaImage = await pdfDoc.embedPng(
-    png["minions-banana_no_alpha"],
-  );
+  const greyscaleBirdImage = await pdfDoc.embedPng(png["greyscale-bird_base64_uri"]);
+  const minionsBananaAlphaImage = await pdfDoc.embedPng(png["minions-banana_alpha"]);
+  const minionsBananaNoAlphaImage = await pdfDoc.embedPng(png["minions-banana_no_alpha"]);
   const smallMarioImage = await pdfDoc.embedPng(png["small-mario"]);
 
   const catRidingUnicornDims = catRidingUnicornImage.scale(0.2);
@@ -363,10 +341,7 @@ export default async (assets: Assets) => {
   page3.moveTo(0, 0);
   page3.drawRectangle({
     width: minionsBananaAlphaDims.width,
-    height:
-      minionsBananaAlphaDims.height +
-      minionsBananaNoAlphaDims.height +
-      smallMarioDims.height,
+    height: minionsBananaAlphaDims.height + minionsBananaNoAlphaDims.height + smallMarioDims.height,
     color: rgb(0, 1, 0),
   });
 
@@ -407,10 +382,7 @@ export default async (assets: Assets) => {
     rotate: degrees(-90),
   });
 
-  const [embeddedPage1, embeddedPage2] = await pdfDoc.embedPdf(
-    assets.pdfs.normal,
-    [0, 1],
-  );
+  const [embeddedPage1, embeddedPage2] = await pdfDoc.embedPdf(assets.pdfs.normal, [0, 1]);
   page4.drawPage(embeddedPage1, {
     x: 40,
     y: 100,
@@ -570,24 +542,21 @@ export default async (assets: Assets) => {
   // Radio Group
   const radioGroup = form.createRadioGroup("moi.radioGroup.field[0]");
 
-  [
-    { option: "Bing" },
-    { option: "Boing" },
-    { option: "Bang" },
-    { option: "Bloop" },
-  ].forEach(({ option }, idx) => {
-    radioGroup.addOptionToPage(option, page5, {
-      x: fPadding * 3 + fWidth * 5,
-      y: size - fMax * 3 - fPadding * 2,
-      width: fHeight,
-      height: fHeight,
-      rotate: degrees(90 * idx),
-      borderWidth: 4,
-      backgroundColor: pastels.blue,
-      borderColor: pastels.pinkish,
-      textColor: pastels.yellow,
-    });
-  });
+  [{ option: "Bing" }, { option: "Boing" }, { option: "Bang" }, { option: "Bloop" }].forEach(
+    ({ option }, idx) => {
+      radioGroup.addOptionToPage(option, page5, {
+        x: fPadding * 3 + fWidth * 5,
+        y: size - fMax * 3 - fPadding * 2,
+        width: fHeight,
+        height: fHeight,
+        rotate: degrees(90 * idx),
+        borderWidth: 4,
+        backgroundColor: pastels.blue,
+        borderColor: pastels.pinkish,
+        textColor: pastels.yellow,
+      });
+    },
+  );
 
   radioGroup.select("Bing");
 

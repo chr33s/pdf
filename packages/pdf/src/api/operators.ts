@@ -53,32 +53,13 @@ export const rotateRadians = (angle: number | PDFNumber) =>
 export const rotateDegrees = (angle: number | PDFNumber) =>
   rotateRadians(degreesToRadians(asNumber(angle)));
 
-export const skewRadians = (
-  xSkewAngle: number | PDFNumber,
-  ySkewAngle: number | PDFNumber,
-) =>
-  concatTransformationMatrix(
-    1,
-    tan(asNumber(xSkewAngle)),
-    tan(asNumber(ySkewAngle)),
-    1,
-    0,
-    0,
-  );
+export const skewRadians = (xSkewAngle: number | PDFNumber, ySkewAngle: number | PDFNumber) =>
+  concatTransformationMatrix(1, tan(asNumber(xSkewAngle)), tan(asNumber(ySkewAngle)), 1, 0, 0);
 
-export const skewDegrees = (
-  xSkewAngle: number | PDFNumber,
-  ySkewAngle: number | PDFNumber,
-) =>
-  skewRadians(
-    degreesToRadians(asNumber(xSkewAngle)),
-    degreesToRadians(asNumber(ySkewAngle)),
-  );
+export const skewDegrees = (xSkewAngle: number | PDFNumber, ySkewAngle: number | PDFNumber) =>
+  skewRadians(degreesToRadians(asNumber(xSkewAngle)), degreesToRadians(asNumber(ySkewAngle)));
 
-export const setDashPattern = (
-  dashArray: (number | PDFNumber)[],
-  dashPhase: number | PDFNumber,
-) =>
+export const setDashPattern = (dashArray: (number | PDFNumber)[], dashPhase: number | PDFNumber) =>
   PDFOperator.of(Ops.SetLineDashPattern, [
     `[${dashArray.map(asPDFNumber).join(" ")}]`,
     asPDFNumber(dashPhase),
@@ -219,18 +200,15 @@ export const moveText = (x: number | PDFNumber, y: number | PDFNumber) =>
 
 /* ==================== Text Showing Operators ==================== */
 
-export const showText = (text: PDFHexString) =>
-  PDFOperator.of(Ops.ShowText, [text]);
+export const showText = (text: PDFHexString) => PDFOperator.of(Ops.ShowText, [text]);
 
 /* ==================== Text State Operators ==================== */
 
 export const beginText = () => PDFOperator.of(Ops.BeginText);
 export const endText = () => PDFOperator.of(Ops.EndText);
 
-export const setFontAndSize = (
-  name: string | PDFName,
-  size: number | PDFNumber,
-) => PDFOperator.of(Ops.SetFontAndSize, [asPDFName(name), asPDFNumber(size)]);
+export const setFontAndSize = (name: string | PDFName, size: number | PDFNumber) =>
+  PDFOperator.of(Ops.SetFontAndSize, [asPDFName(name), asPDFNumber(size)]);
 
 export const setCharacterSpacing = (spacing: number | PDFNumber) =>
   PDFOperator.of(Ops.SetCharacterSpacing, [asPDFNumber(spacing)]);
@@ -261,8 +239,7 @@ const textRenderingMode = {
 
 export const TextRenderingMode = textRenderingMode;
 
-export type TextRenderingMode =
-  (typeof textRenderingMode)[keyof typeof textRenderingMode];
+export type TextRenderingMode = (typeof textRenderingMode)[keyof typeof textRenderingMode];
 
 export const setTextRenderingMode = (mode: TextRenderingMode) =>
   PDFOperator.of(Ops.SetTextRenderingMode, [asPDFNumber(mode)]);
@@ -344,11 +321,7 @@ export const setStrokingRgbColor = (
   green: number | PDFNumber,
   blue: number | PDFNumber,
 ) =>
-  PDFOperator.of(Ops.StrokingColorRgb, [
-    asPDFNumber(red),
-    asPDFNumber(green),
-    asPDFNumber(blue),
-  ]);
+  PDFOperator.of(Ops.StrokingColorRgb, [asPDFNumber(red), asPDFNumber(green), asPDFNumber(blue)]);
 
 export const setFillingCmykColor = (
   cyan: number | PDFNumber,

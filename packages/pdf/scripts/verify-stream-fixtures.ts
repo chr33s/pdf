@@ -52,18 +52,10 @@ const pathExists = async (target: string) => {
 
 const toPosix = (value: string) => value.split(sep).join("/");
 
-const relativePath = (target: string) =>
-  toPosix(relative(testRoot, target)) || ".";
+const relativePath = (target: string) => toPosix(relative(testRoot, target)) || ".";
 
 const cmapFontSources = {
-  "ubuntu-R.ttf.cmap": join(
-    __dirname,
-    "..",
-    "assets",
-    "fonts",
-    "ubuntu",
-    "ubuntu-R.ttf",
-  ),
+  "ubuntu-R.ttf.cmap": join(__dirname, "..", "assets", "fonts", "ubuntu", "ubuntu-R.ttf"),
   "source-han-serif-jp-regular.otf.cmap": join(
     __dirname,
     "..",
@@ -84,13 +76,10 @@ function compareBuffers(
   expected: Uint8Array | ArrayBuffer,
 ) {
   const viewA = actual instanceof Uint8Array ? actual : new Uint8Array(actual);
-  const viewB =
-    expected instanceof Uint8Array ? expected : new Uint8Array(expected);
+  const viewB = expected instanceof Uint8Array ? expected : new Uint8Array(expected);
 
   if (viewA.length !== viewB.length) {
-    throw new Error(
-      `${label}: length mismatch (expected ${viewB.length}, got ${viewA.length})`,
-    );
+    throw new Error(`${label}: length mismatch (expected ${viewB.length}, got ${viewA.length})`);
   }
   for (let i = 0; i < viewB.length; i++) {
     if (viewA[i] !== viewB[i]) {
@@ -338,9 +327,7 @@ async function verifyAscii85(dir: string) {
     skipped.push(`${relativePath(dir)} (missing)`);
     return;
   }
-  const files = (await readdir(dir)).filter((file) =>
-    file.endsWith(".encoded"),
-  );
+  const files = (await readdir(dir)).filter((file) => file.endsWith(".encoded"));
   if (files.length === 0) {
     skipped.push(`${relativePath(dir)} (no encoded fixtures)`);
     return;
@@ -362,9 +349,7 @@ async function verifyAsciiHex(dir: string) {
     skipped.push(`${relativePath(dir)} (missing)`);
     return;
   }
-  const files = (await readdir(dir)).filter((file) =>
-    file.endsWith(".encoded"),
-  );
+  const files = (await readdir(dir)).filter((file) => file.endsWith(".encoded"));
   if (files.length === 0) {
     skipped.push(`${relativePath(dir)} (no encoded fixtures)`);
     return;
@@ -386,9 +371,7 @@ async function verifyRunLength(dir: string) {
     skipped.push(`${relativePath(dir)} (missing)`);
     return;
   }
-  const files = (await readdir(dir)).filter((file) =>
-    file.endsWith(".encoded"),
-  );
+  const files = (await readdir(dir)).filter((file) => file.endsWith(".encoded"));
   if (files.length === 0) {
     skipped.push(`${relativePath(dir)} (no encoded fixtures)`);
     return;
@@ -414,9 +397,7 @@ async function verifyFlate(dir: string) {
     skipped.push(`${relativePath(dir)} (missing)`);
     return;
   }
-  const files = (await readdir(dir)).filter((file) =>
-    file.endsWith(".encoded"),
-  );
+  const files = (await readdir(dir)).filter((file) => file.endsWith(".encoded"));
   if (files.length === 0) {
     skipped.push(`${relativePath(dir)} (no encoded fixtures)`);
     return;
@@ -431,10 +412,7 @@ async function verifyFlate(dir: string) {
         await decodeFlate(encodedBytes);
         throw new Error(`${labelFor(dir, name)}: expected decoder to throw`);
       } catch (err) {
-        if (
-          err instanceof Error &&
-          /expected decoder to throw/.test(err.message)
-        ) {
+        if (err instanceof Error && /expected decoder to throw/.test(err.message)) {
           throw err;
         }
         ok.push(`${labelFor(dir, name)} (expected failure)`);
@@ -453,9 +431,7 @@ async function verifyLzw(dir: string) {
     skipped.push(`${relativePath(dir)} (missing)`);
     return;
   }
-  const files = (await readdir(dir)).filter((file) =>
-    file.endsWith(".encoded"),
-  );
+  const files = (await readdir(dir)).filter((file) => file.endsWith(".encoded"));
   if (files.length === 0) {
     skipped.push(`${relativePath(dir)} (no encoded fixtures)`);
     return;
@@ -506,15 +482,9 @@ async function verifyEmbeddersData(dir: string) {
         .sort(byAscendingId),
       (glyph: any) => glyph.id,
     );
-    const cmap = createCmap(glyphs as any, (glyph: any) =>
-      glyph ? glyph.id : -1,
-    );
+    const cmap = createCmap(glyphs as any, (glyph: any) => (glyph ? glyph.id : -1));
     const expected = await readFile(join(dir, file), "utf8");
-    compareBuffers(
-      labelFor(dir, file),
-      Buffer.from(cmap, "utf8"),
-      Buffer.from(expected, "utf8"),
-    );
+    compareBuffers(labelFor(dir, file), Buffer.from(cmap, "utf8"), Buffer.from(expected, "utf8"));
   }
 }
 
@@ -524,8 +494,7 @@ async function verifyParserData(dir: string) {
     return;
   }
 
-  const readData = async (file: string) =>
-    new Uint8Array(await readFile(join(dir, file)));
+  const readData = async (file: string) => new Uint8Array(await readFile(join(dir, file)));
 
   const objectStreamFixtures = [
     { name: "object-stream1", dict: { N: 3, First: 18 }, expectedCount: 3 },
@@ -535,9 +504,7 @@ async function verifyParserData(dir: string) {
       expectedCount: 9,
       validate: (context: any) => {
         const lookup = (num: number, type?: any) =>
-          type
-            ? context.lookup(PDFRef.of(num), type)
-            : context.lookup(PDFRef.of(num));
+          type ? context.lookup(PDFRef.of(num), type) : context.lookup(PDFRef.of(num));
         if (!(lookup(1) instanceof PDFDict)) {
           throw new Error("object-stream2: expected ref 1 to be PDFDict");
         }
@@ -602,24 +569,15 @@ async function verifyParserData(dir: string) {
     if (count !== fixture.expectedCount) {
       const label = labelFor(
         dir,
-        fixture.labelSuffix
-          ? `${fixture.name}${fixture.labelSuffix}`
-          : fixture.name,
+        fixture.labelSuffix ? `${fixture.name}${fixture.labelSuffix}` : fixture.name,
       );
-      throw new Error(
-        `${label}: expected ${fixture.expectedCount} objects, saw ${count}`,
-      );
+      throw new Error(`${label}: expected ${fixture.expectedCount} objects, saw ${count}`);
     }
     if (fixture.validate) {
       fixture.validate(context);
     }
     recordSuccess(
-      labelFor(
-        dir,
-        fixture.labelSuffix
-          ? `${fixture.name}${fixture.labelSuffix}`
-          : fixture.name,
-      ),
+      labelFor(dir, fixture.labelSuffix ? `${fixture.name}${fixture.labelSuffix}` : fixture.name),
     );
   }
 
@@ -627,10 +585,7 @@ async function verifyParserData(dir: string) {
   if (await pathExists(invalidPath)) {
     const invalidContext = PDFContext.create();
     const invalidDict = invalidContext.obj({ N: 1, First: 5 });
-    const invalidStream = PDFRawStream.of(
-      invalidDict,
-      await readData("object-stream-invalid"),
-    );
+    const invalidStream = PDFRawStream.of(invalidDict, await readData("object-stream-invalid"));
     const invalidParser = PDFObjectStreamParser.forStream(invalidStream);
     let threw = false;
     try {
@@ -639,17 +594,11 @@ async function verifyParserData(dir: string) {
       threw = true;
     }
     if (!threw) {
-      throw new Error(
-        `${labelFor(dir, "object-stream-invalid")}: expected parser to throw`,
-      );
+      throw new Error(`${labelFor(dir, "object-stream-invalid")}: expected parser to throw`);
     }
-    recordSuccess(
-      `${labelFor(dir, "object-stream-invalid")} (expected failure)`,
-    );
+    recordSuccess(`${labelFor(dir, "object-stream-invalid")} (expected failure)`);
   } else {
-    skipped.push(
-      `${relativePath(dir)}/object-stream-invalid (missing fixture)`,
-    );
+    skipped.push(`${relativePath(dir)}/object-stream-invalid (missing fixture)`);
   }
 
   const xrefFixtures = [
@@ -670,9 +619,8 @@ async function verifyParserData(dir: string) {
         DecodeParms: { Columns: 4, Predictor: 12 },
         Filter: "FlateDecode",
         Index: [
-          1, 1, 16, 1, 18, 2, 25, 3, 30, 6, 50, 1, 78, 11, 90, 2, 95, 1, 119,
-          19, 139, 1, 141, 1, 143, 11, 156, 61, 219, 2, 223, 9, 243, 2, 246, 13,
-          282, 7, 290, 1, 308, 1, 319, 4,
+          1, 1, 16, 1, 18, 2, 25, 3, 30, 6, 50, 1, 78, 11, 90, 2, 95, 1, 119, 19, 139, 1, 141, 1,
+          143, 11, 156, 61, 219, 2, 223, 9, 243, 2, 246, 13, 282, 7, 290, 1, 308, 1, 319, 4,
         ],
         Length: 120,
         Size: 323,
@@ -717,13 +665,9 @@ async function verifyParserData(dir: string) {
     const stream = PDFRawStream.of(dict, await readData(fixture.name));
     const parser = PDFXRefStreamParser.forStream(stream);
     const entries = parser.parseIntoContext();
-    const normal = entries.filter(
-      (entry) => !entry.deleted && !entry.inObjectStream,
-    ).length;
+    const normal = entries.filter((entry) => !entry.deleted && !entry.inObjectStream).length;
     const deleted = entries.filter((entry) => entry.deleted).length;
-    const inObjectStream = entries.filter(
-      (entry) => entry.inObjectStream,
-    ).length;
+    const inObjectStream = entries.filter((entry) => entry.inObjectStream).length;
     if (entries.length !== fixture.expected.total) {
       throw new Error(
         `${labelFor(dir, fixture.name)}: expected ${fixture.expected.total} entries, saw ${entries.length}`,
@@ -749,10 +693,7 @@ async function verifyParserData(dir: string) {
     if (fixture.checkReparse) {
       const reparseContext = PDFContext.create();
       const reparseDict = reparseContext.obj(fixture.dict);
-      const reparseStream = PDFRawStream.of(
-        reparseDict,
-        await readData(fixture.name),
-      );
+      const reparseStream = PDFRawStream.of(reparseDict, await readData(fixture.name));
       const reparseParser = PDFXRefStreamParser.forStream(reparseStream);
       reparseParser.parseIntoContext();
       let reparseThrew = false;
@@ -766,9 +707,7 @@ async function verifyParserData(dir: string) {
         }
       }
       if (!reparseThrew) {
-        throw new Error(
-          `${labelFor(dir, fixture.name)}: expected reparse guard to throw`,
-        );
+        throw new Error(`${labelFor(dir, fixture.name)}: expected reparse guard to throw`);
       }
       recordSuccess(`${labelFor(dir, fixture.name)} (reparse guard)`);
     }
@@ -833,12 +772,7 @@ async function verifyWritersData(dir: string) {
   });
   context.trailerInfo.Root = context.register(catalog);
 
-  const buffer = await PDFStreamWriter.forContext(
-    context,
-    Infinity,
-    false,
-    2,
-  ).serializeToBuffer();
+  const buffer = await PDFStreamWriter.forContext(context, Infinity, false, 2).serializeToBuffer();
 
   compareBuffers(labelFor(dir, "stream-writer-1.pdf"), buffer, expected);
 }

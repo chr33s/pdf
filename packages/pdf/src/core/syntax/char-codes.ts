@@ -59,6 +59,4 @@ const CharCodes = {
   Tilde: 126,
 } as const;
 
-type CharCode = (typeof CharCodes)[keyof typeof CharCodes];
-
 export default CharCodes;

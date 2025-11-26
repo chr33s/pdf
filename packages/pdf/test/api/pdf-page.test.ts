@@ -1,11 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { describe, expect, test } from "vitest";
-import {
-  PDFArray,
-  PDFDocument,
-  PDFName,
-  StandardFonts,
-} from "../../src/index.js";
+import { PDFArray, PDFDocument, PDFName, StandardFonts } from "../../src/index.js";
 
 const birdPng = await readFile("assets/images/greyscale-bird.png");
 

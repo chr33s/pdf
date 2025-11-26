@@ -1,9 +1,6 @@
 import { TransformationMatrix } from "../../types/matrix.js";
 import { mergeIntoTypedArray } from "../../utils/index.js";
-import {
-  MissingPageContentsEmbeddingError,
-  UnrecognizedStreamTypeError,
-} from "../errors.js";
+import { MissingPageContentsEmbeddingError, UnrecognizedStreamTypeError } from "../errors.js";
 import PDFArray from "../objects/pdf-array.js";
 import PDFNumber from "../objects/pdf-number.js";
 import PDFRawStream from "../objects/pdf-raw-stream.js";
@@ -55,9 +52,14 @@ const fullPageBoundingBox = (page: PDFPageLeaf) => {
 
 // Returns the identity matrix, modified to position the content of the given
 // bounding box at (0, 0).
-const boundingBoxAdjustedMatrix = (
-  bb: PageBoundingBox,
-): TransformationMatrix => [1, 0, 0, 1, -bb.left, -bb.bottom];
+const boundingBoxAdjustedMatrix = (bb: PageBoundingBox): TransformationMatrix => [
+  1,
+  0,
+  0,
+  1,
+  -bb.left,
+  -bb.bottom,
+];
 
 class PDFPageEmbedder {
   static async for(
@@ -87,8 +89,7 @@ class PDFPageEmbedder {
     this.width = bb.right - bb.left;
     this.height = bb.top - bb.bottom;
     this.boundingBox = bb;
-    this.transformationMatrix =
-      transformationMatrix ?? boundingBoxAdjustedMatrix(bb);
+    this.transformationMatrix = transformationMatrix ?? boundingBoxAdjustedMatrix(bb);
   }
 
   async embedIntoContext(context: PDFContext, ref?: PDFRef): Promise<PDFRef> {

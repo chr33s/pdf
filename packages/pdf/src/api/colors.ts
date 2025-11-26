@@ -51,12 +51,7 @@ export const rgb = (red: number, green: number, blue: number): RGB => {
   return { type: ColorTypes.RGB, red, green, blue };
 };
 
-export const cmyk = (
-  cyan: number,
-  magenta: number,
-  yellow: number,
-  key: number,
-): CMYK => {
+export const cmyk = (cyan: number, magenta: number, yellow: number, key: number): CMYK => {
   assertRange(cyan, "cyan", 0, 1);
   assertRange(magenta, "magenta", 0, 1);
   assertRange(yellow, "yellow", 0, 1);
@@ -79,12 +74,7 @@ export const setFillingColor = (color: Color) =>
     : color.type === ColorTypes.RGB
       ? setFillingRgbColor(color.red, color.green, color.blue)
       : color.type === ColorTypes.CMYK
-        ? setFillingCmykColor(
-            color.cyan,
-            color.magenta,
-            color.yellow,
-            color.key,
-          )
+        ? setFillingCmykColor(color.cyan, color.magenta, color.yellow, color.key)
         : error(`Invalid color: ${JSON.stringify(color)}`);
 
 export const setStrokingColor = (color: Color) =>
@@ -93,12 +83,7 @@ export const setStrokingColor = (color: Color) =>
     : color.type === ColorTypes.RGB
       ? setStrokingRgbColor(color.red, color.green, color.blue)
       : color.type === ColorTypes.CMYK
-        ? setStrokingCmykColor(
-            color.cyan,
-            color.magenta,
-            color.yellow,
-            color.key,
-          )
+        ? setStrokingCmykColor(color.cyan, color.magenta, color.yellow, color.key)
         : error(`Invalid color: ${JSON.stringify(color)}`);
 
 // prettier-ignore

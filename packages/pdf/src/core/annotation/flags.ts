@@ -91,5 +91,4 @@ const annotationFlags = {
 
 export const AnnotationFlags = annotationFlags;
 
-export type AnnotationFlag =
-  (typeof annotationFlags)[keyof typeof annotationFlags];
+export type AnnotationFlag = (typeof annotationFlags)[keyof typeof annotationFlags];

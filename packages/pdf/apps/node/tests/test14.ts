@@ -8,19 +8,13 @@ const fieldNames = {
     "form1[0].Page1[0].BeforeYouBegin[0].BusinessInfo[0].AccountNumber[0].BusinessNumber_RT1[0]",
   BusinessNumber2:
     "form1[0].Page1[0].BeforeYouBegin[0].BusinessInfo[0].AccountNumber[0].BusinessNumber_RT2[0]",
-  BusinessAddress:
-    "form1[0].Page1[0].BeforeYouBegin[0].PhysicalAddress[0].BusinessAddress[0]",
+  BusinessAddress: "form1[0].Page1[0].BeforeYouBegin[0].PhysicalAddress[0].BusinessAddress[0]",
   City: "form1[0].Page1[0].BeforeYouBegin[0].PhysicalAddress[0].City[0]",
-  Province:
-    "form1[0].Page1[0].BeforeYouBegin[0].PhysicalAddress[0].Province[0]",
-  PostalCode:
-    "form1[0].Page1[0].BeforeYouBegin[0].PhysicalAddress[0].PostalCode[0]",
-  TypeOfReturn:
-    "form1[0].Page1[0].BeforeYouBegin[0].Type[0].RadioButtonGroup[0]",
-  FromDate:
-    "form1[0].Page1[0].BeforeYouBegin[0].Period[0].FromToDates_Comb_Adv_EN[0].FromDate[0]",
-  ToDate:
-    "form1[0].Page1[0].BeforeYouBegin[0].Period[0].FromToDates_Comb_Adv_EN[0].ToDate[0]",
+  Province: "form1[0].Page1[0].BeforeYouBegin[0].PhysicalAddress[0].Province[0]",
+  PostalCode: "form1[0].Page1[0].BeforeYouBegin[0].PhysicalAddress[0].PostalCode[0]",
+  TypeOfReturn: "form1[0].Page1[0].BeforeYouBegin[0].Type[0].RadioButtonGroup[0]",
+  FromDate: "form1[0].Page1[0].BeforeYouBegin[0].Period[0].FromToDates_Comb_Adv_EN[0].FromDate[0]",
+  ToDate: "form1[0].Page1[0].BeforeYouBegin[0].Period[0].FromToDates_Comb_Adv_EN[0].ToDate[0]",
 
   // Page 2
   Amount1:
@@ -31,19 +25,15 @@ const fieldNames = {
     "form1[0].Page12[0].SalesDutyPage12[0].AmountDue[0].AjustmentAdditionalDutyPayable[0].AjustmentAdditionalDutyPayable[0].Amount[0]",
   Amount4:
     "form1[0].Page12[0].SalesDutyPage12[0].AmountDue[0].NetPayable[0].NetPayable[0].Amount[0]",
-  Amount5:
-    "form1[0].Page12[0].SalesDutyPage12[0].AmountDue[0].Refund[0].Refund[0].Amount[0]",
-  Amount6:
-    "form1[0].Page12[0].SalesDutyPage12[0].AmountDue[0].AmountDue[0].AmountDue[0].Amount[0]",
+  Amount5: "form1[0].Page12[0].SalesDutyPage12[0].AmountDue[0].Refund[0].Refund[0].Amount[0]",
+  Amount6: "form1[0].Page12[0].SalesDutyPage12[0].AmountDue[0].AmountDue[0].AmountDue[0].Amount[0]",
   ByDueDate: "form1[0].Page12[0].SalesDutyPage12[0].ByDueDate[0]",
   Name: "form1[0].Page12[0].Certification[0].Signature[0].Name[0]",
   Title: "form1[0].Page12[0].Certification[0].Signature[0].Title[0]",
   PhoneNumber:
     "form1[0].Page12[0].Certification[0].Signature[0].Phone_Ext[0].TelephoneNumberSplit[0].PhoneNumber[0]",
-  PhoneExt:
-    "form1[0].Page12[0].Certification[0].Signature[0].Phone_Ext[0].Ext[0]",
-  SignatureDate:
-    "form1[0].Page12[0].Certification[0].Signature[0].Date[0].DateYYYYMMDD_Comb[0]",
+  PhoneExt: "form1[0].Page12[0].Certification[0].Signature[0].Phone_Ext[0].Ext[0]",
+  SignatureDate: "form1[0].Page12[0].Certification[0].Signature[0].Date[0].DateYYYYMMDD_Comb[0]",
 };
 
 export default async (assets: Assets) => {

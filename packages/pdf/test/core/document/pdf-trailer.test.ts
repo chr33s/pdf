@@ -5,21 +5,15 @@ import { toCharCode, typedArrayFor } from "../../../src/utils/index.js";
 
 describe("PDFTrailer", () => {
   test("can be constructed from PDFTrailer.forLastCrossRefSectionOffset(...)", () => {
-    expect(PDFTrailer.forLastCrossRefSectionOffset(21)).toBeInstanceOf(
-      PDFTrailer,
-    );
+    expect(PDFTrailer.forLastCrossRefSectionOffset(21)).toBeInstanceOf(PDFTrailer);
   });
 
   test("can be converted to a string", () => {
-    expect(String(PDFTrailer.forLastCrossRefSectionOffset(799))).toBe(
-      "startxref\n799\n%%EOF",
-    );
+    expect(String(PDFTrailer.forLastCrossRefSectionOffset(799))).toBe("startxref\n799\n%%EOF");
   });
 
   test("can provide its size in bytes", () => {
-    expect(PDFTrailer.forLastCrossRefSectionOffset(1919).sizeInBytes()).toBe(
-      20,
-    );
+    expect(PDFTrailer.forLastCrossRefSectionOffset(1919).sizeInBytes()).toBe(20);
   });
 
   test("can be serialized", () => {

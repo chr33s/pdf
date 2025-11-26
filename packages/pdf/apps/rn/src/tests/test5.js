@@ -10,9 +10,7 @@ export default async () => {
 
   const pdfDoc = await PDFDocument.load(inputPdfBytes);
 
-  const timesRomanFont = await pdfDoc.embedFont(
-    StandardFonts.TimesRomanBoldItalic,
-  );
+  const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRomanBoldItalic);
   const minionsBananaImage = await pdfDoc.embedPng(minionsBananaAlphaBytes);
   const minionsBananaDims = minionsBananaImage.scale(0.5);
 

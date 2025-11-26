@@ -16,10 +16,8 @@ type UniversalShapingData = StateMachineConfig & {
 };
 
 const textDecoder = new TextDecoder();
-const decodeBase64 = (encoded: string): Uint8Array =>
-  new Uint8Array(base64.decode(encoded));
-const inflateBase64 = (encoded: string): Uint8Array =>
-  pako.inflate(decodeBase64(encoded));
+const decodeBase64 = (encoded: string): Uint8Array => new Uint8Array(base64.decode(encoded));
+const inflateBase64 = (encoded: string): Uint8Array => pako.inflate(decodeBase64(encoded));
 
 const useData = JSON.parse(
   textDecoder.decode(inflateBase64(base64DeflatedUseData)),
@@ -37,8 +35,7 @@ const stateMachine = new StateMachine(useData);
  * See https://www.microsoft.com/typography/OpenTypeDev/USE/intro.htm.
  */
 export default class UniversalShaper extends DefaultShaper {
-  static override zeroMarkWidths: typeof DefaultShaper.zeroMarkWidths =
-    "BEFORE_GPOS";
+  static override zeroMarkWidths: typeof DefaultShaper.zeroMarkWidths = "BEFORE_GPOS";
 
   static override planFeatures(plan: ShapingPlan): void {
     plan.addStage(setupSyllables);
@@ -108,9 +105,7 @@ class USEInfo {
 
 function setupSyllables(_font: FontLike, glyphs: GlyphInfo[]): void {
   let syllable = 0;
-  for (const [start, end, tags] of stateMachine.match(
-    glyphs.map(useCategory),
-  )) {
+  for (const [start, end, tags] of stateMachine.match(glyphs.map(useCategory))) {
     syllable++;
 
     // Create shaper info
@@ -198,12 +193,7 @@ function reorder(font: FontLike, glyphs: GlyphInfo[]): void {
             i--;
           }
 
-          glyphs.splice(
-            start,
-            0,
-            ...glyphs.splice(start + 1, i - start),
-            glyphs[i],
-          );
+          glyphs.splice(start, 0, ...glyphs.splice(start + 1, i - start), glyphs[i]);
           break;
         }
       }
@@ -216,10 +206,7 @@ function reorder(font: FontLike, glyphs: GlyphInfo[]): void {
         // If we hit a halant, move after it; otherwise it's a base: move to its
         // place, and shift things in between backward.
         j = isHalant(glyphs[i]) ? i + 1 : i;
-      } else if (
-        (info.category === "VPre" || info.category === "VMPre") &&
-        j < i
-      ) {
+      } else if ((info.category === "VPre" || info.category === "VMPre") && j < i) {
         glyphs.splice(j, 1, glyphs[i], ...glyphs.splice(j, i - j));
       }
     }
@@ -232,10 +219,7 @@ function nextSyllable(glyphs: GlyphInfo[], start: number): number {
   }
 
   const syllable = getUseInfo(glyphs[start]).syllable;
-  while (
-    ++start < glyphs.length &&
-    getUseInfo(glyphs[start]).syllable === syllable
-  );
+  while (++start < glyphs.length && getUseInfo(glyphs[start]).syllable === syllable);
   return start;
 }
 

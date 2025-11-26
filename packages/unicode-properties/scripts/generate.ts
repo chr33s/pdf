@@ -7,8 +7,7 @@ import pako from "pako";
 
 type IndexLookup = Record<string, number>;
 
-const bits = (value: number): number =>
-  value > 0 ? (Math.log2(value) + 1) | 0 : 0;
+const bits = (value: number): number => (value > 0 ? (Math.log2(value) + 1) | 0 : 0);
 
 const numericValue = (numeric?: string | null): number => {
   if (!numeric) {
@@ -56,10 +55,8 @@ const addIndex = (
   return currentCount;
 };
 
-const getIndex = (
-  lookup: IndexLookup,
-  key: string | null | undefined,
-): number => lookup[key ?? ""] ?? 0;
+const getIndex = (lookup: IndexLookup, key: string | null | undefined): number =>
+  lookup[key ?? ""] ?? 0;
 
 const srcDir = path.resolve(process.cwd(), "src");
 const trieFilePath = path.join(srcDir, "trie.js");
@@ -83,11 +80,7 @@ for (const entry of entries) {
   }
 
   categoryCount = addIndex(categories, entry.category, categoryCount);
-  combiningClassCount = addIndex(
-    combiningClasses,
-    entry.combiningClassName,
-    combiningClassCount,
-  );
+  combiningClassCount = addIndex(combiningClasses, entry.combiningClassName, combiningClassCount);
   scriptCount = addIndex(scripts, entry.script, scriptCount);
   eawCount = addIndex(eaws, entry.eastAsianWidth, eawCount);
 }

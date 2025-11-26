@@ -1,9 +1,4 @@
-import {
-  PDFDocument,
-  PDFFont,
-  StandardFonts,
-  type StandardFont,
-} from "../../../src/index.js";
+import { PDFDocument, PDFFont, StandardFonts, type StandardFont } from "../../../src/index.js";
 import { Assets } from "../index.js";
 
 // prettier-ignore
@@ -127,19 +122,12 @@ const addPageWithFonts = (
       lineHeight: font.heightAtSize(fontSize) + 10,
     });
 
-    page.moveDown(
-      (font.heightAtSize(fontSize) + 10) * (lines.length - 1 + gapAmt),
-    );
+    page.moveDown((font.heightAtSize(fontSize) + 10) * (lines.length - 1 + gapAmt));
   });
 };
 
 // Primitive line break algorithm
-const breakTextIntoLines = (
-  text: string,
-  size: number,
-  font: PDFFont,
-  maxWidth: number,
-) => {
+const breakTextIntoLines = (text: string, size: number, font: PDFFont, maxWidth: number) => {
   const lines: string[] = [];
   let textIdx = 0;
   while (textIdx < text.length) {
@@ -193,12 +181,7 @@ export default async (_assets: Assets) => {
     glyph supported by a given font's encoding is rendered to the page under a
     header naming the font in use.`;
 
-  const descriptionLines = breakTextIntoLines(
-    description,
-    16,
-    helveticaFont,
-    600,
-  );
+  const descriptionLines = breakTextIntoLines(description, 16, helveticaFont, 600);
 
   const titlePage = pdfDoc.addPage([650, 700]);
   titlePage.drawText(title, {
@@ -257,9 +240,7 @@ export default async (_assets: Assets) => {
   page.drawText("ZapfDingbats", {
     font: helveticaFont,
     size: zapfDingbatsFontSize,
-    x:
-      650 / 2 -
-      helveticaFont.widthOfTextAtSize("ZapfDingbats", zapfDingbatsFontSize) / 2,
+    x: 650 / 2 - helveticaFont.widthOfTextAtSize("ZapfDingbats", zapfDingbatsFontSize) / 2,
   });
   page.moveDown(zapfDingbatsFont.heightAtSize(zapfDingbatsFontSize) + 10);
   page.drawText(zapfDingbatsLines.join("\n"), {
@@ -272,12 +253,7 @@ export default async (_assets: Assets) => {
   // Symbol
   const symbolFont = await pdfDoc.embedFont(StandardFonts.Symbol);
   const symbolFontSize = 20;
-  const symbolLines = breakTextIntoLines(
-    symbolString,
-    symbolFontSize,
-    symbolFont,
-    600,
-  );
+  const symbolLines = breakTextIntoLines(symbolString, symbolFontSize, symbolFont, 600);
 
   page.moveDown(275);
   page.drawText("Symbol", {

@@ -3,9 +3,7 @@ import { describe, expect, test } from "vitest";
 import { decodeFromBase64DataUri } from "../../src/utils/index.js";
 
 const pdfBytes = await readFile(new URL("./data/simple.pdf", import.meta.url));
-const pdfBase64Bytes = await readFile(
-  new URL("./data/simple.pdf.base64", import.meta.url),
-);
+const pdfBase64Bytes = await readFile(new URL("./data/simple.pdf.base64", import.meta.url));
 const pdfBase64String = pdfBase64Bytes.toString();
 
 // Jest stalls when comparing large arrays, so we'll use this instead

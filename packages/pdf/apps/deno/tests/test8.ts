@@ -1,23 +1,14 @@
 import { Assets } from "../index.ts";
 
 // @deno-types="../dummy.d.ts"
-import {
-  ParseSpeeds,
-  PDFDocument,
-  PDFPage,
-  rgb,
-  StandardFonts,
-} from "../../../dist/index.js";
+import { ParseSpeeds, PDFDocument, PDFPage, rgb, StandardFonts } from "../../../dist/index.js";
 
 export default async (assets: Assets) => {
   const { pdfs } = assets;
 
-  const pdfDoc = await PDFDocument.load(
-    pdfs.with_newline_whitespace_in_indirect_object_numbers,
-    {
-      parseSpeed: ParseSpeeds.Fastest,
-    },
-  );
+  const pdfDoc = await PDFDocument.load(pdfs.with_newline_whitespace_in_indirect_object_numbers, {
+    parseSpeed: ParseSpeeds.Fastest,
+  });
 
   const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
 

@@ -24,9 +24,7 @@ describe("Bitfield", () => {
   });
 
   test("should decode", () => {
-    const stream = new DecodeStream(
-      Buffer.from([JACK | MACK | PACK | NACK | QUACK]),
-    );
+    const stream = new DecodeStream(Buffer.from([JACK | MACK | PACK | NACK | QUACK]));
     expect(bitfield.decode(stream)).to.deep.equal({
       Jack: true,
       Kack: false,
@@ -42,9 +40,7 @@ describe("Bitfield", () => {
   test("should encode", async () => {
     const stream = new EncodeStream();
     const expectation = expectStream(stream, (buf) => {
-      expect(buf).to.deep.equal(
-        Buffer.from([JACK | MACK | PACK | NACK | QUACK]),
-      );
+      expect(buf).to.deep.equal(Buffer.from([JACK | MACK | PACK | NACK | QUACK]));
     });
 
     bitfield.encode(stream, {

@@ -4,8 +4,7 @@ import PDFContext from "../pdf-context.js";
 import PDFRef from "../objects/pdf-ref.js";
 
 class PDFAcroListBox extends PDFAcroChoice {
-  static fromDict = (dict: PDFDict, ref: PDFRef) =>
-    new PDFAcroListBox(dict, ref);
+  static fromDict = (dict: PDFDict, ref: PDFRef) => new PDFAcroListBox(dict, ref);
 
   static create = (context: PDFContext) => {
     const dict = context.obj({

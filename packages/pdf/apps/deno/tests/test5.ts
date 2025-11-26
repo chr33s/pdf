@@ -1,13 +1,7 @@
 import { Assets } from "../index.ts";
 
 // @deno-types="../dummy.d.ts"
-import {
-  ParseSpeeds,
-  PDFDocument,
-  PDFPage,
-  rgb,
-  StandardFonts,
-} from "../../../dist/index.js";
+import { ParseSpeeds, PDFDocument, PDFPage, rgb, StandardFonts } from "../../../dist/index.js";
 
 export default async (assets: Assets) => {
   const { pdfs, images } = assets;
@@ -16,12 +10,8 @@ export default async (assets: Assets) => {
     parseSpeed: ParseSpeeds.Fastest,
   });
 
-  const timesRomanFont = await pdfDoc.embedFont(
-    StandardFonts.TimesRomanBoldItalic,
-  );
-  const minionsBananaImage = await pdfDoc.embedPng(
-    images.png.minions - banana_alpha,
-  );
+  const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRomanBoldItalic);
+  const minionsBananaImage = await pdfDoc.embedPng(images.png.minions - banana_alpha);
   const minionsBananaDims = minionsBananaImage.scale(0.5);
 
   const pages = pdfDoc.getPages();

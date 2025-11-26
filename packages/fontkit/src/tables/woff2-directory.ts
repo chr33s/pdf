@@ -95,9 +95,7 @@ let WOFF2DirectoryEntry = new r.Struct({
   length: Base128,
   transformVersion: (t) => (t.flags >>> 6) & 0x03,
   transformed: (t) =>
-    t.tag === "glyf" || t.tag === "loca"
-      ? t.transformVersion === 0
-      : t.transformVersion !== 0,
+    t.tag === "glyf" || t.tag === "loca" ? t.transformVersion === 0 : t.transformVersion !== 0,
   transformLength: new r.Optional(Base128, (t) => t.transformed),
 });
 

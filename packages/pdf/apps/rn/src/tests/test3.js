@@ -1,27 +1,16 @@
-import {
-  degrees,
-  LineCapStyle,
-  PDFDocument,
-  rgb,
-  StandardFonts,
-} from "@chr33s/pdf";
+import { degrees, LineCapStyle, PDFDocument, rgb, StandardFonts } from "@chr33s/pdf";
 
 import { fetchAsset } from "./assets.js";
 
 export default async () => {
-  const [
-    inputPdfBytes,
-    catRidingUnicornBytes,
-    cmykBytes,
-    normalPdfBase64,
-    existingPdfBytes,
-  ] = await Promise.all([
-    fetchAsset("pdfs/with_update_sections.pdf"),
-    fetchAsset("images/cat_riding_unicorn_resized.jpg"),
-    fetchAsset("images/cmyk_colorspace.jpg"),
-    fetchAsset("pdfs/normal.pdf"),
-    fetchAsset("pdfs/with_annots.pdf"),
-  ]);
+  const [inputPdfBytes, catRidingUnicornBytes, cmykBytes, normalPdfBase64, existingPdfBytes] =
+    await Promise.all([
+      fetchAsset("pdfs/with_update_sections.pdf"),
+      fetchAsset("images/cat_riding_unicorn_resized.jpg"),
+      fetchAsset("images/cmyk_colorspace.jpg"),
+      fetchAsset("pdfs/normal.pdf"),
+      fetchAsset("pdfs/with_annots.pdf"),
+    ]);
 
   const pdfDoc = await PDFDocument.load(inputPdfBytes, {
     updateMetadata: false,

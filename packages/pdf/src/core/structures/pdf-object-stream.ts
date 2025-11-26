@@ -10,21 +10,14 @@ import PDFFlateStream from "./pdf-flate-stream.js";
 type IndirectObject = [PDFRef, PDFObject];
 
 class PDFObjectStream extends PDFFlateStream {
-  static withContextAndObjects = (
-    context: PDFContext,
-    objects: IndirectObject[],
-    encode = true,
-  ) => new PDFObjectStream(context, objects, encode);
+  static withContextAndObjects = (context: PDFContext, objects: IndirectObject[], encode = true) =>
+    new PDFObjectStream(context, objects, encode);
 
   readonly #objects: IndirectObject[];
   readonly #offsets: [number, number][];
   readonly #offsetsString: string;
 
-  private constructor(
-    context: PDFContext,
-    objects: IndirectObject[],
-    encode = true,
-  ) {
+  private constructor(context: PDFContext, objects: IndirectObject[], encode = true) {
     super(context.obj({}), encode);
 
     this.#objects = objects;
@@ -33,10 +26,7 @@ class PDFObjectStream extends PDFFlateStream {
 
     this.dict.set(PDFName.of("Type"), PDFName.of("ObjStm"));
     this.dict.set(PDFName.of("N"), PDFNumber.of(this.#objects.length));
-    this.dict.set(
-      PDFName.of("First"),
-      PDFNumber.of(this.#offsetsString.length),
-    );
+    this.dict.set(PDFName.of("First"), PDFNumber.of(this.#offsetsString.length));
   }
 
   getObjectsCount(): number {
@@ -73,10 +63,7 @@ class PDFObjectStream extends PDFFlateStream {
 
   getUnencodedContentsSize(): number {
     return (
-      this.#offsetsString.length +
-      last(this.#offsets)[1] +
-      last(this.#objects)[1].sizeInBytes() +
-      1
+      this.#offsetsString.length + last(this.#offsets)[1] + last(this.#objects)[1].sizeInBytes() + 1
     );
   }
 

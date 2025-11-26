@@ -89,7 +89,6 @@ const PDFOperatorNames = {
   EndCompatibilitySection: "EX",
 } as const;
 
-export type PDFOperatorName =
-  (typeof PDFOperatorNames)[keyof typeof PDFOperatorNames];
+export type PDFOperatorName = (typeof PDFOperatorNames)[keyof typeof PDFOperatorNames];
 
 export default PDFOperatorNames;

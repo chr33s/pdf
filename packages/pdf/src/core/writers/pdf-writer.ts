@@ -74,8 +74,7 @@ class PDFWriter {
       buffer[offset++] = CharCodes.Newline;
       buffer[offset++] = CharCodes.Newline;
 
-      const n =
-        object instanceof PDFObjectStream ? object.getObjectsCount() : 1;
+      const n = object instanceof PDFObjectStream ? object.getObjectsCount() : 1;
       if (this.shouldWaitForTick(n)) await waitForTick();
     }
 
@@ -95,10 +94,7 @@ class PDFWriter {
     return buffer;
   }
 
-  protected computeIndirectObjectSize([ref, object]: [
-    PDFRef,
-    PDFObject,
-  ]): number {
+  protected computeIndirectObjectSize([ref, object]: [PDFRef, PDFObject]): number {
     const refSize = ref.sizeInBytes() + 3; // 'R' -> 'obj\n'
     const objectSize = object.sizeInBytes() + 9; // '\nendobj\n\n'
     return refSize + objectSize;
@@ -148,10 +144,7 @@ class PDFWriter {
 
   protected encrypt(ref: PDFRef, object: PDFObject, security: PDFSecurity) {
     if (object instanceof PDFStream) {
-      const encryptFn = security.getEncryptFn(
-        ref.objectNumber,
-        ref.generationNumber,
-      );
+      const encryptFn = security.getEncryptFn(ref.objectNumber, ref.generationNumber);
       const unencryptedContents = object.getContents();
       const encryptedContents = encryptFn(unencryptedContents);
       object.updateContents(encryptedContents);

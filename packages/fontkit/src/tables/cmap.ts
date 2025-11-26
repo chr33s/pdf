@@ -64,10 +64,7 @@ let CmapSubtable = new r.VersionedStruct(r.uint16, {
     startCode: new r.LazyArray(r.uint16, "segCount"),
     idDelta: new r.LazyArray(r.int16, "segCount"),
     idRangeOffset: new r.LazyArray(r.uint16, "segCount"),
-    glyphIndexArray: new r.LazyArray(
-      r.uint16,
-      (t) => (t.length - t._currentOffset) / 2,
-    ),
+    glyphIndexArray: new r.LazyArray(r.uint16, (t) => (t.length - t._currentOffset) / 2),
   },
 
   6: {

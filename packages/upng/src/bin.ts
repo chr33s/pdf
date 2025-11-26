@@ -11,10 +11,7 @@ export class Bin {
     buff[p + 1] = n & 255;
   }
   static readUint(buff: Uint8Array, p: number) {
-    return (
-      buff[p] * (256 * 256 * 256) +
-      ((buff[p + 1] << 16) | (buff[p + 2] << 8) | buff[p + 3])
-    );
+    return buff[p] * (256 * 256 * 256) + ((buff[p + 1] << 16) | (buff[p + 2] << 8) | buff[p + 3]);
   }
   static writeUint(buff: Uint8Array, p: number, n: number) {
     buff[p] = (n >> 24) & 255;

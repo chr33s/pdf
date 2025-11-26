@@ -32,9 +32,7 @@ export default async () => {
     fetchAsset("pdfs/with_large_page_count.pdf"),
   ]);
 
-  const pdfDoc = await PDFDocument.load(
-    withMissingEndstreamEolAndPollutedCtmBytes,
-  );
+  const pdfDoc = await PDFDocument.load(withMissingEndstreamEolAndPollutedCtmBytes);
 
   const allDonorPdfBytes = [
     normalBytes,

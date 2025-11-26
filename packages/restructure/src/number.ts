@@ -18,8 +18,7 @@ export class NumberT extends Base<number> {
   }
 
   size(): number {
-    const size =
-      DecodeStream.TYPES[this.type as keyof typeof DecodeStream.TYPES];
+    const size = DecodeStream.TYPES[this.type as keyof typeof DecodeStream.TYPES];
     if (!size) {
       throw new Error(`Unknown number type: ${this.type}`);
     }

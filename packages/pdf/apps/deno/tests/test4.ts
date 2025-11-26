@@ -18,9 +18,7 @@ export default async (assets: Assets) => {
     parseSpeed: ParseSpeeds.Fastest,
   });
 
-  const minionsLaughingImage = await pdfDoc.embedJpg(
-    images.jpg.minions - laughing,
-  );
+  const minionsLaughingImage = await pdfDoc.embedJpg(images.jpg.minions - laughing);
   const minionsLaughingDims = minionsLaughingImage.scale(0.6);
 
   const firstPage = pdfDoc.getPage(0);

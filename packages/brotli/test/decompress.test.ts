@@ -5,16 +5,12 @@ import { decompress } from "../dist/decompress.js";
 import { normalize, readdir, readFile } from "./utils.js";
 
 const brotliBinary = await readFile("../dist/brotli.js");
-const compressedFiles = (await readdir("data")).filter((file) =>
-  /\.compressed/.test(file),
-);
+const compressedFiles = (await readdir("data")).filter((file) => /\.compressed/.test(file));
 
 describe("decompress", function () {
   test.each(compressedFiles)(`%s`, async function (file) {
     const compressed = await readFile(`data/${file}`);
-    const expected = await readFile(
-      `data/${file.replace(/\.compressed.*/, "")}`,
-    );
+    const expected = await readFile(`data/${file.replace(/\.compressed.*/, "")}`);
     const result = decompress(compressed);
     expect(normalize(result!)).toStrictEqual(normalize(expected));
   });

@@ -31,8 +31,7 @@ class Encoding {
     this.#unicodeMappings = unicodeMappings;
   }
 
-  canEncodeUnicodeCodePoint = (codePoint: number) =>
-    codePoint in this.#unicodeMappings;
+  canEncodeUnicodeCodePoint = (codePoint: number) => codePoint in this.#unicodeMappings;
 
   encodeUnicodeCodePoint = (codePoint: number) => {
     const mapped = this.#unicodeMappings[codePoint];

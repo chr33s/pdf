@@ -1,7 +1,4 @@
-import {
-  InvalidAcroFieldValueError,
-  MultiSelectValueError,
-} from "../errors.js";
+import { InvalidAcroFieldValueError, MultiSelectValueError } from "../errors.js";
 import PDFArray from "../objects/pdf-array.js";
 import PDFHexString from "../objects/pdf-hex-string.js";
 import PDFName from "../objects/pdf-name.js";
@@ -53,8 +50,7 @@ class PDFAcroChoice extends PDFAcroTerminal {
         .map((value) => {
           const decoded = value.decodeText();
           return options.findIndex(
-            (option) =>
-              decoded === (option.display || option.value).decodeText(),
+            (option) => decoded === (option.display || option.value).decodeText(),
           );
         })
         .sort((a, b) => a - b);
@@ -86,12 +82,7 @@ class PDFAcroChoice extends PDFAcroTerminal {
   }
 
   Opt(): PDFArray | PDFString | PDFHexString | undefined {
-    return this.dict.lookupMaybe(
-      PDFName.of("Opt"),
-      PDFString,
-      PDFHexString,
-      PDFArray,
-    );
+    return this.dict.lookupMaybe(PDFName.of("Opt"), PDFString, PDFHexString, PDFArray);
   }
 
   setOptions(

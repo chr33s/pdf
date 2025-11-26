@@ -42,9 +42,7 @@ export default async () => {
   const isAFairy = form.getCheckBox("Are You A Fairy? 🌿");
   isAFairy.updateAppearances();
 
-  const isPowerLevelOver9000 = form.getCheckBox(
-    "Is Your Power Level Over 9000? 💪",
-  );
+  const isPowerLevelOver9000 = form.getCheckBox("Is Your Power Level Over 9000? 💪");
   isPowerLevelOver9000.updateAppearances();
 
   const onePunch = form.getCheckBox("Can You Defeat Enemies In One Punch? 👊");

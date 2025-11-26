@@ -1,13 +1,5 @@
 import { readFile } from "node:fs/promises";
-import {
-  afterAll,
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  test,
-  vi,
-} from "vitest";
+import { afterAll, beforeAll, beforeEach, describe, expect, test, vi } from "vitest";
 import {
   PDFAcroForm,
   PDFButton,
@@ -55,8 +47,7 @@ const getApRefs = (widget: PDFWidgetAnnotation) => {
   ].filter(Boolean);
 };
 
-const flatten = <T>(arr: T[][]): T[] =>
-  arr.reduce((curr, acc) => [...acc, ...curr], []);
+const flatten = <T>(arr: T[][]): T[] => arr.reduce((curr, acc) => [...acc, ...curr], []);
 
 const fancyFieldsPdfBytes = await readFile("assets/pdfs/fancy-fields.pdf");
 // const sampleFormPdfBytes = await readFile('assets/pdfs/sample-form.pdf');
@@ -302,9 +293,7 @@ describe("PDFForm", () => {
 
     expect(() => form.updateFieldAppearances()).not.toThrow();
 
-    await expect(
-      pdfDoc.save({ updateFieldAppearances: true }),
-    ).resolves.toBeInstanceOf(Uint8Array);
+    await expect(pdfDoc.save({ updateFieldAppearances: true })).resolves.toBeInstanceOf(Uint8Array);
   });
 
   test("it cleans references of removed fields and their widgets", async () => {

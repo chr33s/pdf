@@ -10,10 +10,7 @@ const uncompressed = await readFile(join(__dirname, "lorem.txt"));
 
 type DeflateOptions = Parameters<typeof createDeflateRaw>[0];
 
-async function deflateRaw(
-  buffer: Buffer,
-  options?: DeflateOptions,
-): Promise<Buffer> {
+async function deflateRaw(buffer: Buffer, options?: DeflateOptions): Promise<Buffer> {
   return new Promise<Buffer>((resolve, reject) => {
     const chunks: Buffer[] = [];
     const stream = createDeflateRaw(options);

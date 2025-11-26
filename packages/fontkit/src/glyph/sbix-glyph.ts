@@ -46,10 +46,7 @@ export default class SBIXGlyph extends TTFGlyph {
 
   render(
     ctx: CanvasContextLike & {
-      image: (
-        data: Uint8Array,
-        options: { height: number; x: number; y: number },
-      ) => void;
+      image: (data: Uint8Array, options: { height: number; x: number; y: number }) => void;
     },
     size: number,
   ): void {

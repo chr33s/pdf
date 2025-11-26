@@ -63,9 +63,7 @@ export default class EncodeStream extends Readable {
           this.writeBuffer(iconv.encode(value, encoding));
           break;
         }
-        throw new Error(
-          "Install iconv-lite to enable additional string encodings.",
-        );
+        throw new Error("Install iconv-lite to enable additional string encodings.");
       }
     }
   }
@@ -126,8 +124,8 @@ export default class EncodeStream extends Readable {
   }
 }
 
-const writeMethodNames = Object.getOwnPropertyNames(Buffer.prototype).filter(
-  (key) => key.startsWith("write"),
+const writeMethodNames = Object.getOwnPropertyNames(Buffer.prototype).filter((key) =>
+  key.startsWith("write"),
 );
 
 for (const key of writeMethodNames) {

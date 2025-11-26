@@ -24,20 +24,14 @@ fontkitWithHelpers.openSync = (filename, postscriptName) => {
   return fontkitWithHelpers.create(buffer, postscriptName ?? undefined);
 };
 
-fontkitWithHelpers.open = (
-  filename,
-  postscriptNameOrCallback,
-  maybeCallback,
-) => {
+fontkitWithHelpers.open = (filename, postscriptNameOrCallback, maybeCallback) => {
   const callback: AsyncCallback =
     typeof postscriptNameOrCallback === "function"
       ? postscriptNameOrCallback
       : (maybeCallback ?? (() => undefined));
 
   const postscriptName =
-    typeof postscriptNameOrCallback === "function"
-      ? undefined
-      : postscriptNameOrCallback;
+    typeof postscriptNameOrCallback === "function" ? undefined : postscriptNameOrCallback;
 
   fs.readFile(filename, (err, buffer) => {
     if (err) {
@@ -46,10 +40,7 @@ fontkitWithHelpers.open = (
     }
 
     try {
-      const loadedFont = fontkitWithHelpers.create(
-        buffer,
-        postscriptName ?? undefined,
-      );
+      const loadedFont = fontkitWithHelpers.create(buffer, postscriptName ?? undefined);
       callback(null, loadedFont);
     } catch (error) {
       callback(error as Error);

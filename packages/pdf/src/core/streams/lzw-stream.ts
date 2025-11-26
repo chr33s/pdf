@@ -33,11 +33,7 @@ class LZWStream extends DecodeStream {
     prevCode?: number | null;
   };
 
-  constructor(
-    stream: StreamType,
-    maybeLength: number | undefined,
-    earlyChange: 0 | 1,
-  ) {
+  constructor(stream: StreamType, maybeLength: number | undefined, earlyChange: 0 | 1) {
     super(maybeLength);
 
     this.#stream = stream;
@@ -133,10 +129,7 @@ class LZWStream extends DecodeStream {
         nextCode++;
         const threshold = nextCode + earlyChange;
         if ((threshold & (threshold - 1)) === 0) {
-          codeLength = Math.min(
-            ((Math.log(threshold) / Math.LN2) | 0) + 1,
-            MAX_CODE_LENGTH,
-          );
+          codeLength = Math.min(((Math.log(threshold) / Math.LN2) | 0) + 1, MAX_CODE_LENGTH);
         }
       }
       prevCode = code;
@@ -152,10 +145,7 @@ class LZWStream extends DecodeStream {
         buffer[currentBufferLength++] = currentSequence[j];
       }
 
-      if (
-        this.#expectedLength !== undefined &&
-        currentBufferLength >= this.#expectedLength
-      ) {
+      if (this.#expectedLength !== undefined && currentBufferLength >= this.#expectedLength) {
         this.bufferLength = this.#expectedLength;
         this.eof = true;
         this.#lzwState = undefined;

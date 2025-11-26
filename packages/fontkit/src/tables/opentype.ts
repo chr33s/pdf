@@ -63,10 +63,7 @@ export function LookupList(SubTable) {
     flags: LookupFlags,
     subTableCount: r.uint16,
     subTables: new r.Array(new r.Pointer(r.uint16, SubTable), "subTableCount"),
-    markFilteringSet: new r.Optional(
-      r.uint16,
-      (t) => t.flags.flags.useMarkFilteringSet,
-    ),
+    markFilteringSet: new r.Optional(r.uint16, (t) => t.flags.flags.useMarkFilteringSet),
   });
 
   return new r.LazyArray(new r.Pointer(r.uint16, Lookup), r.uint16);
@@ -198,10 +195,7 @@ export let ChainingContext = new r.VersionedStruct(r.uint16, {
     // Simple context glyph substitution
     coverage: new r.Pointer(r.uint16, Coverage),
     chainCount: r.uint16,
-    chainRuleSets: new r.Array(
-      new r.Pointer(r.uint16, ChainRuleSet),
-      "chainCount",
-    ),
+    chainRuleSets: new r.Array(new r.Pointer(r.uint16, ChainRuleSet), "chainCount"),
   },
 
   2: {
@@ -211,29 +205,17 @@ export let ChainingContext = new r.VersionedStruct(r.uint16, {
     inputClassDef: new r.Pointer(r.uint16, ClassDef),
     lookaheadClassDef: new r.Pointer(r.uint16, ClassDef),
     chainCount: r.uint16,
-    chainClassSet: new r.Array(
-      new r.Pointer(r.uint16, ChainRuleSet),
-      "chainCount",
-    ),
+    chainClassSet: new r.Array(new r.Pointer(r.uint16, ChainRuleSet), "chainCount"),
   },
 
   3: {
     // Coverage-based chaining context
     backtrackGlyphCount: r.uint16,
-    backtrackCoverage: new r.Array(
-      new r.Pointer(r.uint16, Coverage),
-      "backtrackGlyphCount",
-    ),
+    backtrackCoverage: new r.Array(new r.Pointer(r.uint16, Coverage), "backtrackGlyphCount"),
     inputGlyphCount: r.uint16,
-    inputCoverage: new r.Array(
-      new r.Pointer(r.uint16, Coverage),
-      "inputGlyphCount",
-    ),
+    inputCoverage: new r.Array(new r.Pointer(r.uint16, Coverage), "inputGlyphCount"),
     lookaheadGlyphCount: r.uint16,
-    lookaheadCoverage: new r.Array(
-      new r.Pointer(r.uint16, Coverage),
-      "lookaheadGlyphCount",
-    ),
+    lookaheadCoverage: new r.Array(new r.Pointer(r.uint16, Coverage), "lookaheadGlyphCount"),
     lookupCount: r.uint16,
     lookupRecords: new r.Array(LookupRecord, "lookupCount"),
   },

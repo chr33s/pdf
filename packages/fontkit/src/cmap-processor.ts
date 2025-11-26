@@ -120,9 +120,7 @@ function materialize<T>(value?: MaybeLazyArray<T> | null): T[] {
   return value.toArray();
 }
 
-function isVariationSelectorTable(
-  table: AnyCmapSubtable | null,
-): table is CmapFormat14Subtable {
+function isVariationSelectorTable(table: AnyCmapSubtable | null): table is CmapFormat14Subtable {
   return table?.version === 14;
 }
 
@@ -178,9 +176,7 @@ export default class CmapProcessor {
     }
 
     const variationTable = this.#findSubtable(cmapTable, [[0, 5]]);
-    this.#uvs = isVariationSelectorTable(variationTable)
-      ? variationTable
-      : null;
+    this.#uvs = isVariationSelectorTable(variationTable) ? variationTable : null;
   }
 
   #findPrimarySubtable(
@@ -195,10 +191,7 @@ export default class CmapProcessor {
     return null;
   }
 
-  #findSubtable(
-    cmapTable: CmapTable,
-    pairs: readonly [number, number][],
-  ): AnyCmapSubtable | null {
+  #findSubtable(cmapTable: CmapTable, pairs: readonly [number, number][]): AnyCmapSubtable | null {
     for (const [platformID, encodingID] of pairs) {
       for (const cmap of cmapTable.tables) {
         if (cmap.platformID === platformID && cmap.encodingID === encodingID) {
@@ -258,9 +251,7 @@ export default class CmapProcessor {
               gid = codepoint + cmap.idDelta.get(mid);
             } else {
               const index =
-                rangeOffset / 2 +
-                (codepoint - cmap.startCode.get(mid)) -
-                (cmap.segCount - mid);
+                rangeOffset / 2 + (codepoint - cmap.startCode.get(mid)) - (cmap.segCount - mid);
               gid = cmap.glyphIndexArray.get(index) || 0;
               if (gid !== 0) {
                 gid += cmap.idDelta.get(mid);
@@ -318,8 +309,7 @@ export default class CmapProcessor {
     const selectors = this.#uvs.varSelectors.toArray();
     const selectorIndex = binarySearch(
       selectors,
-      (record: VariationSelectorRecord) =>
-        variationSelector - record.varSelector,
+      (record: VariationSelectorRecord) => variationSelector - record.varSelector,
     );
 
     if (selectorIndex === -1) {

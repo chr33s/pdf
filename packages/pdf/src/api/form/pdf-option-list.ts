@@ -3,10 +3,7 @@ import PDFFont from "../pdf-font.js";
 import PDFPage from "../pdf-page.js";
 import { rgb } from "../colors.js";
 import { degrees } from "../rotations.js";
-import PDFField, {
-  FieldAppearanceOptions,
-  assertFieldAppearanceOptions,
-} from "./pdf-field.js";
+import PDFField, { FieldAppearanceOptions, assertFieldAppearanceOptions } from "./pdf-field.js";
 import {
   AppearanceProviderFor,
   defaultOptionListAppearanceProvider,
@@ -22,12 +19,7 @@ import {
   PDFString,
   PDFWidgetAnnotation,
 } from "../../core/index.js";
-import {
-  assertIs,
-  assertIsSubset,
-  assertOrUndefined,
-  assertPositive,
-} from "../../utils/index.js";
+import { assertIs, assertIsSubset, assertOrUndefined, assertPositive } from "../../utils/index.js";
 
 /**
  * Represents an option list field of a [[PDFForm]].
@@ -59,11 +51,7 @@ export default class PDFOptionList extends PDFField {
   /** The low-level PDFAcroListBox wrapped by this option list. */
   readonly acroField: PDFAcroListBox;
 
-  private constructor(
-    acroListBox: PDFAcroListBox,
-    ref: PDFRef,
-    doc: PDFDocument,
-  ) {
+  private constructor(acroListBox: PDFAcroListBox, ref: PDFRef, doc: PDFDocument) {
     super(acroListBox, ref, doc);
 
     assertIs(acroListBox, "acroListBox", [[PDFAcroListBox, "PDFAcroListBox"]]);
@@ -84,9 +72,7 @@ export default class PDFOptionList extends PDFField {
    */
   getOptions(): string[] {
     const rawOptions = this.acroField.getOptions();
-    return rawOptions.map(({ display, value }) =>
-      (display ?? value).decodeText(),
-    );
+    return rawOptions.map(({ display, value }) => (display ?? value).decodeText());
   }
 
   /**
@@ -482,8 +468,7 @@ export default class PDFOptionList extends PDFField {
     const widgets = this.acroField.getWidgets();
     for (let idx = 0, len = widgets.length; idx < len; idx++) {
       const widget = widgets[idx];
-      const hasAppearances =
-        widget.getAppearances()?.normal instanceof PDFStream;
+      const hasAppearances = widget.getAppearances()?.normal instanceof PDFStream;
       if (!hasAppearances) return true;
     }
 
@@ -521,10 +506,7 @@ export default class PDFOptionList extends PDFField {
    * @param provider Optionally, the appearance provider to be used for
    *                 generating the contents of the appearance streams.
    */
-  updateAppearances(
-    font: PDFFont,
-    provider?: AppearanceProviderFor<PDFOptionList>,
-  ) {
+  updateAppearances(font: PDFFont, provider?: AppearanceProviderFor<PDFOptionList>) {
     assertIs(font, "font", [[PDFFont, "PDFFont"]]);
     assertOrUndefined(provider, "provider", [Function]);
 

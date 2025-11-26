@@ -1,10 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { describe, expect, test } from "vitest";
-import {
-  AnnotationFlags,
-  PDFDocument,
-  TextAlignment,
-} from "../../../src/index.js";
+import { AnnotationFlags, PDFDocument, TextAlignment } from "../../../src/index.js";
 
 const fancyFieldsPdfBytes = await readFile("assets/pdfs/fancy-fields.pdf");
 

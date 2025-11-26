@@ -10,15 +10,10 @@ const ubuntuFont = await readFile(
   new URL("../../../assets/fonts/ubuntu/ubuntu-r.ttf", import.meta.url),
 );
 const sourceHansJpFont = await readFile(
-  new URL(
-    "../../../assets/fonts/source-hans-jp/source-han-serif-jp-regular.otf",
-    import.meta.url,
-  ),
+  new URL("../../../assets/fonts/source-hans-jp/source-han-serif-jp-regular.otf", import.meta.url),
 );
 
-const ubuntuFontCmap = await readFile(
-  new URL("./data/ubuntu-R.ttf.cmap", import.meta.url),
-);
+const ubuntuFontCmap = await readFile(new URL("./data/ubuntu-R.ttf.cmap", import.meta.url));
 const sourceHansJpFontCmap = await readFile(
   new URL("./data/source-han-serif-jp-regular.otf.cmap", import.meta.url),
 );

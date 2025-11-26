@@ -1,10 +1,4 @@
-import {
-  Assignment,
-  ExpressionNode,
-  Literal,
-  Node,
-  Variable,
-} from "./nodes.js";
+import { Assignment, ExpressionNode, Literal, Node, Variable } from "./nodes.js";
 
 type SymbolTableStatement = Node;
 type ExternalSymbolMap = Record<string, number>;
@@ -18,10 +12,7 @@ export default class SymbolTable {
   main: ExpressionNode;
   size: number;
 
-  constructor(
-    statements: SymbolTableStatement[],
-    externalSymbols: ExternalSymbolMap = {},
-  ) {
+  constructor(statements: SymbolTableStatement[], externalSymbols: ExternalSymbolMap = {}) {
     this.variables = {};
     this.symbols = {};
     this.main = undefined as unknown as ExpressionNode;

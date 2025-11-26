@@ -9,17 +9,10 @@ import PDFContext from "../pdf-context.js";
 import CharCodes from "../syntax/char-codes.js";
 import type { PDFOperatorName } from "./pdf-operator-names.js";
 
-type PDFOperatorArg =
-  | string
-  | PDFName
-  | PDFArray
-  | PDFNumber
-  | PDFString
-  | PDFHexString;
+type PDFOperatorArg = string | PDFName | PDFArray | PDFNumber | PDFString | PDFHexString;
 
 class PDFOperator {
-  static of = (name: PDFOperatorName, args?: PDFOperatorArg[]) =>
-    new PDFOperator(name, args);
+  static of = (name: PDFOperatorName, args?: PDFOperatorArg[]) => new PDFOperator(name, args);
 
   readonly #name: PDFOperatorName;
   readonly #args: PDFOperatorArg[];

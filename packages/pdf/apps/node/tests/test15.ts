@@ -58,9 +58,7 @@ export default async (assets: Assets) => {
       ].join("\n"),
     );
 
-  form
-    .getTextField("Treasure")
-    .setText(["• Gold coins", "• Treasure chests"].join("\n"));
+  form.getTextField("Treasure").setText(["• Gold coins", "• Treasure chests"].join("\n"));
 
   // Add new page with custom form fields to exercise options not used in test1
   const { width, height } = pdfDoc.getPage(0).getSize();
@@ -128,13 +126,7 @@ export default async (assets: Assets) => {
     borderWidth: 5,
     borderColor: rgb(1, 0, 1),
   });
-  optionList.setOptions([
-    "Sojourner",
-    "Spirit",
-    "Opportunity",
-    "Curiosity",
-    "Perseverance",
-  ]);
+  optionList.setOptions(["Sojourner", "Spirit", "Opportunity", "Curiosity", "Perseverance"]);
   optionList.enableMultiselect();
   optionList.select(["Sojourner", "Curiosity", "Perseverance"]);
 

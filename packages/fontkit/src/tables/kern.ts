@@ -15,9 +15,7 @@ let ClassTable = new r.Struct({
 
 let Kern2Array = new r.Struct({
   off: (t) => t._startOffset - t.parent.parent._startOffset,
-  len: (t) =>
-    ((t.parent.leftTable.max - t.off) / t.parent.rowWidth + 1) *
-    (t.parent.rowWidth / 2),
+  len: (t) => ((t.parent.leftTable.max - t.off) / t.parent.rowWidth + 1) * (t.parent.rowWidth / 2),
   values: new r.LazyArray(r.int16, "len"),
 });
 
@@ -46,10 +44,7 @@ let KernSubtable = new r.VersionedStruct("format", {
     kernValue: new r.Array(r.int16, "kernValueCount"),
     leftClass: new r.Array(r.uint8, "glyphCount"),
     rightClass: new r.Array(r.uint8, "glyphCount"),
-    kernIndex: new r.Array(
-      r.uint8,
-      (t) => t.leftClassCount * t.rightClassCount,
-    ),
+    kernIndex: new r.Array(r.uint8, (t) => t.leftClassCount * t.rightClassCount),
   },
 });
 

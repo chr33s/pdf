@@ -1,15 +1,8 @@
 import { readFile } from "node:fs/promises";
 import { describe, expect, test } from "vitest";
-import {
-  FileEmbedder,
-  PDFContext,
-  PDFDict,
-  PDFRef,
-} from "../../../src/index.js";
+import { FileEmbedder, PDFContext, PDFDict, PDFRef } from "../../../src/index.js";
 
-const catRidingUnicornJpg = await readFile(
-  "assets/images/cat-riding-unicorn.jpg",
-);
+const catRidingUnicornJpg = await readFile("assets/images/cat-riding-unicorn.jpg");
 const usConstitutionPdf = await readFile("assets/pdfs/us-constitution.pdf");
 
 describe("FileEmbedder", () => {
@@ -20,16 +13,12 @@ describe("FileEmbedder", () => {
 
   test("can embed files into PDFContexts without a predefined ref", async () => {
     const context = PDFContext.create();
-    const embedder = FileEmbedder.for(
-      catRidingUnicornJpg,
-      "cat-riding-unicorn.jpg",
-      {
-        mimeType: "image/jpeg",
-        description: "Cool cat riding a unicorn! 🦄🐈🕶️",
-        creationDate: new Date("2019/12/01"),
-        modificationDate: new Date("2020/04/19"),
-      },
-    );
+    const embedder = FileEmbedder.for(catRidingUnicornJpg, "cat-riding-unicorn.jpg", {
+      mimeType: "image/jpeg",
+      description: "Cool cat riding a unicorn! 🦄🐈🕶️",
+      creationDate: new Date("2019/12/01"),
+      modificationDate: new Date("2020/04/19"),
+    });
 
     expect(context.enumerateIndirectObjects().length).toBe(0);
     const ref = await embedder.embedIntoContext(context);
@@ -40,16 +29,12 @@ describe("FileEmbedder", () => {
   test("can embed files into PDFContexts with a predefined ref", async () => {
     const context = PDFContext.create();
     const predefinedRef = PDFRef.of(9999);
-    const embedder = FileEmbedder.for(
-      usConstitutionPdf,
-      "us-constitution.pdf",
-      {
-        mimeType: "application/pdf",
-        description: "Constitution of the United States 🇺🇸🦅",
-        creationDate: new Date("1787/09/17"),
-        modificationDate: new Date("1992/05/07"),
-      },
-    );
+    const embedder = FileEmbedder.for(usConstitutionPdf, "us-constitution.pdf", {
+      mimeType: "application/pdf",
+      description: "Constitution of the United States 🇺🇸🦅",
+      creationDate: new Date("1787/09/17"),
+      modificationDate: new Date("1992/05/07"),
+    });
 
     expect(context.enumerateIndirectObjects().length).toBe(0);
     const ref = await embedder.embedIntoContext(context, predefinedRef);

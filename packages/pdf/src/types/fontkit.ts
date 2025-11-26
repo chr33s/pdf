@@ -54,14 +54,7 @@ interface Path {
    * Adds a bezier curve to the path from the current point to the
    * given x, y coordinates using cp1x, cp1y and cp2x, cp2y as control points.
    */
-  bezierCurveTo(
-    cp1x: number,
-    cp1y: number,
-    cp2x: number,
-    cp2y: number,
-    x: number,
-    y: number,
-  ): void;
+  bezierCurveTo(cp1x: number, cp1y: number, cp2x: number, cp2y: number, x: number, y: number): void;
 
   /**
    * Closes the current sub-path by drawing a straight line back to the
@@ -229,10 +222,7 @@ interface GlyphRun {
 }
 
 interface SubsetStream {
-  on: (
-    eventType: "data" | "end",
-    callback: (data: Uint8Array) => any,
-  ) => SubsetStream;
+  on: (eventType: "data" | "end", callback: (data: Uint8Array) => any) => SubsetStream;
 }
 
 export interface Subset {
@@ -646,8 +636,5 @@ export interface Font {
 }
 
 export interface Fontkit {
-  create(
-    buffer: Uint8Array | ArrayBuffer | Buffer,
-    postscriptName?: string,
-  ): Font;
+  create(buffer: Uint8Array | ArrayBuffer | Buffer, postscriptName?: string): Font;
 }

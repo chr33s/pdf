@@ -13,9 +13,7 @@ const decodeName = (name: string) =>
   name.replace(/#([\dABCDEF]{2})/g, (_, hex) => charFromHexCode(hex));
 
 const isRegularChar = (charCode: number) =>
-  charCode >= CharCodes.ExclamationPoint &&
-  charCode <= CharCodes.Tilde &&
-  !IsIrregular[charCode];
+  charCode >= CharCodes.ExclamationPoint && charCode <= CharCodes.Tilde && !IsIrregular[charCode];
 
 const ENFORCER = {};
 const pool = new Map<string, PDFName>();

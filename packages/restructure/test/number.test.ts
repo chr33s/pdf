@@ -234,12 +234,9 @@ const aliasCases: Array<[string, any, any]> = [
 ];
 
 describe("Number", () => {
-  test.each(aliasCases)(
-    "%s should alias the big-endian variant",
-    (name, alias, target) => {
-      expect(alias).to.equal(target);
-    },
-  );
+  test.each(aliasCases)("%s should alias the big-endian variant", (name, alias, target) => {
+    expect(alias).to.equal(target);
+  });
 
   describe.each(integerCases)("$name", ({ type, buffer, expected, size }) => {
     test("should decode", () => {
@@ -267,33 +264,30 @@ describe("Number", () => {
     });
   });
 
-  describe.each(floatCases)(
-    "$name",
-    ({ type, buffer, expected, size, precision }) => {
-      test("should decode", () => {
-        const stream = new DecodeStream(Buffer.from(buffer));
-        const value = type.decode(stream);
-        if (precision) {
-          expect(value).to.be.closeTo(expected, precision);
-        } else {
-          expect(value).to.equal(expected);
-        }
+  describe.each(floatCases)("$name", ({ type, buffer, expected, size, precision }) => {
+    test("should decode", () => {
+      const stream = new DecodeStream(Buffer.from(buffer));
+      const value = type.decode(stream);
+      if (precision) {
+        expect(value).to.be.closeTo(expected, precision);
+      } else {
+        expect(value).to.equal(expected);
+      }
+    });
+
+    test("should report size", () => {
+      expect(type.size()).to.equal(size);
+    });
+
+    test("should encode", async () => {
+      const stream = new EncodeStream();
+      const expectation = expectStream(stream, (buf) => {
+        expect(buf).to.deep.equal(Buffer.from(buffer));
       });
 
-      test("should report size", () => {
-        expect(type.size()).to.equal(size);
-      });
-
-      test("should encode", async () => {
-        const stream = new EncodeStream();
-        const expectation = expectStream(stream, (buf) => {
-          expect(buf).to.deep.equal(Buffer.from(buffer));
-        });
-
-        type.encode(stream, expected);
-        stream.end();
-        await expectation;
-      });
-    },
-  );
+      type.encode(stream, expected);
+      stream.end();
+      await expectation;
+    });
+  });
 });

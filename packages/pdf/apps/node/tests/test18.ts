@@ -9,9 +9,7 @@ const loadA = async (assets: Assets) => {
   const form = pdfDoc.getForm();
 
   form
-    .getTextField(
-      "form1[0].Page1[0].BeforeYouBegin[0].BusinessInfo[0].LegalName[0]",
-    )
+    .getTextField("form1[0].Page1[0].BeforeYouBegin[0].BusinessInfo[0].LegalName[0]")
     .setText("Purple People Eater");
 
   form
@@ -27,27 +25,19 @@ const loadA = async (assets: Assets) => {
     .setText("9876");
 
   form
-    .getTextField(
-      "form1[0].Page1[0].BeforeYouBegin[0].PhysicalAddress[0].BusinessAddress[0]",
-    )
+    .getTextField("form1[0].Page1[0].BeforeYouBegin[0].PhysicalAddress[0].BusinessAddress[0]")
     .setText("873 Lantern Lane");
 
   form
-    .getTextField(
-      "form1[0].Page1[0].BeforeYouBegin[0].PhysicalAddress[0].City[0]",
-    )
+    .getTextField("form1[0].Page1[0].BeforeYouBegin[0].PhysicalAddress[0].City[0]")
     .setText("Tuckerton");
 
   form
-    .getDropdown(
-      "form1[0].Page1[0].BeforeYouBegin[0].PhysicalAddress[0].Province[0]",
-    )
+    .getDropdown("form1[0].Page1[0].BeforeYouBegin[0].PhysicalAddress[0].Province[0]")
     .select("Saskatchewan");
 
   form
-    .getTextField(
-      "form1[0].Page1[0].BeforeYouBegin[0].PhysicalAddress[0].PostalCode[0]",
-    )
+    .getTextField("form1[0].Page1[0].BeforeYouBegin[0].PhysicalAddress[0].PostalCode[0]")
     .setText("08087");
 
   // TODO: Add this back once https://github.com/Hopding/pdf/pull/724 is merged
@@ -86,9 +76,7 @@ const loadC = async (assets: Assets) => {
   const pdfDoc = await PDFDocument.load(assets.pdfs.with_xfa_fields);
   const form = pdfDoc.getForm();
 
-  form
-    .getCheckBox("topmostSubform[0].Page1[0].FilingStatus[0].c1_01[2]")
-    .check();
+  form.getCheckBox("topmostSubform[0].Page1[0].FilingStatus[0].c1_01[2]").check();
 
   form
     .getTextField("topmostSubform[0].Page1[0].FilingStatus[0].f1_01[0]")
@@ -99,26 +87,18 @@ const loadC = async (assets: Assets) => {
   form.getTextField("topmostSubform[0].Page1[0].f1_03[0]").setText("Pendragon");
 
   form
-    .getTextField(
-      "topmostSubform[0].Page1[0].YourSocial_ReadOrderControl[0].f1_04[0]",
-    )
+    .getTextField("topmostSubform[0].Page1[0].YourSocial_ReadOrderControl[0].f1_04[0]")
     .setText("123456789");
 
   form
-    .getTextField(
-      "topmostSubform[0].Page1[0].YourSocial_ReadOrderControl[0].f1_05[0]",
-    )
+    .getTextField("topmostSubform[0].Page1[0].YourSocial_ReadOrderControl[0].f1_05[0]")
     .setText("Guinevere Q");
 
   form
-    .getTextField(
-      "topmostSubform[0].Page1[0].YourSocial_ReadOrderControl[0].f1_06[0]",
-    )
+    .getTextField("topmostSubform[0].Page1[0].YourSocial_ReadOrderControl[0].f1_06[0]")
     .setText("Pendragon");
 
-  form
-    .getTextField("topmostSubform[0].Page1[0].ReadOrderControl[0].f1_07[0]")
-    .setText("987654321");
+  form.getTextField("topmostSubform[0].Page1[0].ReadOrderControl[0].f1_07[0]").setText("987654321");
 
   form.flatten();
   return pdfDoc;
@@ -139,9 +119,7 @@ const loadD = async (assets: Assets) => {
   form.getTextField("LastName 🛩").updateAppearances(ubuntuFont);
   form.getCheckBox("Are You A Fairy? 🌿").updateAppearances();
   form.getCheckBox("Is Your Power Level Over 9000? 💪").updateAppearances();
-  form
-    .getCheckBox("Can You Defeat Enemies In One Punch? 👊")
-    .updateAppearances();
+  form.getCheckBox("Can You Defeat Enemies In One Punch? 👊").updateAppearances();
   form.getCheckBox("Will You Ever Let Me Down? ☕️").updateAppearances();
   form.getButton("Eject 📼").updateAppearances(ubuntuFont);
   form.getButton("Submit 📝").updateAppearances(ubuntuFont);

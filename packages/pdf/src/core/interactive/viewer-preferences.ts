@@ -1,9 +1,4 @@
-import {
-  assertEachIs,
-  assertInteger,
-  assertIsOneOf,
-  assertRange,
-} from "../../utils/index.js";
+import { assertEachIs, assertInteger, assertIsOneOf, assertRange } from "../../utils/index.js";
 import PDFArray from "../objects/pdf-array.js";
 import PDFBool from "../objects/pdf-bool.js";
 import PDFDict from "../objects/pdf-dict.js";
@@ -57,8 +52,7 @@ const readingDirection = {
 
 export const ReadingDirection = readingDirection;
 
-export type ReadingDirection =
-  (typeof readingDirection)[keyof typeof readingDirection];
+export type ReadingDirection = (typeof readingDirection)[keyof typeof readingDirection];
 
 const printScaling = {
   /** No page scaling. */
@@ -101,11 +95,7 @@ type BoolViewerPrefKey =
   | "CenterWindow"
   | "DisplayDocTitle"
   | "PickTrayByPDFSize";
-type NameViewerPrefKey =
-  | "NonFullScreenPageMode"
-  | "Direction"
-  | "PrintScaling"
-  | "Duplex";
+type NameViewerPrefKey = "NonFullScreenPageMode" | "Direction" | "PrintScaling" | "Duplex";
 
 interface PageRange {
   start: number;
@@ -117,8 +107,7 @@ class ViewerPreferences {
   readonly dict: PDFDict;
 
   /** @ignore */
-  static fromDict = (dict: PDFDict): ViewerPreferences =>
-    new ViewerPreferences(dict);
+  static fromDict = (dict: PDFDict): ViewerPreferences => new ViewerPreferences(dict);
 
   /** @ignore */
   static create = (context: PDFContext) => {
@@ -447,11 +436,7 @@ class ViewerPreferences {
    *                              exiting full screen mode.
    */
   setNonFullScreenPageMode(nonFullScreenPageMode: NonFullScreenPageMode) {
-    assertIsOneOf(
-      nonFullScreenPageMode,
-      "nonFullScreenPageMode",
-      NonFullScreenPageMode,
-    );
+    assertIsOneOf(nonFullScreenPageMode, "nonFullScreenPageMode", NonFullScreenPageMode);
     const mode = PDFName.of(nonFullScreenPageMode);
     this.dict.set(PDFName.of("NonFullScreenPageMode"), mode);
   }

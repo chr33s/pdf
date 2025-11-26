@@ -9,9 +9,7 @@ let NameRecord = new r.Struct({
   length: r.uint16,
   string: new r.Pointer(
     r.uint16,
-    new r.String("length", (t) =>
-      getEncoding(t.platformID, t.encodingID, t.languageID),
-    ),
+    new r.String("length", (t) => getEncoding(t.platformID, t.encodingID, t.languageID)),
     { type: "parent", relativeTo: "parent.stringOffset", allowNull: false },
   ),
 });
@@ -73,11 +71,7 @@ NameTable.process = function (_stream) {
     // find out what language this is for
     let language = LANGUAGES[record.platformID][record.languageID];
 
-    if (
-      language == null &&
-      this.langTags != null &&
-      record.languageID >= 0x8000
-    ) {
+    if (language == null && this.langTags != null && record.languageID >= 0x8000) {
       language = this.langTags[record.languageID - 0x8000].tag;
     }
 
@@ -86,10 +80,7 @@ NameTable.process = function (_stream) {
     }
 
     // if the nameID is >= 256, it is a font feature record (AAT)
-    let key =
-      record.nameID >= 256
-        ? "fontFeatures"
-        : NAMES[record.nameID] || record.nameID;
+    let key = record.nameID >= 256 ? "fontFeatures" : NAMES[record.nameID] || record.nameID;
     if (records[key] == null) {
       records[key] = {};
     }
@@ -99,10 +90,7 @@ NameTable.process = function (_stream) {
       obj = obj[record.nameID] || (obj[record.nameID] = {});
     }
 
-    if (
-      typeof record.string === "string" ||
-      typeof obj[language] !== "string"
-    ) {
+    if (typeof record.string === "string" || typeof obj[language] !== "string") {
       obj[language] = record.string;
     }
   }

@@ -121,9 +121,7 @@ describe("PDFObjectStreamParser", () => {
     const contents = await readData("object-stream4");
     const stream = PDFRawStream.of(dict, contents);
 
-    await expect(
-      PDFObjectStreamParser.forStream(stream).parseIntoContext(),
-    ).rejects.toThrow();
+    await expect(PDFObjectStreamParser.forStream(stream).parseIntoContext()).rejects.toThrow();
   });
 
   test("throws an error for invalid object streams", async () => {
@@ -135,9 +133,7 @@ describe("PDFObjectStreamParser", () => {
     const contents = await readData("object-stream-invalid");
     const stream = PDFRawStream.of(dict, contents);
 
-    await expect(
-      PDFObjectStreamParser.forStream(stream).parseIntoContext(),
-    ).rejects.toThrow();
+    await expect(PDFObjectStreamParser.forStream(stream).parseIntoContext()).rejects.toThrow();
   });
 
   test("prevents reparsing", async () => {

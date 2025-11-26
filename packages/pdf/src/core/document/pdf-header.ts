@@ -2,8 +2,7 @@ import { charFromCode, copyStringIntoBuffer } from "../../utils/index.js";
 import CharCodes from "../syntax/char-codes.js";
 
 class PDFHeader {
-  static forVersion = (major: number, minor: number) =>
-    new PDFHeader(major, minor);
+  static forVersion = (major: number, minor: number) => new PDFHeader(major, minor);
 
   readonly #major: string;
   readonly #minor: string;

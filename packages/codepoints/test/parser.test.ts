@@ -60,9 +60,7 @@ describe("parser", () => {
     expect(dottedCapitalI?.NFD_QC).toBe(1);
     expect(dottedCapitalI?.NFKD_QC).toBe(1);
     expect(dottedCapitalI?.caseConditions).not.toBeNull();
-    expect(dottedCapitalI?.caseConditions).toEqual(
-      expect.arrayContaining(["az"]),
-    );
+    expect(dottedCapitalI?.caseConditions).toEqual(expect.arrayContaining(["az"]));
   });
 
   test("fills in range entries and Arabic joining metadata", () => {

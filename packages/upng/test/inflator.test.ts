@@ -101,16 +101,12 @@ describe("Inflator helpers", () => {
 
     // Our own simple canonical-code computation for comparison
     const maxBits = 3;
-    const blCount: number[] = Array.from({ length: maxBits + 1 }).fill(
-      0,
-    ) as number[];
+    const blCount: number[] = Array.from({ length: maxBits + 1 }).fill(0) as number[];
     lengths.forEach((l) => {
       if (l > 0) blCount[l]++;
     });
 
-    const nextCode: number[] = Array.from({ length: maxBits + 1 }).fill(
-      0,
-    ) as number[];
+    const nextCode: number[] = Array.from({ length: maxBits + 1 }).fill(0) as number[];
     let code = 0;
     for (let bits = 1; bits <= maxBits; bits++) {
       code = (code + blCount[bits - 1]) << 1;
@@ -192,8 +188,7 @@ describe("Inflator.inflateRaw", () => {
   });
 
   it("inflates a dynamic Huffman block identically to pako", () => {
-    const text =
-      "Dynamic Huffman blocks are used for better compression on varied data.";
+    const text = "Dynamic Huffman blocks are used for better compression on varied data.";
     const encoder = new TextEncoder();
     const data = encoder.encode(text);
 

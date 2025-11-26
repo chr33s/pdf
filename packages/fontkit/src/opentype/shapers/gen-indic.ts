@@ -16,9 +16,7 @@ const isModuleNotFoundFor = (error: unknown, modulePath: string) =>
     "code" in error &&
     (error as NodeJS.ErrnoException).code === "ERR_MODULE_NOT_FOUND" &&
     typeof (error as NodeJS.ErrnoException).message === "string" &&
-    (error as NodeJS.ErrnoException).message.includes(
-      modulePath.replace("./", ""),
-    ),
+    (error as NodeJS.ErrnoException).message.includes(modulePath.replace("./", "")),
   );
 
 async function loadIndicData() {
@@ -44,10 +42,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const textEncoder = new TextEncoder();
 
 const toArrayBuffer = (view: Uint8Array): ArrayBuffer =>
-  view.buffer.slice(
-    view.byteOffset,
-    view.byteOffset + view.byteLength,
-  ) as ArrayBuffer;
+  view.buffer.slice(view.byteOffset, view.byteOffset + view.byteLength) as ArrayBuffer;
 
 const CATEGORY_MAP: Record<string, string> = {
   Avagraha: "Symbol",
@@ -251,12 +246,7 @@ function getPosition(codepoint: any, category: string): number {
     position = "Base_C";
   } else if (category === "M") {
     position = matraPosition(codepoint, position);
-  } else if (
-    category === "SM" ||
-    category === "VD" ||
-    category === "A" ||
-    category === "Symbol"
-  ) {
+  } else if (category === "SM" || category === "VD" || category === "A" || category === "Symbol") {
     position = "SMVD";
   }
 
@@ -279,9 +269,7 @@ for (let i = 0; i < codepoints.length; i++) {
   if (codepoint) {
     const categoryOverride = OVERRIDES[codepoint.code];
     const syllabicCategory = codepoint.indicSyllabicCategory ?? undefined;
-    const mappedCategory = syllabicCategory
-      ? CATEGORY_MAP[syllabicCategory]
-      : undefined;
+    const mappedCategory = syllabicCategory ? CATEGORY_MAP[syllabicCategory] : undefined;
     let category = categoryOverride ?? mappedCategory ?? "X";
     let position = getPosition(codepoint, category);
 
@@ -293,32 +281,19 @@ for (let i = 0; i < codepoints.length; i++) {
 // allowing unicode-properties to work in the browser
 const trieFilePath = join(__dirname, "trie-indic.json");
 const deflatedTrie = pako.deflate(trie.toBuffer());
-const jsonBase64DeflatedTrie = JSON.stringify(
-  base64.encode(toArrayBuffer(deflatedTrie)),
-);
+const jsonBase64DeflatedTrie = JSON.stringify(base64.encode(toArrayBuffer(deflatedTrie)));
 await fs.writeFile(trieFilePath, jsonBase64DeflatedTrie);
 
 const trieModulePath = join(__dirname, "trie-indic-data.js");
-await fs.writeFile(
-  trieModulePath,
-  `export default ${jsonBase64DeflatedTrie};\n`,
-);
+await fs.writeFile(trieModulePath, `export default ${jsonBase64DeflatedTrie};\n`);
 
-let stateMachine = compile(
-  await fs.readFile(join(__dirname, "indic.machine"), "utf8"),
-  symbols,
-);
+let stateMachine = compile(await fs.readFile(join(__dirname, "indic.machine"), "utf8"), symbols);
 
 const indicFilePath = join(__dirname, "indic.json");
 const stateMachineJsonBytes = textEncoder.encode(JSON.stringify(stateMachine));
 const deflatedIndic = pako.deflate(stateMachineJsonBytes);
-const jsonBase64DeflatedIndic = JSON.stringify(
-  base64.encode(toArrayBuffer(deflatedIndic)),
-);
+const jsonBase64DeflatedIndic = JSON.stringify(base64.encode(toArrayBuffer(deflatedIndic)));
 await fs.writeFile(indicFilePath, jsonBase64DeflatedIndic);
 
 const indicModulePath = join(__dirname, "indic-gen-data.js");
-await fs.writeFile(
-  indicModulePath,
-  `export default ${jsonBase64DeflatedIndic};\n`,
-);
+await fs.writeFile(indicModulePath, `export default ${jsonBase64DeflatedIndic};\n`);

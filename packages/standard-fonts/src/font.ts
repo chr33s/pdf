@@ -157,12 +157,8 @@ export class Font {
 
   private constructor() {}
 
-  getWidthOfGlyph = (glyphName: string): number | void =>
-    this.#CharWidths[glyphName];
+  getWidthOfGlyph = (glyphName: string): number | void => this.#CharWidths[glyphName];
 
-  getXAxisKerningForPair = (
-    leftGlyphName: string,
-    rightGlyphName: string,
-  ): number | void =>
+  getXAxisKerningForPair = (leftGlyphName: string, rightGlyphName: string): number | void =>
     (this.#KernPairXAmounts[leftGlyphName] || {})[rightGlyphName];
 }

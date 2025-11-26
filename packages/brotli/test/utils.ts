@@ -30,16 +30,9 @@ export const normalize = (buffer: Uint8Array<ArrayBufferLike>) => {
 };
 
 export function readFile(path: string): Promise<Buffer>;
-export function readFile(
-  path: string,
-  encoding: BufferEncoding,
-): Promise<string>;
-export function readFile(
-  path: string,
-  encoding?: BufferEncoding,
-): Promise<Buffer | string> {
+export function readFile(path: string, encoding: BufferEncoding): Promise<string>;
+export function readFile(path: string, encoding?: BufferEncoding): Promise<Buffer | string> {
   return fsReadFile(resolve(__dirname, path), encoding);
 }
 
-export const readdir = (path: string): Promise<string[]> =>
-  fsReaddir(resolve(__dirname, path));
+export const readdir = (path: string): Promise<string[]> => fsReaddir(resolve(__dirname, path));

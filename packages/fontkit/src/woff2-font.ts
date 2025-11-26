@@ -68,8 +68,7 @@ export default class WOFF2Font extends TTFFont {
   }
 
   _decodeDirectory(): TTDirectoryData & WOFF2DirectoryData {
-    this.directory = WOFF2Directory.decode(this.stream) as TTDirectoryData &
-      WOFF2DirectoryData;
+    this.directory = WOFF2Directory.decode(this.stream) as TTDirectoryData & WOFF2DirectoryData;
     for (let entry of Object.values(this.directory.tables)) {
       entry.offset = 0;
     }
@@ -87,8 +86,7 @@ export default class WOFF2Font extends TTFFont {
       for (let tag in this.directory.tables) {
         const entry = this.directory.tables[tag];
         entry.offset = decompressedSize;
-        decompressedSize +=
-          entry.transformLength != null ? entry.transformLength : entry.length;
+        decompressedSize += entry.transformLength != null ? entry.transformLength : entry.length;
       }
 
       const decompressed = decompress(buffer);
@@ -249,11 +247,7 @@ function withSign(flag: number, baseval: number): number {
   return flag & 1 ? baseval : -baseval;
 }
 
-function decodeTriplet(
-  flags: DecodeStream,
-  glyphs: DecodeStream,
-  nPoints: number,
-): MutablePoint[] {
+function decodeTriplet(flags: DecodeStream, glyphs: DecodeStream, nPoints: number): MutablePoint[] {
   let x = 0;
   let y = 0;
   const res: MutablePoint[] = [];
@@ -279,10 +273,7 @@ function decodeTriplet(
     } else if (flag < 120) {
       const b0 = flag - 84;
       dx = withSign(flag, 1 + ((b0 / 12) << 8) + glyphs.readUInt8());
-      dy = withSign(
-        flag >> 1,
-        1 + (((b0 % 12) >> 2) << 8) + glyphs.readUInt8(),
-      );
+      dy = withSign(flag >> 1, 1 + (((b0 % 12) >> 2) << 8) + glyphs.readUInt8());
     } else if (flag < 124) {
       const b1 = glyphs.readUInt8();
       const b2 = glyphs.readUInt8();

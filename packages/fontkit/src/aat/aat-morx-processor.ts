@@ -87,11 +87,7 @@ export interface FontLike extends GlyphFactory {
   morx: MorxTable;
 }
 
-type ProcessorFn = (
-  glyph: Glyph,
-  entry: StateTableEntry,
-  index: number,
-) => void;
+type ProcessorFn = (glyph: Glyph, entry: StateTableEntry, index: number) => void;
 
 type InputCache = Record<number, number[][]>;
 
@@ -122,10 +118,7 @@ export default class AATMorxProcessor {
 
   // Processes an array of glyphs and applies the specified features
   // Features should be in the form of {featureType:{featureSetting:true}}
-  process(
-    glyphs: Glyph[],
-    features: FeatureSelectionMap = {} as FeatureSelectionMap,
-  ) {
+  process(glyphs: Glyph[], features: FeatureSelectionMap = {} as FeatureSelectionMap) {
     for (const chain of this.#morx.chains) {
       let flags = chain.defaultFlags;
 
@@ -215,12 +208,7 @@ export default class AATMorxProcessor {
       this.#lastGlyph = index;
     }
 
-    reorderGlyphs(
-      this.#glyphs,
-      entry.flags & VERB,
-      this.#firstGlyph,
-      this.#lastGlyph,
-    );
+    reorderGlyphs(this.#glyphs, entry.flags & VERB, this.#firstGlyph, this.#lastGlyph);
   };
 
   processContextualSubstitution: ProcessorFn = (_glyph, entry, index) => {
@@ -262,8 +250,7 @@ export default class AATMorxProcessor {
 
     if (entry.flags & PERFORM_ACTION) {
       const subtable = this.#subtable;
-      const { ligatureActions, components, ligatureList } =
-        subtable?.table ?? {};
+      const { ligatureActions, components, ligatureList } = subtable?.table ?? {};
       if (!ligatureActions || !components || !ligatureList) {
         throw new Error("Ligature table missing required data");
       }
@@ -293,10 +280,7 @@ export default class AATMorxProcessor {
 
         if (last || store) {
           const ligatureEntry = ligatureList.getItem(ligatureIndex);
-          this.#glyphs[componentGlyph] = this.#getGlyph(
-            ligatureEntry,
-            codePoints,
-          );
+          this.#glyphs[componentGlyph] = this.#getGlyph(ligatureEntry, codePoints);
           ligatureGlyphs.push(componentGlyph);
           ligatureIndex = 0;
           codePoints = [];
@@ -309,10 +293,7 @@ export default class AATMorxProcessor {
     }
   };
 
-  processNoncontextualSubstitutions = (
-    subtable: MorxSubtable,
-    glyphs: Glyph[],
-  ) => {
+  processNoncontextualSubstitutions = (subtable: MorxSubtable, glyphs: Glyph[]) => {
     const lookupSource = subtable.table.lookupTable as LookupTable | undefined;
     if (!lookupSource) {
       throw new Error("Lookup table missing for noncontextual substitution");
@@ -365,12 +346,7 @@ export default class AATMorxProcessor {
     if (entry.markedInsertIndex !== 0xffff && this.#markedIndex != null) {
       const count = (entry.flags & MARKED_INSERT_COUNT) >>> 5;
       const isBefore = !!(entry.flags & MARKED_INSERT_BEFORE);
-      this.#insertGlyphs(
-        this.#markedIndex,
-        entry.markedInsertIndex,
-        count,
-        isBefore,
-      );
+      this.#insertGlyphs(this.#markedIndex, entry.markedInsertIndex, count, isBefore);
     }
 
     if (entry.currentInsertIndex !== 0xffff) {

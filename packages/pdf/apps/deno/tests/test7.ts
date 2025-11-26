@@ -1,12 +1,7 @@
 import { Assets } from "../index.ts";
 
 // @deno-types="../dummy.d.ts"
-import {
-  degrees,
-  ParseSpeeds,
-  PDFDocument,
-  StandardFonts,
-} from "../../../dist/index.js";
+import { degrees, ParseSpeeds, PDFDocument, StandardFonts } from "../../../dist/index.js";
 
 const createDonorPdf = async () => {
   const pdfDoc = await PDFDocument.create();
@@ -26,12 +21,9 @@ const createDonorPdf = async () => {
 export default async (assets: Assets) => {
   const { pdfs } = assets;
 
-  const pdfDoc = await PDFDocument.load(
-    pdfs.with_missing_endstream_eol_and_polluted_ctm,
-    {
-      parseSpeed: ParseSpeeds.Fastest,
-    },
-  );
+  const pdfDoc = await PDFDocument.load(pdfs.with_missing_endstream_eol_and_polluted_ctm, {
+    parseSpeed: ParseSpeeds.Fastest,
+  });
 
   const allDonorPdfBytes: Uint8Array[] = [
     assets.pdfs.normal,

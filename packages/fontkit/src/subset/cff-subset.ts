@@ -98,10 +98,7 @@ export default class CFFSubset extends Subset {
       delete dict.FontName;
       if (dict.Private && dict.Private.Subrs) {
         dict.Private = Object.assign({}, dict.Private);
-        dict.Private.Subrs = this.subsetSubrs(
-          dict.Private.Subrs,
-          usedSubrs[i] ?? {},
-        );
+        dict.Private.Subrs = this.subsetSubrs(dict.Private.Subrs, usedSubrs[i] ?? {});
       }
     }
   }
@@ -119,10 +116,7 @@ export default class CFFSubset extends Subset {
 
     let privateDict = Object.assign({}, this.cff.topDict.Private);
     if (this.cff.topDict.Private && this.cff.topDict.Private.Subrs) {
-      privateDict.Subrs = this.subsetSubrs(
-        this.cff.topDict.Private.Subrs,
-        used_subrs,
-      );
+      privateDict.Subrs = this.subsetSubrs(this.cff.topDict.Private.Subrs, used_subrs);
     }
 
     topDict.FDArray = [{ Private: privateDict }];

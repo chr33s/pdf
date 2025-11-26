@@ -1,9 +1,4 @@
-import {
-  degrees,
-  ParseSpeeds,
-  PDFDocument,
-  StandardFonts,
-} from "../../../src/index.js";
+import { degrees, ParseSpeeds, PDFDocument, StandardFonts } from "../../../src/index.js";
 import { Assets } from "../index.js";
 
 const createDonorPdf = async () => {
@@ -24,12 +19,9 @@ const createDonorPdf = async () => {
 export default async (assets: Assets) => {
   const { pdfs } = assets;
 
-  const pdfDoc = await PDFDocument.load(
-    pdfs.with_missing_endstream_eol_and_polluted_ctm,
-    {
-      parseSpeed: ParseSpeeds.Fastest,
-    },
-  );
+  const pdfDoc = await PDFDocument.load(pdfs.with_missing_endstream_eol_and_polluted_ctm, {
+    parseSpeed: ParseSpeeds.Fastest,
+  });
 
   const allDonorPdfBytes: Uint8Array[] = [
     assets.pdfs.normal,

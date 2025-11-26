@@ -22,8 +22,7 @@ export const mergeIntoTypedArray = (...arrays: (string | Uint8Array)[]) => {
   const typedArrays: Uint8Array[] = [];
   for (let idx = 0; idx < arrayCount; idx++) {
     const element = arrays[idx];
-    typedArrays[idx] =
-      element instanceof Uint8Array ? element : typedArrayFor(element);
+    typedArrays[idx] = element instanceof Uint8Array ? element : typedArrayFor(element);
   }
 
   let totalSize = 0;
@@ -132,9 +131,7 @@ export const pluckIndices = <T>(arr: T[], indices: number[]) => {
 export const canBeConvertedToUint8Array = (
   input: any,
 ): input is string | ArrayBuffer | Uint8Array =>
-  input instanceof Uint8Array ||
-  input instanceof ArrayBuffer ||
-  typeof input === "string";
+  input instanceof Uint8Array || input instanceof ArrayBuffer || typeof input === "string";
 
 export const toUint8Array = (input: string | ArrayBuffer | Uint8Array) => {
   if (typeof input === "string") {
@@ -144,9 +141,7 @@ export const toUint8Array = (input: string | ArrayBuffer | Uint8Array) => {
   } else if (input instanceof Uint8Array) {
     return input;
   } else {
-    throw new TypeError(
-      "`input` must be one of `string | ArrayBuffer | Uint8Array`",
-    );
+    throw new TypeError("`input` must be one of `string | ArrayBuffer | Uint8Array`");
   }
 };
 

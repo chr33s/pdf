@@ -16,14 +16,12 @@ type PropertyAccessor = (codePoint: number) => string;
 type NumericAccessor = (codePoint: number) => number | null;
 type PropertyPredicate = (codePoint: number) => boolean;
 
-const decodeBase64 = (encoded: string): Uint8Array =>
-  new Uint8Array(base64.decode(encoded));
+const decodeBase64 = (encoded: string): Uint8Array => new Uint8Array(base64.decode(encoded));
 
 const inflateJson = <T>(encoded: string): T =>
   JSON.parse(pako.inflate(decodeBase64(encoded), { to: "string" }) as string);
 
-const inflateBinary = (encoded: string): Uint8Array =>
-  pako.inflate(decodeBase64(encoded));
+const inflateBinary = (encoded: string): Uint8Array => pako.inflate(decodeBase64(encoded));
 
 const encodedData = base64DeflatedData as string;
 const encodedTrie = base64DeflatedTrie as string;
@@ -32,8 +30,7 @@ const data: UnicodeDataset = inflateJson<UnicodeDataset>(encodedData);
 const trieData = inflateBinary(encodedTrie);
 const trie = new UnicodeTrie(trieData);
 
-const log2 = (value: number): number =>
-  Math.log2?.(value) ?? Math.log(value) / Math.LN2;
+const log2 = (value: number): number => Math.log2?.(value) ?? Math.log(value) / Math.LN2;
 const bits = (value: number): number => (value > 0 ? (log2(value) + 1) | 0 : 0);
 
 // compute the number of bits stored for each field
@@ -124,8 +121,7 @@ const isAlphabetic: PropertyPredicate = (codePoint) => {
   );
 };
 
-const isDigit: PropertyPredicate = (codePoint) =>
-  getCategory(codePoint) === "Nd";
+const isDigit: PropertyPredicate = (codePoint) => getCategory(codePoint) === "Nd";
 
 const isPunctuation: PropertyPredicate = (codePoint) => {
   const category = getCategory(codePoint);
@@ -140,14 +136,11 @@ const isPunctuation: PropertyPredicate = (codePoint) => {
   );
 };
 
-const isLowerCase: PropertyPredicate = (codePoint) =>
-  getCategory(codePoint) === "Ll";
+const isLowerCase: PropertyPredicate = (codePoint) => getCategory(codePoint) === "Ll";
 
-const isUpperCase: PropertyPredicate = (codePoint) =>
-  getCategory(codePoint) === "Lu";
+const isUpperCase: PropertyPredicate = (codePoint) => getCategory(codePoint) === "Lu";
 
-const isTitleCase: PropertyPredicate = (codePoint) =>
-  getCategory(codePoint) === "Lt";
+const isTitleCase: PropertyPredicate = (codePoint) => getCategory(codePoint) === "Lt";
 
 const isWhiteSpace: PropertyPredicate = (codePoint) => {
   const category = getCategory(codePoint);

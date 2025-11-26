@@ -7,12 +7,7 @@ export default class BBox {
   maxX: number;
   maxY: number;
 
-  constructor(
-    minX = Infinity,
-    minY = Infinity,
-    maxX = -Infinity,
-    maxY = -Infinity,
-  ) {
+  constructor(minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity) {
     /**
      * The minimum X position in the bounding box
      * @type {number}

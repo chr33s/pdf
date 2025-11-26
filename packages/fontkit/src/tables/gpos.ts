@@ -131,10 +131,7 @@ let MarkRecord = new r.Struct({
 
 let MarkArray = new r.Array(MarkRecord, r.uint16);
 
-let BaseRecord = new r.Array(
-  new r.Pointer(r.uint16, Anchor),
-  (t) => t.parent.classCount,
-);
+let BaseRecord = new r.Array(new r.Pointer(r.uint16, Anchor), (t) => t.parent.classCount);
 let BaseArray = new r.Array(BaseRecord, r.uint16);
 
 let ComponentRecord = new r.Array(
@@ -142,10 +139,7 @@ let ComponentRecord = new r.Array(
   (t) => t.parent.parent.classCount,
 );
 let LigatureAttach = new r.Array(ComponentRecord, r.uint16);
-let LigatureArray = new r.Array(
-  new r.Pointer(r.uint16, LigatureAttach),
-  r.uint16,
-);
+let LigatureArray = new r.Array(new r.Pointer(r.uint16, LigatureAttach), r.uint16);
 
 let GPOSLookup = new r.VersionedStruct("lookupType", {
   1: new r.VersionedStruct(r.uint16, {
@@ -172,10 +166,7 @@ let GPOSLookup = new r.VersionedStruct("lookupType", {
       valueFormat1: ValueFormat,
       valueFormat2: ValueFormat,
       pairSetCount: r.uint16,
-      pairSets: new r.LazyArray(
-        new r.Pointer(r.uint16, PairSet),
-        "pairSetCount",
-      ),
+      pairSets: new r.LazyArray(new r.Pointer(r.uint16, PairSet), "pairSetCount"),
     },
 
     2: {
@@ -187,10 +178,7 @@ let GPOSLookup = new r.VersionedStruct("lookupType", {
       classDef2: new r.Pointer(r.uint16, ClassDef),
       class1Count: r.uint16,
       class2Count: r.uint16,
-      classRecords: new r.LazyArray(
-        new r.LazyArray(Class2Record, "class2Count"),
-        "class1Count",
-      ),
+      classRecords: new r.LazyArray(new r.LazyArray(Class2Record, "class2Count"), "class1Count"),
     },
   }),
 

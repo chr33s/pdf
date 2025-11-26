@@ -7,10 +7,7 @@ import {
   defaultCheckBoxAppearanceProvider,
   normalizeAppearance,
 } from "./appearances.js";
-import PDFField, {
-  FieldAppearanceOptions,
-  assertFieldAppearanceOptions,
-} from "./pdf-field.js";
+import PDFField, { FieldAppearanceOptions, assertFieldAppearanceOptions } from "./pdf-field.js";
 
 import {
   PDFAcroCheckBox,
@@ -48,16 +45,10 @@ export default class PDFCheckBox extends PDFField {
   /** The low-level PDFAcroCheckBox wrapped by this check box. */
   readonly acroField: PDFAcroCheckBox;
 
-  private constructor(
-    acroCheckBox: PDFAcroCheckBox,
-    ref: PDFRef,
-    doc: PDFDocument,
-  ) {
+  private constructor(acroCheckBox: PDFAcroCheckBox, ref: PDFRef, doc: PDFDocument) {
     super(acroCheckBox, ref, doc);
 
-    assertIs(acroCheckBox, "acroCheckBox", [
-      [PDFAcroCheckBox, "PDFAcroCheckBox"],
-    ]);
+    assertIs(acroCheckBox, "acroCheckBox", [[PDFAcroCheckBox, "PDFAcroCheckBox"]]);
 
     this.acroField = acroCheckBox;
   }

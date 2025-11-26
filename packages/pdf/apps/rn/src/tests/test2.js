@@ -7,13 +7,12 @@ import { fetchAsset } from "./assets.js";
 // It inserts data for every page (images, rectangles, texts, embedded PDFs).
 // Also, the second page is removed.
 export default async () => {
-  const [ubuntuBytes, smallMarioBytes, inputPdfBytes, largePageCountPdfBytes] =
-    await Promise.all([
-      fetchAsset("fonts/ubuntu/ubuntu-r.ttf"),
-      fetchAsset("images/small_mario_resized.png"),
-      fetchAsset("pdfs/linearized_with_object_streams.pdf"),
-      fetchAsset("pdfs/with_large_page_count.pdf"),
-    ]);
+  const [ubuntuBytes, smallMarioBytes, inputPdfBytes, largePageCountPdfBytes] = await Promise.all([
+    fetchAsset("fonts/ubuntu/ubuntu-r.ttf"),
+    fetchAsset("images/small_mario_resized.png"),
+    fetchAsset("pdfs/linearized_with_object_streams.pdf"),
+    fetchAsset("pdfs/with_large_page_count.pdf"),
+  ]);
 
   const pdfDoc = await PDFDocument.load(inputPdfBytes, {
     updateMetadata: false,

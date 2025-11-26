@@ -1,9 +1,4 @@
-export {
-  build,
-  default as compile,
-  parse,
-  type ExternalSymbols,
-} from "./compile.js";
+export { build, default as compile, parse, type ExternalSymbols } from "./compile.js";
 export * from "./nodes.js";
 export {
   FAIL_STATE,

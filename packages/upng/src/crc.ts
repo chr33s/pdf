@@ -13,8 +13,7 @@ export class CRC {
   })();
 
   static update(c: number, buf: Uint8Array, off: number, len: number) {
-    for (let i = 0; i < len; i++)
-      c = CRC.table[(c ^ buf[off + i]) & 0xff] ^ (c >>> 8);
+    for (let i = 0; i < len; i++) c = CRC.table[(c ^ buf[off + i]) & 0xff] ^ (c >>> 8);
     return c;
   }
 

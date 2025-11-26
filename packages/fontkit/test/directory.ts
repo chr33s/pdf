@@ -6,9 +6,7 @@ import { here } from "./utils/dir.js";
 const __dirname = here(import.meta.url);
 
 describe("metadata", function () {
-  let font = fontkit.openSync(
-    __dirname + "/data/open-sans/open-sans-regular.ttf",
-  );
+  let font = fontkit.openSync(__dirname + "/data/open-sans/open-sans-regular.ttf");
 
   test("decodes SFNT directory values correctly", function () {
     let dir = font.directory;

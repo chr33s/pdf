@@ -10,8 +10,7 @@ import {
 const utf8BOM = new Uint8Array([0xef, 0xbb, 0xbf]);
 const utf16BOM = new Uint16Array([0xfeff]);
 
-const withUtf8Bom = (encoding: Uint8Array) =>
-  mergeIntoTypedArray(utf8BOM, encoding);
+const withUtf8Bom = (encoding: Uint8Array) => mergeIntoTypedArray(utf8BOM, encoding);
 
 const withUtf16Bom = (encoding: Uint16Array) =>
   new Uint16Array([...Array.from(utf16BOM), ...Array.from(encoding)]);

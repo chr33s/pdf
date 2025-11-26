@@ -13,9 +13,7 @@ type PointerContext = {
   val?: any;
 };
 
-export default class Struct<
-  T extends Record<string, any> = Record<string, any>,
-> {
+export default class Struct<T extends Record<string, any> = Record<string, any>> {
   public process?: (this: T, stream: DecodeStream) => void;
   public preEncode?: (this: T, stream?: EncodeStream) => void;
   public fields: FieldMap;
@@ -33,11 +31,7 @@ export default class Struct<
     return result;
   }
 
-  protected _setup(
-    stream: DecodeStream,
-    parent: any,
-    length: number,
-  ): Record<string, any> {
+  protected _setup(stream: DecodeStream, parent: any, length: number): Record<string, any> {
     const result: Record<string, any> = {};
 
     Object.defineProperties(result, {

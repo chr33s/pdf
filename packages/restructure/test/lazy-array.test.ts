@@ -1,10 +1,5 @@
 import { describe, expect, test } from "vitest";
-import {
-  DecodeStream,
-  EncodeStream,
-  LazyArray as LazyArrayT,
-  uint8,
-} from "../src/index.js";
+import { DecodeStream, EncodeStream, LazyArray as LazyArrayT, uint8 } from "../src/index.js";
 import { expectStream } from "./helpers.js";
 
 describe("LazyArray", () => {

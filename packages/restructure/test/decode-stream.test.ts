@@ -88,20 +88,16 @@ describe("DecodeStream", () => {
 
     test("should decode macroman", () => {
       const buf = Buffer.from([
-        0x8a, 0x63, 0x63, 0x65, 0x6e, 0x74, 0x65, 0x64, 0x20, 0x63, 0x68, 0x87,
-        0x72, 0x61, 0x63, 0x74, 0x65, 0x72, 0x73,
+        0x8a, 0x63, 0x63, 0x65, 0x6e, 0x74, 0x65, 0x64, 0x20, 0x63, 0x68, 0x87, 0x72, 0x61, 0x63,
+        0x74, 0x65, 0x72, 0x73,
       ]);
       const stream = new DecodeStream(buf);
-      expect(stream.readString(buf.length, "mac")).to.equal(
-        "äccented cháracters",
-      );
+      expect(stream.readString(buf.length, "mac")).to.equal("äccented cháracters");
     });
 
     test("should return a buffer for unsupported encodings", () => {
       const stream = new DecodeStream(Buffer.from([1, 2, 3]));
-      expect(stream.readString(3, "unsupported")).to.deep.equal(
-        Buffer.from([1, 2, 3]),
-      );
+      expect(stream.readString(3, "unsupported")).to.deep.equal(Buffer.from([1, 2, 3]));
     });
   });
 });

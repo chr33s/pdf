@@ -119,17 +119,10 @@ class TTFFontBase implements GlyphFontLike {
 
   static probe(buffer: Buffer): boolean {
     let format = buffer.toString("ascii", 0, 4);
-    return (
-      format === "true" ||
-      format === "OTTO" ||
-      format === String.fromCharCode(0, 1, 0, 0)
-    );
+    return format === "true" || format === "OTTO" || format === String.fromCharCode(0, 1, 0, 0);
   }
 
-  constructor(
-    stream: DecodeStream,
-    variationCoords: VariationCoords | null = null,
-  ) {
+  constructor(stream: DecodeStream, variationCoords: VariationCoords | null = null) {
     this.stream = stream;
     this.variationCoords = variationCoords;
 
@@ -358,9 +351,7 @@ class TTFFontBase implements GlyphFontLike {
    */
   @cache
   get bbox() {
-    return Object.freeze(
-      new BBox(this.head.xMin, this.head.yMin, this.head.xMax, this.head.yMax),
-    );
+    return Object.freeze(new BBox(this.head.xMin, this.head.yMin, this.head.xMax, this.head.yMax));
   }
 
   @cache
@@ -431,19 +422,14 @@ class TTFFontBase implements GlyphFontLike {
 
         // Compute the next state: 1 if the next codepoint is a variation selector, 0 otherwise.
         nextState =
-          (0xfe00 <= code && code <= 0xfe0f) ||
-          (0xe0100 <= code && code <= 0xe01ef)
-            ? 1
-            : 0;
+          (0xfe00 <= code && code <= 0xfe0f) || (0xe0100 <= code && code <= 0xe01ef) ? 1 : 0;
       } else {
         idx++;
       }
 
       if (state === 0 && nextState === 1) {
         // Variation selector following normal codepoint.
-        glyphs.push(
-          this.getGlyph(this._cmapProcessor.lookup(last, code), [last, code]),
-        );
+        glyphs.push(this.getGlyph(this._cmapProcessor.lookup(last, code), [last, code]));
       } else if (state === 0 && nextState === 0) {
         // Normal codepoint following normal codepoint.
         glyphs.push(this.glyphForCodePoint(last));
@@ -496,13 +482,7 @@ class TTFFontBase implements GlyphFontLike {
       featuresArg = userFeatures;
     }
 
-    return this._layoutEngine.layout(
-      string,
-      featuresArg,
-      scriptArg,
-      languageArg,
-      directionArg,
-    );
+    return this._layoutEngine.layout(string, featuresArg, scriptArg, languageArg, directionArg);
   }
 
   /**
@@ -525,10 +505,7 @@ class TTFFontBase implements GlyphFontLike {
     return this._layoutEngine.getAvailableFeatures();
   }
 
-  getAvailableFeatures(
-    script?: string | null,
-    language?: string | null,
-  ): string[] {
+  getAvailableFeatures(script?: string | null, language?: string | null): string[] {
     return this._layoutEngine.getAvailableFeatures(script, language);
   }
 
@@ -664,13 +641,10 @@ class TTFFontBase implements GlyphFontLike {
     if (
       !(
         this.directory.tables.fvar &&
-        ((this.directory.tables.gvar && this.directory.tables.glyf) ||
-          this.directory.tables.CFF2)
+        ((this.directory.tables.gvar && this.directory.tables.glyf) || this.directory.tables.CFF2)
       )
     ) {
-      throw new Error(
-        "Variations require a font with the fvar, gvar and glyf, or CFF2 tables.",
-      );
+      throw new Error("Variations require a font with the fvar, gvar and glyf, or CFF2 tables.");
     }
 
     const fvar = this.fvar;
@@ -686,19 +660,14 @@ class TTFFontBase implements GlyphFontLike {
     }
 
     if (!resolvedSettings || typeof resolvedSettings !== "object") {
-      throw new Error(
-        "Variation settings must be either a variation name or settings object.",
-      );
+      throw new Error("Variation settings must be either a variation name or settings object.");
     }
 
     // normalize the coordinates
     let coords = fvar.axis.map((axis) => {
       let axisTag = axis.axisTag.trim();
       if (axisTag in resolvedSettings) {
-        return Math.max(
-          axis.minValue,
-          Math.min(axis.maxValue, resolvedSettings[axisTag]),
-        );
+        return Math.max(axis.minValue, Math.min(axis.maxValue, resolvedSettings[axisTag]));
       } else {
         return axis.defaultValue;
       }
@@ -736,9 +705,7 @@ class TTFFontBase implements GlyphFontLike {
       variationCoords = fvar.axis.map((axis) => axis.defaultValue);
     }
 
-    type VariationFontCtorArg = ConstructorParameters<
-      typeof GlyphVariationProcessor
-    >[0];
+    type VariationFontCtorArg = ConstructorParameters<typeof GlyphVariationProcessor>[0];
     const variationFont = this as unknown as VariationFontCtorArg;
     return new GlyphVariationProcessor(variationFont, variationCoords);
   }

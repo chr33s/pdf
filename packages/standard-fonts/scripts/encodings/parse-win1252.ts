@@ -102,12 +102,12 @@ export const parseWin1252 = (data: string): EncodingMap => {
       const unicode = Number(unicodeCode);
       const postscript = Number(postscriptCode);
       const postscriptName = WinAnsiCharNames[postscript];
-      return [
-        unicode,
-        postscript,
-        unicodeName.substring(1),
-        postscriptName,
-      ] as [number, number, string, string | undefined];
+      return [unicode, postscript, unicodeName.substring(1), postscriptName] as [
+        number,
+        number,
+        string,
+        string | undefined,
+      ];
     })
     .filter(isValidEncodingTuple);
 

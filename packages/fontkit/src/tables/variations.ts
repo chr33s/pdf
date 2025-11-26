@@ -15,18 +15,12 @@ let RegionAxisCoordinates = new r.Struct({
 let VariationRegionList = new r.Struct({
   axisCount: r.uint16,
   regionCount: r.uint16,
-  variationRegions: new r.Array(
-    new r.Array(RegionAxisCoordinates, "axisCount"),
-    "regionCount",
-  ),
+  variationRegions: new r.Array(new r.Array(RegionAxisCoordinates, "axisCount"), "regionCount"),
 });
 
 let DeltaSet = new r.Struct({
   shortDeltas: new r.Array(r.int16, (t) => t.parent.shortDeltaCount),
-  regionDeltas: new r.Array(
-    r.int8,
-    (t) => t.parent.regionIndexCount - t.parent.shortDeltaCount,
-  ),
+  regionDeltas: new r.Array(r.int8, (t) => t.parent.regionIndexCount - t.parent.shortDeltaCount),
   deltas: (t) => t.shortDeltas.concat(t.regionDeltas),
 });
 
@@ -42,10 +36,7 @@ export let ItemVariationStore = new r.Struct({
   format: r.uint16,
   variationRegionList: new r.Pointer(r.uint32, VariationRegionList),
   variationDataCount: r.uint16,
-  itemVariationData: new r.Array(
-    new r.Pointer(r.uint32, ItemVariationData),
-    "variationDataCount",
-  ),
+  itemVariationData: new r.Array(new r.Pointer(r.uint32, ItemVariationData), "variationDataCount"),
 });
 
 /**********************
@@ -62,10 +53,7 @@ let ConditionTable = new r.VersionedStruct(r.uint16, {
 
 let ConditionSet = new r.Struct({
   conditionCount: r.uint16,
-  conditionTable: new r.Array(
-    new r.Pointer(r.uint32, ConditionTable),
-    "conditionCount",
-  ),
+  conditionTable: new r.Array(new r.Pointer(r.uint32, ConditionTable), "conditionCount"),
 });
 
 let FeatureTableSubstitutionRecord = new r.Struct({
@@ -76,10 +64,7 @@ let FeatureTableSubstitutionRecord = new r.Struct({
 let FeatureTableSubstitution = new r.Struct({
   version: r.fixed32,
   substitutionCount: r.uint16,
-  substitutions: new r.Array(
-    FeatureTableSubstitutionRecord,
-    "substitutionCount",
-  ),
+  substitutions: new r.Array(FeatureTableSubstitutionRecord, "substitutionCount"),
 });
 
 let FeatureVariationRecord = new r.Struct({
@@ -93,8 +78,5 @@ export let FeatureVariations = new r.Struct({
   majorVersion: r.uint16,
   minorVersion: r.uint16,
   featureVariationRecordCount: r.uint32,
-  featureVariationRecords: new r.Array(
-    FeatureVariationRecord,
-    "featureVariationRecordCount",
-  ),
+  featureVariationRecords: new r.Array(FeatureVariationRecord, "featureVariationRecordCount"),
 });

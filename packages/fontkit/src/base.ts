@@ -55,10 +55,7 @@ interface FontInstance {
   getGlyph(glyphId: number, codePoints?: number[]): Glyph;
   stringsForGlyph(glyphId: number): string[];
   availableFeatures: string[];
-  getAvailableFeatures(
-    script?: string | null,
-    language?: string | null,
-  ): string[];
+  getAvailableFeatures(script?: string | null, language?: string | null): string[];
   layout(
     text: string,
     userFeatures?: string[] | Record<string, boolean> | string,
@@ -125,9 +122,7 @@ const fontkit: FontkitRegistry = {
       uint8ArrayFontData instanceof ArrayBuffer
         ? new Uint8Array(uint8ArrayFontData)
         : uint8ArrayFontData;
-    const buffer = Buffer.isBuffer(normalizedData)
-      ? normalizedData
-      : Buffer.from(normalizedData);
+    const buffer = Buffer.isBuffer(normalizedData) ? normalizedData : Buffer.from(normalizedData);
     for (let i = 0; i < formats.length; i++) {
       const format = formats[i];
       if (format.probe(buffer)) {
@@ -136,12 +131,8 @@ const fontkit: FontkitRegistry = {
           const resolvedFont = font.getFont(postscriptName);
           if (!resolvedFont) {
             const requestedName =
-              typeof postscriptName === "string"
-                ? postscriptName
-                : JSON.stringify(postscriptName);
-            throw new Error(
-              `Font "${requestedName}" was not found within the font collection`,
-            );
+              typeof postscriptName === "string" ? postscriptName : JSON.stringify(postscriptName);
+            throw new Error(`Font "${requestedName}" was not found within the font collection`);
           }
           return resolvedFont;
         }

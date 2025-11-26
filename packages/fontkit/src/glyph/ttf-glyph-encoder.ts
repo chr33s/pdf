@@ -80,22 +80,8 @@ export default class TTFGlyphEncoder {
           flag |= ON_CURVE;
         }
 
-        flag = this._encodePoint(
-          x,
-          lastX,
-          xPoints,
-          flag,
-          X_SHORT_VECTOR,
-          SAME_X,
-        );
-        flag = this._encodePoint(
-          y,
-          lastY,
-          yPoints,
-          flag,
-          Y_SHORT_VECTOR,
-          SAME_Y,
-        );
+        flag = this._encodePoint(x, lastX, xPoints, flag, X_SHORT_VECTOR, SAME_X);
+        flag = this._encodePoint(y, lastY, yPoints, flag, Y_SHORT_VECTOR, SAME_Y);
 
         if (flag === lastFlag && same < 255) {
           flags[flags.length - 1] |= REPEAT;

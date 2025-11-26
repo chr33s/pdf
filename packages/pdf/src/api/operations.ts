@@ -1,9 +1,4 @@
-import {
-  PDFHexString,
-  PDFName,
-  PDFNumber,
-  PDFOperator,
-} from "../core/index.js";
+import { PDFHexString, PDFName, PDFNumber, PDFOperator } from "../core/index.js";
 import type { Space, TransformationMatrix } from "../types/index.js";
 import { identityMatrix } from "../types/matrix.js";
 import { Color, setFillingColor, setStrokingColor } from "./colors.js";
@@ -80,10 +75,7 @@ const clipSpaces = (spaces: Space[]) => spaces.flatMap(clipSpace);
 const negate = (value: number | PDFNumber): number | PDFNumber =>
   typeof value === "number" ? -value : PDFNumber.of(-value.asNumber());
 
-export const drawText = (
-  line: PDFHexString,
-  options: DrawTextOptions,
-): PDFOperator[] =>
+export const drawText = (line: PDFHexString, options: DrawTextOptions): PDFOperator[] =>
   [
     pushGraphicsState(),
     options.graphicsState && setGraphicsState(options.graphicsState),
@@ -280,29 +272,17 @@ export const drawRectangle = (options: {
 
   // Transformation to apply rotation and skew
   if (rotate) {
-    fullMatrix = combineMatrix(
-      fullMatrix,
-      transformationToMatrix("rotate", [-toDegrees(rotate)]),
-    );
+    fullMatrix = combineMatrix(fullMatrix, transformationToMatrix("rotate", [-toDegrees(rotate)]));
   }
   if (xSkew) {
-    fullMatrix = combineMatrix(
-      fullMatrix,
-      transformationToMatrix("skewX", [toDegrees(xSkew)]),
-    );
+    fullMatrix = combineMatrix(fullMatrix, transformationToMatrix("skewX", [toDegrees(xSkew)]));
   }
   if (ySkew) {
-    fullMatrix = combineMatrix(
-      fullMatrix,
-      transformationToMatrix("skewY", [-toDegrees(ySkew)]),
-    );
+    fullMatrix = combineMatrix(fullMatrix, transformationToMatrix("skewY", [-toDegrees(ySkew)]));
   }
 
   // move the rectangle upward so that the (x, y) coord is bottom-left
-  fullMatrix = combineMatrix(
-    fullMatrix,
-    transformationToMatrix("translateY", [-h]),
-  );
+  fullMatrix = combineMatrix(fullMatrix, transformationToMatrix("translateY", [-h]));
 
   return drawSvgPath(d, {
     ...options,
@@ -397,9 +377,7 @@ export const drawSvgPath = (
 
   const scaleValue = options.scale ?? 1;
   const scaleOperator =
-    options.scale !== undefined
-      ? scale(scaleValue, negate(scaleValue))
-      : scale(1, -1);
+    options.scale !== undefined ? scale(scaleValue, negate(scaleValue)) : scale(1, -1);
 
   return [
     pushGraphicsState(),

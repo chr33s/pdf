@@ -45,11 +45,7 @@ export default class StateMachine {
           state = stateTable[state]?.[symbol] ?? FAIL_STATE;
 
           if (state === FAIL_STATE) {
-            if (
-              startRun != null &&
-              lastAccepting != null &&
-              lastAccepting >= startRun
-            ) {
+            if (startRun != null && lastAccepting != null && lastAccepting >= startRun) {
               yield [startRun, lastAccepting, tags[lastState] ?? []];
             }
 
@@ -70,11 +66,7 @@ export default class StateMachine {
           }
         }
 
-        if (
-          startRun != null &&
-          lastAccepting != null &&
-          lastAccepting >= startRun
-        ) {
+        if (startRun != null && lastAccepting != null && lastAccepting >= startRun) {
           yield [startRun, lastAccepting, tags[state] ?? []];
         }
       },
@@ -88,10 +80,7 @@ export default class StateMachine {
    */
   apply(
     input: readonly number[],
-    actions: Record<
-      string,
-      (start: number, end: number, slice: number[]) => void
-    >,
+    actions: Record<string, (start: number, end: number, slice: number[]) => void>,
   ): void {
     for (const [start, end, tagList] of this.match(input)) {
       for (const tag of tagList) {

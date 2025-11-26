@@ -1,12 +1,5 @@
 import { describe, expect, test } from "vitest";
-import {
-  DecodeStream,
-  EncodeStream,
-  Pointer,
-  Struct,
-  VoidPointer,
-  uint8,
-} from "../src/index.js";
+import { DecodeStream, EncodeStream, Pointer, Struct, VoidPointer, uint8 } from "../src/index.js";
 import { expectStream } from "./helpers.js";
 
 describe("Pointer", () => {
@@ -33,26 +26,20 @@ describe("Pointer", () => {
       const stream = new DecodeStream(Buffer.from([0, 0, 1, 53]));
       stream.pos = 2;
       const pointer = new Pointer(uint8, uint8, { type: "parent" });
-      expect(pointer.decode(stream, { parent: { _startOffset: 2 } })).to.equal(
-        53,
-      );
+      expect(pointer.decode(stream, { parent: { _startOffset: 2 } })).to.equal(53);
     });
 
     test("should support global offsets", () => {
       const stream = new DecodeStream(Buffer.from([1, 2, 4, 0, 0, 0, 53]));
       const pointer = new Pointer(uint8, uint8, { type: "global" });
       stream.pos = 2;
-      expect(
-        pointer.decode(stream, { parent: { parent: { _startOffset: 2 } } }),
-      ).to.equal(53);
+      expect(pointer.decode(stream, { parent: { parent: { _startOffset: 2 } } })).to.equal(53);
     });
 
     test("should support offsets relative to a property on the parent", () => {
       const stream = new DecodeStream(Buffer.from([1, 0, 0, 0, 0, 53]));
       const pointer = new Pointer(uint8, uint8, { relativeTo: "parent.ptr" });
-      expect(
-        pointer.decode(stream, { _startOffset: 0, parent: { ptr: 4 } }),
-      ).to.equal(53);
+      expect(pointer.decode(stream, { _startOffset: 0, parent: { ptr: 4 } })).to.equal(53);
     });
 
     test("should support returning pointer if there is no decode type", () => {
@@ -160,9 +147,7 @@ describe("Pointer", () => {
 
       ptr.encode(stream, 10, ctx);
       expect(ctx.pointerOffset).to.equal(2);
-      expect(ctx.pointers).to.deep.equal([
-        { type: uint8, val: 10, parent: ctx },
-      ]);
+      expect(ctx.pointers).to.deep.equal([{ type: uint8, val: 10, parent: ctx }]);
       stream.end();
       await expectation;
     });
@@ -183,9 +168,7 @@ describe("Pointer", () => {
 
       ptr.encode(stream, 10, ctx);
       expect(ctx.pointerOffset).to.equal(2);
-      expect(ctx.pointers).to.deep.equal([
-        { type: uint8, val: 10, parent: ctx },
-      ]);
+      expect(ctx.pointers).to.deep.equal([{ type: uint8, val: 10, parent: ctx }]);
       stream.end();
       await expectation;
     });
@@ -208,9 +191,7 @@ describe("Pointer", () => {
 
       ptr.encode(stream, 10, ctx);
       expect(ctx.parent.pointerOffset).to.equal(6);
-      expect(ctx.parent.pointers).to.deep.equal([
-        { type: uint8, val: 10, parent: ctx },
-      ]);
+      expect(ctx.parent.pointers).to.deep.equal([{ type: uint8, val: 10, parent: ctx }]);
       stream.end();
       await expectation;
     });
@@ -261,9 +242,7 @@ describe("Pointer", () => {
 
       ptr.encode(stream, 10, ctx);
       expect(ctx.pointerOffset).to.equal(11);
-      expect(ctx.pointers).to.deep.equal([
-        { type: uint8, val: 10, parent: ctx },
-      ]);
+      expect(ctx.pointers).to.deep.equal([{ type: uint8, val: 10, parent: ctx }]);
       stream.end();
       await expectation;
     });
@@ -284,9 +263,7 @@ describe("Pointer", () => {
 
       ptr.encode(stream, new VoidPointer(uint8, 55), ctx);
       expect(ctx.pointerOffset).to.equal(2);
-      expect(ctx.pointers).to.deep.equal([
-        { type: uint8, val: 55, parent: ctx },
-      ]);
+      expect(ctx.pointers).to.deep.equal([{ type: uint8, val: 55, parent: ctx }]);
       stream.end();
       await expectation;
     });

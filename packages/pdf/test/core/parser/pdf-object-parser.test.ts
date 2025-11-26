@@ -1,12 +1,4 @@
-import {
-  afterAll,
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  test,
-  vi,
-} from "vitest";
+import { afterAll, beforeAll, beforeEach, describe, expect, test, vi } from "vitest";
 
 import PDFPageLeaf from "../../../src/core/structures/pdf-page-leaf.js";
 import {
@@ -33,11 +25,7 @@ type ParseOptions = { capNumbers?: boolean };
 
 const parse = (value: string | Uint8Array, options: ParseOptions = {}) => {
   const context = PDFContext.create();
-  const parser = PDFObjectParser.forBytes(
-    typedArrayFor(value),
-    context,
-    options.capNumbers,
-  );
+  const parser = PDFObjectParser.forBytes(typedArrayFor(value), context, options.capNumbers);
   return parser.parseObject();
 };
 
@@ -51,9 +39,7 @@ describe("PDFObjectParser", () => {
   const origConsoleWarn = console.warn;
 
   beforeAll(() => {
-    const ignoredWarnings = [
-      "Parsed number that is too large for some PDF readers:",
-    ];
+    const ignoredWarnings = ["Parsed number that is too large for some PDF readers:"];
     console.warn = vi.fn((...args) => {
       const isIgnored = ignoredWarnings.find((iw) => args[0].includes(iw));
       if (!isIgnored) origConsoleWarn(...args);
@@ -186,15 +172,9 @@ describe("PDFObjectParser", () => {
     });
 
     test("does not cap numbers at Number.MAX_SAFE_INTEGER when capNumbers=false", () => {
-      expectParseStr(numberToString(Number.MAX_SAFE_INTEGER - 1)).toBe(
-        "9007199254740990",
-      );
-      expectParseStr(numberToString(Number.MAX_SAFE_INTEGER)).toBe(
-        "9007199254740991",
-      );
-      expectParseStr(numberToString(Number.MAX_SAFE_INTEGER + 1)).toBe(
-        "9007199254740992",
-      );
+      expectParseStr(numberToString(Number.MAX_SAFE_INTEGER - 1)).toBe("9007199254740990");
+      expectParseStr(numberToString(Number.MAX_SAFE_INTEGER)).toBe("9007199254740991");
+      expectParseStr(numberToString(Number.MAX_SAFE_INTEGER + 1)).toBe("9007199254740992");
       expectParseStr("340282346638528900000000000000000000000").toBe(
         "340282346638528900000000000000000000000",
       );
@@ -223,9 +203,7 @@ describe("PDFObjectParser", () => {
     });
 
     test("handles comments before and after the string", () => {
-      expectParse("% Lulz wut?\n(testing)% Lulz wut?\n").toBeInstanceOf(
-        PDFString,
-      );
+      expectParse("% Lulz wut?\n(testing)% Lulz wut?\n").toBeInstanceOf(PDFString);
       expectParseStr("% Lulz wut?\n(testing)% Lulz wut?\n").toBe("(testing)");
     });
 
@@ -281,16 +259,12 @@ describe("PDFObjectParser", () => {
     });
 
     test("handles whitespace before and after the hex string", () => {
-      expectParse("\0\t\n\f\r <ABC123>\0\t\n\f\r ").toBeInstanceOf(
-        PDFHexString,
-      );
+      expectParse("\0\t\n\f\r <ABC123>\0\t\n\f\r ").toBeInstanceOf(PDFHexString);
       expectParseStr("\0\t\n\f\r <ABC123>\0\t\n\f\r ").toBe("<ABC123>");
     });
 
     test("handles comments before and after the hex string", () => {
-      expectParse("% Lulz wut?\n<ABC123>% Lulz wut?\n").toBeInstanceOf(
-        PDFHexString,
-      );
+      expectParse("% Lulz wut?\n<ABC123>% Lulz wut?\n").toBeInstanceOf(PDFHexString);
       expectParseStr("% Lulz wut?\n<ABC123>% Lulz wut?\n").toBe("<ABC123>");
     });
 
@@ -308,10 +282,7 @@ describe("PDFObjectParser", () => {
     test.each([
       ["/Name1", "Name1"],
       ["/ASomewhatLongerName", "ASomewhatLongerName"],
-      [
-        "/A;Name_With-Various***Characters?",
-        "A;Name_With-Various***Characters?",
-      ],
+      ["/A;Name_With-Various***Characters?", "A;Name_With-Various***Characters?"],
       ["/1.2", "1.2"],
       ["/$$", "$$"],
       ["/@pattern", "@pattern"],
@@ -429,9 +400,7 @@ describe("PDFObjectParser", () => {
     });
 
     test("handles arrays with no whitespace or comments", () => {
-      expectParse("[true/FooBar[]<</Foo/Bar>>21.null]").toBeInstanceOf(
-        PDFArray,
-      );
+      expectParse("[true/FooBar[]<</Foo/Bar>>21.null]").toBeInstanceOf(PDFArray);
       expectParseStr("[true/FooBar[]<</Foo/Bar>>21.null]").toBe(
         "[ true /FooBar [ ] <<\n/Foo /Bar\n>> 21 null ]",
       );
@@ -522,9 +491,7 @@ describe("PDFObjectParser", () => {
     });
 
     test("handles dictionaries with no whitespace or comments", () => {
-      expectParse(
-        "<</Foo true/Bar[]/Qux<<>>/Baz 21./Bing null>>",
-      ).toBeInstanceOf(PDFDict);
+      expectParse("<</Foo true/Bar[]/Qux<<>>/Baz 21./Bing null>>").toBeInstanceOf(PDFDict);
       expectParseStr("<</Foo true/Bar[]/Qux<<>>/Baz 21./Bing null>>").toBe(
         "<<\n/Foo true\n/Bar [ ]\n/Qux <<\n>>\n/Baz 21\n/Bing null\n>>",
       );
@@ -564,18 +531,9 @@ describe("PDFObjectParser", () => {
         "<</Length 2>>\r\nstream\r\nquxbaz\r\nendstream",
         "<<\n/Length 6\n>>\nstream\nquxbaz\nendstream",
       ],
-      [
-        "<<>>streamfoobarendstream",
-        "<<\n/Length 6\n>>\nstream\nfoobar\nendstream",
-      ],
-      [
-        "<<>>\rstream\rstuff\rendstream",
-        "<<\n/Length 5\n>>\nstream\nstuff\nendstream",
-      ],
-      [
-        "<<>>\n\rstream\n\rthingz\n\rendstream",
-        "<<\n/Length 8\n>>\nstream\n\rthingz\n\nendstream",
-      ],
+      ["<<>>streamfoobarendstream", "<<\n/Length 6\n>>\nstream\nfoobar\nendstream"],
+      ["<<>>\rstream\rstuff\rendstream", "<<\n/Length 5\n>>\nstream\nstuff\nendstream"],
+      ["<<>>\n\rstream\n\rthingz\n\rendstream", "<<\n/Length 8\n>>\nstream\n\rthingz\n\nendstream"],
     ])("can parse %j", (input, output) => {
       const object = parse(typedArrayFor(input));
       expect(object).toBeInstanceOf(PDFRawStream);

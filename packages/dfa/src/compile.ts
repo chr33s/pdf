@@ -6,10 +6,7 @@ import SymbolTable from "./symbol-table.js";
 
 export type ExternalSymbols = Record<string, number>;
 
-export function parse(
-  source: string,
-  externalSymbols: ExternalSymbols = {},
-): SymbolTable {
+export function parse(source: string, externalSymbols: ExternalSymbols = {}): SymbolTable {
   const ast = parseGrammar(source, { nodes });
   return new SymbolTable(ast, externalSymbols);
 }

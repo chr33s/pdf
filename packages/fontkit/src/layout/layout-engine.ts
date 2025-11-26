@@ -19,10 +19,7 @@ type AdvancedLayoutEngine = {
   setup?(glyphRun: GlyphRun): void;
   cleanup?(): void;
   fallbackPosition?: boolean;
-  getAvailableFeatures(
-    script?: string | null,
-    language?: string | null,
-  ): string[];
+  getAvailableFeatures(script?: string | null, language?: string | null): string[];
   stringsForGlyph?(gid: number): Iterable<string> | string[];
 };
 
@@ -41,9 +38,7 @@ export default class LayoutEngine {
     // Choose an advanced layout engine. We try the AAT morx table first since more
     // scripts are currently supported because the shaping logic is built into the font.
     if (this.font.morx) {
-      this.engine = new AATLayoutEngine(
-        this.font as unknown as AATLayoutFontLike,
-      );
+      this.engine = new AATLayoutEngine(this.font as unknown as AATLayoutFontLike);
     } else if (this.font.GSUB || this.font.GPOS) {
       this.engine = new OTLayoutEngine(this.font);
     }
@@ -137,9 +132,7 @@ export default class LayoutEngine {
 
   position(glyphRun: GlyphRun): void {
     // Get initial glyph positions
-    glyphRun.positions = glyphRun.glyphs.map(
-      (glyph) => new GlyphPosition(glyph.advanceWidth),
-    );
+    glyphRun.positions = glyphRun.glyphs.map((glyph) => new GlyphPosition(glyph.advanceWidth));
     let positioned: { kern?: boolean } | null = null;
 
     // Call the advanced layout engine. Returns the features applied.
@@ -153,18 +146,11 @@ export default class LayoutEngine {
         this.unicodeLayoutEngine = new UnicodeLayoutEngine(this.font);
       }
 
-      this.unicodeLayoutEngine.positionGlyphs(
-        glyphRun.glyphs,
-        glyphRun.positions,
-      );
+      this.unicodeLayoutEngine.positionGlyphs(glyphRun.glyphs, glyphRun.positions);
     }
 
     // if kerning is not supported by GPOS, do kerning with the TrueType/AAT kern table
-    if (
-      (!positioned || !positioned.kern) &&
-      glyphRun.features.kern !== false &&
-      this.font.kern
-    ) {
+    if ((!positioned || !positioned.kern) && glyphRun.features.kern !== false && this.font.kern) {
       const kernData = this.font.kern;
       if (!kernData?.tables) {
         return;
@@ -227,9 +213,7 @@ export default class LayoutEngine {
       // Other planes
       switch (plane) {
         case 0x01:
-          return (
-            (0x1bca0 <= ch && ch <= 0x1bca3) || (0x1d173 <= ch && ch <= 0x1d17a)
-          );
+          return (0x1bca0 <= ch && ch <= 0x1bca3) || (0x1d173 <= ch && ch <= 0x1d17a);
         case 0x0e:
           return 0xe0000 <= ch && ch <= 0xe0fff;
         default:
@@ -238,17 +222,12 @@ export default class LayoutEngine {
     }
   }
 
-  getAvailableFeatures(
-    script?: string | string[] | null,
-    language?: string | null,
-  ): string[] {
+  getAvailableFeatures(script?: string | string[] | null, language?: string | null): string[] {
     let features: string[] = [];
     const scriptTag = this.#firstScript(script);
 
     if (this.engine) {
-      features.push(
-        ...this.engine.getAvailableFeatures(scriptTag, language ?? null),
-      );
+      features.push(...this.engine.getAvailableFeatures(scriptTag, language ?? null));
     }
 
     if (this.font.kern && features.indexOf("kern") === -1) {

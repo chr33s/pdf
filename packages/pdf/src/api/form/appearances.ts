@@ -1,14 +1,7 @@
 import { PDFOperator, PDFWidgetAnnotation } from "../../core/index.js";
 import { findLastMatch } from "../../utils/index.js";
 import PDFFont from "../pdf-font.js";
-import {
-  cmyk,
-  Color,
-  componentsToColor,
-  grayscale,
-  rgb,
-  setFillingColor,
-} from "../colors.js";
+import { cmyk, Color, componentsToColor, grayscale, rgb, setFillingColor } from "../colors.js";
 import PDFButton from "./pdf-button.js";
 import PDFCheckBox from "./pdf-check-box.js";
 import PDFDropdown from "./pdf-dropdown.js";
@@ -118,9 +111,7 @@ const tfRegex = new RegExp(
   `/([^${CONTROL_WHITESPACE}]+)[${CONTROL_WHITESPACE}]+(\\d*\\.\\d+|\\d+)[${CONTROL_WHITESPACE}]+Tf`,
 );
 
-const getDefaultFontSize = (field: {
-  getDefaultAppearance(): string | undefined;
-}) => {
+const getDefaultFontSize = (field: { getDefaultAppearance(): string | undefined }) => {
   const da = field.getDefaultAppearance() ?? "";
   const daMatch = findLastMatch(da, tfRegex).match ?? [];
   const defaultFontSize = Number(daMatch[2]);
@@ -135,9 +126,7 @@ const colorRegex = new RegExp(
   `(\\d*\\.\\d+|\\d+)[${CONTROL_WHITESPACE}]*(\\d*\\.\\d+|\\d+)?[${CONTROL_WHITESPACE}]*(\\d*\\.\\d+|\\d+)?[${CONTROL_WHITESPACE}]*(\\d*\\.\\d+|\\d+)?[${CONTROL_WHITESPACE}]+(g|rg|k)`,
 );
 
-const getDefaultColor = (field: {
-  getDefaultAppearance(): string | undefined;
-}) => {
+const getDefaultColor = (field: { getDefaultAppearance(): string | undefined }) => {
   const da = field.getDefaultAppearance() ?? "";
   const daMatch = findLastMatch(da, colorRegex).match;
 
@@ -169,9 +158,10 @@ const updateDefaultAppearance = (
   field.setDefaultAppearance(da);
 };
 
-export const defaultCheckBoxAppearanceProvider: AppearanceProviderFor<
-  PDFCheckBox
-> = (checkBox, widget) => {
+export const defaultCheckBoxAppearanceProvider: AppearanceProviderFor<PDFCheckBox> = (
+  checkBox,
+  widget,
+) => {
   // The `/DA` entry can be at the widget or field level - so we handle both
   const widgetColor = getDefaultColor(widget);
   const fieldColor = getDefaultColor(checkBox.acroField);
@@ -250,9 +240,10 @@ export const defaultCheckBoxAppearanceProvider: AppearanceProviderFor<
   };
 };
 
-export const defaultRadioGroupAppearanceProvider: AppearanceProviderFor<
-  PDFRadioGroup
-> = (radioGroup, widget) => {
+export const defaultRadioGroupAppearanceProvider: AppearanceProviderFor<PDFRadioGroup> = (
+  radioGroup,
+  widget,
+) => {
   // The `/DA` entry can be at the widget or field level - so we handle both
   const widgetColor = getDefaultColor(widget);
   const fieldColor = getDefaultColor(radioGroup.acroField);
@@ -330,9 +321,11 @@ export const defaultRadioGroupAppearanceProvider: AppearanceProviderFor<
   };
 };
 
-export const defaultButtonAppearanceProvider: AppearanceProviderFor<
-  PDFButton
-> = (button, widget, font) => {
+export const defaultButtonAppearanceProvider: AppearanceProviderFor<PDFButton> = (
+  button,
+  widget,
+  font,
+) => {
   // The `/DA` entry can be at the widget or field level - so we handle both
   const widgetColor = getDefaultColor(widget);
   const fieldColor = getDefaultColor(button.acroField);
@@ -418,9 +411,11 @@ export const defaultButtonAppearanceProvider: AppearanceProviderFor<
   };
 };
 
-export const defaultTextFieldAppearanceProvider: AppearanceProviderFor<
-  PDFTextField
-> = (textField, widget, font) => {
+export const defaultTextFieldAppearanceProvider: AppearanceProviderFor<PDFTextField> = (
+  textField,
+  widget,
+  font,
+) => {
   // The `/DA` entry can be at the widget or field level - so we handle both
   const widgetColor = getDefaultColor(widget);
   const fieldColor = getDefaultColor(textField.acroField);
@@ -508,9 +503,11 @@ export const defaultTextFieldAppearanceProvider: AppearanceProviderFor<
   return [...rotate, ...drawTextField(options)];
 };
 
-export const defaultDropdownAppearanceProvider: AppearanceProviderFor<
-  PDFDropdown
-> = (dropdown, widget, font) => {
+export const defaultDropdownAppearanceProvider: AppearanceProviderFor<PDFDropdown> = (
+  dropdown,
+  widget,
+  font,
+) => {
   // The `/DA` entry can be at the widget or field level - so we handle both
   const widgetColor = getDefaultColor(widget);
   const fieldColor = getDefaultColor(dropdown.acroField);
@@ -573,9 +570,11 @@ export const defaultDropdownAppearanceProvider: AppearanceProviderFor<
   return [...rotate, ...drawTextField(options)];
 };
 
-export const defaultOptionListAppearanceProvider: AppearanceProviderFor<
-  PDFOptionList
-> = (optionList, widget, font) => {
+export const defaultOptionListAppearanceProvider: AppearanceProviderFor<PDFOptionList> = (
+  optionList,
+  widget,
+  font,
+) => {
   // The `/DA` entry can be at the widget or field level - so we handle both
   const widgetColor = getDefaultColor(widget);
   const fieldColor = getDefaultColor(optionList.acroField);

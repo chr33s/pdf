@@ -233,10 +233,7 @@ const thirdPage = async (pdfDoc: PDFDocument, assets: Assets) => {
   });
 
   // embed page from other PDF using blendMode
-  const [embeddedPage] = await pdfDoc.embedPdf(
-    assets.pdfs.simple_pdf_2_example,
-    [0],
-  );
+  const [embeddedPage] = await pdfDoc.embedPdf(assets.pdfs.simple_pdf_2_example, [0]);
 
   const [px, py, scale] = [300, 100, 0.33];
 

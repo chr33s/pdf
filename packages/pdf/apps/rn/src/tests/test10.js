@@ -115,9 +115,7 @@ const addPageWithFonts = (pdfDoc, text, fontSize, gapAmt, fontNames) => {
       lineHeight: font.heightAtSize(fontSize) + 10,
     });
 
-    page.moveDown(
-      (font.heightAtSize(fontSize) + 10) * (lines.length - 1 + gapAmt),
-    );
+    page.moveDown((font.heightAtSize(fontSize) + 10) * (lines.length - 1 + gapAmt));
   });
 };
 
@@ -177,12 +175,7 @@ export default async () => {
         header naming the font in use.
       `;
 
-  const descriptionLines = breakTextIntoLines(
-    description,
-    16,
-    helveticaFont,
-    600,
-  );
+  const descriptionLines = breakTextIntoLines(description, 16, helveticaFont, 600);
 
   const titlePage = pdfDoc.addPage([650, 700]);
   titlePage.drawText(title, {
@@ -241,9 +234,7 @@ export default async () => {
   page.drawText("ZapfDingbats", {
     font: helveticaFont,
     size: zapfDingbatsFontSize,
-    x:
-      650 / 2 -
-      helveticaFont.widthOfTextAtSize("ZapfDingbats", zapfDingbatsFontSize) / 2,
+    x: 650 / 2 - helveticaFont.widthOfTextAtSize("ZapfDingbats", zapfDingbatsFontSize) / 2,
   });
   page.moveDown(zapfDingbatsFont.heightAtSize(zapfDingbatsFontSize) + 10);
   page.drawText(zapfDingbatsLines.join("\n"), {
@@ -256,12 +247,7 @@ export default async () => {
   // Symbol
   const symbolFont = await pdfDoc.embedFont(StandardFonts.Symbol);
   const symbolFontSize = 20;
-  const symbolLines = breakTextIntoLines(
-    symbolString,
-    symbolFontSize,
-    symbolFont,
-    600,
-  );
+  const symbolLines = breakTextIntoLines(symbolString, symbolFontSize, symbolFont, 600);
 
   page.moveDown(275);
   page.drawText("Symbol", {

@@ -68,45 +68,45 @@ describe("PDFHexString", () => {
 
   describe("decoding to date", () => {
     test("can interpret date strings of the form D:YYYYMMDDHHmmSSOHH'mm", () => {
-      expect(
-        PDFHexString.fromText("D:20200321165011+01'01").decodeDate(),
-      ).toStrictEqual(new Date("2020-03-21T15:49:11Z"));
-      expect(
-        PDFHexString.fromText("D:20200321165011-01'01").decodeDate(),
-      ).toStrictEqual(new Date("2020-03-21T17:51:11Z"));
-      expect(
-        PDFHexString.fromText("D:20200321165011Z00'00").decodeDate(),
-      ).toStrictEqual(new Date("2020-03-21T16:50:11Z"));
+      expect(PDFHexString.fromText("D:20200321165011+01'01").decodeDate()).toStrictEqual(
+        new Date("2020-03-21T15:49:11Z"),
+      );
+      expect(PDFHexString.fromText("D:20200321165011-01'01").decodeDate()).toStrictEqual(
+        new Date("2020-03-21T17:51:11Z"),
+      );
+      expect(PDFHexString.fromText("D:20200321165011Z00'00").decodeDate()).toStrictEqual(
+        new Date("2020-03-21T16:50:11Z"),
+      );
     });
 
     test("can interpret date strings of the form D:YYYYMMDDHHmmSSOHH", () => {
-      expect(
-        PDFHexString.fromText("D:20200321165011+01").decodeDate(),
-      ).toStrictEqual(new Date("2020-03-21T15:50:11Z"));
-      expect(
-        PDFHexString.fromText("D:20200321165011-01").decodeDate(),
-      ).toStrictEqual(new Date("2020-03-21T17:50:11Z"));
-      expect(
-        PDFHexString.fromText("D:20200321165011Z00").decodeDate(),
-      ).toStrictEqual(new Date("2020-03-21T16:50:11Z"));
+      expect(PDFHexString.fromText("D:20200321165011+01").decodeDate()).toStrictEqual(
+        new Date("2020-03-21T15:50:11Z"),
+      );
+      expect(PDFHexString.fromText("D:20200321165011-01").decodeDate()).toStrictEqual(
+        new Date("2020-03-21T17:50:11Z"),
+      );
+      expect(PDFHexString.fromText("D:20200321165011Z00").decodeDate()).toStrictEqual(
+        new Date("2020-03-21T16:50:11Z"),
+      );
     });
 
     test("can interpret date strings of the form D:YYYYMMDDHHmmSSO", () => {
-      expect(
-        PDFHexString.fromText("D:20200321165011Z").decodeDate(),
-      ).toStrictEqual(new Date("2020-03-21T16:50:11Z"));
+      expect(PDFHexString.fromText("D:20200321165011Z").decodeDate()).toStrictEqual(
+        new Date("2020-03-21T16:50:11Z"),
+      );
     });
 
     test("can interpret date strings of the form D:YYYYMMDDHHmmSS", () => {
-      expect(
-        PDFHexString.fromText("D:20200321165011").decodeDate(),
-      ).toStrictEqual(new Date("2020-03-21T16:50:11Z"));
+      expect(PDFHexString.fromText("D:20200321165011").decodeDate()).toStrictEqual(
+        new Date("2020-03-21T16:50:11Z"),
+      );
     });
 
     test("can interpret date strings of the form D:YYYYMMDDHHmm", () => {
-      expect(
-        PDFHexString.fromText("D:202003211650").decodeDate(),
-      ).toStrictEqual(new Date("2020-03-21T16:50:00Z"));
+      expect(PDFHexString.fromText("D:202003211650").decodeDate()).toStrictEqual(
+        new Date("2020-03-21T16:50:00Z"),
+      );
     });
 
     test("can interpret date strings of the form D:YYYYMMDDHH", () => {
@@ -149,9 +149,7 @@ describe("PDFHexString", () => {
   });
 
   test("can be converted to a string", () => {
-    expect(String(PDFHexString.of("4E6F762073686D6F7A2"))).toBe(
-      "<4E6F762073686D6F7A2>",
-    );
+    expect(String(PDFHexString.of("4E6F762073686D6F7A2"))).toBe("<4E6F762073686D6F7A2>");
     expect(String(PDFHexString.of("901FA3"))).toBe("<901FA3>");
     expect(String(PDFHexString.of("901FA"))).toBe("<901FA>");
   });

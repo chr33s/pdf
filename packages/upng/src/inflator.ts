@@ -7,22 +7,21 @@ const createInflatorTables = () => {
     v: new Uint16Ctor(16),
     d: [16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15],
     o: [
-      3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 15, 17, 19, 23, 27, 31, 35, 43, 51, 59,
-      67, 83, 99, 115, 131, 163, 195, 227, 258, 999, 999, 999,
+      3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 15, 17, 19, 23, 27, 31, 35, 43, 51, 59, 67, 83, 99, 115, 131,
+      163, 195, 227, 258, 999, 999, 999,
     ],
     z: [
-      0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5,
-      5, 5, 5, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 0, 0, 0,
+      0,
     ],
     B: new Uint16Ctor(32),
     p: [
-      1, 2, 3, 4, 5, 7, 9, 13, 17, 25, 33, 49, 65, 97, 129, 193, 257, 385, 513,
-      769, 1025, 1537, 2049, 3073, 4097, 6145, 8193, 12289, 16385, 24577, 65535,
-      65535,
+      1, 2, 3, 4, 5, 7, 9, 13, 17, 25, 33, 49, 65, 97, 129, 193, 257, 385, 513, 769, 1025, 1537,
+      2049, 3073, 4097, 6145, 8193, 12289, 16385, 24577, 65535, 65535,
     ],
     w: [
-      0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10,
-      11, 11, 12, 12, 13, 13, 0, 0,
+      0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13,
+      13, 0, 0,
     ],
     h: new Uint32Ctor(32),
     g: new Uint16Ctor(512),
@@ -69,11 +68,7 @@ const createInflatorTables = () => {
     }
   };
 
-  const buildLookupTable = (
-    values: number[],
-    bits: number,
-    target: Uint16Array,
-  ) => {
+  const buildLookupTable = (values: number[], bits: number, target: Uint16Array) => {
     const len = values.length;
     const bitReverse = tables.i;
 
@@ -152,22 +147,16 @@ export class Inflator {
   static inflateRaw(o: Uint8Array, j?: Uint8Array) {
     const D = Inflator.D;
     function F(o: Uint8Array, j: number, I: number) {
-      return (
-        ((o[j >>> 3] | (o[(j >>> 3) + 1] << 8)) >>> (j & 7)) & ((1 << I) - 1)
-      );
+      return ((o[j >>> 3] | (o[(j >>> 3) + 1] << 8)) >>> (j & 7)) & ((1 << I) - 1);
     }
     function s(o: Uint8Array, j: number, I: number) {
       return (
-        ((o[j >>> 3] | (o[(j >>> 3) + 1] << 8) | (o[(j >>> 3) + 2] << 16)) >>>
-          (j & 7)) &
+        ((o[j >>> 3] | (o[(j >>> 3) + 1] << 8) | (o[(j >>> 3) + 2] << 16)) >>> (j & 7)) &
         ((1 << I) - 1)
       );
     }
     function w(o: Uint8Array, j: number) {
-      return (
-        (o[j >>> 3] | (o[(j >>> 3) + 1] << 8) | (o[(j >>> 3) + 2] << 16)) >>>
-        (j & 7)
-      );
+      return (o[j >>> 3] | (o[(j >>> 3) + 1] << 8) | (o[(j >>> 3) + 2] << 16)) >>> (j & 7);
     }
     const I = Uint8Array;
     let r = 0;
@@ -325,24 +314,12 @@ export class Inflator {
     A.set(o, 0);
     return A;
   }
-  static B(
-    o: Uint16Array,
-    j: number,
-    I: number,
-    A: Uint8Array,
-    r: number,
-    i: number[],
-  ) {
+  static B(o: Uint16Array, j: number, I: number, A: Uint8Array, r: number, i: number[]) {
     function w(o: Uint8Array, j: number) {
-      return (
-        (o[j >>> 3] | (o[(j >>> 3) + 1] << 8) | (o[(j >>> 3) + 2] << 16)) >>>
-        (j & 7)
-      );
+      return (o[j >>> 3] | (o[(j >>> 3) + 1] << 8) | (o[(j >>> 3) + 2] << 16)) >>> (j & 7);
     }
     function F(o: Uint8Array, j: number, I: number) {
-      return (
-        ((o[j >>> 3] | (o[(j >>> 3) + 1] << 8)) >>> (j & 7)) & ((1 << I) - 1)
-      );
+      return ((o[j >>> 3] | (o[(j >>> 3) + 1] << 8)) >>> (j & 7)) & ((1 << I) - 1);
     }
     let y = 0;
     while (y < I) {

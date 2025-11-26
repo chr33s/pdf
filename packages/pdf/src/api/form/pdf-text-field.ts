@@ -16,10 +16,7 @@ import {
   defaultTextFieldAppearanceProvider,
   normalizeAppearance,
 } from "./appearances.js";
-import PDFField, {
-  FieldAppearanceOptions,
-  assertFieldAppearanceOptions,
-} from "./pdf-field.js";
+import PDFField, { FieldAppearanceOptions, assertFieldAppearanceOptions } from "./pdf-field.js";
 
 import {
   AcroTextFlags,
@@ -305,11 +302,7 @@ export default class PDFTextField extends PDFField {
     const widgets = this.acroField.getWidgets();
     for (let idx = 0, len = widgets.length; idx < len; idx++) {
       const widget = widgets[idx];
-      const streamRef = this.createImageAppearanceStream(
-        widget,
-        image,
-        alignment,
-      );
+      const streamRef = this.createImageAppearanceStream(widget, image, alignment);
       this.updateWidgetAppearances(widget, { normal: streamRef });
     }
 
@@ -760,8 +753,7 @@ export default class PDFTextField extends PDFField {
     const widgets = this.acroField.getWidgets();
     for (let idx = 0, len = widgets.length; idx < len; idx++) {
       const widget = widgets[idx];
-      const hasAppearances =
-        widget.getAppearances()?.normal instanceof PDFStream;
+      const hasAppearances = widget.getAppearances()?.normal instanceof PDFStream;
       if (!hasAppearances) return true;
     }
 
@@ -799,10 +791,7 @@ export default class PDFTextField extends PDFField {
    * @param provider Optionally, the appearance provider to be used for
    *                 generating the contents of the appearance streams.
    */
-  updateAppearances(
-    font: PDFFont,
-    provider?: AppearanceProviderFor<PDFTextField>,
-  ) {
+  updateAppearances(font: PDFFont, provider?: AppearanceProviderFor<PDFTextField>) {
     assertIs(font, "font", [[PDFFont, "PDFFont"]]);
     assertOrUndefined(provider, "provider", [Function]);
 

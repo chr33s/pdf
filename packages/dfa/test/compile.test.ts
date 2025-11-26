@@ -42,9 +42,7 @@ describe("state machine compiler", () => {
 
   test("should compile a state machine with an optional repeat", () => {
     const stateMachine = compile("a = 0; b = 1; main = b a (a b)*;");
-    const matches = Array.from(
-      stateMachine.match([0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 0]),
-    );
+    const matches = Array.from(stateMachine.match([0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 0]));
     expect(matches).toEqual([
       [2, 7, []],
       [9, 10, []],
@@ -53,9 +51,7 @@ describe("state machine compiler", () => {
 
   test("should compile a state machine with an optional group", () => {
     const stateMachine = compile("a = 0; b = 1; main = b a (a b)?;");
-    const matches = Array.from(
-      stateMachine.match([0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 0]),
-    );
+    const matches = Array.from(stateMachine.match([0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 0]));
     expect(matches).toEqual([
       [2, 5, []],
       [9, 10, []],
@@ -64,17 +60,13 @@ describe("state machine compiler", () => {
 
   test("should compile a state machine with an exact repetition", () => {
     const stateMachine = compile("a = 0; b = 1; main = a{3} b;");
-    const matches = Array.from(
-      stateMachine.match([0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1]),
-    );
+    const matches = Array.from(stateMachine.match([0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1]));
     expect(matches).toEqual([[3, 6, []]]);
   });
 
   test("should compile a state machine with a minimum repetition", () => {
     const stateMachine = compile("a = 0; b = 1; main = a{3,} b;");
-    const matches = Array.from(
-      stateMachine.match([0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1]),
-    );
+    const matches = Array.from(stateMachine.match([0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1]));
     expect(matches).toEqual([
       [3, 6, []],
       [7, 11, []],
@@ -83,9 +75,7 @@ describe("state machine compiler", () => {
 
   test("should compile a state machine with a maximum repetition", () => {
     const stateMachine = compile("a = 0; b = 1; main = a{,3} b;");
-    const matches = Array.from(
-      stateMachine.match([0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1]),
-    );
+    const matches = Array.from(stateMachine.match([0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1]));
     expect(matches).toEqual([
       [0, 2, []],
       [3, 6, []],
@@ -97,9 +87,7 @@ describe("state machine compiler", () => {
   test("should compile a state machine with a minimum and maximum repetition", () => {
     const stateMachine = compile("a = 0; b = 1; main = a{3,5} b;");
     const matches = Array.from(
-      stateMachine.match([
-        0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1,
-      ]),
+      stateMachine.match([0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1]),
     );
     expect(matches).toEqual([
       [3, 6, []],
@@ -120,10 +108,8 @@ describe("state machine compiler", () => {
 
     const applied: Array<[string, number, number, number[]]> = [];
     stateMachine.apply(input, {
-      x: (start: number, end: number, slice: number[]) =>
-        applied.push(["x", start, end, slice]),
-      y: (start: number, end: number, slice: number[]) =>
-        applied.push(["y", start, end, slice]),
+      x: (start: number, end: number, slice: number[]) => applied.push(["x", start, end, slice]),
+      y: (start: number, end: number, slice: number[]) => applied.push(["y", start, end, slice]),
     });
 
     expect(applied).toEqual([

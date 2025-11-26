@@ -248,10 +248,7 @@ export default class CFFGlyph extends Glyph {
                 throw new Error("blend operator in non-variation font");
               }
 
-              const blendVector = variationProcessor.getBlendVector(
-                vstore,
-                vsindex,
-              );
+              const blendVector = variationProcessor.getBlendVector(vstore, vsindex);
               const numBlends = stack.pop();
               const numOperands = numBlends * blendVector.length;
               let deltaIndex = stack.length - numOperands;
@@ -604,20 +601,7 @@ export default class CFFGlyph extends Glyph {
                     pts.push(x, y);
                   }
 
-                  const [
-                    c1x,
-                    c1y,
-                    c2x,
-                    c2y,
-                    c3x,
-                    c3y,
-                    c4x,
-                    c4y,
-                    c5x,
-                    c5y,
-                    c6x,
-                    c6y,
-                  ] = pts as [
+                  const [c1x, c1y, c2x, c2y, c3x, c3y, c4x, c4y, c5x, c5y, c6x, c6y] = pts as [
                     number,
                     number,
                     number,
@@ -679,20 +663,7 @@ export default class CFFGlyph extends Glyph {
                   }
 
                   pts.push(x, y);
-                  const [
-                    f1x,
-                    f1y,
-                    f2x,
-                    f2y,
-                    f3x,
-                    f3y,
-                    f4x,
-                    f4y,
-                    f5x,
-                    f5y,
-                    f6x,
-                    f6y,
-                  ] = pts as [
+                  const [f1x, f1y, f2x, f2y, f3x, f3y, f4x, f4y, f5x, f5y, f6x, f6y] = pts as [
                     number,
                     number,
                     number,

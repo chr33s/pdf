@@ -39,9 +39,7 @@ describe("UPNG basic encode/decode", () => {
   it("round-trips an image with transparency (forces alpha ctype 6 or pal+TRNS)", () => {
     const w = 2;
     const h = 2;
-    const buf = new Uint8Array([
-      255, 0, 0, 255, 255, 0, 0, 0, 0, 255, 0, 255, 0, 255, 0, 0,
-    ]).buffer;
+    const buf = new Uint8Array([255, 0, 0, 255, 255, 0, 0, 0, 0, 255, 0, 255, 0, 255, 0, 0]).buffer;
 
     const encoded = UPNG.encode([buf], w, h, 0);
     const decoded = UPNG.decode(encoded);
@@ -128,9 +126,7 @@ describe("UPNG #getBPP and #filterZero via encode/decode", () => {
   it("handles grayscale (ctype 0) depth 8 correctly", () => {
     const w = 3;
     const h = 1;
-    const gray = new Uint8Array([
-      50, 50, 50, 255, 100, 100, 100, 255, 200, 200, 200, 255,
-    ]).buffer;
+    const gray = new Uint8Array([50, 50, 50, 255, 100, 100, 100, 255, 200, 200, 200, 255]).buffer;
 
     // Use encodeLL to force grayscale: cc=1, ac=0
     const encoded = UPNG.encodeLL([gray], w, h, 1, 0, 8);
@@ -150,9 +146,8 @@ describe("UPNG #getBPP and #filterZero via encode/decode", () => {
   it("handles palette-based images (ctype 3) when color count is small", () => {
     const w = 2;
     const h = 2;
-    const buf = new Uint8Array([
-      255, 0, 0, 255, 0, 255, 0, 255, 255, 0, 0, 255, 0, 255, 0, 255,
-    ]).buffer;
+    const buf = new Uint8Array([255, 0, 0, 255, 0, 255, 0, 255, 255, 0, 0, 255, 0, 255, 0, 255])
+      .buffer;
 
     // Force small palette size to encourage PLTE path
     const encoded = UPNG.encode([buf], w, h, 4);
@@ -203,15 +198,7 @@ describe("UPNG internal dithering path (by effect)", () => {
     }
 
     // cnum=16 palette size, dithering enabled via encode (6th param of prms)
-    const encoded = (UPNG as any).encode(
-      [buf.buffer],
-      w,
-      h,
-      16,
-      undefined,
-      undefined,
-      false,
-    );
+    const encoded = (UPNG as any).encode([buf.buffer], w, h, 16, undefined, undefined, false);
     const decoded = UPNG.decode(encoded);
     const [rgbaBuf] = UPNG.toRGBA8(decoded);
     const out = new Uint8Array(rgbaBuf);
@@ -236,16 +223,7 @@ describe("UPNG animated encodeLL", () => {
     const delays = [100, 200];
     const tabs = { loop: 0 };
 
-    const encoded = UPNG.encodeLL(
-      [frame0, frame1],
-      w,
-      h,
-      4,
-      1,
-      8,
-      delays,
-      tabs,
-    );
+    const encoded = UPNG.encodeLL([frame0, frame1], w, h, 4, 1, 8, delays, tabs);
     const decoded = UPNG.decode(encoded) as Image;
 
     // We should have animation control chunk parsed

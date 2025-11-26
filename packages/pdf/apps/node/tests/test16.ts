@@ -5,8 +5,7 @@ const fieldNames = {
   // Page 1
   Single: "topmostSubform[0].Page1[0].FilingStatus[0].c1_01[0]",
   MarriedFilingJointly: "topmostSubform[0].Page1[0].FilingStatus[0].c1_01[1]",
-  MarriedFilingSeparately:
-    "topmostSubform[0].Page1[0].FilingStatus[0].c1_01[2]",
+  MarriedFilingSeparately: "topmostSubform[0].Page1[0].FilingStatus[0].c1_01[2]",
   HeadOfHousehold: "topmostSubform[0].Page1[0].FilingStatus[0].c1_01[3]",
   QualifyingWidow: "topmostSubform[0].Page1[0].FilingStatus[0].c1_01[4]",
   FilingPartner: "topmostSubform[0].Page1[0].FilingStatus[0].f1_01[0]",
@@ -16,21 +15,15 @@ const fieldNames = {
   SSN: "topmostSubform[0].Page1[0].YourSocial_ReadOrderControl[0].f1_04[0]",
   SpouseFirstNameAndMiddleInitial:
     "topmostSubform[0].Page1[0].YourSocial_ReadOrderControl[0].f1_05[0]",
-  SpouseLastName:
-    "topmostSubform[0].Page1[0].YourSocial_ReadOrderControl[0].f1_06[0]",
+  SpouseLastName: "topmostSubform[0].Page1[0].YourSocial_ReadOrderControl[0].f1_06[0]",
   SpouseSSN: "topmostSubform[0].Page1[0].ReadOrderControl[0].f1_07[0]",
 
-  HomeAddress:
-    "topmostSubform[0].Page1[0].ReadOrderControl[0].Address[0].f1_08[0]",
+  HomeAddress: "topmostSubform[0].Page1[0].ReadOrderControl[0].Address[0].f1_08[0]",
   AptNo: "topmostSubform[0].Page1[0].ReadOrderControl[0].Address[0].f1_09[0]",
-  CityTownStateZip:
-    "topmostSubform[0].Page1[0].ReadOrderControl[0].Address[0].f1_10[0]",
-  ForeignCountryName:
-    "topmostSubform[0].Page1[0].ReadOrderControl[0].Address[0].f1_11[0]",
-  ForeignProvince:
-    "topmostSubform[0].Page1[0].ReadOrderControl[0].Address[0].f1_12[0]",
-  ForeignPostalCode:
-    "topmostSubform[0].Page1[0].ReadOrderControl[0].Address[0].f1_13[0]",
+  CityTownStateZip: "topmostSubform[0].Page1[0].ReadOrderControl[0].Address[0].f1_10[0]",
+  ForeignCountryName: "topmostSubform[0].Page1[0].ReadOrderControl[0].Address[0].f1_11[0]",
+  ForeignProvince: "topmostSubform[0].Page1[0].ReadOrderControl[0].Address[0].f1_12[0]",
+  ForeignPostalCode: "topmostSubform[0].Page1[0].ReadOrderControl[0].Address[0].f1_13[0]",
 
   Dependents: {
     FirstAndLastName: [
@@ -67,36 +60,22 @@ const fieldNames = {
     ],
   },
 
-  TaxExemptInterest:
-    "topmostSubform[0].Page1[0].ReadOrderControl_Lns1-8b[0].f1_27[0]",
-  QualifiedDividends:
-    "topmostSubform[0].Page1[0].ReadOrderControl_Lns1-8b[0].f1_29[0]",
-  IraDistributions:
-    "topmostSubform[0].Page1[0].ReadOrderControl_Lns1-8b[0].f1_31[0]",
+  TaxExemptInterest: "topmostSubform[0].Page1[0].ReadOrderControl_Lns1-8b[0].f1_27[0]",
+  QualifiedDividends: "topmostSubform[0].Page1[0].ReadOrderControl_Lns1-8b[0].f1_29[0]",
+  IraDistributions: "topmostSubform[0].Page1[0].ReadOrderControl_Lns1-8b[0].f1_31[0]",
   Pensions: "topmostSubform[0].Page1[0].ReadOrderControl_Lns1-8b[0].f1_33[0]",
-  SocialSecurity:
-    "topmostSubform[0].Page1[0].ReadOrderControl_Lns1-8b[0].f1_35[0]",
+  SocialSecurity: "topmostSubform[0].Page1[0].ReadOrderControl_Lns1-8b[0].f1_35[0]",
   Wages: "topmostSubform[0].Page1[0].ReadOrderControl_Lns1-8b[0].f1_26[0]",
-  TaxableInterest:
-    "topmostSubform[0].Page1[0].ReadOrderControl_Lns1-8b[0].f1_28[0]",
-  OrdinaryDividends:
-    "topmostSubform[0].Page1[0].ReadOrderControl_Lns1-8b[0].f1_30[0]",
-  TaxableIraDistributions:
-    "topmostSubform[0].Page1[0].ReadOrderControl_Lns1-8b[0].f1_32[0]",
-  TaxablePensions:
-    "topmostSubform[0].Page1[0].ReadOrderControl_Lns1-8b[0].f1_34[0]",
-  TaxableSocialSecurity:
-    "topmostSubform[0].Page1[0].ReadOrderControl_Lns1-8b[0].f1_36[0]",
-  CapitalGainOrLoss:
-    "topmostSubform[0].Page1[0].ReadOrderControl_Lns1-8b[0].f1_37[0]",
-  OtherIncome:
-    "topmostSubform[0].Page1[0].ReadOrderControl_Lns1-8b[0].f1_38[0]",
-  TotalIncome:
-    "topmostSubform[0].Page1[0].ReadOrderControl_Lns1-8b[0].f1_39[0]",
-  IncomeAdjustments:
-    "topmostSubform[0].Page1[0].ReadOrderControl_Lns1-8b[0].f1_40[0]",
-  AdjustedGrossIncome:
-    "topmostSubform[0].Page1[0].ReadOrderControl_Lns1-8b[0].f1_41[0]",
+  TaxableInterest: "topmostSubform[0].Page1[0].ReadOrderControl_Lns1-8b[0].f1_28[0]",
+  OrdinaryDividends: "topmostSubform[0].Page1[0].ReadOrderControl_Lns1-8b[0].f1_30[0]",
+  TaxableIraDistributions: "topmostSubform[0].Page1[0].ReadOrderControl_Lns1-8b[0].f1_32[0]",
+  TaxablePensions: "topmostSubform[0].Page1[0].ReadOrderControl_Lns1-8b[0].f1_34[0]",
+  TaxableSocialSecurity: "topmostSubform[0].Page1[0].ReadOrderControl_Lns1-8b[0].f1_36[0]",
+  CapitalGainOrLoss: "topmostSubform[0].Page1[0].ReadOrderControl_Lns1-8b[0].f1_37[0]",
+  OtherIncome: "topmostSubform[0].Page1[0].ReadOrderControl_Lns1-8b[0].f1_38[0]",
+  TotalIncome: "topmostSubform[0].Page1[0].ReadOrderControl_Lns1-8b[0].f1_39[0]",
+  IncomeAdjustments: "topmostSubform[0].Page1[0].ReadOrderControl_Lns1-8b[0].f1_40[0]",
+  AdjustedGrossIncome: "topmostSubform[0].Page1[0].ReadOrderControl_Lns1-8b[0].f1_41[0]",
   StandardDeduction: "topmostSubform[0].Page1[0].f1_42[0]",
   QualifiedBusinessDeduction: "topmostSubform[0].Page1[0].f1_43[0]",
   SumOf9And10: "topmostSubform[0].Page1[0].f1_44[0]",
@@ -105,16 +84,14 @@ const fieldNames = {
   TaxFormLabel: "topmostSubform[0].Page2[0].Lines12a-12b_ReadOrder[0].f2_01[0]",
   TaxFormValue: "topmostSubform[0].Page2[0].Lines12a-12b_ReadOrder[0].f2_02[0]",
   ScheduleTotal12b: "topmostSubform[0].Page2[0].f2_03[0]",
-  ChildTaxCredit:
-    "topmostSubform[0].Page2[0].Lines13a-13b_ReadOrder[0].f2_04[0]",
+  ChildTaxCredit: "topmostSubform[0].Page2[0].Lines13a-13b_ReadOrder[0].f2_04[0]",
   ScheduleTotal13b: "topmostSubform[0].Page2[0].f2_05[0]",
   Subtract14: "topmostSubform[0].Page2[0].f2_06[0]",
   OtherTaxes: "topmostSubform[0].Page2[0].f2_07[0]",
   TotalTax: "topmostSubform[0].Page2[0].f2_08[0]",
   WithheldIncomeTax: "topmostSubform[0].Page2[0].f2_09[0]",
   EarnedIncomeCredit: "topmostSubform[0].Page2[0].Line18_ReadOrder[0].f2_10[0]",
-  AdditionalChildTaxCredit:
-    "topmostSubform[0].Page2[0].Line18_ReadOrder[0].f2_11[0]",
+  AdditionalChildTaxCredit: "topmostSubform[0].Page2[0].Line18_ReadOrder[0].f2_11[0]",
   OpportunityCredit: "topmostSubform[0].Page2[0].Line18_ReadOrder[0].f2_12[0]",
   Schedule18d: "topmostSubform[0].Page2[0].Line18_ReadOrder[0].f2_13[0]",
   RefundableCredits: "topmostSubform[0].Page2[0].f2_14[0]",
@@ -135,56 +112,37 @@ const fieldNames = {
   SpouseIdentityPIN: "topmostSubform[0].Page2[0].Signatures[0].f2_29[0]",
   PhoneNo: "topmostSubform[0].Page2[0].Signatures[0].f2_30[0]",
   EmailAddress: "topmostSubform[0].Page2[0].Signatures[0].f2_31[0]",
-  PreparerName:
-    "topmostSubform[0].Page2[0].PaidPreparer[0].Preparer[0].f2_32[0]",
+  PreparerName: "topmostSubform[0].Page2[0].PaidPreparer[0].Preparer[0].f2_32[0]",
   PTIN: "topmostSubform[0].Page2[0].PaidPreparer[0].Preparer[0].f2_33[0]",
-  PreparerFirmName:
-    "topmostSubform[0].Page2[0].PaidPreparer[0].Preparer[0].f2_34[0]",
-  PreparerPhoneNo:
-    "topmostSubform[0].Page2[0].PaidPreparer[0].Preparer[0].f2_35[0]",
-  PreparerAddress:
-    "topmostSubform[0].Page2[0].PaidPreparer[0].Preparer[0].f2_36[0]",
-  PreparerEIN:
-    "topmostSubform[0].Page2[0].PaidPreparer[0].Preparer[0].f2_37[0]",
+  PreparerFirmName: "topmostSubform[0].Page2[0].PaidPreparer[0].Preparer[0].f2_34[0]",
+  PreparerPhoneNo: "topmostSubform[0].Page2[0].PaidPreparer[0].Preparer[0].f2_35[0]",
+  PreparerAddress: "topmostSubform[0].Page2[0].PaidPreparer[0].Preparer[0].f2_36[0]",
+  PreparerEIN: "topmostSubform[0].Page2[0].PaidPreparer[0].Preparer[0].f2_37[0]",
 
   // Checkboxes
   PresidentialElectionFund:
     "topmostSubform[0].Page1[0].ReadOrderControl[1].PresidentialElection[0].c1_02[0]",
   PresidentialElectionFundSpouse:
     "topmostSubform[0].Page1[0].ReadOrderControl[1].PresidentialElection[0].c1_03[0]",
-  YouAsDependent:
-    "topmostSubform[0].Page1[0].ReadOrderControl[1].StandardDeduction[0].c1_04[0]",
-  SpouseAsDependent:
-    "topmostSubform[0].Page1[0].ReadOrderControl[1].StandardDeduction[0].c1_05[0]",
-  SpouseItemizes:
-    "topmostSubform[0].Page1[0].ReadOrderControl[1].StandardDeduction[0].c1_06[0]",
-  BlindBefore1995:
-    "topmostSubform[0].Page1[0].ReadOrderControl[1].AgeBlindness[0].c1_07[0]",
-  AreBlind:
-    "topmostSubform[0].Page1[0].ReadOrderControl[1].AgeBlindness[0].c1_08[0]",
-  SpouseBlindBefore1995:
-    "topmostSubform[0].Page1[0].ReadOrderControl[1].AgeBlindness[0].c1_09[0]",
-  SpouseIsBlind:
-    "topmostSubform[0].Page1[0].ReadOrderControl[1].AgeBlindness[0].c1_10[0]",
-  MoreThanFourDependents:
-    "topmostSubform[0].Page1[0].IfMoreThanFour[0].c1_11[0]",
-  CapitalGainOrLossRequired:
-    "topmostSubform[0].Page1[0].ReadOrderControl_Lns1-8b[0].c1_20[0]",
+  YouAsDependent: "topmostSubform[0].Page1[0].ReadOrderControl[1].StandardDeduction[0].c1_04[0]",
+  SpouseAsDependent: "topmostSubform[0].Page1[0].ReadOrderControl[1].StandardDeduction[0].c1_05[0]",
+  SpouseItemizes: "topmostSubform[0].Page1[0].ReadOrderControl[1].StandardDeduction[0].c1_06[0]",
+  BlindBefore1995: "topmostSubform[0].Page1[0].ReadOrderControl[1].AgeBlindness[0].c1_07[0]",
+  AreBlind: "topmostSubform[0].Page1[0].ReadOrderControl[1].AgeBlindness[0].c1_08[0]",
+  SpouseBlindBefore1995: "topmostSubform[0].Page1[0].ReadOrderControl[1].AgeBlindness[0].c1_09[0]",
+  SpouseIsBlind: "topmostSubform[0].Page1[0].ReadOrderControl[1].AgeBlindness[0].c1_10[0]",
+  MoreThanFourDependents: "topmostSubform[0].Page1[0].IfMoreThanFour[0].c1_11[0]",
+  CapitalGainOrLossRequired: "topmostSubform[0].Page1[0].ReadOrderControl_Lns1-8b[0].c1_20[0]",
   TaxForm8814: "topmostSubform[0].Page2[0].Lines12a-12b_ReadOrder[0].c2_01[0]",
   TaxForm4972: "topmostSubform[0].Page2[0].Lines12a-12b_ReadOrder[0].c2_02[0]",
-  TaxFormCustom:
-    "topmostSubform[0].Page2[0].Lines12a-12b_ReadOrder[0].c2_03[0]",
+  TaxFormCustom: "topmostSubform[0].Page2[0].Lines12a-12b_ReadOrder[0].c2_03[0]",
   Form8888Attached: "topmostSubform[0].Page2[0].c2_04[0]",
   CheckingAccountType: "topmostSubform[0].Page2[0].c2_05[0]",
   SavingsAccountType: "topmostSubform[0].Page2[0].c2_05[1]",
-  AllowOthersToDiscussReturn:
-    "topmostSubform[0].Page2[0].ThirdPartyDesignee[0].c2_06[0]",
-  DoNotAllowOthersToDiscussReturn:
-    "topmostSubform[0].Page2[0].ThirdPartyDesignee[0].c2_06[1]",
-  Is3rdPartyDesignee:
-    "topmostSubform[0].Page2[0].PaidPreparer[0].Preparer[0].CheckIf[0].c2_07[0]",
-  IsSelfEmployed:
-    "topmostSubform[0].Page2[0].PaidPreparer[0].Preparer[0].CheckIf[0].c2_07[1]",
+  AllowOthersToDiscussReturn: "topmostSubform[0].Page2[0].ThirdPartyDesignee[0].c2_06[0]",
+  DoNotAllowOthersToDiscussReturn: "topmostSubform[0].Page2[0].ThirdPartyDesignee[0].c2_06[1]",
+  Is3rdPartyDesignee: "topmostSubform[0].Page2[0].PaidPreparer[0].Preparer[0].CheckIf[0].c2_07[0]",
+  IsSelfEmployed: "topmostSubform[0].Page2[0].PaidPreparer[0].Preparer[0].CheckIf[0].c2_07[1]",
 };
 
 export default async (assets: Assets) => {
@@ -210,9 +168,7 @@ export default async (assets: Assets) => {
   const ssn = form.getTextField(fieldNames.SSN);
   ssn.setText("123456789");
 
-  const spouseFirst = form.getTextField(
-    fieldNames.SpouseFirstNameAndMiddleInitial,
-  );
+  const spouseFirst = form.getTextField(fieldNames.SpouseFirstNameAndMiddleInitial);
   spouseFirst.setText("Guinevere Q");
 
   const spouseLast = form.getTextField(fieldNames.SpouseLastName);
@@ -224,9 +180,7 @@ export default async (assets: Assets) => {
   const standardDeduction = form.getTextField(fieldNames.StandardDeduction);
   standardDeduction.setText("42.36");
 
-  const businessDeduction = form.getTextField(
-    fieldNames.QualifiedBusinessDeduction,
-  );
+  const businessDeduction = form.getTextField(fieldNames.QualifiedBusinessDeduction);
   businessDeduction.setText("91.48");
 
   const sumOf9And10 = form.getTextField(fieldNames.SumOf9And10);
@@ -253,31 +207,22 @@ export default async (assets: Assets) => {
   const foreignPostalCode = form.getTextField(fieldNames.ForeignPostalCode);
   foreignPostalCode.setText("29381");
 
-  [
-    "Caesar Augustus",
-    "Marcus Aurelius",
-    "Livia Augustus",
-    "Claudia Octavia",
-  ].forEach((firstAndLast, idx) => {
-    const field = form.getTextField(
-      fieldNames.Dependents.FirstAndLastName[idx],
-    );
-    field.setText(firstAndLast);
+  ["Caesar Augustus", "Marcus Aurelius", "Livia Augustus", "Claudia Octavia"].forEach(
+    (firstAndLast, idx) => {
+      const field = form.getTextField(fieldNames.Dependents.FirstAndLastName[idx]);
+      field.setText(firstAndLast);
+    },
+  );
+
+  ["917073905", "671723254", "261182980", "629137689"].forEach((dependentSsn, idx) => {
+    const field = form.getTextField(fieldNames.Dependents.SSN[idx]);
+    field.setText(dependentSsn);
   });
 
-  ["917073905", "671723254", "261182980", "629137689"].forEach(
-    (dependentSsn, idx) => {
-      const field = form.getTextField(fieldNames.Dependents.SSN[idx]);
-      field.setText(dependentSsn);
-    },
-  );
-
-  ["Son", "Grandson", "Daughter", "Granddaughter"].forEach(
-    (relationship, idx) => {
-      const field = form.getTextField(fieldNames.Dependents.Relationship[idx]);
-      field.setText(relationship);
-    },
-  );
+  ["Son", "Grandson", "Daughter", "Granddaughter"].forEach((relationship, idx) => {
+    const field = form.getTextField(fieldNames.Dependents.Relationship[idx]);
+    field.setText(relationship);
+  });
 
   const taxExemptInterest = form.getTextField(fieldNames.TaxExemptInterest);
   taxExemptInterest.setText("6359.25");
@@ -303,17 +248,13 @@ export default async (assets: Assets) => {
   const ordinaryDividends = form.getTextField(fieldNames.OrdinaryDividends);
   ordinaryDividends.setText("1567.57");
 
-  const taxableIraDistributions = form.getTextField(
-    fieldNames.TaxableIraDistributions,
-  );
+  const taxableIraDistributions = form.getTextField(fieldNames.TaxableIraDistributions);
   taxableIraDistributions.setText("4142.40");
 
   const taxablePensions = form.getTextField(fieldNames.TaxablePensions);
   taxablePensions.setText("6272.80");
 
-  const taxableSocialSecurity = form.getTextField(
-    fieldNames.TaxableSocialSecurity,
-  );
+  const taxableSocialSecurity = form.getTextField(fieldNames.TaxableSocialSecurity);
   taxableSocialSecurity.setText("8576.60");
 
   const capitalGainOrLoss = form.getTextField(fieldNames.CapitalGainOrLoss);
@@ -361,9 +302,7 @@ export default async (assets: Assets) => {
   const earnedIncomeCredit = form.getTextField(fieldNames.EarnedIncomeCredit);
   earnedIncomeCredit.setText("3614.21");
 
-  const additionalChildTaxCredit = form.getTextField(
-    fieldNames.AdditionalChildTaxCredit,
-  );
+  const additionalChildTaxCredit = form.getTextField(fieldNames.AdditionalChildTaxCredit);
   additionalChildTaxCredit.setText("4945.15");
 
   const opportunityCredit = form.getTextField(fieldNames.OpportunityCredit);
@@ -444,12 +383,10 @@ export default async (assets: Assets) => {
   const preparerEIN = form.getTextField(fieldNames.PreparerEIN);
   preparerEIN.setText("218932783");
 
-  ["Son", "Grandson", "Daughter", "Granddaughter"].forEach(
-    (relationship, idx) => {
-      const field = form.getTextField(fieldNames.Dependents.Relationship[idx]);
-      field.setText(relationship);
-    },
-  );
+  ["Son", "Grandson", "Daughter", "Granddaughter"].forEach((relationship, idx) => {
+    const field = form.getTextField(fieldNames.Dependents.Relationship[idx]);
+    field.setText(relationship);
+  });
 
   const ctc0 = form.getCheckBox(fieldNames.Dependents.ChildTaxCredit[0]);
   ctc0.check();

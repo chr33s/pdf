@@ -26,8 +26,7 @@ class PDFHexString extends PDFObject {
     return new PDFHexString(hex);
   };
 
-  static fromBytes = (bytes: Uint8Array) =>
-    PDFHexString.of(byteArrayToHexString(bytes));
+  static fromBytes = (bytes: Uint8Array) => PDFHexString.of(byteArrayToHexString(bytes));
 
   readonly #value: string;
 

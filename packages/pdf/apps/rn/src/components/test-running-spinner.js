@@ -1,10 +1,5 @@
 import React, { Component } from "react";
-import {
-  StyleSheet,
-  Text,
-  SafeAreaView,
-  ActivityIndicator,
-} from "react-native";
+import { StyleSheet, Text, SafeAreaView, ActivityIndicator } from "react-native";
 
 const styles = StyleSheet.create({
   container: {

@@ -93,14 +93,12 @@ const isV = (code: number): boolean =>
 const isT = (code: number): boolean =>
   (0x11a8 <= code && code <= 0x11ff) || (0xd7cb <= code && code <= 0xd7fb);
 const isTone = (code: number): boolean => 0x302e <= code && code <= 0x302f;
-const isLVT = (code: number): boolean =>
-  HANGUL_BASE <= code && code <= HANGUL_END;
+const isLVT = (code: number): boolean => HANGUL_BASE <= code && code <= HANGUL_END;
 const isLV = (code: number): boolean =>
   code - HANGUL_BASE < HANGUL_COUNT && (code - HANGUL_BASE) % T_COUNT === 0;
 const isCombiningL = (code: number): boolean => L_BASE <= code && code <= L_END;
 const isCombiningV = (code: number): boolean => V_BASE <= code && code <= V_END;
-const isCombiningT = (code: number): boolean =>
-  T_BASE + 1 <= code && code <= T_END;
+const isCombiningT = (code: number): boolean => T_BASE + 1 <= code && code <= T_END;
 
 // Character categories
 const X = 0; // Other character
@@ -192,11 +190,7 @@ const STATE_TABLE: StateAction[][] = [
   ],
 ];
 
-function getGlyph(
-  font: FontLike,
-  code: number,
-  features: GlyphInfo["features"],
-): GlyphInfo {
+function getGlyph(font: FontLike, code: number, features: GlyphInfo["features"]): GlyphInfo {
   return new GlyphInfo(font, font.glyphForCodePoint(code).id, [code], {
     ...features,
   });
@@ -342,11 +336,7 @@ function reorderToneMark(glyphs: GlyphInfo[], i: number, font: FontLike): void {
   glyphs.splice(i - len, 0, glyph);
 }
 
-function insertDottedCircle(
-  glyphs: GlyphInfo[],
-  i: number,
-  font: FontLike,
-): number {
+function insertDottedCircle(glyphs: GlyphInfo[], i: number, font: FontLike): number {
   let glyph = glyphs[i];
   let code = glyphs[i].codePoints[0];
 

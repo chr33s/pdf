@@ -13,15 +13,9 @@ export { default as PDFTrailerDict } from "./document/pdf-trailer-dict.js";
 
 export { default as CustomFontEmbedder } from "./embedders/custom-font-embedder.js";
 export { default as CustomFontSubsetEmbedder } from "./embedders/custom-font-subset-embedder.js";
-export {
-  AFRelationship,
-  default as FileEmbedder,
-} from "./embedders/file-embedder.js";
+export { AFRelationship, default as FileEmbedder } from "./embedders/file-embedder.js";
 export { default as JpegEmbedder } from "./embedders/jpeg-embedder.js";
-export {
-  default as PDFPageEmbedder,
-  PageBoundingBox,
-} from "./embedders/pdf-page-embedder.js";
+export { default as PDFPageEmbedder, PageBoundingBox } from "./embedders/pdf-page-embedder.js";
 export { default as PngEmbedder } from "./embedders/png-embedder.js";
 export { default as StandardFontEmbedder } from "./embedders/standard-font-embedder.js";
 
@@ -63,10 +57,7 @@ export { default as PDFObjectStreamParser } from "./parser/pdf-object-stream-par
 export { default as PDFParser } from "./parser/pdf-parser.js";
 export { default as PDFXRefStreamParser } from "./parser/pdfx-ref-stream-parser.js";
 
-export {
-  default as PDFSecurity,
-  SecurityOptions,
-} from "./security/pdf-security.js";
+export { default as PDFSecurity, SecurityOptions } from "./security/pdf-security.js";
 
 export { decodePDFRawStream } from "./streams/decode.js";
 

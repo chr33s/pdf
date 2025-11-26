@@ -8,9 +8,7 @@ describe("Encodings", () => {
     const { supportedCodePoints } = winAnsi;
 
     expect(supportedCodePoints.length).toBeGreaterThan(0);
-    expect(supportedCodePoints).toEqual(
-      [...supportedCodePoints].sort((a, b) => a - b),
-    );
+    expect(supportedCodePoints).toEqual([...supportedCodePoints].sort((a, b) => a - b));
   });
 
   test("encodes mapped code points and reports unsupported ones", () => {
@@ -26,9 +24,7 @@ describe("Encodings", () => {
     }
 
     const unsupportedCodePoint = 0xffff;
-    expect(encoding.canEncodeUnicodeCodePoint(unsupportedCodePoint)).toBe(
-      false,
-    );
+    expect(encoding.canEncodeUnicodeCodePoint(unsupportedCodePoint)).toBe(false);
     expect(() => encoding.encodeUnicodeCodePoint(unsupportedCodePoint)).toThrow(
       /Symbol cannot encode/,
     );

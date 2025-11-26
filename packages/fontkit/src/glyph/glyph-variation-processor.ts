@@ -160,9 +160,7 @@ export default class GlyphVariationProcessor implements VariationProcessor {
           if (j >= 1 && normalized[i] < pair.fromCoord) {
             const prev = segment.correspondence[j - 1];
             normalized[i] =
-              ((normalized[i] - prev.fromCoord) *
-                (pair.toCoord - prev.toCoord) +
-                Number.EPSILON) /
+              ((normalized[i] - prev.fromCoord) * (pair.toCoord - prev.toCoord) + Number.EPSILON) /
                 (pair.fromCoord - prev.fromCoord + Number.EPSILON) +
               prev.toCoord;
             break;
@@ -244,12 +242,7 @@ export default class GlyphVariationProcessor implements VariationProcessor {
         }
       }
 
-      const factor = this.tupleFactor(
-        tupleIndex,
-        tupleCoords,
-        startCoords,
-        endCoords,
-      );
+      const factor = this.tupleFactor(tupleIndex, tupleCoords, startCoords, endCoords);
       if (factor === 0) {
         offsetToData += tupleDataSize;
         continue;
@@ -317,9 +310,7 @@ export default class GlyphVariationProcessor implements VariationProcessor {
       const run = stream.readUInt8();
       const runCount = (run & POINT_RUN_COUNT_MASK) + 1;
       const readValue =
-        run & POINTS_ARE_WORDS
-          ? () => stream.readUInt16()
-          : () => stream.readUInt8();
+        run & POINTS_ARE_WORDS ? () => stream.readUInt16() : () => stream.readUInt8();
 
       for (let j = 0; j < runCount && i < count; j++) {
         point += readValue();
@@ -343,9 +334,7 @@ export default class GlyphVariationProcessor implements VariationProcessor {
         i += runCount;
       } else {
         const readValue =
-          run & DELTAS_ARE_WORDS
-            ? () => stream.readInt16BE()
-            : () => stream.readInt8();
+          run & DELTAS_ARE_WORDS ? () => stream.readInt16BE() : () => stream.readInt8();
         for (let j = 0; j < runCount && i < count; j++) {
           deltas[i++] = readValue();
         }
@@ -386,9 +375,7 @@ export default class GlyphVariationProcessor implements VariationProcessor {
           return 0;
         }
 
-        factor =
-          (factor * normalized[i] + Number.EPSILON) /
-          (tupleCoords[i] + Number.EPSILON);
+        factor = (factor * normalized[i] + Number.EPSILON) / (tupleCoords[i] + Number.EPSILON);
       } else {
         const start = startCoords?.[i] ?? 0;
         const end = endCoords?.[i] ?? 0;
@@ -412,11 +399,7 @@ export default class GlyphVariationProcessor implements VariationProcessor {
   // Interpolates points without delta values.
   // Needed for the Ø and Q glyphs in Skia.
   // Algorithm from Freetype.
-  interpolateMissingDeltas(
-    points: GlyphPoint[],
-    inPoints: GlyphPoint[],
-    hasDelta: boolean[],
-  ) {
+  interpolateMissingDeltas(points: GlyphPoint[], inPoints: GlyphPoint[], hasDelta: boolean[]) {
     if (points.length === 0) {
       return;
     }
@@ -448,14 +431,7 @@ export default class GlyphVariationProcessor implements VariationProcessor {
       while (point <= endPoint) {
         // find the next point with a delta, and interpolate intermediate points
         if (hasDelta[point]) {
-          this.deltaInterpolate(
-            curDelta + 1,
-            point - 1,
-            curDelta,
-            point,
-            inPoints,
-            points,
-          );
+          this.deltaInterpolate(curDelta + 1, point - 1, curDelta, point, inPoints, points);
           curDelta = point;
         }
 
@@ -467,24 +443,10 @@ export default class GlyphVariationProcessor implements VariationProcessor {
         this.deltaShift(firstPoint, endPoint, curDelta, inPoints, points);
       } else {
         // otherwise, handle the remaining points at the end and beginning of the contour
-        this.deltaInterpolate(
-          curDelta + 1,
-          endPoint,
-          curDelta,
-          firstDelta,
-          inPoints,
-          points,
-        );
+        this.deltaInterpolate(curDelta + 1, endPoint, curDelta, firstDelta, inPoints, points);
 
         if (firstDelta > 0) {
-          this.deltaInterpolate(
-            firstPoint,
-            firstDelta - 1,
-            curDelta,
-            firstDelta,
-            inPoints,
-            points,
-          );
+          this.deltaInterpolate(firstPoint, firstDelta - 1, curDelta, firstDelta, inPoints, points);
         }
       }
 
@@ -539,13 +501,7 @@ export default class GlyphVariationProcessor implements VariationProcessor {
     }
   }
 
-  deltaShift(
-    p1: number,
-    p2: number,
-    ref: number,
-    inPoints: GlyphPoint[],
-    outPoints: GlyphPoint[],
-  ) {
+  deltaShift(p1: number, p2: number, ref: number, inPoints: GlyphPoint[], outPoints: GlyphPoint[]) {
     const deltaX = outPoints[ref].x - inPoints[ref].x;
     const deltaY = outPoints[ref].y - inPoints[ref].y;
 
@@ -582,11 +538,7 @@ export default class GlyphVariationProcessor implements VariationProcessor {
 
   // See pseudo code from `Font Variations Overview'
   // in the OpenType specification.
-  getDelta(
-    itemStore: ItemVariationStore,
-    outerIndex: number,
-    innerIndex: number,
-  ): number {
+  getDelta(itemStore: ItemVariationStore, outerIndex: number, innerIndex: number): number {
     if (outerIndex >= itemStore.itemVariationData.length) {
       return 0;
     }
@@ -611,10 +563,7 @@ export default class GlyphVariationProcessor implements VariationProcessor {
     return netAdjustment;
   }
 
-  getBlendVector(
-    itemStore: ItemVariationStore | null | undefined,
-    outerIndex = 0,
-  ): number[] {
+  getBlendVector(itemStore: ItemVariationStore | null | undefined, outerIndex = 0): number[] {
     if (!itemStore) {
       return [];
     }
@@ -631,30 +580,19 @@ export default class GlyphVariationProcessor implements VariationProcessor {
     for (let master = 0; master < varData.regionIndexCount; master++) {
       let scalar = 1;
       const regionIndex = varData.regionIndexes[master];
-      const axes =
-        itemStore.variationRegionList.variationRegions[regionIndex] || [];
+      const axes = itemStore.variationRegionList.variationRegions[regionIndex] || [];
 
       for (let j = 0; j < axes.length; j++) {
         const axis = axes[j];
         let axisScalar: number;
 
-        if (
-          axis.startCoord > axis.peakCoord ||
-          axis.peakCoord > axis.endCoord
-        ) {
+        if (axis.startCoord > axis.peakCoord || axis.peakCoord > axis.endCoord) {
           axisScalar = 1;
-        } else if (
-          axis.startCoord < 0 &&
-          axis.endCoord > 0 &&
-          axis.peakCoord !== 0
-        ) {
+        } else if (axis.startCoord < 0 && axis.endCoord > 0 && axis.peakCoord !== 0) {
           axisScalar = 1;
         } else if (axis.peakCoord === 0) {
           axisScalar = 1;
-        } else if (
-          normalizedCoords[j] < axis.startCoord ||
-          normalizedCoords[j] > axis.endCoord
-        ) {
+        } else if (normalizedCoords[j] < axis.startCoord || normalizedCoords[j] > axis.endCoord) {
           axisScalar = 0;
         } else if (normalizedCoords[j] === axis.peakCoord) {
           axisScalar = 1;

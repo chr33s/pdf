@@ -117,8 +117,7 @@ export default class Glyph {
     this._metrics = null;
 
     // TODO: get this info from GDEF if available
-    this.isMark =
-      this.codePoints.length > 0 && this.codePoints.every(unicode.isMark);
+    this.isMark = this.codePoints.length > 0 && this.codePoints.every(unicode.isMark);
     this.isLigature = this.codePoints.length > 1;
   }
 
@@ -158,14 +157,14 @@ export default class Glyph {
       return this._metrics;
     }
 
-    const { advance: advanceWidthRaw, bearing: leftBearing } =
-      this._getTableMetrics(this._font.hmtx);
+    const { advance: advanceWidthRaw, bearing: leftBearing } = this._getTableMetrics(
+      this._font.hmtx,
+    );
     let advanceWidth = advanceWidthRaw;
 
     // For vertical metrics, use vmtx if available, or fall back to global data from OS/2 or hhea
     if (this._font.vmtx) {
-      var { advance: advanceHeight, bearing: topBearing } =
-        this._getTableMetrics(this._font.vmtx);
+      var { advance: advanceHeight, bearing: topBearing } = this._getTableMetrics(this._font.vmtx);
     } else {
       let os2;
       if (typeof cbox === "undefined" || cbox === null) {
@@ -183,10 +182,7 @@ export default class Glyph {
     }
 
     if (this._font._variationProcessor && this._font.HVAR) {
-      advanceWidth += this._font._variationProcessor.getAdvanceAdjustment(
-        this.id,
-        this._font.HVAR,
-      );
+      advanceWidth += this._font._variationProcessor.getAdvanceAdjustment(this.id, this._font.HVAR);
     }
 
     return (this._metrics = {

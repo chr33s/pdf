@@ -26,8 +26,7 @@ const acroFieldFlags = {
 
 export const AcroFieldFlags = acroFieldFlags;
 
-export type AcroFieldFlag =
-  (typeof acroFieldFlags)[keyof typeof acroFieldFlags];
+export type AcroFieldFlag = (typeof acroFieldFlags)[keyof typeof acroFieldFlags];
 
 /** From PDF spec table 226 */
 const acroButtonFlags = {
@@ -60,8 +59,7 @@ const acroButtonFlags = {
 
 export const AcroButtonFlags = acroButtonFlags;
 
-export type AcroButtonFlag =
-  (typeof acroButtonFlags)[keyof typeof acroButtonFlags];
+export type AcroButtonFlag = (typeof acroButtonFlags)[keyof typeof acroButtonFlags];
 
 /** From PDF spec table 228 */
 const acroTextFlags = {
@@ -177,5 +175,4 @@ const acroChoiceFlags = {
 
 export const AcroChoiceFlags = acroChoiceFlags;
 
-export type AcroChoiceFlag =
-  (typeof acroChoiceFlags)[keyof typeof acroChoiceFlags];
+export type AcroChoiceFlag = (typeof acroChoiceFlags)[keyof typeof acroChoiceFlags];

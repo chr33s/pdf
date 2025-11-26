@@ -1,19 +1,8 @@
 import fontkit from "@chr33s/fontkit";
-import {
-  charAtIndex,
-  last,
-  PDFDocument,
-  PDFFont,
-  StandardFonts,
-} from "../../../src/index.js";
+import { charAtIndex, last, PDFDocument, PDFFont, StandardFonts } from "../../../src/index.js";
 import { Assets } from "../index.js";
 
-const breakTextIntoLines = (
-  text: string,
-  size: number,
-  font: PDFFont,
-  maxWidth: number,
-) => {
+const breakTextIntoLines = (text: string, size: number, font: PDFFont, maxWidth: number) => {
   const lines: string[] = [];
   let textIdx = 0;
   while (textIdx < text.length) {
@@ -36,11 +25,7 @@ const breakTextIntoLines = (
   return lines;
 };
 
-const breakLinesIntoGroups = (
-  lines: string[],
-  lineHeight: number,
-  maxHeight: number,
-) => {
+const breakLinesIntoGroups = (lines: string[], lineHeight: number, maxHeight: number) => {
   const linesPerGroup = Math.floor(maxHeight / lineHeight);
   const groups: string[][] = [[]];
   for (let idx = 0, len = lines.length; idx < len; idx++) {
@@ -79,12 +64,7 @@ export default async (assets: Assets) => {
     glyphs represent UTF-16 code points (the rest of the glyphs in this document
     are UTF-8).`;
 
-  const descriptionLines = breakTextIntoLines(
-    description,
-    16,
-    helveticaFont,
-    600,
-  );
+  const descriptionLines = breakTextIntoLines(description, 16, helveticaFont, 600);
 
   const titlePage = pdfDoc.addPage([650, 700]);
   titlePage.drawText(title, {
@@ -103,15 +83,8 @@ export default async (assets: Assets) => {
   const sourceHanFont = await pdfDoc.embedFont(fonts.otf["source-hans-jp"]);
 
   const sourceHanFontSize = 20;
-  const sourceHanString = String.fromCodePoint(
-    ...sourceHanFont.getCharacterSet().reverse(),
-  );
-  const sourceHanLines = breakTextIntoLines(
-    sourceHanString,
-    sourceHanFontSize,
-    sourceHanFont,
-    600,
-  );
+  const sourceHanString = String.fromCodePoint(...sourceHanFont.getCharacterSet().reverse());
+  const sourceHanLines = breakTextIntoLines(sourceHanString, sourceHanFontSize, sourceHanFont, 600);
   const sourceHanLineGroups = breakLinesIntoGroups(
     sourceHanLines,
     sourceHanFont.heightAtSize(sourceHanFontSize) + 10,

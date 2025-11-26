@@ -12,12 +12,8 @@ describe("PDFCheckBox", () => {
     const form = pdfDoc.getForm();
 
     const isAFairy = form.getCheckBox("Are You A Fairy? 🌿");
-    const isPowerLevelOver9000 = form.getCheckBox(
-      "Is Your Power Level Over 9000? 💪",
-    );
-    const onePunch = form.getCheckBox(
-      "Can You Defeat Enemies In One Punch? 👊",
-    );
+    const isPowerLevelOver9000 = form.getCheckBox("Is Your Power Level Over 9000? 💪");
+    const onePunch = form.getCheckBox("Can You Defeat Enemies In One Punch? 👊");
     const everLetMeDown = form.getCheckBox("Will You Ever Let Me Down? ☕️");
 
     expect(isAFairy.isChecked()).toBe(true);

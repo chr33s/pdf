@@ -47,9 +47,7 @@ export default class CFFDict {
     this.#ops = ops;
     this.#fields = {} as FieldMap;
     for (let field of ops) {
-      const key = Array.isArray(field[0])
-        ? (field[0][0] << 8) | field[0][1]
-        : field[0];
+      const key = Array.isArray(field[0]) ? (field[0][0] << 8) | field[0][1] : field[0];
       this.#fields[key] = field;
     }
   }
@@ -61,9 +59,7 @@ export default class CFFDict {
     operands: OperandList,
   ): unknown {
     if (Array.isArray(type)) {
-      return operands.map((op, i) =>
-        this.#decodeOperands(type[i], stream, ret, [op]),
-      );
+      return operands.map((op, i) => this.#decodeOperands(type[i], stream, ret, [op]));
     }
 
     if (typeof type === "string") {
@@ -116,14 +112,10 @@ export default class CFFDict {
 
     if (type.encode != null) {
       const encoded = type.encode(stream, operands, ctx);
-      return Array.isArray(encoded)
-        ? (encoded as OperandValue[])
-        : [encoded as OperandValue];
+      return Array.isArray(encoded) ? (encoded as OperandValue[]) : [encoded as OperandValue];
     }
 
-    return Array.isArray(operands)
-      ? (operands as OperandValue[])
-      : [operands as OperandValue];
+    return Array.isArray(operands) ? (operands as OperandValue[]) : [operands as OperandValue];
   }
 
   decode(stream: DecodeStream, parent: Record<string, any>) {
@@ -171,11 +163,7 @@ export default class CFFDict {
     return ret;
   }
 
-  size(
-    dict: Record<string, any>,
-    parent: Record<string, any>,
-    includePointers = true,
-  ) {
+  size(dict: Record<string, any>, parent: Record<string, any>, includePointers = true) {
     const ctx: DictContext = {
       parent,
       val: dict,
@@ -210,11 +198,7 @@ export default class CFFDict {
     return len;
   }
 
-  encode(
-    stream: EncodeStream,
-    dict: Record<string, any>,
-    parent: Record<string, any>,
-  ) {
+  encode(stream: EncodeStream, dict: Record<string, any>, parent: Record<string, any>) {
     const ctx: DictContext = {
       pointers: [],
       startOffset: stream.pos,

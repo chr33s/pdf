@@ -32,10 +32,7 @@ export default class VersionedStruct extends Struct {
     if (typeof this.type === "string") {
       return this.type
         .split(".")
-        .reduce(
-          (obj, prop) => (typeof obj !== "undefined" ? obj[prop] : undefined),
-          parent,
-        );
+        .reduce((obj, prop) => (typeof obj !== "undefined" ? obj[prop] : undefined), parent);
     }
     return undefined;
   }

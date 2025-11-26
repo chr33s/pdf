@@ -84,9 +84,7 @@ export default class CFFIndex<T = Buffer> {
 
     let offset = 1;
     for (let item of arr) {
-      offset += this.#type
-        ? this.#type.size(item, parent)
-        : this.#ensureBuffer(item).length;
+      offset += this.#type ? this.#type.size(item, parent) : this.#ensureBuffer(item).length;
     }
 
     let offsetType: NumberT;
@@ -122,9 +120,7 @@ export default class CFFIndex<T = Buffer> {
     const sizes: number[] = [];
     let offset = 1;
     for (let item of arr) {
-      const s = this.#type
-        ? this.#type.size(item, parent)
-        : this.#ensureBuffer(item).length;
+      const s = this.#type ? this.#type.size(item, parent) : this.#ensureBuffer(item).length;
       sizes.push(s);
       offset += s;
     }

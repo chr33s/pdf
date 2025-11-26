@@ -6,11 +6,7 @@ type PlatformEncodingMap = ReadonlyArray<EncodingTable>;
  * Gets an encoding name from platform, encoding, and language ids.
  * Returned encoding names can be used in iconv-lite to decode text.
  */
-export function getEncoding(
-  platformID: number,
-  encodingID: number,
-  languageID = 0,
-): EncodingName {
+export function getEncoding(platformID: number, encodingID: number, languageID = 0): EncodingName {
   if (platformID === 1) {
     const macEncoding = MAC_LANGUAGE_ENCODINGS[languageID];
     if (macEncoding) {

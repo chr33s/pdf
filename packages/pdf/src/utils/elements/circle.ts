@@ -1,12 +1,4 @@
-import {
-  distance,
-  distanceCoords,
-  isEqual,
-  minus,
-  plus,
-  times,
-  unitVector,
-} from "../maths.js";
+import { distance, distanceCoords, isEqual, minus, plus, times, unitVector } from "../maths.js";
 
 import GraphElement from "./graph-element.js";
 import Point from "./point.js";

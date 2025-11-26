@@ -62,9 +62,7 @@ describe("Array", () => {
     test("should decode to the end of the parent if no length is given", () => {
       const stream = new DecodeStream(Buffer.from([1, 2, 3, 4, 5]));
       const array = new ArrayT(uint8);
-      expect(
-        array.decode(stream, { _length: 4, _startOffset: 0 }),
-      ).to.deep.equal([1, 2, 3, 4]);
+      expect(array.decode(stream, { _length: 4, _startOffset: 0 })).to.deep.equal([1, 2, 3, 4]);
     });
 
     test("should decode to the end of the stream if no parent and length is given", () => {

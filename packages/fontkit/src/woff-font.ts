@@ -39,10 +39,7 @@ export default class WOFFFont extends TTFFont {
       if (table.compLength < table.length) {
         this.stream.pos += 2; // skip deflate header
         const outBuffer = Buffer.alloc(table.length);
-        const buf = inflate(
-          this.stream.readBuffer(table.compLength - 2),
-          outBuffer,
-        ) as Buffer;
+        const buf = inflate(this.stream.readBuffer(table.compLength - 2), outBuffer) as Buffer;
         return new r.DecodeStream(buf);
       } else {
         return this.stream;

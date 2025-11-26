@@ -21,9 +21,7 @@ export class UnexpectedObjectTypeError extends Error {
       (t as { name?: string; constructor?: { name?: string } })?.name ??
       (t as { constructor?: { name?: string } })?.constructor?.name;
 
-    const expectedTypes = Array.isArray(expected)
-      ? expected.map(name)
-      : [name(expected)];
+    const expectedTypes = Array.isArray(expected) ? expected.map(name) : [name(expected)];
 
     const msg =
       `Expected instance of ${expectedTypes.join(" or ")}, ` +
@@ -196,8 +194,7 @@ export class PDFStreamParsingError extends PDFParsingError {
 
 export class UnbalancedParenthesisError extends PDFParsingError {
   constructor(pos: Position) {
-    const msg =
-      "Failed to parse PDF literal string due to unbalanced parenthesis";
+    const msg = "Failed to parse PDF literal string due to unbalanced parenthesis";
     super(pos, msg);
   }
 }

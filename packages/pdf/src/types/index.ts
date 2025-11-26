@@ -18,15 +18,7 @@ export type Coordinates = {
   y: number;
 };
 
-export type GraphicElement =
-  | Arc
-  | Circle
-  | Ellipse
-  | Line
-  | Plot
-  | Point
-  | Rectangle
-  | Segment;
+export type GraphicElement = Arc | Circle | Ellipse | Line | Plot | Point | Rectangle | Segment;
 
 export type Space = {
   topLeft: Coordinates;

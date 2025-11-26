@@ -138,9 +138,7 @@ describe("Struct", () => {
     test("should encode pointer data after structure", async () => {
       const stream = new EncodeStream();
       const expectation = expectStream(stream, (buf) => {
-        expect(buf).to.deep.equal(
-          Buffer.from("\x05devon\x15\x08\x05hello", "binary"),
-        );
+        expect(buf).to.deep.equal(Buffer.from("\x05devon\x15\x08\x05hello", "binary"));
       });
 
       const struct = new Struct({

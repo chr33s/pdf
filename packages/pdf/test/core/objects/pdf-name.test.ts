@@ -18,22 +18,14 @@ describe("PDFName", () => {
 
   test("returns the same instance when given the same value", () => {
     expect(PDFName.of("foobar")).toBe(PDFName.of("foobar"));
-    expect(PDFName.of("A;Name_With-***Characters?")).toBe(
-      PDFName.of("A;Name_With-***Characters?"),
-    );
-    expect(PDFName.of("paired#28#29parentheses")).toBe(
-      PDFName.of("paired#28#29parentheses"),
-    );
+    expect(PDFName.of("A;Name_With-***Characters?")).toBe(PDFName.of("A;Name_With-***Characters?"));
+    expect(PDFName.of("paired#28#29parentheses")).toBe(PDFName.of("paired#28#29parentheses"));
   });
 
   test("decodes hex codes in the values", () => {
     expect(PDFName.of("Lime#20Green")).toBe(PDFName.of("Lime Green"));
-    expect(PDFName.of("paired#28#29parentheses")).toBe(
-      PDFName.of("paired()parentheses"),
-    );
-    expect(PDFName.of("The_Key_of_F#23_Minor")).toBe(
-      PDFName.of("The_Key_of_F#_Minor"),
-    );
+    expect(PDFName.of("paired#28#29parentheses")).toBe(PDFName.of("paired()parentheses"));
+    expect(PDFName.of("The_Key_of_F#23_Minor")).toBe(PDFName.of("The_Key_of_F#_Minor"));
     expect(PDFName.of("A#42")).toBe(PDFName.of("AB"));
     expect(PDFName.of("Identity#2DH")).toBe(PDFName.of("Identity-H"));
 
@@ -89,12 +81,8 @@ describe("PDFName", () => {
     expect(String(PDFName.of("Lime Green"))).toBe("/Lime#20Green");
     expect(String(PDFName.of("\0\t\n\f\r "))).toBe("/#00#09#0A#0C#0D#20");
     expect(String(PDFName.of("Foo#Bar"))).toBe("/Foo#23Bar");
-    expect(String(PDFName.of("paired()parentheses"))).toBe(
-      "/paired#28#29parentheses",
-    );
-    expect(String(PDFName.of("The_Key_of_F#23_Minor"))).toBe(
-      "/The_Key_of_F#23_Minor",
-    );
+    expect(String(PDFName.of("paired()parentheses"))).toBe("/paired#28#29parentheses");
+    expect(String(PDFName.of("The_Key_of_F#23_Minor"))).toBe("/The_Key_of_F#23_Minor");
     expect(String(PDFName.of("A#42"))).toBe("/AB");
   });
 

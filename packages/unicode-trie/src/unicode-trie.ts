@@ -7,10 +7,7 @@ export type UnicodeTrieJSON = {
   errorValue: number;
 };
 
-export type UnicodeTrieInit =
-  | ArrayBufferLike
-  | ArrayBufferView
-  | UnicodeTrieJSON;
+export type UnicodeTrieInit = ArrayBufferLike | ArrayBufferView | UnicodeTrieJSON;
 
 const SHIFT_1 = 6 + 5;
 const SHIFT_2 = 5;
@@ -29,25 +26,18 @@ const UTF8_2B_INDEX_2_LENGTH = 0x800 >> 6;
 const INDEX_1_OFFSET = UTF8_2B_INDEX_2_OFFSET + UTF8_2B_INDEX_2_LENGTH;
 const DATA_GRANULARITY = 1 << INDEX_SHIFT;
 
-const isUnicodeTrieJSON = (
-  value: UnicodeTrieInit,
-): value is UnicodeTrieJSON => {
+const isUnicodeTrieJSON = (value: UnicodeTrieInit): value is UnicodeTrieJSON => {
   if (typeof value !== "object" || value === null) {
     return false;
   }
 
-  if (
-    !("data" in value) ||
-    !("highStart" in value) ||
-    !("errorValue" in value)
-  ) {
+  if (!("data" in value) || !("highStart" in value) || !("errorValue" in value)) {
     return false;
   }
 
   const candidate = value as Partial<UnicodeTrieJSON>;
   return (
-    (candidate.data instanceof Uint32Array ||
-      candidate.data instanceof Int32Array) &&
+    (candidate.data instanceof Uint32Array || candidate.data instanceof Int32Array) &&
     typeof candidate.highStart === "number" &&
     typeof candidate.errorValue === "number"
   );
@@ -66,10 +56,7 @@ const toUint8Array = (value: ArrayBufferLike | ArrayBufferView): Uint8Array => {
     return new Uint8Array(value);
   }
 
-  if (
-    typeof SharedArrayBuffer !== "undefined" &&
-    value instanceof SharedArrayBuffer
-  ) {
+  if (typeof SharedArrayBuffer !== "undefined" && value instanceof SharedArrayBuffer) {
     return new Uint8Array(value);
   }
 
@@ -84,9 +71,7 @@ class UnicodeTrie {
   constructor(source: UnicodeTrieInit) {
     if (isUnicodeTrieJSON(source)) {
       const typedData =
-        source.data instanceof Uint32Array
-          ? source.data
-          : new Uint32Array(source.data);
+        source.data instanceof Uint32Array ? source.data : new Uint32Array(source.data);
       this.data = typedData;
       this.highStart = source.highStart;
       this.errorValue = source.errorValue;
@@ -119,25 +104,19 @@ class UnicodeTrie {
     }
 
     if (codePoint < 0xd800 || (codePoint > 0xdbff && codePoint <= 0xffff)) {
-      const index =
-        (this.data[codePoint >> SHIFT_2] << INDEX_SHIFT) +
-        (codePoint & DATA_MASK);
+      const index = (this.data[codePoint >> SHIFT_2] << INDEX_SHIFT) + (codePoint & DATA_MASK);
       return this.data[index];
     }
 
     if (codePoint <= 0xffff) {
       const index =
-        (this.data[LSCP_INDEX_2_OFFSET + ((codePoint - 0xd800) >> SHIFT_2)] <<
-          INDEX_SHIFT) +
+        (this.data[LSCP_INDEX_2_OFFSET + ((codePoint - 0xd800) >> SHIFT_2)] << INDEX_SHIFT) +
         (codePoint & DATA_MASK);
       return this.data[index];
     }
 
     if (codePoint < this.highStart) {
-      let index =
-        this.data[
-          INDEX_1_OFFSET - OMITTED_BMP_INDEX_1_LENGTH + (codePoint >> SHIFT_1)
-        ];
+      let index = this.data[INDEX_1_OFFSET - OMITTED_BMP_INDEX_1_LENGTH + (codePoint >> SHIFT_1)];
       index = this.data[index + ((codePoint >> SHIFT_2) & INDEX_2_MASK)];
       index = (index << INDEX_SHIFT) + (codePoint & DATA_MASK);
       return this.data[index];

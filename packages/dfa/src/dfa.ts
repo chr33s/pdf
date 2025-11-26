@@ -1,11 +1,4 @@
-import {
-  Concatenation,
-  EndMarker,
-  ExpressionNode,
-  Literal,
-  PositionNode,
-  Tag,
-} from "./nodes.js";
+import { Concatenation, EndMarker, ExpressionNode, Literal, PositionNode, Tag } from "./nodes.js";
 import { addAll, equal } from "./utils.js";
 
 const END_MARKER = new EndMarker();
@@ -25,10 +18,7 @@ export interface DFAState {
  * There is a PDF of the book here:
  * http://www.informatik.uni-bremen.de/agbkb/lehre/ccfl/Material/ALSUdragonbook.pdf
  */
-export default function buildDFA(
-  root: ExpressionNode,
-  numSymbols: number,
-): DFAState[] {
+export default function buildDFA(root: ExpressionNode, numSymbols: number): DFAState[] {
   const augmentedRoot = new Concatenation(root, END_MARKER);
   augmentedRoot.calcFollowpos();
 

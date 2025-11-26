@@ -1,5 +1,4 @@
-const isBigEndian =
-  new Uint8Array(new Uint32Array([0x12345678]).buffer)[0] === 0x12;
+const isBigEndian = new Uint8Array(new Uint32Array([0x12345678]).buffer)[0] === 0x12;
 
 const swap = (array: Uint8Array, left: number, right: number): void => {
   const temp = array[left];

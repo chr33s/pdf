@@ -14,9 +14,7 @@ describe("PDFCrossRefStream", () => {
   const dict = context.obj({});
 
   test("can be constructed from PDFCrossRefStream.create(...)", () => {
-    expect(PDFCrossRefStream.create(dict, false)).toBeInstanceOf(
-      PDFCrossRefStream,
-    );
+    expect(PDFCrossRefStream.create(dict, false)).toBeInstanceOf(PDFCrossRefStream);
   });
 
   const stream1 = PDFCrossRefStream.create(dict, false);
@@ -64,9 +62,7 @@ describe("PDFCrossRefStream", () => {
   });
 
   test("can be serialized", () => {
-    const buffer = new Uint8Array(stream1.sizeInBytes() + 3).fill(
-      toCharCode(" "),
-    );
+    const buffer = new Uint8Array(stream1.sizeInBytes() + 3).fill(toCharCode(" "));
 
     // prettier-ignore
     const expectedEntries = new Uint8Array([
@@ -88,9 +84,7 @@ describe("PDFCrossRefStream", () => {
   });
 
   test("can be serialized without object number 1", () => {
-    const buffer = new Uint8Array(stream2.sizeInBytes() + 3).fill(
-      toCharCode(" "),
-    );
+    const buffer = new Uint8Array(stream2.sizeInBytes() + 3).fill(toCharCode(" "));
 
     // prettier-ignore
     const expectedEntries = new Uint8Array([
@@ -119,9 +113,7 @@ describe("PDFCrossRefStream", () => {
     stream.addUncompressedEntry(PDFRef.of(9000), 600);
     stream.addCompressedEntry(PDFRef.of(9001), PDFRef.of(10), 1);
 
-    const buffer = new Uint8Array(stream.sizeInBytes() + 3).fill(
-      toCharCode(" "),
-    );
+    const buffer = new Uint8Array(stream.sizeInBytes() + 3).fill(toCharCode(" "));
 
     // prettier-ignore
     const expectedEntries = new Uint8Array([

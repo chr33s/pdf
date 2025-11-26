@@ -29,8 +29,7 @@ import PDFPageLeaf from "./structures/pdf-page-leaf.js";
  * supported, but is equivalent to cloning it.
  */
 class PDFObjectCopier {
-  static for = (src: PDFContext, dest: PDFContext) =>
-    new PDFObjectCopier(src, dest);
+  static for = (src: PDFContext, dest: PDFContext) => new PDFObjectCopier(src, dest);
 
   readonly #src: PDFContext;
   readonly #dest: PDFContext;

@@ -39,11 +39,7 @@ export type StateTable = {
 
 type GlyphLike = Glyph;
 
-type ProcessEntryFn = (
-  glyph: GlyphLike,
-  entry: StateTableEntry,
-  index: number,
-) => void;
+type ProcessEntryFn = (glyph: GlyphLike, entry: StateTableEntry, index: number) => void;
 
 type TraverseOptions = {
   enter?: (glyph: number, entry: StateTableEntry) => void;
@@ -64,10 +60,7 @@ export default class AATStateMachine {
     let index = reverse ? glyphs.length - 1 : 0;
     let dir = reverse ? -1 : 1;
 
-    while (
-      (dir === 1 && index <= glyphs.length) ||
-      (dir === -1 && index >= -1)
-    ) {
+    while ((dir === 1 && index <= glyphs.length) || (dir === -1 && index >= -1)) {
       let glyph: GlyphLike | null = null;
       let classCode = OUT_OF_BOUNDS_CLASS;
       let shouldAdvance = true;
@@ -89,11 +82,7 @@ export default class AATStateMachine {
       const entryIndex = row[classCode];
       const entry = this.#stateTable.entryTable.getItem(entryIndex);
 
-      if (
-        classCode !== END_OF_TEXT_CLASS &&
-        classCode !== DELETED_GLYPH_CLASS &&
-        glyph
-      ) {
+      if (classCode !== END_OF_TEXT_CLASS && classCode !== DELETED_GLYPH_CLASS && glyph) {
         processEntry(glyph, entry, index);
         shouldAdvance = !(entry.flags & DONT_ADVANCE);
       }

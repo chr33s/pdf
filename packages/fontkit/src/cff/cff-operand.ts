@@ -1,23 +1,7 @@
 import type { DecodeStream, EncodeStream } from "@chr33s/restructure";
 
 const FLOAT_EOF = 0xf;
-const FLOAT_LOOKUP = [
-  "0",
-  "1",
-  "2",
-  "3",
-  "4",
-  "5",
-  "6",
-  "7",
-  "8",
-  "9",
-  ".",
-  "E",
-  "E-",
-  null,
-  "-",
-];
+const FLOAT_LOOKUP = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "E", "E-", null, "-"];
 
 const FLOAT_ENCODE_LOOKUP: Record<string, number> = {
   ".": 10,
@@ -99,10 +83,7 @@ export default class CFFOperand {
       return 1;
     }
 
-    if (
-      (108 <= intVal && intVal <= 1131) ||
-      (-1131 <= intVal && intVal <= -108)
-    ) {
+    if ((108 <= intVal && intVal <= 1131) || (-1131 <= intVal && intVal <= -108)) {
       return 2;
     }
 

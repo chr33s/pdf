@@ -48,10 +48,7 @@ let GSUBLookup = new r.VersionedStruct("lookupType", {
     substFormat: r.uint16,
     coverage: new r.Pointer(r.uint16, Coverage),
     count: r.uint16,
-    alternateSet: new r.LazyArray(
-      new r.Pointer(r.uint16, AlternateSet),
-      "count",
-    ),
+    alternateSet: new r.LazyArray(new r.Pointer(r.uint16, AlternateSet), "count"),
   },
 
   4: {
@@ -59,10 +56,7 @@ let GSUBLookup = new r.VersionedStruct("lookupType", {
     substFormat: r.uint16,
     coverage: new r.Pointer(r.uint16, Coverage),
     count: r.uint16,
-    ligatureSets: new r.LazyArray(
-      new r.Pointer(r.uint16, LigatureSet),
-      "count",
-    ),
+    ligatureSets: new r.LazyArray(new r.Pointer(r.uint16, LigatureSet), "count"),
   },
 
   5: Context, // Contextual Substitution
@@ -79,15 +73,9 @@ let GSUBLookup = new r.VersionedStruct("lookupType", {
     // Reverse Chaining Contextual Single Substitution
     substFormat: r.uint16,
     coverage: new r.Pointer(r.uint16, Coverage),
-    backtrackCoverage: new r.Array(
-      new r.Pointer(r.uint16, Coverage),
-      "backtrackGlyphCount",
-    ),
+    backtrackCoverage: new r.Array(new r.Pointer(r.uint16, Coverage), "backtrackGlyphCount"),
     lookaheadGlyphCount: r.uint16,
-    lookaheadCoverage: new r.Array(
-      new r.Pointer(r.uint16, Coverage),
-      "lookaheadGlyphCount",
-    ),
+    lookaheadCoverage: new r.Array(new r.Pointer(r.uint16, Coverage), "lookaheadGlyphCount"),
     glyphCount: r.uint16,
     substitutes: new r.Array(r.uint16, "glyphCount"),
   },

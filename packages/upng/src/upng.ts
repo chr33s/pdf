@@ -9,8 +9,7 @@ export class UPNG {
   static toRGBA8(out: Image) {
     const w = out.width;
     const h = out.height;
-    if (out.tabs.acTL == null)
-      return [this.#decodeImage(out.data, w, h, out).buffer];
+    if (out.tabs.acTL == null) return [this.#decodeImage(out.data, w, h, out).buffer];
 
     const frms: ArrayBuffer[] = [];
     if (out.frames[0].data == null) out.frames[0].data = out.data;
@@ -30,14 +29,12 @@ export class UPNG {
       if (i != 0) for (let j = 0; j < len; j++) prev[j] = img[j];
 
       if (frm.blend == 0) this.#copyTile(fdata, fw, fh, img, w, h, fx, fy, 0);
-      else if (frm.blend == 1)
-        this.#copyTile(fdata, fw, fh, img, w, h, fx, fy, 1);
+      else if (frm.blend == 1) this.#copyTile(fdata, fw, fh, img, w, h, fx, fy, 1);
 
       frms.push(img.buffer.slice(0));
 
       if (frm.dispose == 0) {
-      } else if (frm.dispose == 1)
-        this.#copyTile(empty, fw, fh, img, w, h, fx, fy, 0);
+      } else if (frm.dispose == 1) this.#copyTile(empty, fw, fh, img, w, h, fx, fy, 0);
       else if (frm.dispose == 2) for (let j = 0; j < len; j++) img[j] = prev[j];
     }
     return frms;
@@ -75,20 +72,12 @@ export class UPNG {
         if (depth == 8)
           for (let i = 0; i < area; i++) {
             const ti = i * 3;
-            bf32[i] =
-              (255 << 24) |
-              (data[ti + 2] << 16) |
-              (data[ti + 1] << 8) |
-              data[ti];
+            bf32[i] = (255 << 24) | (data[ti + 2] << 16) | (data[ti + 1] << 8) | data[ti];
           }
         if (depth == 16)
           for (let i = 0; i < area; i++) {
             const ti = i * 6;
-            bf32[i] =
-              (255 << 24) |
-              (data[ti + 4] << 16) |
-              (data[ti + 2] << 8) |
-              data[ti];
+            bf32[i] = (255 << 24) | (data[ti + 4] << 16) | (data[ti + 2] << 8) | data[ti];
           }
       } else {
         const tr = ts[0];
@@ -98,28 +87,15 @@ export class UPNG {
           for (let i = 0; i < area; i++) {
             const qi = i << 2;
             const ti = i * 3;
-            bf32[i] =
-              (255 << 24) |
-              (data[ti + 2] << 16) |
-              (data[ti + 1] << 8) |
-              data[ti];
-            if (data[ti] == tr && data[ti + 1] == tg && data[ti + 2] == tb)
-              bf[qi + 3] = 0;
+            bf32[i] = (255 << 24) | (data[ti + 2] << 16) | (data[ti + 1] << 8) | data[ti];
+            if (data[ti] == tr && data[ti + 1] == tg && data[ti + 2] == tb) bf[qi + 3] = 0;
           }
         if (depth == 16)
           for (let i = 0; i < area; i++) {
             const qi = i << 2;
             const ti = i * 6;
-            bf32[i] =
-              (255 << 24) |
-              (data[ti + 4] << 16) |
-              (data[ti + 2] << 8) |
-              data[ti];
-            if (
-              rs(data, ti) == tr &&
-              rs(data, ti + 2) == tg &&
-              rs(data, ti + 4) == tb
-            )
+            bf32[i] = (255 << 24) | (data[ti + 4] << 16) | (data[ti + 2] << 8) | data[ti];
+            if (rs(data, ti) == tr && rs(data, ti + 2) == tg && rs(data, ti + 4) == tb)
               bf[qi + 3] = 0;
           }
       }
@@ -216,15 +192,13 @@ export class UPNG {
           }
         else if (depth == 2)
           for (let x = 0; x < w; x++) {
-            const gr =
-              85 * ((data[off + (x >>> 2)] >>> (6 - ((x & 3) << 1))) & 3);
+            const gr = 85 * ((data[off + (x >>> 2)] >>> (6 - ((x & 3) << 1))) & 3);
             const al = gr == (tr as number) * 85 ? 0 : 255;
             bf32[to + x] = (al << 24) | (gr << 16) | (gr << 8) | gr;
           }
         else if (depth == 4)
           for (let x = 0; x < w; x++) {
-            const gr =
-              17 * ((data[off + (x >>> 1)] >>> (4 - ((x & 1) << 2))) & 15);
+            const gr = 17 * ((data[off + (x >>> 1)] >>> (4 - ((x & 1) << 2))) & 15);
             const al = gr == (tr as number) * 17 ? 0 : 255;
             bf32[to + x] = (al << 24) | (gr << 16) | (gr << 8) | gr;
           }
@@ -257,8 +231,7 @@ export class UPNG {
     let foff = 0;
 
     const mgck = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
-    for (let i = 0; i < 8; i++)
-      if (data[i] != mgck[i]) throw "The input is not a PNG file!";
+    for (let i = 0; i < 8; i++) if (data[i] != mgck[i]) throw "The input is not a PNG file!";
 
     while (offset < data.length) {
       const len = Bin.readUint(data, offset);
@@ -293,12 +266,7 @@ export class UPNG {
       } else if (type == "fcTL") {
         if (foff != 0) {
           const fr = out.frames[out.frames.length - 1];
-          fr.data = this.#decompress(
-            out,
-            fd.slice(0, foff),
-            fr.rect.width,
-            fr.rect.height,
-          );
+          fr.data = this.#decompress(out, fd.slice(0, foff), fr.rect.width, fr.rect.height);
           foff = 0;
         }
         const rct = {
@@ -327,8 +295,7 @@ export class UPNG {
         ];
       } else if (type == "cHRM") {
         out.tabs[type] = [];
-        for (let i = 0; i < 8; i++)
-          out.tabs[type]!.push(Bin.readUint(data, offset + i * 4));
+        for (let i = 0; i < 8; i++) out.tabs[type]!.push(Bin.readUint(data, offset + i * 4));
       } else if (type == "tEXt" || type == "zTXt") {
         if (out.tabs[type] == null) out.tabs[type] = {};
         const nz = Bin.nextZero(data, offset);
@@ -367,29 +334,18 @@ export class UPNG {
       } else if (type == "hIST") {
         const pl = out.tabs["PLTE"]!.length / 3;
         out.tabs[type] = [];
-        for (let i = 0; i < pl; i++)
-          out.tabs[type]!.push(rUs(data, offset + i * 2));
+        for (let i = 0; i < pl; i++) out.tabs[type]!.push(rUs(data, offset + i * 2));
       } else if (type == "tRNS") {
         if (out.ctype == 3) out.tabs[type] = Bin.readBytes(data, offset, len);
         else if (out.ctype == 0) out.tabs[type] = rUs(data, offset);
         else if (out.ctype == 2)
-          out.tabs[type] = [
-            rUs(data, offset),
-            rUs(data, offset + 2),
-            rUs(data, offset + 4),
-          ];
-      } else if (type == "gAMA")
-        out.tabs[type] = Bin.readUint(data, offset) / 100000;
+          out.tabs[type] = [rUs(data, offset), rUs(data, offset + 2), rUs(data, offset + 4)];
+      } else if (type == "gAMA") out.tabs[type] = Bin.readUint(data, offset) / 100000;
       else if (type == "sRGB") out.tabs[type] = data[offset];
       else if (type == "bKGD") {
-        if (out.ctype == 0 || out.ctype == 4)
-          out.tabs[type] = [rUs(data, offset)];
+        if (out.ctype == 0 || out.ctype == 4) out.tabs[type] = [rUs(data, offset)];
         else if (out.ctype == 2 || out.ctype == 6)
-          out.tabs[type] = [
-            rUs(data, offset),
-            rUs(data, offset + 2),
-            rUs(data, offset + 4),
-          ];
+          out.tabs[type] = [rUs(data, offset), rUs(data, offset + 2), rUs(data, offset + 4)];
         else if (out.ctype == 3) out.tabs[type] = data[offset];
       } else if (type == "IEND") {
         break;
@@ -400,12 +356,7 @@ export class UPNG {
     }
     if (foff != 0) {
       const fr = out.frames[out.frames.length - 1];
-      fr.data = this.#decompress(
-        out,
-        fd.slice(0, foff),
-        fr.rect.width,
-        fr.rect.height,
-      );
+      fr.data = this.#decompress(out, fd.slice(0, foff), fr.rect.width, fr.rect.height);
       foff = 0;
     }
     out.data = this.#decompress(out, dd, out.width, out.height);
@@ -441,10 +392,7 @@ export class UPNG {
   }
 
   static #inflate(data: Uint8Array, buff?: Uint8Array) {
-    const out = Inflator.inflateRaw(
-      new Uint8Array(data.buffer, 2, data.length - 6),
-      buff,
-    );
+    const out = Inflator.inflateRaw(new Uint8Array(data.buffer, 2, data.length - 6), buff);
     return out;
   }
 
@@ -524,13 +472,7 @@ export class UPNG {
     return (noc as number) * out.depth;
   }
 
-  static #filterZero(
-    data: Uint8Array,
-    out: Image,
-    off: number,
-    w: number,
-    h: number,
-  ) {
+  static #filterZero(data: Uint8Array, out: Image, off: number, w: number, h: number) {
     let bpp = this.#getBPP(out);
     const bpl = Math.ceil((w * bpp) / 8);
     bpp = Math.ceil(bpp / 8);
@@ -541,8 +483,7 @@ export class UPNG {
 
     if (type > 1) data[off] = [0, 0, 1][type - 2];
     if (type == 3)
-      for (x = bpp; x < bpl; x++)
-        data[x + 1] = (data[x + 1] + (data[x + 1 - bpp] >>> 1)) & 255;
+      for (x = bpp; x < bpl; x++) data[x + 1] = (data[x + 1] + (data[x + 1 - bpp] >>> 1)) & 255;
 
     for (let y = 0; y < h; y++) {
       i = off + y * bpl;
@@ -557,22 +498,15 @@ export class UPNG {
       } else if (type == 2) {
         for (; x < bpl; x++) data[i + x] = data[di + x] + data[i + x - bpl];
       } else if (type == 3) {
-        for (; x < bpp; x++)
-          data[i + x] = data[di + x] + (data[i + x - bpl] >>> 1);
+        for (; x < bpp; x++) data[i + x] = data[di + x] + (data[i + x - bpl] >>> 1);
         for (; x < bpl; x++)
-          data[i + x] =
-            data[di + x] + ((data[i + x - bpl] + data[i + x - bpp]) >>> 1);
+          data[i + x] = data[di + x] + ((data[i + x - bpl] + data[i + x - bpp]) >>> 1);
       } else {
-        for (; x < bpp; x++)
-          data[i + x] = data[di + x] + this.#paeth(0, data[i + x - bpl], 0);
+        for (; x < bpp; x++) data[i + x] = data[di + x] + this.#paeth(0, data[i + x - bpl], 0);
         for (; x < bpl; x++)
           data[i + x] =
             data[di + x] +
-            this.#paeth(
-              data[i + x - bpp],
-              data[i + x - bpl],
-              data[i + x - bpp - bpl],
-            );
+            this.#paeth(data[i + x - bpp], data[i + x - bpl], data[i + x - bpp - bpl]);
       }
     }
     return data;
@@ -693,12 +627,7 @@ export class UPNG {
 
   // --- ENCODING METHODS ---
 
-  static #addErr(
-    er: number[],
-    tg: Uint8Array | Int16Array,
-    ti: number,
-    f: number,
-  ) {
+  static #addErr(er: number[], tg: Uint8Array | Int16Array, ti: number, f: number) {
     tg[ti] += (er[0] * f) >> 4;
     tg[ti + 1] += (er[1] * f) >> 4;
     tg[ti + 2] += (er[2] * f) >> 4;
@@ -730,12 +659,7 @@ export class UPNG {
     const nplt = [];
     for (let i = 0; i < pc; i++) {
       const c = plte[i];
-      nplt.push([
-        (c >>> 0) & 255,
-        (c >>> 8) & 255,
-        (c >>> 16) & 255,
-        (c >>> 24) & 255,
-      ]);
+      nplt.push([(c >>> 0) & 255, (c >>> 8) & 255, (c >>> 16) & 255, (c >>> 24) & 255]);
     }
 
     const tb32 = new Uint32Array(tb.buffer);
@@ -743,8 +667,7 @@ export class UPNG {
 
     const S = 4;
     const M = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
-    for (let i = 0; i < M.length; i++)
-      M[i] = 255 * (-0.5 + (M[i] + 0.5) / (S * S));
+    for (let i = 0; i < M.length; i++) M[i] = 255 * (-0.5 + (M[i] + 0.5) / (S * S));
 
     for (let y = 0; y < h; y++) {
       for (let x = 0; x < w; x++) {
@@ -967,13 +890,7 @@ export class UPNG {
     return out;
   }
 
-  static #main(
-    nimg: Image,
-    w: number,
-    h: number,
-    dels?: number[],
-    tabs?: ImageTabs,
-  ) {
+  static #main(nimg: Image, w: number, h: number, dels?: number[], tabs?: ImageTabs) {
     if (tabs == null) tabs = {};
     const wUi = Bin.writeUint.bind(Bin);
     const wUs = Bin.writeUshort.bind(Bin);
@@ -993,8 +910,7 @@ export class UPNG {
     }
     if (nimg.ctype == 3) {
       const dl = (nimg as any).plte.length;
-      for (let i = 0; i < dl; i++)
-        if ((nimg as any).plte[i] >>> 24 != 255) pltAlpha = true;
+      for (let i = 0; i < dl; i++) if ((nimg as any).plte[i] >>> 24 != 255) pltAlpha = true;
       leng += 8 + dl * 3 + 4 + (pltAlpha ? 8 + dl * 1 + 4 : 0);
     }
     for (let j = 0; j < nimg.frames.length; j++) {
@@ -1107,8 +1023,7 @@ export class UPNG {
         offset += 4;
         wAs(data, offset, "tRNS");
         offset += 4;
-        for (let i = 0; i < dl; i++)
-          data[offset + i] = ((nimg as any).plte[i] >>> 24) & 255;
+        for (let i = 0; i < dl; i++) data[offset + i] = ((nimg as any).plte[i] >>> 24) & 255;
         offset += dl;
         wUi(data, offset, CRC.crc(data, offset - dl - 4, dl + 4));
         offset += 4; // crc
@@ -1177,25 +1092,11 @@ export class UPNG {
       const frm = out.frames[i];
       const nh = frm.rect.height;
       const fdata = new Uint8Array(nh * frm.bpl! + nh);
-      frm.cimg = this.#encodeFilterZero(
-        frm.img!,
-        nh,
-        frm.bpp!,
-        frm.bpl!,
-        fdata,
-        filter,
-        levelZero,
-      );
+      frm.cimg = this.#encodeFilterZero(frm.img!, nh, frm.bpp!, frm.bpl!, fdata, filter, levelZero);
     }
   }
 
-  static #compress(
-    bufs: ArrayBuffer[],
-    w: number,
-    h: number,
-    ps: number,
-    prms: any[],
-  ) {
+  static #compress(bufs: ArrayBuffer[], w: number, h: number, ps: number, prms: any[]) {
     const onlyBlend = prms[0];
     const evenCrd = prms[1];
     const forbidPrev = prms[2];
@@ -1227,8 +1128,7 @@ export class UPNG {
       const abuf = this.#concatRGBA(nbufs);
       const qres = Quantizer.quantize(abuf, ps);
 
-      for (let i = 0; i < qres.plte.length; i++)
-        plte.push(qres.plte[i].est.rgba);
+      for (let i = 0; i < qres.plte.length; i++) plte.push(qres.plte[i].est.rgba);
 
       let cof = 0;
       for (let i = 0; i < frms.length; i++) {
@@ -1238,15 +1138,7 @@ export class UPNG {
         inds.push(ind);
         const bb = new Uint8Array(qres.abuf, cof, bln);
 
-        if (dith)
-          this.#dither(
-            frm.img!,
-            frm.rect.width,
-            frm.rect.height,
-            plte,
-            bb,
-            ind,
-          );
+        if (dith) this.#dither(frm.img!, frm.rect.width, frm.rect.height, plte, bb, ind);
         frm.img!.set(bb);
         cof += bln;
       }
@@ -1298,17 +1190,13 @@ export class UPNG {
         for (let y = 0; y < nh; y++) {
           const i = y * bpl;
           const ii = y * nw;
-          if (depth == 8)
-            for (let x = 0; x < nw; x++) nimg[i + x] = inj[ii + x];
+          if (depth == 8) for (let x = 0; x < nw; x++) nimg[i + x] = inj[ii + x];
           else if (depth == 4)
-            for (let x = 0; x < nw; x++)
-              nimg[i + (x >> 1)] |= inj[ii + x] << (4 - (x & 1) * 4);
+            for (let x = 0; x < nw; x++) nimg[i + (x >> 1)] |= inj[ii + x] << (4 - (x & 1) * 4);
           else if (depth == 2)
-            for (let x = 0; x < nw; x++)
-              nimg[i + (x >> 2)] |= inj[ii + x] << (6 - (x & 3) * 2);
+            for (let x = 0; x < nw; x++) nimg[i + (x >> 2)] |= inj[ii + x] << (6 - (x & 3) * 2);
           else if (depth == 1)
-            for (let x = 0; x < nw; x++)
-              nimg[i + (x >> 3)] |= inj[ii + x] << (7 - (x & 7) * 1);
+            for (let x = 0; x < nw; x++) nimg[i + (x >> 3)] |= inj[ii + x] << (7 - (x & 7) * 1);
         }
         cimg = nimg;
         ctype = 3;
@@ -1356,10 +1244,7 @@ export class UPNG {
       let nh = h;
       let blend = alwaysBlend ? 1 : 0;
       if (j != 0) {
-        const tlim =
-          forbidPrev || alwaysBlend || j == 1 || frms[j - 2].dispose != 0
-            ? 1
-            : 2;
+        const tlim = forbidPrev || alwaysBlend || j == 1 || frms[j - 2].dispose != 0 ? 1 : 2;
         let tstp = 0;
         let tarea = 1e9;
         for (let it = 0; it < tlim; it++) {
@@ -1523,8 +1408,7 @@ export class UPNG {
     if (levelZero) opts = { level: 0 };
 
     for (let i = 0; i < ftry.length; i++) {
-      for (let y = 0; y < h; y++)
-        this.#filterLine(data, img, y, bpl, bpp, ftry[i]);
+      for (let y = 0; y < h; y++) this.#filterLine(data, img, y, bpl, bpp, ftry[i]);
       fls.push(pako.deflate(data, opts));
     }
 
@@ -1556,8 +1440,7 @@ export class UPNG {
       else data.set(new Uint8Array(img.buffer, i, bpl), di);
     } else if (type == 1) {
       for (let x = 0; x < bpp; x++) data[di + x] = img[i + x];
-      for (let x = bpp; x < bpl; x++)
-        data[di + x] = (img[i + x] - img[i + x - bpp] + 256) & 255;
+      for (let x = bpp; x < bpl; x++) data[di + x] = (img[i + x] - img[i + x - bpp] + 256) & 255;
     } else if (y == 0) {
       for (let x = 0; x < bpp; x++) data[di + x] = img[i + x];
 
@@ -1567,34 +1450,25 @@ export class UPNG {
           data[di + x] = (img[i + x] - (img[i + x - bpp] >> 1) + 256) & 255;
       if (type == 4)
         for (let x = bpp; x < bpl; x++)
-          data[di + x] =
-            (img[i + x] - this.#paeth(img[i + x - bpp], 0, 0) + 256) & 255;
+          data[di + x] = (img[i + x] - this.#paeth(img[i + x - bpp], 0, 0) + 256) & 255;
     } else {
       if (type == 2) {
-        for (let x = 0; x < bpl; x++)
-          data[di + x] = (img[i + x] + 256 - img[i + x - bpl]) & 255;
+        for (let x = 0; x < bpl; x++) data[di + x] = (img[i + x] + 256 - img[i + x - bpl]) & 255;
       }
       if (type == 3) {
         for (let x = 0; x < bpp; x++)
           data[di + x] = (img[i + x] + 256 - (img[i + x - bpl] >> 1)) & 255;
         for (let x = bpp; x < bpl; x++)
-          data[di + x] =
-            (img[i + x] + 256 - ((img[i + x - bpl] + img[i + x - bpp]) >> 1)) &
-            255;
+          data[di + x] = (img[i + x] + 256 - ((img[i + x - bpl] + img[i + x - bpp]) >> 1)) & 255;
       }
       if (type == 4) {
         for (let x = 0; x < bpp; x++)
-          data[di + x] =
-            (img[i + x] + 256 - this.#paeth(0, img[i + x - bpl], 0)) & 255;
+          data[di + x] = (img[i + x] + 256 - this.#paeth(0, img[i + x - bpl], 0)) & 255;
         for (let x = bpp; x < bpl; x++)
           data[di + x] =
             (img[i + x] +
               256 -
-              this.#paeth(
-                img[i + x - bpp],
-                img[i + x - bpl],
-                img[i + x - bpp - bpl],
-              )) &
+              this.#paeth(img[i + x - bpp], img[i + x - bpl], img[i + x - bpp - bpl])) &
             255;
       }
     }

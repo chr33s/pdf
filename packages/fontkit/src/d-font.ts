@@ -15,11 +15,7 @@ let Ref = new r.Struct({
 let Type = new r.Struct({
   name: new r.String(4),
   maxTypeIndex: r.uint16,
-  refList: new r.Pointer(
-    r.uint16,
-    new r.Array(Ref, (t) => t.maxTypeIndex + 1),
-    { type: "parent" },
-  ),
+  refList: new r.Pointer(r.uint16, new r.Array(Ref, (t) => t.maxTypeIndex + 1), { type: "parent" }),
 });
 
 let TypeList = new r.Struct({
@@ -118,10 +114,7 @@ export default class DFont {
         if (ref.nameOffset >= 0) {
           this.#stream.pos = ref.nameOffset + this.#header.map.nameListOffset;
           const decodedName = DFontName.decode(this.#stream) as string | Buffer;
-          ref.name =
-            typeof decodedName === "string"
-              ? decodedName
-              : decodedName.toString("utf8");
+          ref.name = typeof decodedName === "string" ? decodedName : decodedName.toString("utf8");
         } else {
           ref.name = null;
         }

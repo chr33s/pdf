@@ -4,9 +4,7 @@ import type EncodeStream from "./encode-stream.js";
 import { Number as NumberT } from "./number.js";
 import { resolveLength, type LengthLike } from "./utils.js";
 
-type EncodingResolver =
-  | string
-  | ((this: any, parent?: any) => string | undefined);
+type EncodingResolver = string | ((this: any, parent?: any) => string | undefined);
 
 const ENCODING_ALIASES: Record<string, string> = {
   "utf-8": "utf8",
@@ -91,10 +89,7 @@ export default class StringT extends Base<string | Buffer> {
       const limit = stream.length;
       const maxPos = Math.max(limit - width + 1, stream.pos);
 
-      while (
-        pos < maxPos &&
-        (buffer[pos] !== 0x00 || (width === 2 && buffer[pos + 1] !== 0x00))
-      ) {
+      while (pos < maxPos && (buffer[pos] !== 0x00 || (width === 2 && buffer[pos + 1] !== 0x00))) {
         pos += width;
       }
 

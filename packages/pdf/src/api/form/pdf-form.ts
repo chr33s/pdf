@@ -24,12 +24,7 @@ import {
   UnexpectedFieldTypeError,
 } from "../errors.js";
 import { rotateInPlace } from "../operations.js";
-import {
-  drawObject,
-  popGraphicsState,
-  pushGraphicsState,
-  translate,
-} from "../operators.js";
+import { drawObject, popGraphicsState, pushGraphicsState, translate } from "../operators.js";
 import PDFDocument from "../pdf-document.js";
 import PDFFont from "../pdf-font.js";
 import PDFPage from "../pdf-page.js";
@@ -69,8 +64,7 @@ export default class PDFForm {
    * @param acroForm The underlying `PDFAcroForm` for this form.
    * @param doc The document to which the form will belong.
    */
-  static of = (acroForm: PDFAcroForm, doc: PDFDocument) =>
-    new PDFForm(acroForm, doc);
+  static of = (acroForm: PDFAcroForm, doc: PDFDocument) => new PDFForm(acroForm, doc);
 
   /** The low-level PDFAcroForm wrapped by this form. */
   readonly acroForm: PDFAcroForm;
@@ -474,11 +468,7 @@ export default class PDFForm {
     const radioButton = PDFAcroRadioButton.create(this.doc.context);
     radioButton.setPartialName(nameParts.terminal);
 
-    addFieldToParent(
-      parent,
-      [radioButton, radioButton.ref],
-      nameParts.terminal,
-    );
+    addFieldToParent(parent, [radioButton, radioButton.ref], nameParts.terminal);
 
     return PDFRadioGroup.of(radioButton, radioButton.ref, this.doc);
   }
@@ -727,10 +717,7 @@ export default class PDFForm {
     return page;
   }
 
-  #findWidgetAppearanceRef(
-    field: PDFField,
-    widget: PDFWidgetAnnotation,
-  ): PDFRef {
+  #findWidgetAppearanceRef(field: PDFField, widget: PDFWidgetAnnotation): PDFRef {
     let refOrDict = widget.getNormalAppearance();
 
     if (field instanceof PDFCheckBox || field instanceof PDFRadioGroup) {
@@ -756,9 +743,7 @@ export default class PDFForm {
   }
 
   #findOrCreateNonTerminals(partialNames: string[]) {
-    let nonTerminal: [PDFAcroForm] | [PDFAcroNonTerminal, PDFRef] = [
-      this.acroForm,
-    ];
+    let nonTerminal: [PDFAcroForm] | [PDFAcroNonTerminal, PDFRef] = [this.acroForm];
     for (let idx = 0, len = partialNames.length; idx < len; idx++) {
       const namePart = partialNames[idx];
       if (!namePart) throw new InvalidFieldNamePartError(namePart);
@@ -799,8 +784,7 @@ export default class PDFForm {
     return undefined;
   }
 
-  #embedDefaultFont = (): PDFFont =>
-    this.doc.embedStandardFont(StandardFonts.Helvetica);
+  #embedDefaultFont = (): PDFFont => this.doc.embedStandardFont(StandardFonts.Helvetica);
 }
 
 const convertToPDFField = (
@@ -851,9 +835,7 @@ const addFieldToParent = (
   partialName: string,
 ) => {
   const entries = parent.normalizedEntries();
-  const fields = createPDFAcroFields(
-    "Kids" in entries ? entries.Kids : entries.Fields,
-  );
+  const fields = createPDFAcroFields("Kids" in entries ? entries.Kids : entries.Fields);
   for (let idx = 0, len = fields.length; idx < len; idx++) {
     if (fields[idx][0].getPartialName() === partialName) {
       throw new FieldAlreadyExistsError(partialName);

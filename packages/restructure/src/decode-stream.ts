@@ -77,8 +77,8 @@ export default class DecodeStream {
   }
 }
 
-const readMethodNames = Object.getOwnPropertyNames(Buffer.prototype).filter(
-  (key) => key.startsWith("read"),
+const readMethodNames = Object.getOwnPropertyNames(Buffer.prototype).filter((key) =>
+  key.startsWith("read"),
 );
 
 for (const key of readMethodNames) {

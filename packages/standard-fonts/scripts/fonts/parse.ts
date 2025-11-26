@@ -4,14 +4,8 @@ import { basename, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import pako from "pako";
 
-import {
-  type ICharMetrics,
-  parseCharMetricsSection,
-} from "./parse-character-metrics.ts";
-import {
-  type IFontMetrics,
-  parseFontMetricsSection,
-} from "./parse-font-metrics.ts";
+import { type ICharMetrics, parseCharMetricsSection } from "./parse-character-metrics.ts";
+import { type IFontMetrics, parseFontMetricsSection } from "./parse-font-metrics.ts";
 import { type IKernPair, parseKernPairsSection } from "./parse-kern-pairs.ts";
 
 export interface IMetrics extends IFontMetrics {
@@ -53,13 +47,11 @@ const fontFileNameMap: Record<string, string> = {
   "courier.compressed.json": "courier.compressed.json",
   "courier-bold.compressed.json": "courier-bold.compressed.json",
   "courier-oblique.compressed.json": "courier-oblique.compressed.json",
-  "courier-bold-oblique.compressed.json":
-    "courier-bold-oblique.compressed.json",
+  "courier-bold-oblique.compressed.json": "courier-bold-oblique.compressed.json",
   "helvetica.compressed.json": "helvetica.compressed.json",
   "helvetica-bold.compressed.json": "helvetica-bold.compressed.json",
   "helvetica-oblique.compressed.json": "helvetica-oblique.compressed.json",
-  "helvetica-bold-oblique.compressed.json":
-    "helvetica-bold-oblique.compressed.json",
+  "helvetica-bold-oblique.compressed.json": "helvetica-bold-oblique.compressed.json",
   "times-roman.compressed.json": "times-roman.compressed.json",
   "times-bold.compressed.json": "times-bold.compressed.json",
   "times-italic.compressed.json": "times-italic.compressed.json",

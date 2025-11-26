@@ -79,13 +79,9 @@ export let LookupTable = function (ValueType = uint16) {
   let LookupSegmentArray = new r.Struct({
     lastGlyph: r.uint16,
     firstGlyph: r.uint16,
-    values: new r.Pointer(
-      r.uint16,
-      new r.Array(ValueType, (t) => t.lastGlyph - t.firstGlyph + 1),
-      {
-        type: "parent",
-      },
-    ),
+    values: new r.Pointer(r.uint16, new r.Array(ValueType, (t) => t.lastGlyph - t.firstGlyph + 1), {
+      type: "parent",
+    }),
   });
 
   let LookupSingle = new r.Struct({
@@ -99,17 +95,11 @@ export let LookupTable = function (ValueType = uint16) {
     },
     2: {
       binarySearchHeader: BinarySearchHeader,
-      segments: new r.Array(
-        LookupSegmentSingle,
-        (t) => t.binarySearchHeader.nUnits,
-      ),
+      segments: new r.Array(LookupSegmentSingle, (t) => t.binarySearchHeader.nUnits),
     },
     4: {
       binarySearchHeader: BinarySearchHeader,
-      segments: new r.Array(
-        LookupSegmentArray,
-        (t) => t.binarySearchHeader.nUnits,
-      ),
+      segments: new r.Array(LookupSegmentArray, (t) => t.binarySearchHeader.nUnits),
     },
     6: {
       binarySearchHeader: BinarySearchHeader,
@@ -160,9 +150,7 @@ export function StateTable1(entryData = {}) {
       newStateOffset: r.uint16,
       // convert offset to stateArray index
       newState: (t) =>
-        (t.newStateOffset -
-          (t.parent.stateArray.base - t.parent._startOffset)) /
-        t.parent.nClasses,
+        (t.newStateOffset - (t.parent.stateArray.base - t.parent._startOffset)) / t.parent.nClasses,
       flags: r.uint16,
     },
     entryData,
