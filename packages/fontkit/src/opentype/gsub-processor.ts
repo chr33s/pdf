@@ -1,10 +1,8 @@
-// @ts-nocheck
-
 import GlyphInfo from "./glyph-info.js";
 import OTProcessor from "./ot-processor.js";
 
 export default class GSUBProcessor extends OTProcessor {
-  applyLookup(lookupType, table) {
+  applyLookup(lookupType: number, table: any): boolean {
     switch (lookupType) {
       case 1: {
         // Single Substitution
@@ -14,6 +12,9 @@ export default class GSUBProcessor extends OTProcessor {
         }
 
         let glyph = this.glyphIterator.cur;
+        if (!glyph) {
+          return false;
+        }
         switch (table.version) {
           case 1:
             glyph.id = (glyph.id + table.deltaGlyphID) & 0xffff;
@@ -30,40 +31,54 @@ export default class GSUBProcessor extends OTProcessor {
       case 2: {
         // Multiple Substitution
         let index = this.coverageIndex(table.coverage);
-        if (index !== -1) {
-          let sequence = table.sequences.get(index);
-          this.glyphIterator.cur.id = sequence[0];
-          this.glyphIterator.cur.ligatureComponent = 0;
-
-          let features = this.glyphIterator.cur.features;
-          let curGlyph = this.glyphIterator.cur;
-          let replacement = sequence.slice(1).map((gid, i) => {
-            let glyph = new GlyphInfo(this.font, gid, undefined, features);
-            glyph.shaperInfo = curGlyph.shaperInfo;
-            glyph.isLigated = curGlyph.isLigated;
-            glyph.ligatureComponent = i + 1;
-            glyph.substituted = true;
-            glyph.isMultiplied = true;
-            return glyph;
-          });
-
-          this.glyphs.splice(this.glyphIterator.index + 1, 0, ...replacement);
-          return true;
+        if (index === -1) {
+          return false;
         }
 
-        return false;
+        let sequence = table.sequences.get(index);
+        if (!sequence || sequence.length === 0) {
+          return false;
+        }
+
+        const current = this.glyphIterator.cur;
+        if (!current) {
+          return false;
+        }
+
+        current.id = sequence[0];
+        current.ligatureComponent = 0;
+
+        let features = current.features;
+        let replacement = sequence.slice(1).map((gid: number, i: number) => {
+          let glyph = new GlyphInfo(this.font, gid, undefined, features);
+          glyph.shaperInfo = current.shaperInfo;
+          glyph.isLigated = current.isLigated;
+          glyph.ligatureComponent = i + 1;
+          glyph.substituted = true;
+          glyph.isMultiplied = true;
+          return glyph;
+        });
+
+        this.glyphs.splice(this.glyphIterator.index + 1, 0, ...replacement);
+        return true;
       }
 
       case 3: {
         // Alternate Substitution
         let index = this.coverageIndex(table.coverage);
-        if (index !== -1) {
-          let USER_INDEX = 0; // TODO
-          this.glyphIterator.cur.id = table.alternateSet.get(index)[USER_INDEX];
-          return true;
+        if (index === -1) {
+          return false;
         }
 
-        return false;
+        const alternates = table.alternateSet.get(index);
+        const glyph = this.glyphIterator.cur;
+        if (!alternates || !glyph || alternates.length === 0) {
+          return false;
+        }
+
+        let USER_INDEX = 0; // TODO
+        glyph.id = alternates[USER_INDEX];
+        return true;
       }
 
       case 4: {
@@ -73,13 +88,21 @@ export default class GSUBProcessor extends OTProcessor {
           return false;
         }
 
-        for (let ligature of table.ligatureSets.get(index)) {
+        let ligatureSet = table.ligatureSets.get(index);
+        if (!ligatureSet) {
+          return false;
+        }
+
+        for (let ligature of ligatureSet) {
           let matched = this.sequenceMatchIndices(1, ligature.components);
           if (!matched) {
             continue;
           }
 
           let curGlyph = this.glyphIterator.cur;
+          if (!curGlyph) {
+            return false;
+          }
 
           // Concatenate all of the characters the new ligature will represent
           let characters = curGlyph.codePoints.slice();
@@ -142,21 +165,29 @@ export default class GSUBProcessor extends OTProcessor {
               idx = matchIndex;
             } else {
               while (idx < matchIndex) {
-                var ligatureComponent =
+                const targetGlyph = this.glyphs[idx];
+                if (!targetGlyph) {
+                  idx++;
+                  continue;
+                }
+
+                const ligatureComponent =
                   curComps -
                   lastNumComps +
-                  Math.min(
-                    this.glyphs[idx].ligatureComponent || 1,
-                    lastNumComps,
-                  );
-                this.glyphs[idx].ligatureID = ligatureGlyph.ligatureID;
-                this.glyphs[idx].ligatureComponent = ligatureComponent;
+                  Math.min(targetGlyph.ligatureComponent || 1, lastNumComps);
+                targetGlyph.ligatureID = ligatureGlyph.ligatureID;
+                targetGlyph.ligatureComponent = ligatureComponent;
                 idx++;
               }
             }
 
-            lastLigID = this.glyphs[idx].ligatureID;
-            lastNumComps = this.glyphs[idx].codePoints.length;
+            const glyphAtIdx = this.glyphs[idx];
+            if (!glyphAtIdx) {
+              break;
+            }
+
+            lastLigID = glyphAtIdx.ligatureID;
+            lastNumComps = glyphAtIdx.codePoints.length;
             curComps += lastNumComps;
             idx++; // skip base glyph
           }
@@ -164,12 +195,17 @@ export default class GSUBProcessor extends OTProcessor {
           // Adjust ligature components for any marks following
           if (lastLigID && !isMarkLigature) {
             for (let i = idx; i < this.glyphs.length; i++) {
-              if (this.glyphs[i].ligatureID === lastLigID) {
+              const glyph = this.glyphs[i];
+              if (!glyph) {
+                continue;
+              }
+
+              if (glyph.ligatureID === lastLigID) {
                 var ligatureComponent =
                   curComps -
                   lastNumComps +
-                  Math.min(this.glyphs[i].ligatureComponent || 1, lastNumComps);
-                this.glyphs[i].ligatureComponent = ligatureComponent;
+                  Math.min(glyph.ligatureComponent || 1, lastNumComps);
+                glyph.ligatureComponent = ligatureComponent;
               } else {
                 break;
               }

@@ -135,7 +135,14 @@ export interface Glyph {
    * some properties about the image, along with the image data itself
    * (usually PNG).
    */
-  getImageForSize(size: number): Uint8Array;
+  getImageForSize(size: number): GlyphImage | null;
+}
+
+export interface GlyphImage {
+  originX: number;
+  originY: number;
+  type: string;
+  data: Uint8Array;
 }
 
 /**
@@ -180,12 +187,12 @@ export interface GlyphRun {
   /**
    * An array of GlyphPosition objects for each glyph in the run
    */
-  positions: GlyphPosition[];
+  positions: GlyphPosition[] | null;
 
   /**
    * The script that was requested for shaping. This was either passed in or detected automatically.
    */
-  script: string;
+  script: string | string[];
 
   /**
    * The language requested for shaping, as passed in. If `null`, the default language for the
@@ -194,10 +201,10 @@ export interface GlyphRun {
   language: string | null;
 
   /**
-   * The direction requested for shaping, as passed in (either ltr or rtl).
+   * The direction requested for shaping, as passed in (typically ltr or rtl).
    * If `null`, the default direction of the script is used.
    */
-  direction: "ltr" | "rtl" | null;
+  direction: string;
 
   /**
    * The features requested during shaping. This is a combination of user
@@ -616,8 +623,11 @@ export interface Font {
    * feature tags are mapped to AAT features.
    */
   layout(
-    str: string,
-    features?: TypeFeatures | (keyof TypeFeatures)[],
+    text: string,
+    userFeatures?: string[] | TypeFeatures | Record<string, boolean> | string,
+    script?: string | null,
+    language?: string | null,
+    direction?: string | null,
   ): GlyphRun;
 
   // Other Methods
@@ -636,5 +646,8 @@ export interface Font {
 }
 
 export interface Fontkit {
-  create(buffer: Uint8Array, postscriptName?: string): Font;
+  create(
+    buffer: Uint8Array | ArrayBuffer | Buffer,
+    postscriptName?: string,
+  ): Font;
 }

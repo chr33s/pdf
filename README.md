@@ -14,14 +14,16 @@
 
 ## TODO
 
+- [ ] knip codebase
 - [ ] move packages/pdf/apps/* -> apps/
-- [ ] remove @ts-nocheck
 - [ ] Audit dependencies
 
-npm rm node-html-better-parser && npm i -S node-html-parser
+node-html-better-parser -> node-html-parser
 crypto-js -> crypto.subtle
 deep-equal -> fast-deep-equal
-tiny-inflate -> pako
+tiny-inflate -> pako | fflate
+pako -> fflate | DecompressionStream (!support:react-native)
+brotli -> https://github.com/google/brotli/blob/master/js/
 
 - [ ] add vitest intergration tests for packages/pdf
 

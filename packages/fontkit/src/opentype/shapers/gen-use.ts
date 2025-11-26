@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import codepoints from "@chr33s/codepoints";
 import { compile as compileModule } from "@chr33s/dfa";
 import { builder as UnicodeTrieBuilder } from "@chr33s/unicode-trie";
@@ -20,7 +18,10 @@ const toArrayBuffer = (view: Uint8Array): ArrayBuffer =>
 
 const compile = (compileModule as any)?.default ?? compileModule;
 
-const CATEGORIES = {
+const CATEGORIES: Record<
+  string,
+  Array<string | number | Record<string, any>>
+> = {
   B: [
     { UISC: "Number" },
     { UISC: "Avagraha", UGC: "Lo" },
@@ -82,7 +83,7 @@ const CATEGORIES = {
   O: ["Other"],
 };
 
-const USE_POSITIONS = {
+const USE_POSITIONS: Record<string, Record<string, string[]>> = {
   F: {
     Abv: ["Top"],
     Blw: ["Bottom"],
@@ -116,7 +117,7 @@ const USE_POSITIONS = {
   },
 };
 
-const UISC_OVERRIDE = {
+const UISC_OVERRIDE: Record<number, string> = {
   0x17dd: "Vowel_Dependent",
   0x1ce2: "Cantillation_Mark",
   0x1ce3: "Cantillation_Mark",
@@ -128,7 +129,7 @@ const UISC_OVERRIDE = {
   0x1ced: "Tone_Mark",
 };
 
-const UIPC_OVERRIDE = {
+const UIPC_OVERRIDE: Record<number, string> = {
   0x1b6c: "Bottom",
   0x953: "Not_Applicable",
   0x954: "Not_Applicable",
@@ -148,7 +149,7 @@ const UIPC_OVERRIDE = {
   0x1cf9: "Top",
 };
 
-function check(pattern, value) {
+function check(pattern: any, value: any): boolean {
   if (typeof pattern === "object" && pattern.not) {
     if (Array.isArray(pattern.not)) {
       return pattern.not.indexOf(value) === -1;
@@ -160,7 +161,7 @@ function check(pattern, value) {
   return value === pattern;
 }
 
-function matches(pattern, code) {
+function matches(pattern: any, code: any): boolean {
   if (typeof pattern === "number") {
     pattern = { U: pattern };
   } else if (typeof pattern === "string") {
@@ -176,15 +177,15 @@ function matches(pattern, code) {
   return true;
 }
 
-function getUISC(code) {
+function getUISC(code: any): string {
   return UISC_OVERRIDE[code.code] || code.indicSyllabicCategory || "Other";
 }
 
-function getUIPC(code) {
+function getUIPC(code: any): string {
   return UIPC_OVERRIDE[code.code] || code.indicPositionalCategory;
 }
 
-function getPositionalCategory(code, USE) {
+function getPositionalCategory(code: any, USE: string): string {
   let UIPC = getUIPC(code);
   let pos = USE_POSITIONS[USE];
   if (pos) {
@@ -198,7 +199,7 @@ function getPositionalCategory(code, USE) {
   return USE;
 }
 
-function getCategory(code) {
+function getCategory(code: any): string | null {
   for (let category in CATEGORIES) {
     for (let pattern of CATEGORIES[category]) {
       if (
@@ -217,18 +218,19 @@ function getCategory(code) {
 }
 
 let trie = new UnicodeTrieBuilder();
-let symbols = {};
+const symbols: Record<string, number> = {};
 let numSymbols = 0;
-let decompositions = {};
+const decompositions: Record<number, number[]> = {};
 for (let i = 0; i < codepoints.length; i++) {
   let codepoint = codepoints[i];
   if (codepoint) {
     let category = getCategory(codepoint);
-    if (!(category in symbols)) {
-      symbols[category] = numSymbols++;
+    const categoryKey = category ?? "null";
+    if (!(categoryKey in symbols)) {
+      symbols[categoryKey] = numSymbols++;
     }
 
-    trie.set(codepoint.code, symbols[category]);
+    trie.set(codepoint.code, symbols[categoryKey]);
 
     if (
       codepoint.indicSyllabicCategory === "Vowel_Dependent" &&
@@ -254,9 +256,13 @@ for (let category of Object.keys(CATEGORIES)) {
   }
 }
 
-function decompose(code) {
-  let decomposition = [];
+function decompose(code: number): number[] {
+  let decomposition: number[] = [];
   let codepoint = codepoints[code];
+  if (!codepoint) {
+    return decomposition;
+  }
+
   for (let c of codepoint.decomposition) {
     let codes = decompose(c);
     codes = codes.length > 0 ? codes : [c];

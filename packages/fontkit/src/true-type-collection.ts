@@ -1,7 +1,20 @@
-// @ts-nocheck
-
 import * as r from "@chr33s/restructure";
 import TTFFont from "./ttf-font.js";
+
+type DecodeStream = InstanceType<typeof r.DecodeStream>;
+
+type TTCHeaderV1 = {
+  numFonts: number;
+  offsets: number[];
+};
+
+type TTCHeaderV2 = TTCHeaderV1 & {
+  dsigTag: number;
+  dsigLength: number;
+  dsigOffset: number;
+};
+
+type TTCHeader = TTCHeaderV1 | TTCHeaderV2;
 
 let TTCHeader = new r.VersionedStruct(r.uint32, {
   0x00010000: {
@@ -18,20 +31,23 @@ let TTCHeader = new r.VersionedStruct(r.uint32, {
 });
 
 export default class TrueTypeCollection {
-  static probe(buffer) {
+  static probe(buffer: Buffer): boolean {
     return buffer.toString("ascii", 0, 4) === "ttcf";
   }
 
-  constructor(stream) {
+  private readonly stream: DecodeStream;
+  private readonly header: TTCHeader;
+
+  constructor(stream: DecodeStream) {
     this.stream = stream;
     if (stream.readString(4) !== "ttcf") {
       throw new Error("Not a TrueType collection");
     }
 
-    this.header = TTCHeader.decode(stream);
+    this.header = TTCHeader.decode(stream) as TTCHeader;
   }
 
-  getFont(name) {
+  getFont(name: string): TTFFont | null {
     for (let offset of this.header.offsets) {
       let stream = new r.DecodeStream(this.stream.buffer);
       stream.pos = offset;
@@ -44,8 +60,8 @@ export default class TrueTypeCollection {
     return null;
   }
 
-  get fonts() {
-    let fonts = [];
+  get fonts(): TTFFont[] {
+    let fonts: TTFFont[] = [];
     for (let offset of this.header.offsets) {
       let stream = new r.DecodeStream(this.stream.buffer);
       stream.pos = offset;

@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 // Automatically generated from Appendix A of the CFF specification; do
 // not edit. Length should be 391.
 export default [

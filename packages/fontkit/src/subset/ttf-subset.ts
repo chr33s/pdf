@@ -1,26 +1,41 @@
-// @ts-nocheck
-
+import type { EncodeStream } from "@chr33s/restructure";
 import cloneDeep from "clone";
 import TTFGlyphEncoder from "../glyph/ttf-glyph-encoder.js";
+import type TTFGlyph from "../glyph/ttf-glyph.js";
 import Directory from "../tables/directory.js";
 import Tables from "../tables/index.js";
+import type TTFFont from "../ttf-font.js";
 import Subset from "./subset.js";
 
-export default class TTFSubset extends Subset {
-  constructor(font) {
+type MetricRecord = { advance: number; bearing: number };
+type LocaTable = { offsets: number[]; version?: number };
+type HmtxTable = { metrics: MetricRecord[]; bearings: number[] };
+
+export default class TTFSubset extends Subset<TTFFont> {
+  private readonly glyphEncoder: TTFGlyphEncoder;
+  private glyf: Buffer[] = [];
+  private offset = 0;
+  private loca: LocaTable = { offsets: [] };
+  private hmtx: HmtxTable = { metrics: [], bearings: [] };
+
+  constructor(font: TTFFont) {
     super(font);
     this.glyphEncoder = new TTFGlyphEncoder();
   }
 
-  _addGlyph(gid) {
-    let glyph = this.font.getGlyph(gid);
+  private _addGlyph(gid: number): number {
+    let glyph = this.font.getGlyph(gid) as TTFGlyph;
     let glyf = glyph._decode();
 
     // get the offset to the glyph from the loca table
     let curOffset = this.font.loca.offsets[gid];
     let nextOffset = this.font.loca.offsets[gid + 1];
 
-    let stream = this.font._getTableStream("glyf");
+    let stream = this.font.getTableStream("glyf");
+    if (!stream) {
+      throw new Error("Unable to locate glyf table stream while subsetting");
+    }
+
     stream.pos += curOffset;
 
     let buffer = stream.readBuffer(nextOffset - curOffset);
@@ -49,7 +64,7 @@ export default class TTFSubset extends Subset {
     return this.glyf.length - 1;
   }
 
-  encode(stream) {
+  protected override encode(stream: EncodeStream): void {
     // tables required by PDF spec:
     //   head, hhea, loca, maxp, cvt , prep, glyf, hmtx, fpgm
     //
@@ -84,7 +99,9 @@ export default class TTFSubset extends Subset {
     let head = cloneDeep(this.font.head);
     head.indexToLocFormat = this.loca.version;
 
-    let hhea = cloneDeep(this.font.hhea);
+    let hhea = cloneDeep(this.font.hhea) as typeof this.font.hhea & {
+      numberOfMetrics: number;
+    };
     hhea.numberOfMetrics = this.hmtx.metrics.length;
 
     // map = []

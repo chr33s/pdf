@@ -1,5 +1,4 @@
 // @ts-nocheck
-
 import * as r from "@chr33s/restructure";
 import { resolveLength } from "@chr33s/restructure";
 import { ItemVariationStore } from "./variations.js";

@@ -112,7 +112,8 @@ export default class VersionedStruct extends Struct {
 
     for (const [key, type] of Object.entries(fields)) {
       if (type?.size) {
-        total += type.size(val[key], ctx);
+        const fieldSize = type.size(val[key], ctx);
+        total += fieldSize;
       }
     }
 
@@ -137,7 +138,8 @@ export default class VersionedStruct extends Struct {
       val,
     };
 
-    ctx.pointerOffset = stream.pos + this.size(val, ctx, false);
+    const sizeWithoutPointers = this.size(val, ctx, false);
+    ctx.pointerOffset = stream.pos + sizeWithoutPointers;
 
     if (typeof this.type !== "string") {
       this.type.encode(stream, val.version);

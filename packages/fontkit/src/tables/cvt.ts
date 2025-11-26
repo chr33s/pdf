@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import * as r from "@chr33s/restructure";
 
 // An array of predefined values accessible by instructions

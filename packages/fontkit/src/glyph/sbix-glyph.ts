@@ -1,6 +1,5 @@
-// @ts-nocheck
-
 import * as r from "@chr33s/restructure";
+import type { CanvasContextLike, GlyphImage } from "./glyph.js";
 import TTFGlyph from "./ttf-glyph.js";
 
 let SBIXImage = new r.Struct({
@@ -22,9 +21,10 @@ export default class SBIXGlyph extends TTFGlyph {
    * @param {number} size
    * @return {object}
    */
-  getImageForSize(size) {
+  getImageForSize(size: number): GlyphImage | null {
+    let table: any = null;
     for (let i = 0; i < this._font.sbix.imageTables.length; i++) {
-      var table = this._font.sbix.imageTables[i];
+      table = this._font.sbix.imageTables[i];
       if (table.ppem >= size) {
         break;
       }
@@ -39,10 +39,20 @@ export default class SBIXGlyph extends TTFGlyph {
     }
 
     this._font.stream.pos = start;
-    return SBIXImage.decode(this._font.stream, { buflen: end - start });
+    return SBIXImage.decode(this._font.stream, {
+      buflen: end - start,
+    }) as GlyphImage;
   }
 
-  render(ctx, size) {
+  render(
+    ctx: CanvasContextLike & {
+      image: (
+        data: Uint8Array,
+        options: { height: number; x: number; y: number },
+      ) => void;
+    },
+    size: number,
+  ): void {
     let img = this.getImageForSize(size);
     if (img != null) {
       let scale = size / this._font.unitsPerEm;

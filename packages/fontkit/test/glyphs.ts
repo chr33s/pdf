@@ -130,6 +130,9 @@ describe("glyphs", function () {
     test("should get an image", function () {
       let glyph = font.glyphsForString("😜")[0];
       let image = glyph.getImageForSize(32);
+      if (!image) {
+        throw new Error("Expected bitmap glyph image");
+      }
       return expect(image).toEqual({
         originX: 0,
         originY: 0,

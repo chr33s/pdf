@@ -1,6 +1,6 @@
-// @ts-nocheck
-
+import type { EncodeStream } from "@chr33s/restructure";
 import * as r from "@chr33s/restructure";
+import type Path from "./path.js";
 
 // Flags for simple glyphs
 const ON_CURVE = 1 << 0;
@@ -11,11 +11,11 @@ const SAME_X = 1 << 4;
 const SAME_Y = 1 << 5;
 
 class Point {
-  static size(val) {
+  static size(val: number): number {
     return val >= 0 && val <= 255 ? 1 : 2;
   }
 
-  static encode(stream, value) {
+  static encode(stream: EncodeStream, value: number): void {
     if (value >= 0 && value <= 255) {
       stream.writeUInt8(value);
     } else {
@@ -41,11 +41,11 @@ let Glyf = new r.Struct({
  * Encodes TrueType glyph outlines
  */
 export default class TTFGlyphEncoder {
-  encodeSimple(path, instructions = []) {
-    let endPtsOfContours = [];
-    let xPoints = [];
-    let yPoints = [];
-    let flags = [];
+  encodeSimple(path: Path, instructions: number[] = []) {
+    let endPtsOfContours: number[] = [];
+    let xPoints: number[] = [];
+    let yPoints: number[] = [];
+    let flags: number[] = [];
     let same = 0;
     let lastX = 0,
       lastY = 0,
@@ -156,7 +156,14 @@ export default class TTFGlyphEncoder {
     return stream.buffer;
   }
 
-  _encodePoint(value, last, points, flag, shortFlag, sameFlag) {
+  _encodePoint(
+    value: number,
+    last: number,
+    points: number[],
+    flag: number,
+    shortFlag: number,
+    sameFlag: number,
+  ): number {
     let diff = value - last;
 
     if (value === last) {

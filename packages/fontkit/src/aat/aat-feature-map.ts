@@ -1,7 +1,12 @@
-// @ts-nocheck
-
 // see https://developer.apple.com/fonts/TrueType-Reference-Manual/RM09/AppendixF.html
 // and /System/Library/Frameworks/CoreText.framework/Versions/A/Headers/SFNTLayoutTypes.h on a Mac
+type FeatureDefinition = {
+  code: number;
+  exclusive: boolean;
+} & Record<string, number | boolean>;
+
+type FeatureTuple = [number, number];
+
 const features = {
   allTypographicFeatures: {
     code: 0,
@@ -347,14 +352,25 @@ const features = {
     defaultCJKRoman: 2,
     fullWidthCJKRoman: 3,
   },
-};
+} as const satisfies Record<string, FeatureDefinition>;
 
-const feature = (name, selector) => [
-  features[name].code,
-  features[name][selector],
-];
+const featuresRecord = features as Record<string, FeatureDefinition>;
 
-const OTMapping = {
+type FeatureName = keyof typeof features;
+type FeatureSelector<Name extends FeatureName> = Exclude<
+  keyof (typeof features)[Name],
+  "code" | "exclusive"
+>;
+
+function feature<
+  Name extends FeatureName,
+  Selector extends FeatureSelector<Name>,
+>(name: Name, selector: Selector): FeatureTuple {
+  const definition = features[name];
+  return [definition.code, definition[selector] as number];
+}
+
+const OTMapping: Record<string, FeatureTuple> = {
   rlig: feature("ligatures", "requiredLigatures"),
   clig: feature("ligatures", "contextualLigatures"),
   dlig: feature("ligatures", "rareLigatures"),
@@ -473,9 +489,9 @@ for (let i = 1; i <= 99; i++) {
 }
 
 // create inverse mapping
-let AATMapping = {};
-for (let ot in OTMapping) {
-  let aat = OTMapping[ot];
+const AATMapping: Record<number, Record<number, string>> = {};
+for (const ot in OTMapping) {
+  const aat = OTMapping[ot];
   if (AATMapping[aat[0]] == null) {
     AATMapping[aat[0]] = {};
   }
@@ -485,16 +501,18 @@ for (let ot in OTMapping) {
 
 // Maps an array of OpenType features to AAT features
 // in the form of {featureType:{featureSetting:true}}
-export function mapOTToAAT(features) {
-  let res = {};
-  for (let k in features) {
-    let r;
-    if ((r = OTMapping[k])) {
+export type FeatureSelectionMap = Record<number, Record<number, boolean>>;
+
+export function mapOTToAAT(featureMap: Record<string, boolean>) {
+  const res: FeatureSelectionMap = {};
+  for (const k in featureMap) {
+    const r = OTMapping[k];
+    if (r) {
       if (res[r[0]] == null) {
         res[r[0]] = {};
       }
 
-      res[r[0]][r[1]] = features[k];
+      res[r[0]][r[1]] = featureMap[k];
     }
   }
 
@@ -503,19 +521,24 @@ export function mapOTToAAT(features) {
 
 // Maps strings in a [featureType, featureSetting]
 // to their equivalent number codes
-function mapFeatureStrings(f) {
-  let [type, setting] = f;
-  if (isNaN(type)) {
-    var typeCode = features[type] && features[type].code;
-  } else {
-    var typeCode = type;
-  }
+type FeatureTypeInput = FeatureName | number;
+type FeatureSettingInput = string | number;
+export type FeatureTupleInput = [FeatureTypeInput, FeatureSettingInput];
+type MaybeFeatureTuple = [number | undefined, number | undefined];
 
-  if (isNaN(setting)) {
-    var settingCode = features[type] && features[type][setting];
-  } else {
-    var settingCode = setting;
-  }
+function mapFeatureStrings(f: FeatureTupleInput): MaybeFeatureTuple {
+  const [type, setting] = f;
+  const typeCode = typeof type === "number" ? type : featuresRecord[type]?.code;
+
+  const settingCode =
+    typeof setting === "number"
+      ? setting
+      : typeof type === "string"
+        ? (() => {
+            const value = featuresRecord[type]?.[setting];
+            return typeof value === "number" ? value : undefined;
+          })()
+        : undefined;
 
   return [typeCode, settingCode];
 }
@@ -524,26 +547,38 @@ function mapFeatureStrings(f) {
 // Supports both arrays in the form of [[featureType, featureSetting]]
 // and objects in the form of {featureType:{featureSetting:true}}
 // featureTypes and featureSettings can be either strings or number codes
-export function mapAATToOT(features) {
-  let res = {};
-  if (Array.isArray(features)) {
-    for (let k = 0; k < features.length; k++) {
-      let r;
-      let f = mapFeatureStrings(features[k]);
-      if ((r = AATMapping[f[0]] && AATMapping[f[0]][f[1]])) {
+export function mapAATToOT(
+  featureList: FeatureTupleInput[] | Record<string, Record<string, boolean>>,
+) {
+  const res: Record<string, boolean> = {};
+  if (Array.isArray(featureList)) {
+    for (let k = 0; k < featureList.length; k++) {
+      const f = mapFeatureStrings(featureList[k]);
+      const r =
+        f[0] != null && f[1] != null && AATMapping[f[0]]
+          ? AATMapping[f[0]][f[1]]
+          : undefined;
+      if (r) {
         res[r] = true;
       }
     }
-  } else if (typeof features === "object") {
-    for (let type in features) {
-      let feature = features[type];
-      for (let setting in feature) {
-        let r;
-        let f = mapFeatureStrings([type, setting]);
-        if (
-          feature[setting] &&
-          (r = AATMapping[f[0]] && AATMapping[f[0]][f[1]])
-        ) {
+  } else if (typeof featureList === "object") {
+    for (const type in featureList) {
+      const feature = featureList[type];
+      for (const setting in feature) {
+        if (!feature[setting]) {
+          continue;
+        }
+
+        const f = mapFeatureStrings([
+          type as FeatureTypeInput,
+          setting as FeatureSettingInput,
+        ]);
+        const r =
+          f[0] != null && f[1] != null && AATMapping[f[0]]
+            ? AATMapping[f[0]][f[1]]
+            : undefined;
+        if (r) {
           res[r] = true;
         }
       }

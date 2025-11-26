@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import * as r from "@chr33s/restructure";
 
 let shortFrac = new r.Fixed(16, "BE", 14);

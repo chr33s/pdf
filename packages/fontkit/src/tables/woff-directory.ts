@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import * as r from "@chr33s/restructure";
 
 let WOFFDirectoryEntry = new r.Struct({

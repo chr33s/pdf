@@ -1,12 +1,10 @@
-// @ts-nocheck
-
-import * as r from "@chr33s/restructure";
 import concat from "concat-stream";
 import { access } from "node:fs/promises";
 import { describe, expect, test } from "vitest";
 
+import * as r from "@chr33s/restructure";
 import CFFFont from "../src/cff/cff-font.js";
-import CFFGlyph from "../src/glyph/cff-glyph.js";
+import type Subset from "../src/subset/subset.js";
 import fontkit from "./add-test-helpers-to-fontkit.js";
 import { here } from "./utils/dir.js";
 
@@ -16,7 +14,7 @@ const hasSkiaFont = await access(SKIA_FONT_PATH)
   .then(() => true)
   .catch(() => false);
 
-function encodeSubset(subset) {
+function encodeSubset(subset: Subset) {
   return new Promise<Buffer>((resolve, reject) => {
     const stream = subset.encodeStream();
     stream.on("error", reject);
@@ -102,10 +100,8 @@ describe("font subsetting", function () {
       }
 
       const buf = await encodeSubset(subset);
-      let stream = new r.DecodeStream(buf);
-      let cff = new CFFFont(stream);
-      let glyph = new CFFGlyph(1, [], { stream, "CFF ": cff });
-      expect(glyph.path.toSVG()).toBe(
+      let subsetFont = fontkit.create(buf);
+      expect(subsetFont.getGlyph(1).path.toSVG()).toBe(
         font.glyphsForString("h")[0].path.toSVG(),
       );
     });
@@ -122,10 +118,21 @@ describe("font subsetting", function () {
       }
 
       const buf = await encodeSubset(subset);
-      let stream = new r.DecodeStream(buf);
-      let cff = new CFFFont(stream);
-      let glyph = new CFFGlyph(1, [], { stream, "CFF ": cff });
-      expect(glyph.path.toSVG()).toBe(f.glyphsForString("갈")[0].path.toSVG());
+      let subsetFont = fontkit.create(buf);
+      let cffEntry = subsetFont.directory.tables["CFF "];
+      if (!cffEntry) {
+        throw new Error("Subset font is missing a CFF table");
+      }
+
+      let cffBuffer = buf.subarray(
+        cffEntry.offset,
+        cffEntry.offset + cffEntry.length,
+      );
+
+      let cff = new CFFFont(new r.DecodeStream(cffBuffer));
+      expect(subsetFont.getGlyph(1).path.toSVG()).toBe(
+        f.glyphsForString("갈")[0].path.toSVG(),
+      );
       expect(cff.topDict.FDArray.length).toBe(2);
       expect(cff.topDict.FDSelect.fds).toEqual([0, 1, 1]);
     });

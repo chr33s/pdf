@@ -1,23 +1,67 @@
-// @ts-nocheck
-
+import type { DecodeStream, EncodeStream } from "@chr33s/restructure";
 import CFFTop from "././cff-top.js";
 import standardStrings from "./cff-standard-strings.js";
 
+type TopDict = Record<string, any>;
+
 class CFFFont {
-  constructor(stream) {
-    this.stream = stream;
+  declare version: number;
+  declare topDictIndex: TopDict[];
+  declare topDict: TopDict;
+  declare nameIndex: string[];
+  declare stringIndex: string[];
+  declare isCIDFont: boolean;
+  declare globalSubrIndex: Array<
+    { offset: number; length: number } | undefined
+  >;
+  declare hdrSize: number;
+  declare length: number;
+  declare header: Record<string, unknown>;
+
+  #stream: DecodeStream;
+
+  constructor(stream: DecodeStream) {
+    this.#stream = stream;
     this.decode();
   }
 
-  static decode(stream) {
+  static decode(stream: DecodeStream) {
     return new CFFFont(stream);
   }
 
+  static size(value: Record<string, unknown> | Buffer) {
+    if (Buffer.isBuffer(value)) {
+      return value.length;
+    }
+
+    return CFFTop.size(value);
+  }
+
+  static encode(
+    stream: EncodeStream | null,
+    value: Record<string, unknown> | Buffer,
+  ) {
+    if (!stream) {
+      return;
+    }
+
+    if (Buffer.isBuffer(value)) {
+      stream.writeBuffer(value);
+      return;
+    }
+
+    return CFFTop.encode(stream, value);
+  }
+
+  get stream() {
+    return this.#stream;
+  }
+
   decode() {
-    let top = CFFTop.decode(this.stream);
+    const top = CFFTop.decode(this.#stream) as Record<string, unknown>;
     for (let key in top) {
-      let val = top[key];
-      this[key] = val;
+      const val = top[key];
+      (this as Record<string, unknown>)[key] = val;
     }
 
     if (this.version < 2) {
@@ -32,7 +76,7 @@ class CFFFont {
     return this;
   }
 
-  string(sid) {
+  string(sid: number) {
     if (this.version >= 2) {
       return null;
     }
@@ -60,12 +104,12 @@ class CFFFont {
     return this.string(this.topDict.FamilyName);
   }
 
-  getCharString(glyph) {
-    this.stream.pos = this.topDict.CharStrings[glyph].offset;
-    return this.stream.readBuffer(this.topDict.CharStrings[glyph].length);
+  getCharString(glyph: number) {
+    this.#stream.pos = this.topDict.CharStrings[glyph].offset;
+    return this.#stream.readBuffer(this.topDict.CharStrings[glyph].length);
   }
 
-  getGlyphName(gid) {
+  getGlyphName(gid: number) {
     // CFF2 glyph names are in the post table.
     if (this.version >= 2) {
       return null;
@@ -105,7 +149,7 @@ class CFFFont {
     return null;
   }
 
-  fdForGlyph(gid) {
+  fdForGlyph(gid: number) {
     if (!this.topDict.FDSelect) {
       return null;
     }
@@ -138,7 +182,7 @@ class CFFFont {
     }
   }
 
-  privateDictForGlyph(gid) {
+  privateDictForGlyph(gid: number) {
     if (this.topDict.FDSelect) {
       let fd = this.fdForGlyph(gid);
       if (this.topDict.FDArray[fd]) {

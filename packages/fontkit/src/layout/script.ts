@@ -1,11 +1,12 @@
-// @ts-nocheck
-
 import unicode from "@chr33s/unicode-properties";
+
+type UnicodeScriptValue = string | string[];
+type UnicodeScriptMap = Record<string, UnicodeScriptValue>;
 
 // This maps the Unicode Script property to an OpenType script tag
 // Data from http://www.microsoft.com/typography/otspec/scripttags.htm
 // and http://www.unicode.org/Public/UNIDATA/PropertyValueAliases.txt.
-const UNICODE_SCRIPTS = {
+const UNICODE_SCRIPTS: UnicodeScriptMap = {
   Caucasian_Albanian: "aghb",
   Arabic: "arab",
   Imperial_Aramaic: "armi",
@@ -135,7 +136,7 @@ const UNICODE_SCRIPTS = {
   Unknown: "zzzz",
 };
 
-const OPENTYPE_SCRIPTS = {};
+const OPENTYPE_SCRIPTS: Record<string, string> = {};
 for (let script in UNICODE_SCRIPTS) {
   let tag = UNICODE_SCRIPTS[script];
   if (Array.isArray(tag)) {
@@ -147,15 +148,15 @@ for (let script in UNICODE_SCRIPTS) {
   }
 }
 
-export function fromUnicode(script) {
+export function fromUnicode(script: string): UnicodeScriptValue | undefined {
   return UNICODE_SCRIPTS[script];
 }
 
-export function fromOpenType(tag) {
+export function fromOpenType(tag: string): string | undefined {
   return OPENTYPE_SCRIPTS[tag];
 }
 
-export function forString(string) {
+export function forString(string: string): string | string[] {
   let len = string.length;
   let idx = 0;
   while (idx < len) {
@@ -181,7 +182,7 @@ export function forString(string) {
   return UNICODE_SCRIPTS.Unknown;
 }
 
-export function forCodePoints(codePoints) {
+export function forCodePoints(codePoints: number[]): string | string[] {
   for (let i = 0; i < codePoints.length; i++) {
     let codePoint = codePoints[i];
     let script = unicode.getScript(codePoint);
@@ -194,7 +195,7 @@ export function forCodePoints(codePoints) {
 }
 
 // The scripts in this map are written from right to left
-const RTL = {
+const RTL: Record<string, boolean> = {
   arab: true, // Arabic
   hebr: true, // Hebrew
   syrc: true, // Syriac
@@ -224,7 +225,7 @@ const RTL = {
   phlp: true, // Psalter Pahlavi
 };
 
-export function direction(script) {
+export function direction(script: string): "rtl" | "ltr" {
   if (RTL[script]) {
     return "rtl";
   }

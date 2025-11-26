@@ -1,60 +1,103 @@
-// @ts-nocheck
-
-import AATLayoutEngine from "../aat/aat-layout-engine.js";
+import AATLayoutEngine, {
+  type LayoutFontLike as AATLayoutFontLike,
+} from "../aat/aat-layout-engine.js";
+import type Glyph from "../glyph/glyph.js";
+import type { FontLike as GlyphFontLike } from "../glyph/glyph.js";
 import OTLayoutEngine from "../opentype/ot-layout-engine.js";
 import GlyphPosition from "./glyph-position.js";
 import GlyphRun from "./glyph-run.js";
-import KernProcessor from "./kern-processor.js";
+import KernProcessor, { type KernTable } from "./kern-processor.js";
 import * as Script from "./script.js";
 import UnicodeLayoutEngine from "./unicode-layout-engine.js";
 
+type LayoutFeatures = string[] | Record<string, boolean> | undefined;
+type ScriptValue = string | string[] | null;
+
+type AdvancedLayoutEngine = {
+  substitute(glyphRun: GlyphRun): void;
+  position?(glyphRun: GlyphRun): { kern?: boolean } | null;
+  setup?(glyphRun: GlyphRun): void;
+  cleanup?(): void;
+  fallbackPosition?: boolean;
+  getAvailableFeatures(
+    script?: string | null,
+    language?: string | null,
+  ): string[];
+  stringsForGlyph?(gid: number): Iterable<string> | string[];
+};
+
 export default class LayoutEngine {
-  constructor(font) {
+  font: GlyphFontLike;
+  unicodeLayoutEngine: UnicodeLayoutEngine | null;
+  kernProcessor: KernProcessor | null;
+  engine: AdvancedLayoutEngine | null;
+
+  constructor(font: GlyphFontLike) {
     this.font = font;
     this.unicodeLayoutEngine = null;
     this.kernProcessor = null;
+    this.engine = null;
 
     // Choose an advanced layout engine. We try the AAT morx table first since more
     // scripts are currently supported because the shaping logic is built into the font.
     if (this.font.morx) {
-      this.engine = new AATLayoutEngine(this.font);
+      this.engine = new AATLayoutEngine(
+        this.font as unknown as AATLayoutFontLike,
+      );
     } else if (this.font.GSUB || this.font.GPOS) {
       this.engine = new OTLayoutEngine(this.font);
     }
   }
 
-  layout(string, features, script, language, direction) {
-    // Make the features parameter optional
+  layout(
+    input: string | Glyph[],
+    features?: string[] | Record<string, boolean> | string,
+    script?: string | null,
+    language?: string | null,
+    direction?: string | null,
+  ): GlyphRun {
+    let resolvedScript: ScriptValue = script ?? null;
+    let resolvedLanguage = language ?? null;
+    let resolvedDirection = direction ?? null;
+    let normalizedFeatures: LayoutFeatures = undefined;
+
     if (typeof features === "string") {
-      direction = language;
-      language = script;
-      script = features;
-      features = [];
+      resolvedDirection = language ?? null;
+      resolvedLanguage = script ?? null;
+      resolvedScript = features;
+    } else {
+      normalizedFeatures = features;
     }
 
-    // Map string to glyphs if needed
-    if (typeof string === "string") {
-      // Attempt to detect the script from the string if not provided.
-      if (script == null) {
-        script = Script.forString(string);
+    let glyphs: Glyph[];
+    if (typeof input === "string") {
+      if (resolvedScript == null) {
+        resolvedScript = Script.forString(input);
       }
 
-      var glyphs = this.font.glyphsForString(string);
+      glyphs = this.font.glyphsForString(input);
     } else {
-      // Attempt to detect the script from the glyph code points if not provided.
-      if (script == null) {
-        let codePoints = [];
-        for (let glyph of string) {
+      if (resolvedScript == null) {
+        const codePoints: number[] = [];
+        for (let glyph of input) {
           codePoints.push(...glyph.codePoints);
         }
 
-        script = Script.forCodePoints(codePoints);
+        resolvedScript = Script.forCodePoints(codePoints);
       }
 
-      var glyphs = string;
+      glyphs = input;
     }
 
-    let glyphRun = new GlyphRun(glyphs, features, script, language, direction);
+    const scriptValue = this.#normalizeScript(resolvedScript);
+
+    let glyphRun = new GlyphRun(
+      glyphs,
+      normalizedFeatures,
+      scriptValue,
+      resolvedLanguage,
+      resolvedDirection,
+    );
 
     // Return early if there are no glyphs
     if (glyphs.length === 0) {
@@ -71,6 +114,10 @@ export default class LayoutEngine {
     this.substitute(glyphRun);
     this.position(glyphRun);
 
+    if (!glyphRun.positions) {
+      glyphRun.positions = [];
+    }
+
     this.hideDefaultIgnorables(glyphRun.glyphs, glyphRun.positions);
 
     // Let the layout engine clean up any state it might have
@@ -81,19 +128,19 @@ export default class LayoutEngine {
     return glyphRun;
   }
 
-  substitute(glyphRun) {
+  substitute(glyphRun: GlyphRun): void {
     // Call the advanced layout engine to make substitutions
     if (this.engine && this.engine.substitute) {
       this.engine.substitute(glyphRun);
     }
   }
 
-  position(glyphRun) {
+  position(glyphRun: GlyphRun): void {
     // Get initial glyph positions
     glyphRun.positions = glyphRun.glyphs.map(
       (glyph) => new GlyphPosition(glyph.advanceWidth),
     );
-    let positioned = null;
+    let positioned: { kern?: boolean } | null = null;
 
     // Call the advanced layout engine. Returns the features applied.
     if (this.engine && this.engine.position) {
@@ -118,8 +165,15 @@ export default class LayoutEngine {
       glyphRun.features.kern !== false &&
       this.font.kern
     ) {
+      const kernData = this.font.kern;
+      if (!kernData?.tables) {
+        return;
+      }
+
       if (!this.kernProcessor) {
-        this.kernProcessor = new KernProcessor(this.font);
+        this.kernProcessor = new KernProcessor({
+          kern: kernData as { tables: KernTable[] },
+        });
       }
 
       this.kernProcessor.process(glyphRun.glyphs, glyphRun.positions);
@@ -127,7 +181,7 @@ export default class LayoutEngine {
     }
   }
 
-  hideDefaultIgnorables(glyphs, positions) {
+  hideDefaultIgnorables(glyphs: Glyph[], positions: GlyphPosition[]): void {
     let space = this.font.glyphForCodePoint(0x20);
     for (let i = 0; i < glyphs.length; i++) {
       if (this.isDefaultIgnorable(glyphs[i].codePoints[0])) {
@@ -138,7 +192,7 @@ export default class LayoutEngine {
     }
   }
 
-  isDefaultIgnorable(ch) {
+  isDefaultIgnorable(ch: number): boolean {
     // From DerivedCoreProperties.txt in the Unicode database,
     // minus U+115F, U+1160, U+3164 and U+FFA0, which is what
     // Harfbuzz and Uniscribe do.
@@ -184,11 +238,17 @@ export default class LayoutEngine {
     }
   }
 
-  getAvailableFeatures(script, language) {
-    let features = [];
+  getAvailableFeatures(
+    script?: string | string[] | null,
+    language?: string | null,
+  ): string[] {
+    let features: string[] = [];
+    const scriptTag = this.#firstScript(script);
 
     if (this.engine) {
-      features.push(...this.engine.getAvailableFeatures(script, language));
+      features.push(
+        ...this.engine.getAvailableFeatures(scriptTag, language ?? null),
+      );
     }
 
     if (this.font.kern && features.indexOf("kern") === -1) {
@@ -198,8 +258,8 @@ export default class LayoutEngine {
     return features;
   }
 
-  stringsForGlyph(gid) {
-    let result = new Set();
+  stringsForGlyph(gid: number): string[] {
+    let result = new Set<string>();
 
     let codePoints = this.font._cmapProcessor.codePointsForGlyph(gid);
     for (let codePoint of codePoints) {
@@ -207,11 +267,27 @@ export default class LayoutEngine {
     }
 
     if (this.engine && this.engine.stringsForGlyph) {
-      for (let string of this.engine.stringsForGlyph(gid)) {
+      for (let string of this.engine.stringsForGlyph(gid) ?? []) {
         result.add(string);
       }
     }
 
     return Array.from(result);
+  }
+
+  #normalizeScript(script: ScriptValue): string | string[] {
+    if (script == null) {
+      return "DFLT";
+    }
+
+    return script;
+  }
+
+  #firstScript(script: string | string[] | null | undefined): string | null {
+    if (!script) {
+      return null;
+    }
+
+    return Array.isArray(script) ? (script[0] ?? null) : script;
   }
 }

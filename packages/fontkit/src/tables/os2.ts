@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import * as r from "@chr33s/restructure";
 
 var OS2 = new r.VersionedStruct(r.uint16, {

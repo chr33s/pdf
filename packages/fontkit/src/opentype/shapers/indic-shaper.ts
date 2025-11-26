@@ -1,12 +1,12 @@
-// @ts-nocheck
-
 import { StateMachine } from "@chr33s/dfa";
 import unicode from "@chr33s/unicode-properties";
 import UnicodeTrie from "@chr33s/unicode-trie";
 import * as base64 from "base64-arraybuffer";
 import pako from "pako";
+import type { FontLike } from "../../glyph/glyph.js";
 import * as Script from "../../layout/script.js";
 import GlyphInfo from "../glyph-info.js";
+import type ShapingPlan from "../shaping-plan.js";
 import DefaultShaper from "./default-shaper.js";
 import {
   CATEGORIES,
@@ -22,20 +22,26 @@ import base64DeflatedIndicMachine from "./indic-gen-data.js";
 import base64DeflatedTrie from "./trie-indic-data.js";
 import base64DeflatedUseData from "./use-data.js";
 
+type IndicConfig = (typeof INDIC_CONFIGS)[keyof typeof INDIC_CONFIGS];
+type IndicPlan = ShapingPlan & {
+  unicodeScript?: string;
+  indicConfig?: IndicConfig;
+  isOldSpec?: boolean;
+};
+
+const INDIC_DECOMPOSITIONS_MAP = INDIC_DECOMPOSITIONS as Record<
+  number,
+  number[]
+>;
+
 // Trie is serialized as a Buffer in node, but here
 // we may be running in a browser so we make an Uint8Array
-const indicMachine = JSON.parse(
-  String.fromCharCode.apply(
-    String,
-    pako.inflate(base64.decode(base64DeflatedIndicMachine)),
-  ),
-);
-const useData = JSON.parse(
-  String.fromCharCode.apply(
-    String,
-    pako.inflate(base64.decode(base64DeflatedUseData)),
-  ),
-);
+const textDecoder = new TextDecoder();
+const decodeInflatedJson = (encoded: string) =>
+  JSON.parse(textDecoder.decode(pako.inflate(base64.decode(encoded))));
+
+const indicMachine = decodeInflatedJson(base64DeflatedIndicMachine);
+const useData = decodeInflatedJson(base64DeflatedUseData);
 const trieData = pako.inflate(base64.decode(base64DeflatedTrie));
 
 const { decompositions } = useData;
@@ -48,8 +54,9 @@ const stateMachine = new StateMachine(indicMachine);
  * Based on code from Harfbuzz: https://github.com/behdad/harfbuzz/blob/master/src/hb-ot-shape-complex-indic.cc
  */
 export default class IndicShaper extends DefaultShaper {
-  static zeroMarkWidths = "NONE";
-  static planFeatures(plan) {
+  static override zeroMarkWidths = "NONE" as const;
+
+  static planFeatures(plan: IndicPlan): void {
     plan.addStage(setupSyllables);
 
     plan.addStage(["locl", "ccmp"]);
@@ -88,24 +95,31 @@ export default class IndicShaper extends DefaultShaper {
     });
 
     // Setup the indic config for the selected script
-    plan.unicodeScript = Script.fromOpenType(plan.script);
-    plan.indicConfig =
-      INDIC_CONFIGS[plan.unicodeScript] || INDIC_CONFIGS.Default;
-    plan.isOldSpec =
-      plan.indicConfig.hasOldSpec &&
-      plan.script[plan.script.length - 1] !== "2";
+    const scriptTag = Array.isArray(plan.script)
+      ? (plan.script[0] ?? "DFLT")
+      : (plan.script ?? "DFLT");
+    const unicodeScript = Script.fromOpenType(scriptTag) ?? "Default";
+    plan.unicodeScript = unicodeScript;
+    const configKey = (
+      unicodeScript in INDIC_CONFIGS ? unicodeScript : "Default"
+    ) as keyof typeof INDIC_CONFIGS;
+    plan.indicConfig = INDIC_CONFIGS[configKey];
+    plan.isOldSpec = Boolean(
+      plan.indicConfig.hasOldSpec && !scriptTag.endsWith("2"),
+    );
 
     // TODO: turn off kern (Khmer) and liga features.
   }
 
-  static assignFeatures(plan, glyphs) {
+  static assignFeatures(plan: IndicPlan, glyphs: GlyphInfo[]): void {
     // Decompose split matras
     // TODO: do this in a more general unicode normalizer
     for (let i = glyphs.length - 1; i >= 0; i--) {
       let codepoint = glyphs[i].codePoints[0];
-      let d = INDIC_DECOMPOSITIONS[codepoint] || decompositions[codepoint];
+      const builtin = INDIC_DECOMPOSITIONS_MAP[codepoint];
+      let d = builtin || decompositions[codepoint];
       if (d) {
-        let decomposed = d.map((c) => {
+        let decomposed = d.map((c: number) => {
           let g = plan.font.glyphForCodePoint(c);
           return new GlyphInfo(plan.font, g.id, [c], glyphs[i].features);
         });
@@ -116,16 +130,26 @@ export default class IndicShaper extends DefaultShaper {
   }
 }
 
-function indicCategory(glyph) {
+function indicCategory(glyph: GlyphInfo): number {
   return trie.get(glyph.codePoints[0]) >> 8;
 }
 
-function indicPosition(glyph) {
+function indicPosition(glyph: GlyphInfo): number {
   return 1 << (trie.get(glyph.codePoints[0]) & 0xff);
 }
 
 class IndicInfo {
-  constructor(category, position, syllableType, syllable) {
+  category: number;
+  position: number;
+  syllableType: string;
+  syllable: number;
+
+  constructor(
+    category: number,
+    position: number,
+    syllableType: string,
+    syllable: number,
+  ) {
     this.category = category;
     this.position = position;
     this.syllableType = syllableType;
@@ -133,7 +157,11 @@ class IndicInfo {
   }
 }
 
-function setupSyllables(font, glyphs) {
+function getIndicInfo(glyph: GlyphInfo): IndicInfo {
+  return glyph.shaperInfo as IndicInfo;
+}
+
+function setupSyllables(font: FontLike, glyphs: GlyphInfo[]): void {
   let syllable = 0;
   let last = 0;
   for (let [start, end, tags] of stateMachine.match(
@@ -179,19 +207,19 @@ function setupSyllables(font, glyphs) {
   }
 }
 
-function isConsonant(glyph) {
-  return glyph.shaperInfo.category & CONSONANT_FLAGS;
+function isConsonant(glyph: GlyphInfo): boolean {
+  return Boolean(getIndicInfo(glyph).category & CONSONANT_FLAGS);
 }
 
-function isJoiner(glyph) {
-  return glyph.shaperInfo.category & JOINER_FLAGS;
+function isJoiner(glyph: GlyphInfo): boolean {
+  return Boolean(getIndicInfo(glyph).category & JOINER_FLAGS);
 }
 
-function isHalantOrCoeng(glyph) {
-  return glyph.shaperInfo.category & HALANT_OR_COENG_FLAGS;
+function isHalantOrCoeng(glyph: GlyphInfo): boolean {
+  return Boolean(getIndicInfo(glyph).category & HALANT_OR_COENG_FLAGS);
 }
 
-function wouldSubstitute(glyphs, feature) {
+function wouldSubstitute(glyphs: GlyphInfo[], feature: string): boolean {
   for (let glyph of glyphs) {
     glyph.features = { [feature]: true };
   }
@@ -202,7 +230,11 @@ function wouldSubstitute(glyphs, feature) {
   return glyphs.length === 1;
 }
 
-function consonantPosition(font, consonant, virama) {
+function consonantPosition(
+  font: FontLike,
+  consonant: GlyphInfo,
+  virama: GlyphInfo,
+): number {
   let glyphs = [virama, consonant, virama];
   if (
     wouldSubstitute(glyphs.slice(0, 2), "blwf") ||
@@ -224,7 +256,11 @@ function consonantPosition(font, consonant, virama) {
   return POSITIONS.Base_C;
 }
 
-function initialReordering(font, glyphs, plan) {
+function initialReordering(
+  font: FontLike,
+  glyphs: GlyphInfo[],
+  plan: IndicPlan,
+): void {
   let indicConfig = plan.indicConfig;
   let features = font._layoutEngine.engine.GSUBProcessor.features;
 
@@ -557,7 +593,10 @@ function initialReordering(font, glyphs, plan) {
     }
 
     let arr = glyphs.slice(start, end);
-    arr.sort((a, b) => a.shaperInfo.position - b.shaperInfo.position);
+    arr.sort(
+      (a: GlyphInfo, b: GlyphInfo) =>
+        getIndicInfo(a).position - getIndicInfo(b).position,
+    );
     glyphs.splice(start, arr.length, ...arr);
 
     // Find base again
@@ -675,7 +714,11 @@ function initialReordering(font, glyphs, plan) {
   }
 }
 
-function finalReordering(font, glyphs, plan) {
+function finalReordering(
+  font: FontLike,
+  glyphs: GlyphInfo[],
+  plan: IndicPlan,
+): void {
   let indicConfig = plan.indicConfig;
   let features = font._layoutEngine.engine.GSUBProcessor.features;
 
@@ -713,7 +756,7 @@ function finalReordering(font, glyphs, plan) {
                 while (base < end && isHalantOrCoeng(glyphs[base])) {
                   base++;
                 }
-                glyphs[base].shaperInfo.position = POSITIONS.BASE_C;
+                glyphs[base].shaperInfo.position = POSITIONS.Base_C;
                 tryPref = false;
               }
               break;

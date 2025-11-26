@@ -1,20 +1,25 @@
-// @ts-nocheck
-
 import unicode from "@chr33s/unicode-properties";
+import type GlyphInfo from "../glyph-info.js";
+import type ShapingPlan from "../shaping-plan.js";
 
 const VARIATION_FEATURES = ["rvrn"];
 const COMMON_FEATURES = ["ccmp", "locl", "rlig", "mark", "mkmk"];
 const FRACTIONAL_FEATURES = ["frac", "numr", "dnom"];
 const HORIZONTAL_FEATURES = ["calt", "clig", "liga", "rclt", "curs", "kern"];
 const _VERTICAL_FEATURES = ["vert"];
-const DIRECTIONAL_FEATURES = {
+const DIRECTIONAL_FEATURES: Record<"ltr" | "rtl", string[]> = {
   ltr: ["ltra", "ltrm"],
   rtl: ["rtla", "rtlm"],
 };
 
 export default class DefaultShaper {
-  static zeroMarkWidths = "AFTER_GPOS";
-  static plan(plan, glyphs, features) {
+  static zeroMarkWidths: "BEFORE_GPOS" | "AFTER_GPOS" | "NONE" = "AFTER_GPOS";
+
+  static plan(
+    plan: ShapingPlan,
+    glyphs: GlyphInfo[],
+    features: Record<string, boolean>,
+  ): void {
     // Plan the features we want to apply
     this.planPreprocessing(plan);
     this.planFeatures(plan);
@@ -27,23 +32,27 @@ export default class DefaultShaper {
     this.assignFeatures(plan, glyphs);
   }
 
-  static planPreprocessing(plan) {
+  static planPreprocessing(plan: ShapingPlan): void {
+    const direction = plan.direction === "rtl" ? "rtl" : "ltr";
     plan.add({
-      global: [...VARIATION_FEATURES, ...DIRECTIONAL_FEATURES[plan.direction]],
+      global: [...VARIATION_FEATURES, ...DIRECTIONAL_FEATURES[direction]],
       local: FRACTIONAL_FEATURES,
     });
   }
 
-  static planFeatures(_plan) {
+  static planFeatures(_plan: ShapingPlan): void {
     // Do nothing by default. Let subclasses override this.
   }
 
-  static planPostprocessing(plan, userFeatures) {
+  static planPostprocessing(
+    plan: ShapingPlan,
+    userFeatures?: string[] | Record<string, boolean>,
+  ): void {
     plan.add([...COMMON_FEATURES, ...HORIZONTAL_FEATURES]);
     plan.setFeatureOverrides(userFeatures);
   }
 
-  static assignFeatures(plan, glyphs) {
+  static assignFeatures(plan: ShapingPlan, glyphs: GlyphInfo[]): void {
     // Enable contextual fractions
     for (let i = 0; i < glyphs.length; i++) {
       let glyph = glyphs[i];

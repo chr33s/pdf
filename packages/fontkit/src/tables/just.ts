@@ -1,5 +1,4 @@
 // @ts-nocheck
-
 import * as r from "@chr33s/restructure";
 import { LookupTable, StateTable1 } from "./aat.js";
 

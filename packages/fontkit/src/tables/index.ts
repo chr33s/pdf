@@ -1,6 +1,4 @@
-// @ts-nocheck
-
-let tables = {};
+const tables: Record<string, any> = {};
 export default tables;
 
 // Required Tables

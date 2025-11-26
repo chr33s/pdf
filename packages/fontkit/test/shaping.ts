@@ -21,6 +21,9 @@ describe("shaping", function () {
         fontCache[font] ||
         (fontCache[font] = fontkit.openSync(__dirname + "/data/" + font));
       let { glyphs, positions } = f.layout(text);
+      if (!positions) {
+        throw new Error("Expected layout positions to be available");
+      }
 
       // Generate a compact string representation of the results
       // in the same format as Harfbuzz, for comparison.

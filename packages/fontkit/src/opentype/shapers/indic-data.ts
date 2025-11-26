@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 // Cateories used in the OpenType spec:
 // https://www.microsoft.com/typography/otfntdev/devanot/shaping.aspx
 export const CATEGORIES = {

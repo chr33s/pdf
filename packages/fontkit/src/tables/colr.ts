@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import * as r from "@chr33s/restructure";
 
 let LayerRecord = new r.Struct({
@@ -28,7 +26,9 @@ export default new r.Struct({
   layerRecords: new r.Pointer(
     r.uint32,
     new r.Array(LayerRecord, "numLayerRecords"),
-    { lazy: true },
+    {
+      lazy: true,
+    },
   ),
   numLayerRecords: r.uint16,
 });

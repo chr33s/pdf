@@ -1,4 +1,4 @@
-// @ts-nocheck
+import type { DecodeStream, EncodeStream } from "@chr33s/restructure";
 
 const FLOAT_EOF = 0xf;
 const FLOAT_LOOKUP = [
@@ -19,15 +19,22 @@ const FLOAT_LOOKUP = [
   "-",
 ];
 
-const FLOAT_ENCODE_LOOKUP = {
+const FLOAT_ENCODE_LOOKUP: Record<string, number> = {
   ".": 10,
   E: 11,
   "E-": 12,
   "-": 14,
 };
 
+type ForceLargeValue = {
+  forceLarge?: boolean;
+  valueOf(): number;
+};
+
+export type OperandValue = number | ForceLargeValue;
+
 export default class CFFOperand {
-  static decode(stream, value) {
+  static decode(stream: DecodeStream, value: number) {
     if (32 <= value && value <= 246) {
       return value - 139;
     }
@@ -51,15 +58,15 @@ export default class CFFOperand {
     if (value === 30) {
       let str = "";
       while (true) {
-        let b = stream.readUInt8();
+        const b = stream.readUInt8();
 
-        let n1 = b >> 4;
+        const n1 = b >> 4;
         if (n1 === FLOAT_EOF) {
           break;
         }
         str += FLOAT_LOOKUP[n1];
 
-        let n2 = b & 15;
+        const n2 = b & 15;
         if (n2 === FLOAT_EOF) {
           break;
         }
@@ -72,77 +79,98 @@ export default class CFFOperand {
     return null;
   }
 
-  static size(value) {
+  static size(value: OperandValue) {
     // if the value needs to be forced to the largest size (32 bit)
     // e.g. for unknown pointers, set to 32768
-    if (value.forceLarge) {
+    if (typeof value !== "number" && value.forceLarge) {
       value = 32768;
     }
 
-    if ((value | 0) !== value) {
+    const numericValue = Number(value);
+
+    if ((numericValue | 0) !== numericValue) {
       // floating point
-      let str = "" + value;
+      const str = String(numericValue);
       return 1 + Math.ceil((str.length + 1) / 2);
-    } else if (-107 <= value && value <= 107) {
+    }
+
+    const intVal = numericValue;
+    if (-107 <= intVal && intVal <= 107) {
       return 1;
-    } else if (
-      (108 <= value && value <= 1131) ||
-      (-1131 <= value && value <= -108)
+    }
+
+    if (
+      (108 <= intVal && intVal <= 1131) ||
+      (-1131 <= intVal && intVal <= -108)
     ) {
       return 2;
-    } else if (-32768 <= value && value <= 32767) {
-      return 3;
-    } else {
-      return 5;
     }
+
+    if (-32768 <= intVal && intVal <= 32767) {
+      return 3;
+    }
+
+    return 5;
   }
 
-  static encode(stream, value) {
+  static encode(stream: EncodeStream, value: OperandValue) {
     // if the value needs to be forced to the largest size (32 bit)
     // e.g. for unknown pointers, save the old value and set to 32768
     let val = Number(value);
 
-    if (value.forceLarge) {
+    if (typeof value !== "number" && value.forceLarge) {
       stream.writeUInt8(29);
       return stream.writeInt32BE(val);
-    } else if ((val | 0) !== val) {
+    }
+
+    if ((val | 0) !== val) {
       // floating point
       stream.writeUInt8(30);
 
-      let str = "" + val;
+      const str = String(val);
+      let n2 = FLOAT_EOF;
       for (let i = 0; i < str.length; i += 2) {
-        let c1 = str[i];
-        let n1 = FLOAT_ENCODE_LOOKUP[c1] || +c1;
+        const c1 = str[i];
+        const n1 = FLOAT_ENCODE_LOOKUP[c1] ?? +c1;
 
         if (i === str.length - 1) {
-          var n2 = FLOAT_EOF;
+          n2 = FLOAT_EOF;
         } else {
-          let c2 = str[i + 1];
-          var n2 = FLOAT_ENCODE_LOOKUP[c2] || +c2;
+          const c2 = str[i + 1];
+          n2 = FLOAT_ENCODE_LOOKUP[c2] ?? +c2;
         }
 
         stream.writeUInt8((n1 << 4) | (n2 & 15));
       }
 
       if (n2 !== FLOAT_EOF) {
-        return stream.writeUInt8(FLOAT_EOF << 4);
+        stream.writeUInt8(FLOAT_EOF << 4);
       }
-    } else if (-107 <= val && val <= 107) {
+      return;
+    }
+
+    if (-107 <= val && val <= 107) {
       return stream.writeUInt8(val + 139);
-    } else if (108 <= val && val <= 1131) {
+    }
+
+    if (108 <= val && val <= 1131) {
       val -= 108;
       stream.writeUInt8((val >> 8) + 247);
       return stream.writeUInt8(val & 0xff);
-    } else if (-1131 <= val && val <= -108) {
+    }
+
+    if (-1131 <= val && val <= -108) {
       val = -val - 108;
       stream.writeUInt8((val >> 8) + 251);
       return stream.writeUInt8(val & 0xff);
-    } else if (-32768 <= val && val <= 32767) {
+    }
+
+    if (-32768 <= val && val <= 32767) {
       stream.writeUInt8(28);
       return stream.writeInt16BE(val);
-    } else {
-      stream.writeUInt8(29);
-      return stream.writeInt32BE(val);
     }
+
+    stream.writeUInt8(29);
+    return stream.writeInt32BE(val);
   }
 }

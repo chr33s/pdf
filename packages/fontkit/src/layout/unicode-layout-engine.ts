@@ -1,6 +1,7 @@
-// @ts-nocheck
-
 import unicode from "@chr33s/unicode-properties";
+import type Glyph from "../glyph/glyph.js";
+import type { FontLike } from "../glyph/glyph.js";
+import type GlyphPosition from "./glyph-position.js";
 
 /**
  * This class is used when GPOS does not define 'mark' or 'mkmk' features
@@ -11,11 +12,13 @@ import unicode from "@chr33s/unicode-properties";
  * https://github.com/behdad/harfbuzz/blob/master/src/hb-ot-shape-fallback.cc
  */
 export default class UnicodeLayoutEngine {
-  constructor(font) {
+  font: FontLike;
+
+  constructor(font: FontLike) {
     this.font = font;
   }
 
-  positionGlyphs(glyphs, positions) {
+  positionGlyphs(glyphs: Glyph[], positions: GlyphPosition[]): GlyphPosition[] {
     // find each base + mark cluster, and position the marks relative to the base
     let clusterStart = 0;
     let clusterEnd = 0;
@@ -40,7 +43,12 @@ export default class UnicodeLayoutEngine {
     return positions;
   }
 
-  positionCluster(glyphs, positions, clusterStart, clusterEnd) {
+  positionCluster(
+    glyphs: Glyph[],
+    positions: GlyphPosition[],
+    clusterStart: number,
+    clusterEnd: number,
+  ): void {
     let base = glyphs[clusterStart];
     let baseBox = base.cbox.copy();
 
@@ -145,7 +153,7 @@ export default class UnicodeLayoutEngine {
     return;
   }
 
-  getCombiningClass(codePoint) {
+  getCombiningClass(codePoint: number): string {
     let combiningClass = unicode.getCombiningClass(codePoint);
 
     // Thai / Lao need some per-character work

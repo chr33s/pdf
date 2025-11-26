@@ -1,19 +1,33 @@
-// @ts-nocheck
+type EncodingName = string | null;
+type EncodingTable = ReadonlyArray<EncodingName>;
+type PlatformEncodingMap = ReadonlyArray<EncodingTable>;
 
 /**
  * Gets an encoding name from platform, encoding, and language ids.
  * Returned encoding names can be used in iconv-lite to decode text.
  */
-export function getEncoding(platformID, encodingID, languageID = 0) {
-  if (platformID === 1 && MAC_LANGUAGE_ENCODINGS[languageID]) {
-    return MAC_LANGUAGE_ENCODINGS[languageID];
+export function getEncoding(
+  platformID: number,
+  encodingID: number,
+  languageID = 0,
+): EncodingName {
+  if (platformID === 1) {
+    const macEncoding = MAC_LANGUAGE_ENCODINGS[languageID];
+    if (macEncoding) {
+      return macEncoding;
+    }
   }
 
-  return ENCODINGS[platformID][encodingID];
+  const platformEncodings = ENCODINGS[platformID];
+  if (!platformEncodings) {
+    return null;
+  }
+
+  return platformEncodings[encodingID] ?? null;
 }
 
 // Map of platform ids to encoding ids.
-export const ENCODINGS = [
+export const ENCODINGS: PlatformEncodingMap = [
   // unicode
   ["utf16be", "utf16be", "utf16be", "utf16be", "utf16be", "utf16be"],
 
@@ -93,7 +107,7 @@ export const ENCODINGS = [
 
 // Overrides for Mac scripts by language id.
 // See http://unicode.org/Public/MAPPINGS/VENDORS/APPLE/Readme.txt
-export const MAC_LANGUAGE_ENCODINGS = {
+export const MAC_LANGUAGE_ENCODINGS: Record<number, string> = {
   15: "maciceland",
   17: "macturkish",
   18: "maccroatian",

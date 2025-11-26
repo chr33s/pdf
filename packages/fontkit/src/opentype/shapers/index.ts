@@ -1,12 +1,12 @@
-// @ts-nocheck
-
 import ArabicShaper from "./arabic-shaper.js";
 import DefaultShaper from "./default-shaper.js";
 import HangulShaper from "./hangul-shaper.js";
 import IndicShaper from "./indic-shaper.js";
 import UniversalShaper from "./universal-shaper.js";
 
-const SHAPERS = {
+export type ShaperModule = typeof DefaultShaper;
+
+const SHAPERS: Record<string, ShaperModule> = {
   arab: ArabicShaper, // Arabic
   mong: ArabicShaper, // Mongolian
   syrc: ArabicShaper, // Syriac
@@ -88,12 +88,14 @@ const SHAPERS = {
   DFLT: DefaultShaper, // Default
 };
 
-export function choose(script) {
-  if (!Array.isArray(script)) {
-    script = [script];
-  }
+export function choose(script?: string | string[] | null): ShaperModule {
+  const scriptTags = Array.isArray(script)
+    ? (script.filter(Boolean) as string[])
+    : script
+      ? [script]
+      : [];
 
-  for (let s of script) {
+  for (let s of scriptTags) {
     let shaper = SHAPERS[s];
     if (shaper) {
       return shaper;

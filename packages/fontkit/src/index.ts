@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import fontkit from "./base.js";
 import DFont from "./d-font.js";
 import TrueTypeCollection from "./true-type-collection.js";
@@ -11,7 +9,7 @@ import WOFF2Font from "./woff2-font.js";
 fontkit.registerFormat(TTFFont);
 fontkit.registerFormat(WOFFFont);
 fontkit.registerFormat(WOFF2Font);
-fontkit.registerFormat(TrueTypeCollection);
-fontkit.registerFormat(DFont);
+fontkit.registerFormat(TrueTypeCollection as any);
+fontkit.registerFormat(DFont as any);
 
 export default fontkit;

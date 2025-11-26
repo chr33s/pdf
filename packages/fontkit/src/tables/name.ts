@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import * as r from "@chr33s/restructure";
 import { getEncoding, LANGUAGES } from "../encodings.js";
 
@@ -70,7 +68,7 @@ const NAMES = [
 ];
 
 NameTable.process = function (_stream) {
-  var records = {};
+  let records = {};
   for (let record of this.records) {
     // find out what language this is for
     let language = LANGUAGES[record.platformID][record.languageID];

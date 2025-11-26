@@ -1,9 +1,11 @@
-// @ts-nocheck
-
 /**
  * Represents positioning information for a glyph in a GlyphRun.
  */
 export default class GlyphPosition {
+  xAdvance: number;
+  yAdvance: number;
+  xOffset: number;
+  yOffset: number;
   constructor(xAdvance = 0, yAdvance = 0, xOffset = 0, yOffset = 0) {
     /**
      * The amount to move the virtual pen in the X direction after rendering this glyph.

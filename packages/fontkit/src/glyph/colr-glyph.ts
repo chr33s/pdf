@@ -1,10 +1,29 @@
-// @ts-nocheck
-
 import BBox from "./b-box.js";
-import Glyph from "./glyph.js";
+import Glyph, { type CanvasContextLike } from "./glyph.js";
+
+type RGBAColor = {
+  red: number;
+  green: number;
+  blue: number;
+  alpha: number;
+};
+
+type LayerRecord = {
+  gid: number;
+  paletteIndex: number;
+};
+
+type BaseGlyphRecord = {
+  gid: number;
+  firstLayerIndex: number;
+  numLayers: number;
+};
 
 class COLRLayer {
-  constructor(glyph, color) {
+  glyph: Glyph;
+  color: RGBAColor;
+
+  constructor(glyph: Glyph, color: RGBAColor) {
     this.glyph = glyph;
     this.color = color;
   }
@@ -16,7 +35,7 @@ class COLRLayer {
  * of which  is another vector glyph.
  */
 export default class COLRGlyph extends Glyph {
-  _getBBox() {
+  _getBBox(): BBox {
     let bbox = new BBox();
     for (let i = 0; i < this.layers.length; i++) {
       let layer = this.layers[i];
@@ -33,22 +52,26 @@ export default class COLRGlyph extends Glyph {
    * each layer in the composite color glyph.
    * @type {object[]}
    */
-  get layers() {
-    let cpal = this._font.CPAL;
-    let colr = this._font.COLR;
+  get layers(): COLRLayer[] {
+    const cpal = this._font.CPAL as { colorRecords: RGBAColor[] };
+    const colr = this._font.COLR as {
+      baseGlyphRecord: BaseGlyphRecord[];
+      layerRecords: LayerRecord[];
+    };
     let low = 0;
     let high = colr.baseGlyphRecord.length - 1;
+    let baseLayer: BaseGlyphRecord | null = null;
 
     while (low <= high) {
       let mid = (low + high) >> 1;
-      var rec = colr.baseGlyphRecord[mid];
+      const rec = colr.baseGlyphRecord[mid];
 
       if (this.id < rec.gid) {
         high = mid - 1;
       } else if (this.id > rec.gid) {
         low = mid + 1;
       } else {
-        var baseLayer = rec;
+        baseLayer = rec;
         break;
       }
     }
@@ -56,8 +79,8 @@ export default class COLRGlyph extends Glyph {
     // if base glyph not found in COLR table,
     // default to normal glyph from glyf or CFF
     if (baseLayer == null) {
-      var g = this._font._getBaseGlyph(this.id);
-      var color = {
+      const g = this._font._getBaseGlyph(this.id) as Glyph;
+      const color: RGBAColor = {
         red: 0,
         green: 0,
         blue: 0,
@@ -68,22 +91,27 @@ export default class COLRGlyph extends Glyph {
     }
 
     // otherwise, return an array of all the layers
-    let layers = [];
+    let layers: COLRLayer[] = [];
     for (
       let i = baseLayer.firstLayerIndex;
       i < baseLayer.firstLayerIndex + baseLayer.numLayers;
       i++
     ) {
-      var rec = colr.layerRecords[i];
-      var color = cpal.colorRecords[rec.paletteIndex];
-      var g = this._font._getBaseGlyph(rec.gid);
+      const rec = colr.layerRecords[i];
+      const color = cpal.colorRecords[rec.paletteIndex];
+      const g = this._font._getBaseGlyph(rec.gid) as Glyph;
       layers.push(new COLRLayer(g, color));
     }
 
     return layers;
   }
 
-  render(ctx, size) {
+  render(
+    ctx: CanvasContextLike & {
+      fillColor(color: number[], alpha: number): void;
+    },
+    size: number,
+  ): void {
     for (let { glyph, color } of this.layers) {
       ctx.fillColor(
         [color.red, color.green, color.blue],

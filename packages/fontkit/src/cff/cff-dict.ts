@@ -1,29 +1,72 @@
-// @ts-nocheck
-
+import type { DecodeStream, EncodeStream } from "@chr33s/restructure";
 import { PropertyDescriptor } from "@chr33s/restructure";
 import isEqual from "deep-equal";
-import CFFOperand from "./cff-operand.js";
+import CFFOperand, { type OperandValue } from "./cff-operand.js";
+
+type OperandList = readonly number[];
+
+type OperandHandler = {
+  decode?: (
+    stream: DecodeStream,
+    parent?: Record<string, unknown>,
+    operands?: OperandList,
+  ) => unknown;
+  encode?: (
+    stream: EncodeStream | null,
+    value: unknown,
+    ctx?: DictContext | Record<string, any>,
+  ) => OperandValue | OperandValue[] | undefined;
+};
+
+type OperandSpec = string | OperandHandler | OperandSpec[];
+
+type OperatorKey = number | [number, number];
+type OperatorDefinition = [OperatorKey, string, OperandSpec, unknown];
+
+type FieldMap = Record<number, OperatorDefinition>;
+
+export type DictContext = {
+  parent: Record<string, any>;
+  val: Record<string, any>;
+  pointerSize: number;
+  startOffset: number;
+  pointerOffset?: number;
+  pointers: Array<{
+    type: OperandHandler;
+    val: unknown;
+    parent: Record<string, any>;
+  }>;
+  [key: string]: unknown;
+};
 
 export default class CFFDict {
-  constructor(ops = []) {
-    this.ops = ops;
-    this.fields = {};
+  #ops: OperatorDefinition[];
+  #fields: FieldMap;
+
+  constructor(ops: OperatorDefinition[] = []) {
+    this.#ops = ops;
+    this.#fields = {} as FieldMap;
     for (let field of ops) {
-      let key = Array.isArray(field[0])
+      const key = Array.isArray(field[0])
         ? (field[0][0] << 8) | field[0][1]
         : field[0];
-      this.fields[key] = field;
+      this.#fields[key] = field;
     }
   }
 
-  decodeOperands(type, stream, ret, operands) {
+  #decodeOperands(
+    type: OperandSpec,
+    stream: DecodeStream,
+    ret: Record<string, any>,
+    operands: OperandList,
+  ): unknown {
     if (Array.isArray(type)) {
       return operands.map((op, i) =>
-        this.decodeOperands(type[i], stream, ret, [op]),
+        this.#decodeOperands(type[i], stream, ret, [op]),
       );
-    } else if (type.decode != null) {
-      return type.decode(stream, ret, operands);
-    } else {
+    }
+
+    if (typeof type === "string") {
       switch (type) {
         case "number":
         case "offset":
@@ -35,40 +78,66 @@ export default class CFFDict {
           return operands;
       }
     }
-  }
 
-  encodeOperands(type, stream, ctx, operands) {
-    if (Array.isArray(type)) {
-      return operands.map(
-        (op, i) => this.encodeOperands(type[i], stream, ctx, op)[0],
-      );
-    } else if (type.encode != null) {
-      return type.encode(stream, operands, ctx);
-    } else if (typeof operands === "number") {
-      return [operands];
-    } else if (typeof operands === "boolean") {
-      return [+operands];
-    } else if (Array.isArray(operands)) {
-      return operands;
-    } else {
-      return [operands];
+    if (type.decode != null) {
+      return type.decode(stream, ret, operands);
     }
+
+    return operands;
   }
 
-  decode(stream, parent) {
-    let end = stream.pos + parent.length;
-    let ret = {};
-    let operands = [];
+  #encodeOperands(
+    type: OperandSpec,
+    stream: EncodeStream | null,
+    ctx: DictContext,
+    operands: unknown,
+  ): OperandValue[] {
+    if (Array.isArray(type)) {
+      return (operands as unknown[]).map(
+        (op, i) => this.#encodeOperands(type[i], stream, ctx, op)[0],
+      );
+    }
 
-    // define hidden properties
+    if (typeof type === "string") {
+      if (typeof operands === "number") {
+        return [operands];
+      }
+
+      if (typeof operands === "boolean") {
+        return [+operands];
+      }
+
+      if (Array.isArray(operands)) {
+        return operands;
+      }
+
+      return [operands as OperandValue];
+    }
+
+    if (type.encode != null) {
+      const encoded = type.encode(stream, operands, ctx);
+      return Array.isArray(encoded)
+        ? (encoded as OperandValue[])
+        : [encoded as OperandValue];
+    }
+
+    return Array.isArray(operands)
+      ? (operands as OperandValue[])
+      : [operands as OperandValue];
+  }
+
+  decode(stream: DecodeStream, parent: Record<string, any>) {
+    const end = stream.pos + parent.length;
+    const ret: Record<string, any> = {};
+    let operands: number[] = [];
+
     Object.defineProperties(ret, {
       parent: { value: parent },
       _startOffset: { value: stream.pos },
     });
 
-    // fill in defaults
-    for (let key in this.fields) {
-      let field = this.fields[key];
+    for (let key in this.#fields) {
+      const field = this.#fields[key];
       ret[field[1]] = field[3];
     }
 
@@ -79,12 +148,12 @@ export default class CFFDict {
           b = (b << 8) | stream.readUInt8();
         }
 
-        let field = this.fields[b];
+        const field = this.#fields[b];
         if (!field) {
           throw new Error(`Unknown operator ${b}`);
         }
 
-        let val = this.decodeOperands(field[2], stream, ret, operands);
+        const val = this.#decodeOperands(field[2], stream, ret, operands);
         if (val != null) {
           if (val instanceof PropertyDescriptor) {
             Object.defineProperty(ret, field[1], val);
@@ -102,30 +171,36 @@ export default class CFFDict {
     return ret;
   }
 
-  size(dict, parent, includePointers = true) {
-    let ctx = {
+  size(
+    dict: Record<string, any>,
+    parent: Record<string, any>,
+    includePointers = true,
+  ) {
+    const ctx: DictContext = {
       parent,
       val: dict,
       pointerSize: 0,
       startOffset: parent.startOffset || 0,
+      pointers: [],
     };
 
     let len = 0;
 
-    for (let k in this.fields) {
-      let field = this.fields[k];
-      let val = dict[field[1]];
-      if (val == null || isEqual(val, field[3])) {
+    // IMPORTANT: iterate over this.#ops to match encode() order
+    for (let field of this.#ops) {
+      const value = dict[field[1]];
+      if (value == null || isEqual(value, field[3])) {
         continue;
       }
 
-      let operands = this.encodeOperands(field[2], null, ctx, val);
+      const operands = this.#encodeOperands(field[2], null, ctx, value);
+      let operandSize = 0;
       for (let op of operands) {
-        len += CFFOperand.size(op);
+        operandSize += CFFOperand.size(op);
       }
 
-      let key = Array.isArray(field[0]) ? field[0] : [field[0]];
-      len += key.length;
+      const operatorKey = Array.isArray(field[0]) ? field[0] : [field[0]];
+      len += operandSize + operatorKey.length;
     }
 
     if (includePointers) {
@@ -135,8 +210,12 @@ export default class CFFDict {
     return len;
   }
 
-  encode(stream, dict, parent) {
-    let ctx = {
+  encode(
+    stream: EncodeStream,
+    dict: Record<string, any>,
+    parent: Record<string, any>,
+  ) {
+    const ctx: DictContext = {
       pointers: [],
       startOffset: stream.pos,
       parent,
@@ -146,29 +225,27 @@ export default class CFFDict {
 
     ctx.pointerOffset = stream.pos + this.size(dict, ctx, false);
 
-    for (let field of this.ops) {
-      let val = dict[field[1]];
-      if (val == null || isEqual(val, field[3])) {
+    for (let field of this.#ops) {
+      const value = dict[field[1]];
+      if (value == null || isEqual(value, field[3])) {
         continue;
       }
 
-      let operands = this.encodeOperands(field[2], stream, ctx, val);
+      const operands = this.#encodeOperands(field[2], stream, ctx, value);
       for (let op of operands) {
         CFFOperand.encode(stream, op);
       }
 
-      let key = Array.isArray(field[0]) ? field[0] : [field[0]];
-      for (let op of key) {
+      const operatorKey = Array.isArray(field[0]) ? field[0] : [field[0]];
+      for (let op of operatorKey) {
         stream.writeUInt8(op);
       }
     }
 
     let i = 0;
     while (i < ctx.pointers.length) {
-      let ptr = ctx.pointers[i++];
-      ptr.type.encode(stream, ptr.val, ptr.parent);
+      const ptr = ctx.pointers[i++];
+      ptr.type.encode?.(stream, ptr.val, ptr.parent);
     }
-
-    return;
   }
 }

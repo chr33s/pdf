@@ -1,30 +1,40 @@
-// @ts-nocheck
-
+import type { DecodeStream, EncodeStream, NumberT } from "@chr33s/restructure";
 import * as r from "@chr33s/restructure";
 
-export default class CFFIndex {
-  constructor(type) {
-    this.type = type;
+type IndexCodec<T = unknown> = {
+  decode(stream: DecodeStream, parent?: Record<string, any>): T;
+  encode(stream: EncodeStream, value: T, parent?: Record<string, any>): void;
+  size(value: T, parent?: Record<string, any>): number;
+};
+
+type IndexEntry<T> = T | { offset: number; length: number };
+
+export default class CFFIndex<T = Buffer> {
+  #type?: IndexCodec<T>;
+
+  constructor(type?: IndexCodec<T>) {
+    this.#type = type;
   }
 
-  getCFFVersion(ctx) {
-    while (ctx && !ctx.hdrSize) {
-      ctx = ctx.parent;
+  getCFFVersion(ctx?: Record<string, any>) {
+    let current = ctx;
+    while (current && !current.hdrSize) {
+      current = current.parent;
     }
 
-    return ctx ? ctx.version : -1;
+    return current ? current.version : -1;
   }
 
-  decode(stream, parent) {
-    let version = this.getCFFVersion(parent);
-    let count = version >= 2 ? stream.readUInt32BE() : stream.readUInt16BE();
+  decode(stream: DecodeStream, parent: Record<string, any>) {
+    const version = this.getCFFVersion(parent);
+    const count = version >= 2 ? stream.readUInt32BE() : stream.readUInt16BE();
 
     if (count === 0) {
-      return [];
+      return [] as IndexEntry<T>[];
     }
 
-    let offSize = stream.readUInt8();
-    let offsetType;
+    const offSize = stream.readUInt8();
+    let offsetType: NumberT;
     if (offSize === 1) {
       offsetType = r.uint8;
     } else if (offSize === 2) {
@@ -37,19 +47,19 @@ export default class CFFIndex {
       throw new Error(`Bad offset size in CFFIndex: ${offSize} ${stream.pos}`);
     }
 
-    let ret = [];
-    let startPos = stream.pos + (count + 1) * offSize - 1;
+    const ret: IndexEntry<T>[] = [];
+    const startPos = stream.pos + (count + 1) * offSize - 1;
 
     let start = offsetType.decode(stream);
     for (let i = 0; i < count; i++) {
-      let end = offsetType.decode(stream);
+      const end = offsetType.decode(stream);
 
-      if (this.type != null) {
-        let pos = stream.pos;
+      if (this.#type) {
+        const pos = stream.pos;
         stream.pos = startPos + start;
 
         parent.length = end - start;
-        ret.push(this.type.decode(stream, parent));
+        ret.push(this.#type.decode(stream, parent));
         stream.pos = pos;
       } else {
         ret.push({
@@ -65,22 +75,21 @@ export default class CFFIndex {
     return ret;
   }
 
-  size(arr, parent) {
-    let size = 2;
+  size(arr: T[], parent: Record<string, any>) {
+    const version = this.getCFFVersion(parent);
+    let size = version >= 2 ? 4 : 2;
     if (arr.length === 0) {
       return size;
     }
 
-    let type = this.type || new r.Buffer();
-
-    // find maximum offset to detminine offset type
     let offset = 1;
-    for (let i = 0; i < arr.length; i++) {
-      let item = arr[i];
-      offset += type.size(item, parent);
+    for (let item of arr) {
+      offset += this.#type
+        ? this.#type.size(item, parent)
+        : this.#ensureBuffer(item).length;
     }
 
-    let offsetType;
+    let offsetType: NumberT;
     if (offset <= 0xff) {
       offsetType = r.uint8;
     } else if (offset <= 0xffff) {
@@ -99,24 +108,28 @@ export default class CFFIndex {
     return size;
   }
 
-  encode(stream, arr, parent) {
-    stream.writeUInt16BE(arr.length);
+  encode(stream: EncodeStream, arr: T[], parent: Record<string, any>) {
+    const version = this.getCFFVersion(parent);
+    if (version >= 2) {
+      stream.writeUInt32BE(arr.length);
+    } else {
+      stream.writeUInt16BE(arr.length);
+    }
     if (arr.length === 0) {
       return;
     }
 
-    let type = this.type || new r.Buffer();
-
-    // find maximum offset to detminine offset type
-    let sizes = [];
+    const sizes: number[] = [];
     let offset = 1;
     for (let item of arr) {
-      let s = type.size(item, parent);
+      const s = this.#type
+        ? this.#type.size(item, parent)
+        : this.#ensureBuffer(item).length;
       sizes.push(s);
       offset += s;
     }
 
-    let offsetType;
+    let offsetType: NumberT;
     if (offset <= 0xff) {
       offsetType = r.uint8;
     } else if (offset <= 0xffff) {
@@ -129,10 +142,8 @@ export default class CFFIndex {
       throw new Error("Bad offset in CFFIndex");
     }
 
-    // write offset size
     stream.writeUInt8(offsetType.size());
 
-    // write elements
     offset = 1;
     offsetType.encode(stream, offset);
 
@@ -142,9 +153,19 @@ export default class CFFIndex {
     }
 
     for (let item of arr) {
-      type.encode(stream, item, parent);
+      if (this.#type) {
+        this.#type.encode(stream, item, parent);
+      } else {
+        stream.writeBuffer(this.#ensureBuffer(item));
+      }
+    }
+  }
+
+  #ensureBuffer(value: T): Buffer {
+    if (Buffer.isBuffer(value)) {
+      return value;
     }
 
-    return;
+    throw new Error("CFFIndex expects Buffer values when no type is provided");
   }
 }

@@ -1,5 +1,4 @@
-// @ts-nocheck
-
+import BBox from "./b-box.js";
 import TTFGlyph from "./ttf-glyph.js";
 
 /**
@@ -11,7 +10,51 @@ export default class WOFF2Glyph extends TTFGlyph {
     return this._font._transformedGlyphs[this.id];
   }
 
-  _getCBox() {
-    return this.path.bbox;
+  _getCBox(internal?: boolean) {
+    if (this._font._variationProcessor && !internal) {
+      return this.path.cbox;
+    }
+
+    const glyph = this._decode();
+    if (!glyph) {
+      return Object.freeze(new BBox(0, 0, 0, 0));
+    }
+
+    const bbox = new BBox();
+    if (glyph.numberOfContours >= 0 && glyph.points) {
+      for (const point of glyph.points) {
+        bbox.addPoint(point.x, point.y);
+      }
+    } else if (glyph.numberOfContours < 0 && glyph.components) {
+      for (const component of glyph.components) {
+        const baseGlyph = this._font.getGlyph(component.glyphID);
+        const componentBox = baseGlyph.cbox;
+        const corners = [
+          [componentBox.minX, componentBox.minY],
+          [componentBox.minX, componentBox.maxY],
+          [componentBox.maxX, componentBox.minY],
+          [componentBox.maxX, componentBox.maxY],
+        ] as const;
+
+        for (const [x, y] of corners) {
+          const transformedX =
+            x * component.scaleX + y * component.scale01 + component.dx;
+          const transformedY =
+            y * component.scaleY + x * component.scale10 + component.dy;
+          bbox.addPoint(transformedX, transformedY);
+        }
+      }
+    }
+
+    if (
+      bbox.minX === Infinity ||
+      bbox.minY === Infinity ||
+      bbox.maxX === -Infinity ||
+      bbox.maxY === -Infinity
+    ) {
+      return Object.freeze(new BBox(0, 0, 0, 0));
+    }
+
+    return Object.freeze(bbox);
   }
 }

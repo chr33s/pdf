@@ -1,9 +1,15 @@
-// @ts-nocheck
-
 import * as r from "@chr33s/restructure";
+import type Glyph from "../glyph/glyph.js";
+import type { FontLike } from "../glyph/glyph.js";
 
-export default class Subset {
-  constructor(font) {
+type GlyphInput = number | Pick<Glyph, "id">;
+
+export default abstract class Subset<TFont extends FontLike = FontLike> {
+  protected font: TFont;
+  protected glyphs: number[];
+  protected mapping: Record<number, number>;
+
+  constructor(font: TFont) {
     this.font = font;
     this.glyphs = [];
     this.mapping = {};
@@ -12,27 +18,27 @@ export default class Subset {
     this.includeGlyph(0);
   }
 
-  includeGlyph(glyph) {
-    if (typeof glyph === "object") {
-      glyph = glyph.id;
+  includeGlyph(target: GlyphInput): number {
+    let glyphId = typeof target === "number" ? target : target.id;
+
+    if (this.mapping[glyphId] == null) {
+      this.glyphs.push(glyphId);
+      this.mapping[glyphId] = this.glyphs.length - 1;
     }
 
-    if (this.mapping[glyph] == null) {
-      this.glyphs.push(glyph);
-      this.mapping[glyph] = this.glyphs.length - 1;
-    }
-
-    return this.mapping[glyph];
+    return this.mapping[glyphId];
   }
 
-  encodeStream() {
-    let s = new r.EncodeStream();
+  encodeStream(): r.EncodeStream {
+    let stream = new r.EncodeStream();
 
     process.nextTick(() => {
-      this.encode(s);
-      return s.end();
+      this.encode(stream);
+      stream.end();
     });
 
-    return s;
+    return stream;
   }
+
+  protected abstract encode(stream: r.EncodeStream): void;
 }

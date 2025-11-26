@@ -32,7 +32,7 @@ describe("character to glyph mapping", function () {
     });
 
     test("should map a string to glyphs", function () {
-      let glyphs = font.glyphsForString("hello", []);
+      let glyphs = font.glyphsForString("hello");
       expect(Array.isArray(glyphs)).toBe(true);
       expect(glyphs.length).toBe(5);
       expect(glyphIds(glyphs)).toEqual([75, 72, 79, 79, 82]);

@@ -88,6 +88,10 @@ describe("fontkit", function () {
     );
     expect(collection.constructor.name).toBe("TrueTypeCollection");
 
+    if (!collection.fonts) {
+      throw new Error("Expected font collection to expose fonts");
+    }
+
     let names = collection.fonts.map((f: any) => f.postscriptName);
     expect(names).toEqual([
       "NotoSans-Bold",
@@ -97,6 +101,10 @@ describe("fontkit", function () {
     ]);
 
     let font = collection.getFont("NotoSans-Italic");
+    if (!font) {
+      throw new Error("Expected collection to include requested font");
+    }
+
     return expect(font.postscriptName).toBe("NotoSans-Italic");
   });
 
@@ -106,6 +114,10 @@ describe("fontkit", function () {
     );
     expect(collection.constructor.name).toBe("DFont");
 
+    if (!collection.fonts) {
+      throw new Error("Expected font collection to expose fonts");
+    }
+
     let names = collection.fonts.map((f: any) => f.postscriptName);
     expect(names).toEqual([
       "NotoSans",
@@ -115,6 +127,10 @@ describe("fontkit", function () {
     ]);
 
     let font = collection.getFont("NotoSans-Italic");
+    if (!font) {
+      throw new Error("Expected collection to include requested font");
+    }
+
     return expect(font.postscriptName).toBe("NotoSans-Italic");
   });
 });

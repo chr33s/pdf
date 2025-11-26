@@ -1,5 +1,4 @@
 // @ts-nocheck
-
 import * as r from "@chr33s/restructure";
 import { uint16 } from "@chr33s/restructure";
 
@@ -83,7 +82,9 @@ export let LookupTable = function (ValueType = uint16) {
     values: new r.Pointer(
       r.uint16,
       new r.Array(ValueType, (t) => t.lastGlyph - t.firstGlyph + 1),
-      { type: "parent" },
+      {
+        type: "parent",
+      },
     ),
   });
 

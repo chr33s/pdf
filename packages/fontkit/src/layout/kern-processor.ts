@@ -1,13 +1,29 @@
-// @ts-nocheck
-
 import { binarySearch } from "../utils.js";
+import type GlyphPosition from "./glyph-position.js";
+
+type GlyphLike = { id: number };
+type KernPair = { left: number; right: number; value: number };
+export type KernTable = {
+  version: number;
+  format: number;
+  coverage: {
+    horizontal: boolean;
+    vertical: boolean;
+    variation: boolean;
+    crossStream: boolean;
+    override: boolean;
+  };
+  subtable: any;
+};
 
 export default class KernProcessor {
-  constructor(font) {
+  kern: { tables: KernTable[] };
+
+  constructor(font: { kern: { tables: KernTable[] } }) {
     this.kern = font.kern;
   }
 
-  process(glyphs, positions) {
+  process(glyphs: GlyphLike[], positions: GlyphPosition[]): void {
     for (let glyphIndex = 0; glyphIndex < glyphs.length - 1; glyphIndex++) {
       let left = glyphs[glyphIndex].id;
       let right = glyphs[glyphIndex + 1].id;
@@ -15,7 +31,7 @@ export default class KernProcessor {
     }
   }
 
-  getKerning(left, right) {
+  getKerning(left: number, right: number): number {
     let res = 0;
 
     for (let table of this.kern.tables) {
@@ -44,7 +60,7 @@ export default class KernProcessor {
       let s = table.subtable;
       switch (table.format) {
         case 0:
-          let pairIdx = binarySearch(s.pairs, function (pair) {
+          let pairIdx = binarySearch(s.pairs, function (pair: KernPair) {
             return left - pair.left || right - pair.right;
           });
 

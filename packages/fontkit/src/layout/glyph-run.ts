@@ -1,6 +1,6 @@
-// @ts-nocheck
-
 import BBox from "../glyph/b-box.js";
+import type Glyph from "../glyph/glyph.js";
+import type GlyphPosition from "./glyph-position.js";
 import * as Script from "./script.js";
 
 /**
@@ -8,7 +8,20 @@ import * as Script from "./script.js";
  * Returned by the font layout method.
  */
 export default class GlyphRun {
-  constructor(glyphs, features, script, language, direction) {
+  glyphs: Glyph[];
+  positions: GlyphPosition[] | null;
+  script: string | string[];
+  language: string | null;
+  direction: string;
+  features: Record<string, boolean>;
+
+  constructor(
+    glyphs: Glyph[],
+    features: string[] | Record<string, boolean> | undefined,
+    script: string | string[],
+    language: string | null,
+    direction: string | null,
+  ) {
     /**
      * An array of Glyph objects in the run
      * @type {Glyph[]}
@@ -23,7 +36,7 @@ export default class GlyphRun {
 
     /**
      * The script that was requested for shaping. This was either passed in or detected automatically.
-     * @type {string}
+     * @type {string|string[]}
      */
     this.script = script;
 
@@ -39,7 +52,8 @@ export default class GlyphRun {
      * If `null`, the default direction of the script is used.
      * @type {string}
      */
-    this.direction = direction || Script.direction(script);
+    const scriptTag = Array.isArray(script) ? (script[0] ?? "DFLT") : script;
+    this.direction = direction || Script.direction(scriptTag);
 
     /**
      * The features requested during shaping. This is a combination of user
@@ -63,6 +77,10 @@ export default class GlyphRun {
    * @type {number}
    */
   get advanceWidth() {
+    if (!this.positions) {
+      return 0;
+    }
+
     let width = 0;
     for (let position of this.positions) {
       width += position.xAdvance;
@@ -76,6 +94,10 @@ export default class GlyphRun {
    * @type {number}
    */
   get advanceHeight() {
+    if (!this.positions) {
+      return 0;
+    }
+
     let height = 0;
     for (let position of this.positions) {
       height += position.yAdvance;
@@ -89,6 +111,10 @@ export default class GlyphRun {
    * @type {BBox}
    */
   get bbox() {
+    if (!this.positions) {
+      return new BBox();
+    }
+
     let bbox = new BBox();
 
     let x = 0;

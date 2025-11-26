@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import * as r from "@chr33s/restructure";
 import { BigMetrics } from "./ebdt.js";
 
@@ -70,7 +68,9 @@ let BitmapSizeTable = new r.Struct({
   indexSubTableArray: new r.Pointer(
     r.uint32,
     new r.Array(IndexSubtableArray, 1),
-    { type: "parent" },
+    {
+      type: "parent",
+    },
   ),
   indexTablesSize: r.uint32,
   numberOfIndexSubTables: r.uint32,

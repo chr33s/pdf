@@ -1,10 +1,17 @@
-// @ts-nocheck
-
+import type GlyphPosition from "../layout/glyph-position.js";
+import type GlyphInfo from "./glyph-info.js";
 import OTProcessor from "./ot-processor.js";
 
 export default class GPOSProcessor extends OTProcessor {
-  applyPositionValue(sequenceIndex, value) {
+  applyPositionValue(sequenceIndex: number, value: any): void {
+    if (!this.positions) {
+      return;
+    }
+
     let position = this.positions[this.glyphIterator.peekIndex(sequenceIndex)];
+    if (!position) {
+      return;
+    }
     if (value.xAdvance != null) {
       position.xAdvance += value.xAdvance;
     }
@@ -61,7 +68,7 @@ export default class GPOSProcessor extends OTProcessor {
     // TODO: device tables
   }
 
-  applyLookup(lookupType, table) {
+  applyLookup(lookupType: number, table: any): boolean {
     switch (lookupType) {
       case 1: {
         // Single positioning value
@@ -99,6 +106,10 @@ export default class GPOSProcessor extends OTProcessor {
           case 1: // Adjustments for glyph pairs
             let set = table.pairSets.get(index);
 
+            if (!set) {
+              return false;
+            }
+
             for (let pair of set) {
               if (pair.secondGlyph === nextGlyph.id) {
                 this.applyPositionValue(0, pair.value1);
@@ -110,6 +121,10 @@ export default class GPOSProcessor extends OTProcessor {
             return false;
 
           case 2: // Class pair adjustment
+            if (!this.glyphIterator.cur) {
+              return false;
+            }
+
             let class1 = this.getClassID(
               this.glyphIterator.cur.id,
               table.classDef1,
@@ -119,7 +134,12 @@ export default class GPOSProcessor extends OTProcessor {
               return false;
             }
 
-            var pair = table.classRecords.get(class1).get(class2);
+            let record = table.classRecords.get(class1);
+            let pair = record && record.get(class2);
+            if (!pair) {
+              return false;
+            }
+
             this.applyPositionValue(0, pair.value1);
             this.applyPositionValue(1, pair.value2);
             return true;
@@ -130,7 +150,7 @@ export default class GPOSProcessor extends OTProcessor {
         // Cursive Attachment Positioning
         let nextIndex = this.glyphIterator.peekIndex();
         let nextGlyph = this.glyphs[nextIndex];
-        if (!nextGlyph) {
+        if (!nextGlyph || !this.glyphIterator.cur || !this.positions) {
           return false;
         }
 
@@ -153,6 +173,9 @@ export default class GPOSProcessor extends OTProcessor {
 
         let cur = this.positions[this.glyphIterator.index];
         let next = this.positions[nextIndex];
+        if (!cur || !next) {
+          return false;
+        }
 
         let d;
         switch (this.direction) {
@@ -192,20 +215,33 @@ export default class GPOSProcessor extends OTProcessor {
 
         // search backward for a base glyph
         let baseGlyphIndex = this.glyphIterator.index;
-        while (
-          --baseGlyphIndex >= 0 &&
-          (this.glyphs[baseGlyphIndex].isMark ||
-            this.glyphs[baseGlyphIndex].ligatureComponent > 0)
-        );
+        while (true) {
+          baseGlyphIndex--;
+          if (baseGlyphIndex < 0) {
+            break;
+          }
+
+          const candidate = this.glyphs[baseGlyphIndex];
+          if (!candidate) {
+            break;
+          }
+
+          const candidateComponent = candidate.ligatureComponent ?? 0;
+          if (!candidate.isMark && candidateComponent <= 0) {
+            break;
+          }
+        }
 
         if (baseGlyphIndex < 0) {
           return false;
         }
 
-        let baseIndex = this.coverageIndex(
-          table.baseCoverage,
-          this.glyphs[baseGlyphIndex].id,
-        );
+        const baseGlyph = this.glyphs[baseGlyphIndex];
+        if (!baseGlyph) {
+          return false;
+        }
+
+        let baseIndex = this.coverageIndex(table.baseCoverage, baseGlyph.id);
         if (baseIndex === -1) {
           return false;
         }
@@ -225,31 +261,49 @@ export default class GPOSProcessor extends OTProcessor {
 
         // search backward for a base glyph
         let baseGlyphIndex = this.glyphIterator.index;
-        while (--baseGlyphIndex >= 0 && this.glyphs[baseGlyphIndex].isMark);
+        while (true) {
+          baseGlyphIndex--;
+          if (baseGlyphIndex < 0) {
+            break;
+          }
+
+          const candidate = this.glyphs[baseGlyphIndex];
+          if (!candidate) {
+            break;
+          }
+
+          if (!candidate.isMark) {
+            break;
+          }
+        }
 
         if (baseGlyphIndex < 0) {
           return false;
         }
 
-        let ligIndex = this.coverageIndex(
-          table.ligatureCoverage,
-          this.glyphs[baseGlyphIndex].id,
-        );
+        const ligGlyph = this.glyphs[baseGlyphIndex];
+        if (!ligGlyph) {
+          return false;
+        }
+
+        let ligIndex = this.coverageIndex(table.ligatureCoverage, ligGlyph.id);
         if (ligIndex === -1) {
           return false;
         }
 
         let ligAttach = table.ligatureArray[ligIndex];
         let markGlyph = this.glyphIterator.cur;
-        let ligGlyph = this.glyphs[baseGlyphIndex];
-        let compIndex =
-          ligGlyph.ligatureID &&
-          ligGlyph.ligatureID === markGlyph.ligatureID &&
-          markGlyph.ligatureComponent > 0
-            ? Math.min(
-                markGlyph.ligatureComponent,
-                ligGlyph.codePoints.length,
-              ) - 1
+        if (!markGlyph) {
+          return false;
+        }
+        const markLigatureComponent = markGlyph.ligatureComponent ?? 0;
+        const markLigatureID = markGlyph.ligatureID ?? 0;
+        const ligGlyphLigatureID = ligGlyph.ligatureID ?? 0;
+        const compIndex =
+          markLigatureID &&
+          ligGlyphLigatureID === markLigatureID &&
+          markLigatureComponent > 0
+            ? Math.min(markLigatureComponent, ligGlyph.codePoints.length) - 1
             : ligGlyph.codePoints.length - 1;
 
         let markRecord = table.markArray[markIndex];
@@ -273,6 +327,9 @@ export default class GPOSProcessor extends OTProcessor {
         }
 
         let cur = this.glyphIterator.cur;
+        if (!cur) {
+          return false;
+        }
 
         // The following logic was borrowed from Harfbuzz
         let good = false;
@@ -324,18 +381,25 @@ export default class GPOSProcessor extends OTProcessor {
     }
   }
 
-  applyAnchor(markRecord, baseAnchor, baseGlyphIndex) {
+  applyAnchor(markRecord: any, baseAnchor: any, baseGlyphIndex: number): void {
     let baseCoords = this.getAnchor(baseAnchor);
     let markCoords = this.getAnchor(markRecord.markAnchor);
 
+    if (!this.positions) {
+      return;
+    }
+
     let markPos = this.positions[this.glyphIterator.index];
+    if (!markPos || !this.glyphIterator.cur) {
+      return;
+    }
 
     markPos.xOffset = baseCoords.x - markCoords.x;
     markPos.yOffset = baseCoords.y - markCoords.y;
     this.glyphIterator.cur.markAttachment = baseGlyphIndex;
   }
 
-  getAnchor(anchor) {
+  getAnchor(anchor: any): { x: number; y: number } {
     // TODO: contour point, device tables
     let x = anchor.xCoordinate;
     let y = anchor.yCoordinate;
@@ -364,17 +428,21 @@ export default class GPOSProcessor extends OTProcessor {
     return { x, y };
   }
 
-  applyFeatures(userFeatures, glyphs, advances) {
+  applyFeatures(
+    userFeatures: string[],
+    glyphs: GlyphInfo[],
+    advances?: GlyphPosition[],
+  ): void {
     super.applyFeatures(userFeatures, glyphs, advances);
 
-    for (var i = 0; i < this.glyphs.length; i++) {
+    for (let i = 0; i < this.glyphs.length; i++) {
       this.fixCursiveAttachment(i);
     }
 
     this.fixMarkAttachment();
   }
 
-  fixCursiveAttachment(i) {
+  fixCursiveAttachment(i: number): void {
     let glyph = this.glyphs[i];
     if (glyph.cursiveAttachment != null) {
       let j = glyph.cursiveAttachment;
@@ -382,26 +450,40 @@ export default class GPOSProcessor extends OTProcessor {
       glyph.cursiveAttachment = null;
       this.fixCursiveAttachment(j);
 
-      this.positions[i].yOffset += this.positions[j].yOffset;
+      if (this.positions && this.positions[i] && this.positions[j]) {
+        this.positions[i].yOffset += this.positions[j].yOffset;
+      }
     }
   }
 
-  fixMarkAttachment() {
+  fixMarkAttachment(): void {
     for (let i = 0; i < this.glyphs.length; i++) {
       let glyph = this.glyphs[i];
       if (glyph.markAttachment != null) {
         let j = glyph.markAttachment;
+
+        if (!this.positions || !this.positions[i] || !this.positions[j]) {
+          continue;
+        }
 
         this.positions[i].xOffset += this.positions[j].xOffset;
         this.positions[i].yOffset += this.positions[j].yOffset;
 
         if (this.direction === "ltr") {
           for (let k = j; k < i; k++) {
+            if (!this.positions[k]) {
+              continue;
+            }
+
             this.positions[i].xOffset -= this.positions[k].xAdvance;
             this.positions[i].yOffset -= this.positions[k].yAdvance;
           }
         } else {
           for (let k = j + 1; k < i + 1; k++) {
+            if (!this.positions[k]) {
+              continue;
+            }
+
             this.positions[i].xOffset += this.positions[k].xAdvance;
             this.positions[i].yOffset += this.positions[k].yAdvance;
           }

@@ -152,6 +152,9 @@ describe("variations", function () {
         wght: 900,
       });
       let run = font.layout("ف");
+      if (!run.positions) {
+        throw new Error("Expected layout positions for variation run");
+      }
       expect(Math.floor(run.positions[0].xOffset)).toBe(639);
       expect(Math.floor(run.positions[0].yOffset)).toBe(542);
     });

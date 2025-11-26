@@ -1,15 +1,18 @@
 import fs from "node:fs";
 import fontkit from "../src/index.js";
 
-type PostscriptName = string | Record<string, unknown> | null | undefined;
+fontkit.logErrors = true;
+
+type VariationSettings = Record<string, number>;
+type FontSelector = string | VariationSettings | null | undefined;
 type FontInstance = ReturnType<typeof fontkit.create>;
 type AsyncCallback = (err: Error | null, font?: FontInstance) => void;
 
 type FontkitWithHelpers = typeof fontkit & {
-  openSync: (filename: string, postscriptName?: PostscriptName) => FontInstance;
+  openSync: (filename: string, postscriptName?: FontSelector) => FontInstance;
   open: (
     filename: string,
-    postscriptNameOrCallback: PostscriptName | AsyncCallback,
+    postscriptNameOrCallback: FontSelector | AsyncCallback,
     maybeCallback?: AsyncCallback,
   ) => void;
 };

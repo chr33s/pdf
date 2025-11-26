@@ -1,9 +1,12 @@
-// @ts-nocheck
-
+import type {
+  DecodeStream,
+  EncodeStream,
+  PointerOptions,
+} from "@chr33s/restructure";
 import * as r from "@chr33s/restructure";
-
+import type { OperandValue } from "./cff-operand.js";
 export default class CFFPointer extends r.Pointer {
-  constructor(type, options = {}) {
+  constructor(type: unknown, options: PointerOptions = {}) {
     if (options.type == null) {
       options.type = "global";
     }
@@ -11,42 +14,66 @@ export default class CFFPointer extends r.Pointer {
     super(null, type, options);
   }
 
-  decode(stream, parent, operands) {
+  decode(stream: DecodeStream, parent?: Record<string, any>): unknown;
+  decode(
+    stream: DecodeStream,
+    parent?: Record<string, any>,
+    operands?: number[],
+  ): unknown;
+  decode(
+    stream: DecodeStream,
+    parent: Record<string, any> = {},
+    operands: number[] = [],
+  ): unknown {
     this.offsetType = {
       decode: () => operands[0],
     };
 
-    return super.decode(stream, parent, operands);
+    return super.decode(stream, parent);
   }
 
-  encode(stream, value, ctx) {
+  encode(stream: EncodeStream, value: unknown, ctx: Record<string, any>): void;
+  encode(
+    stream: EncodeStream | null,
+    value: unknown,
+    ctx?: Record<string, any>,
+  ): OperandValue[];
+  encode(
+    stream: EncodeStream | null,
+    value: unknown,
+    ctx: Record<string, any> = {},
+  ): OperandValue[] | void {
+    const context = ctx ?? {};
+
     if (!stream) {
-      // compute the size (so ctx.pointerSize is correct)
       this.offsetType = {
         size: () => 0,
       };
 
-      this.size(value, ctx);
+      this.size(value, context);
       return [new Ptr(0)];
     }
 
-    let ptr = null;
+    let ptr: number | null = null;
     this.offsetType = {
-      encode: (stream, val) => (ptr = val),
+      encode: (_stream: EncodeStream, val: number) => (ptr = val),
     };
 
-    super.encode(stream, value, ctx);
-    return [new Ptr(ptr)];
+    super.encode(stream, value, context);
+    return [new Ptr(ptr ?? 0)];
   }
 }
 
 class Ptr {
-  constructor(val) {
-    this.val = val;
+  #val: number;
+  forceLarge: boolean;
+
+  constructor(val: number) {
+    this.#val = val;
     this.forceLarge = true;
   }
 
   valueOf() {
-    return this.val;
+    return this.#val;
   }
 }

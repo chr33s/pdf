@@ -1,18 +1,28 @@
-// @ts-nocheck
-
+import type { FontLike } from "../glyph/glyph.js";
+import type GlyphPosition from "../layout/glyph-position.js";
+import type GlyphRun from "../layout/glyph-run.js";
 import GlyphInfo from "./glyph-info.js";
 import GPOSProcessor from "./gpos-processor.js";
 import GSUBProcessor from "./gsub-processor.js";
-import * as Shapers from "./shapers/index.js";
+import { choose as chooseShaper, type ShaperModule } from "./shapers/index.js";
 import ShapingPlan from "./shaping-plan.js";
 
 export default class OTLayoutEngine {
-  constructor(font) {
+  font: FontLike;
+  glyphInfos: GlyphInfo[] | null;
+  plan: ShapingPlan | null;
+  GSUBProcessor: GSUBProcessor | null;
+  GPOSProcessor: GPOSProcessor | null;
+  shaper: ShaperModule | null;
+  fallbackPosition: boolean;
+
+  constructor(font: FontLike) {
     this.font = font;
     this.glyphInfos = null;
     this.plan = null;
     this.GSUBProcessor = null;
     this.GPOSProcessor = null;
+    this.shaper = null;
     this.fallbackPosition = true;
 
     if (font.GSUB) {
@@ -24,7 +34,7 @@ export default class OTLayoutEngine {
     }
   }
 
-  setup(glyphRun) {
+  setup(glyphRun: GlyphRun): void {
     // Map glyphs to GlyphInfo objects so data can be passed between
     // GSUB and GPOS without mutating the real (shared) Glyph objects.
     this.glyphInfos = glyphRun.glyphs.map(
@@ -51,9 +61,10 @@ export default class OTLayoutEngine {
 
     // Choose a shaper based on the script, and setup a shaping plan.
     // This determines which features to apply to which glyphs.
-    this.shaper = Shapers.choose(script);
+    const shaper = chooseShaper(script);
+    this.shaper = shaper;
     this.plan = new ShapingPlan(this.font, script, glyphRun.direction);
-    this.shaper.plan(this.plan, this.glyphInfos, glyphRun.features);
+    shaper.plan(this.plan, this.glyphInfos, glyphRun.features);
 
     // Assign chosen features to output glyph run
     for (let key in this.plan.allFeatures) {
@@ -61,8 +72,8 @@ export default class OTLayoutEngine {
     }
   }
 
-  substitute(glyphRun) {
-    if (this.GSUBProcessor) {
+  substitute(glyphRun: GlyphRun): void {
+    if (this.GSUBProcessor && this.plan && this.glyphInfos) {
       this.plan.process(this.GSUBProcessor, this.glyphInfos);
 
       // Map glyph infos back to normal Glyph objects
@@ -72,12 +83,20 @@ export default class OTLayoutEngine {
     }
   }
 
-  position(glyphRun) {
-    if (this.shaper.zeroMarkWidths === "BEFORE_GPOS") {
+  position(glyphRun: GlyphRun): Record<string, unknown> | null {
+    if (!glyphRun.positions) {
+      throw new Error("Glyph positions must be initialized before positioning");
+    }
+
+    if (this.shaper?.zeroMarkWidths === "BEFORE_GPOS") {
       this.zeroMarkAdvances(glyphRun.positions);
     }
 
     if (this.GPOSProcessor) {
+      if (!this.plan || !this.glyphInfos) {
+        return null;
+      }
+
       this.plan.process(
         this.GPOSProcessor,
         this.glyphInfos,
@@ -85,7 +104,7 @@ export default class OTLayoutEngine {
       );
     }
 
-    if (this.shaper.zeroMarkWidths === "AFTER_GPOS") {
+    if (this.shaper?.zeroMarkWidths === "AFTER_GPOS") {
       this.zeroMarkAdvances(glyphRun.positions);
     }
 
@@ -95,10 +114,14 @@ export default class OTLayoutEngine {
       glyphRun.positions.reverse();
     }
 
-    return this.GPOSProcessor && this.GPOSProcessor.features;
+    return (this.GPOSProcessor && this.GPOSProcessor.features) || null;
   }
 
-  zeroMarkAdvances(positions) {
+  zeroMarkAdvances(positions: GlyphPosition[]): void {
+    if (!this.glyphInfos) {
+      return;
+    }
+
     for (let i = 0; i < this.glyphInfos.length; i++) {
       if (this.glyphInfos[i].isMark) {
         positions[i].xAdvance = 0;
@@ -107,14 +130,17 @@ export default class OTLayoutEngine {
     }
   }
 
-  cleanup() {
+  cleanup(): void {
     this.glyphInfos = null;
     this.plan = null;
     this.shaper = null;
   }
 
-  getAvailableFeatures(script, language) {
-    let features = [];
+  getAvailableFeatures(
+    script?: string | null,
+    language?: string | null,
+  ): string[] {
+    let features: string[] = [];
 
     if (this.GSUBProcessor) {
       this.GSUBProcessor.selectScript(script, language);

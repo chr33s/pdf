@@ -1,13 +1,36 @@
-// @ts-nocheck
-
 import unicode from "@chr33s/unicode-properties";
+import type { FontLike } from "../glyph/glyph.js";
 import OTProcessor from "./ot-processor.js";
 
+type GlyphFeatureMap = Record<string, boolean>;
+type FeatureInit = string[] | GlyphFeatureMap | undefined;
+
 export default class GlyphInfo {
-  constructor(font, id, codePoints = [], features) {
+  _font: FontLike;
+  codePoints: number[];
+  private _id!: number;
+  features: GlyphFeatureMap;
+  ligatureID: number | null;
+  ligatureComponent: number | null;
+  isLigated: boolean;
+  cursiveAttachment: number | null;
+  markAttachment: number | null;
+  shaperInfo: any;
+  substituted: boolean;
+  isMultiplied: boolean;
+  markAttachmentType!: number;
+  isBase!: boolean;
+  isLigature!: boolean;
+  isMark!: boolean;
+
+  constructor(
+    font: FontLike,
+    id: number,
+    codePoints: number[] = [],
+    features?: FeatureInit,
+  ) {
     this._font = font;
     this.codePoints = codePoints;
-    this.id = id;
 
     this.features = {};
     if (Array.isArray(features)) {
@@ -15,7 +38,7 @@ export default class GlyphInfo {
         let feature = features[i];
         this.features[feature] = true;
       }
-    } else if (typeof features === "object") {
+    } else if (typeof features === "object" && features != null) {
       Object.assign(this.features, features);
     }
 
@@ -27,13 +50,16 @@ export default class GlyphInfo {
     this.shaperInfo = null;
     this.substituted = false;
     this.isMultiplied = false;
+
+    // Set id last since the setter computes isBase, isLigature, isMark, markAttachmentType
+    this.id = id;
   }
 
-  get id() {
+  get id(): number {
     return this._id;
   }
 
-  set id(id) {
+  set id(id: number) {
     this._id = id;
     this.substituted = true;
 
@@ -56,7 +82,7 @@ export default class GlyphInfo {
     }
   }
 
-  copy() {
+  copy(): GlyphInfo {
     return new GlyphInfo(this._font, this.id, this.codePoints, this.features);
   }
 }

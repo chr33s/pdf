@@ -1,5 +1,4 @@
-// @ts-nocheck
-
+import type { DecodeStream, EncodeStream } from "@chr33s/restructure";
 import * as r from "@chr33s/restructure";
 import { resolveLength } from "@chr33s/restructure";
 import { ItemVariationStore } from "../tables/variations.js";
@@ -8,39 +7,71 @@ import {
   ExpertSubsetCharset,
   ISOAdobeCharset,
 } from "./cff-charsets.js";
-import CFFDict from "./cff-dict.js";
+import CFFDict, { type DictContext } from "./cff-dict.js";
 import { ExpertEncoding, StandardEncoding } from "./cff-encodings.js";
 import CFFIndex from "./cff-index.js";
+import type { OperandValue } from "./cff-operand.js";
 import CFFPointer from "./cff-pointer.js";
 import CFFPrivateDict from "./cff-private-dict.js";
 
+type OperandList = readonly number[];
+
+type DictParent = Record<string, unknown> & {
+  length: number;
+};
+
+interface RestructType<TValue = unknown> {
+  decode(
+    stream: DecodeStream,
+    parent?: unknown,
+    operands?: OperandList,
+  ): TValue;
+  size(value: TValue, ctx?: unknown): number | [number, number];
+  encode(stream: EncodeStream | null, value: TValue, ctx?: unknown): unknown;
+}
+
 // Checks if an operand is an index of a predefined value,
 // otherwise delegates to the provided type.
-class PredefinedOp {
-  constructor(predefinedOps, type) {
-    this.predefinedOps = predefinedOps;
-    this.type = type;
+class PredefinedOp<TValue = unknown> {
+  #predefinedOps: TValue[];
+  #type: RestructType<TValue>;
+
+  constructor(predefinedOps: TValue[], type: RestructType<TValue>) {
+    this.#predefinedOps = predefinedOps;
+    this.#type = type;
   }
 
-  decode(stream, parent, operands) {
-    if (this.predefinedOps[operands[0]]) {
-      return this.predefinedOps[operands[0]];
+  decode(
+    stream: DecodeStream,
+    parent?: Record<string, unknown>,
+    operands: OperandList = [],
+  ) {
+    const lookupIndex = operands[0];
+    if (lookupIndex != null && this.#predefinedOps[lookupIndex]) {
+      return this.#predefinedOps[lookupIndex];
     }
 
-    return this.type.decode(stream, parent, operands);
+    return this.#type.decode(stream, parent, operands);
   }
 
-  size(value, ctx) {
-    return this.type.size(value, ctx);
+  size(value: TValue, ctx?: unknown) {
+    return this.#type.size(value, ctx);
   }
 
-  encode(stream, value, ctx) {
-    let index = this.predefinedOps.indexOf(value);
+  encode(
+    stream: EncodeStream | null,
+    value: TValue,
+    ctx?: unknown,
+  ): OperandValue | OperandValue[] | undefined {
+    const index = this.#predefinedOps.indexOf(value);
     if (index !== -1) {
       return index;
     }
 
-    return this.type.encode(stream, value, ctx);
+    return this.#type.encode(stream, value, ctx) as
+      | OperandValue
+      | OperandValue[]
+      | undefined;
   }
 }
 
@@ -49,7 +80,7 @@ class CFFEncodingVersion extends r.Number {
     super("UInt8");
   }
 
-  decode(stream) {
+  decode(stream: DecodeStream) {
     return r.uint8.decode(stream) & 0x7f;
   }
 }
@@ -86,7 +117,7 @@ let CFFEncoding = new PredefinedOp(
 // Decodes an array of ranges until the total
 // length is equal to the provided length.
 class RangeArray extends r.Array {
-  decode(stream, parent) {
+  decode(stream: DecodeStream, parent?: unknown) {
     let length = resolveLength(this.length, stream, parent);
     let count = 0;
     let res = [];
@@ -150,20 +181,36 @@ let FDSelect = new r.VersionedStruct(r.uint8, {
 
 let ptr = new CFFPointer(CFFPrivateDict);
 class CFFPrivateOp {
-  decode(stream, parent, operands) {
-    parent.length = operands[0];
-    return ptr.decode(stream, parent, [operands[1]]);
+  decode(
+    stream: DecodeStream,
+    parent?: Record<string, unknown>,
+    operands: OperandList = [],
+  ) {
+    if (!parent) {
+      throw new Error("CFF Private DICT requires a parent context");
+    }
+
+    if (operands.length < 2) {
+      throw new Error("CFF Private DICT expects length and offset operands");
+    }
+
+    const dictParent = parent as DictParent;
+    dictParent.length = operands[0];
+    return ptr.decode(stream, dictParent, [operands[1]]);
   }
 
-  size(dict, ctx) {
-    return [CFFPrivateDict.size(dict, ctx, false), ptr.size(dict, ctx)[0]];
-  }
-
-  encode(stream, dict, ctx) {
-    return [
-      CFFPrivateDict.size(dict, ctx, false),
-      ptr.encode(stream, dict, ctx)[0],
-    ];
+  encode(
+    stream: EncodeStream | null,
+    dict: unknown,
+    ctx?: DictContext | Record<string, unknown>,
+  ) {
+    const parentDict = dict as Record<string, any>;
+    const ctxRecord = (ctx as DictContext) ?? ({} as DictContext);
+    const privateSize = CFFPrivateDict.size(parentDict, ctxRecord, false);
+    const pointerValues =
+      ptr.encode(stream, parentDict, ctxRecord as Record<string, any>) ?? [];
+    const pointerOperand = pointerValues[0] ?? 0;
+    return [privateSize, pointerOperand];
   }
 }
 

@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import codepoints from "@chr33s/codepoints";
 import { compile as compileModule } from "@chr33s/dfa";
 import { builder as UnicodeTrieBuilder } from "@chr33s/unicode-trie";
@@ -51,7 +49,7 @@ const toArrayBuffer = (view: Uint8Array): ArrayBuffer =>
     view.byteOffset + view.byteLength,
   ) as ArrayBuffer;
 
-const CATEGORY_MAP = {
+const CATEGORY_MAP: Record<string, string> = {
   Avagraha: "Symbol",
   Bindu: "SM",
   Brahmi_Joining_Number: "Placeholder",
@@ -88,7 +86,7 @@ const CATEGORY_MAP = {
   Vowel_Independent: "V",
 };
 
-const OVERRIDES = {
+const OVERRIDES: Record<number, string> = {
   0x0953: "SM",
   0x0954: "SM",
   0x0a72: "C",
@@ -137,7 +135,7 @@ const OVERRIDES = {
   0x179a: "Ra", // Khmer - No Reph, Visual Repha
 };
 
-const POSITION_MAP = {
+const POSITION_MAP: Record<string, string> = {
   Left: "Pre_C",
   Top: "Above_C",
   Bottom: "Below_C",
@@ -156,7 +154,7 @@ const POSITION_MAP = {
   Visual_Order_Left: "Pre_M",
 };
 
-function matraPosition(c, pos) {
+function matraPosition(c: any, pos: string): string {
   switch (pos) {
     case "Pre_C":
       return "Pre_M";
@@ -246,7 +244,7 @@ function matraPosition(c, pos) {
   }
 }
 
-function getPosition(codepoint, category) {
+function getPosition(codepoint: any, category: string): number {
   let position = POSITION_MAP[codepoint.indicPositionalCategory] || "End";
 
   if (CATEGORIES[category] & CONSONANT_FLAGS) {
@@ -270,7 +268,7 @@ function getPosition(codepoint, category) {
   return Math.log2(POSITIONS[position]);
 }
 
-let symbols = {};
+const symbols: Record<string, number> = {};
 for (let c in CATEGORIES) {
   symbols[c] = Math.log2(CATEGORIES[c]);
 }
@@ -279,10 +277,12 @@ let trie = new UnicodeTrieBuilder();
 for (let i = 0; i < codepoints.length; i++) {
   let codepoint = codepoints[i];
   if (codepoint) {
-    let category =
-      OVERRIDES[codepoint.code] ||
-      CATEGORY_MAP[codepoint.indicSyllabicCategory] ||
-      "X";
+    const categoryOverride = OVERRIDES[codepoint.code];
+    const syllabicCategory = codepoint.indicSyllabicCategory ?? undefined;
+    const mappedCategory = syllabicCategory
+      ? CATEGORY_MAP[syllabicCategory]
+      : undefined;
+    let category = categoryOverride ?? mappedCategory ?? "X";
     let position = getPosition(codepoint, category);
 
     trie.set(codepoint.code, (symbols[category] << 8) | position);

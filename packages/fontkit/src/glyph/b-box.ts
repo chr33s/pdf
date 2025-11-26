@@ -1,9 +1,12 @@
-// @ts-nocheck
-
 /**
  * Represents a glyph bounding box
  */
 export default class BBox {
+  minX: number;
+  minY: number;
+  maxX: number;
+  maxY: number;
+
   constructor(
     minX = Infinity,
     minY = Infinity,
@@ -39,7 +42,7 @@ export default class BBox {
    * The width of the bounding box
    * @type {number}
    */
-  get width() {
+  get width(): number {
     return this.maxX - this.minX;
   }
 
@@ -47,11 +50,11 @@ export default class BBox {
    * The height of the bounding box
    * @type {number}
    */
-  get height() {
+  get height(): number {
     return this.maxY - this.minY;
   }
 
-  addPoint(x, y) {
+  addPoint(x: number, y: number): void {
     if (Math.abs(x) !== Infinity) {
       if (x < this.minX) {
         this.minX = x;
@@ -73,7 +76,7 @@ export default class BBox {
     }
   }
 
-  copy() {
+  copy(): BBox {
     return new BBox(this.minX, this.minY, this.maxX, this.maxY);
   }
 }

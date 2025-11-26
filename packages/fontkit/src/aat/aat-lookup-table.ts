@@ -1,42 +1,123 @@
-// @ts-nocheck
-
 import { cache } from "../decorators.js";
 import { range } from "../utils.js";
 
+type SimpleLookupTable = {
+  version: 0;
+  values: {
+    getItem(index: number): number | null;
+  };
+};
+
+type BinarySearchHeader = {
+  nUnits: number;
+};
+
+type SegmentRange = {
+  firstGlyph: number;
+  lastGlyph: number;
+};
+
+type SegmentValue = SegmentRange & {
+  value: number;
+};
+
+type SegmentValues = SegmentRange & {
+  values: number[];
+};
+
+type SegmentGlyph = {
+  glyph: number;
+  value: number;
+};
+
+type SegmentLookupTableV2 = {
+  version: 2;
+  binarySearchHeader: BinarySearchHeader;
+  segments: SegmentValue[];
+};
+
+type SegmentLookupTableV4 = {
+  version: 4;
+  binarySearchHeader: BinarySearchHeader;
+  segments: SegmentValues[];
+};
+
+type SingleLookupTable = {
+  version: 6;
+  binarySearchHeader: BinarySearchHeader;
+  segments: SegmentGlyph[];
+};
+
+type TrimmedLookupTable = {
+  version: 8;
+  firstGlyph: number;
+  values: number[];
+};
+
+export type LookupTable =
+  | SimpleLookupTable
+  | SegmentLookupTableV2
+  | SegmentLookupTableV4
+  | SingleLookupTable
+  | TrimmedLookupTable;
+
 export default class AATLookupTable {
-  constructor(table) {
-    this.table = table;
+  #table: LookupTable;
+
+  constructor(table: LookupTable) {
+    this.#table = table;
   }
 
-  lookup(glyph) {
-    switch (this.table.version) {
+  lookup(glyph: number): number | null {
+    const version = this.#table.version;
+    switch (version) {
       case 0: // simple array format
-        return this.table.values.getItem(glyph);
+        return this.#table.values.getItem(glyph);
 
-      case 2: // segment format
-      case 4: {
+      case 2: {
         let min = 0;
-        let max = this.table.binarySearchHeader.nUnits - 1;
+        let max = this.#table.binarySearchHeader.nUnits - 1;
+        const table = this.#table as SegmentLookupTableV2;
 
         while (min <= max) {
-          var mid = (min + max) >> 1;
-          var seg = this.table.segments[mid];
+          const mid = (min + max) >> 1;
+          const segment = table.segments[mid];
 
-          // special end of search value
-          if (seg.firstGlyph === 0xffff) {
+          if (segment.firstGlyph === 0xffff) {
             return null;
           }
 
-          if (glyph < seg.firstGlyph) {
+          if (glyph < segment.firstGlyph) {
             max = mid - 1;
-          } else if (glyph > seg.lastGlyph) {
+          } else if (glyph > segment.lastGlyph) {
             min = mid + 1;
           } else {
-            if (this.table.version === 2) {
-              return seg.value;
-            } else {
-              return seg.values[glyph - seg.firstGlyph];
-            }
+            return segment.value;
+          }
+        }
+
+        return null;
+      }
+
+      case 4: {
+        let min = 0;
+        let max = this.#table.binarySearchHeader.nUnits - 1;
+        const table = this.#table as SegmentLookupTableV4;
+
+        while (min <= max) {
+          const mid = (min + max) >> 1;
+          const segment = table.segments[mid];
+
+          if (segment.firstGlyph === 0xffff) {
+            return null;
+          }
+
+          if (glyph < segment.firstGlyph) {
+            max = mid - 1;
+          } else if (glyph > segment.lastGlyph) {
+            min = mid + 1;
+          } else {
+            return segment.values[glyph - segment.firstGlyph];
           }
         }
 
@@ -46,52 +127,65 @@ export default class AATLookupTable {
       case 6: {
         // lookup single
         let min = 0;
-        let max = this.table.binarySearchHeader.nUnits - 1;
+        let max = this.#table.binarySearchHeader.nUnits - 1;
+        const table = this.#table as SingleLookupTable;
 
         while (min <= max) {
-          var mid = (min + max) >> 1;
-          var seg = this.table.segments[mid];
+          const mid = (min + max) >> 1;
+          const segment = table.segments[mid];
 
           // special end of search value
-          if (seg.glyph === 0xffff) {
+          if (segment.glyph === 0xffff) {
             return null;
           }
 
-          if (glyph < seg.glyph) {
+          if (glyph < segment.glyph) {
             max = mid - 1;
-          } else if (glyph > seg.glyph) {
+          } else if (glyph > segment.glyph) {
             min = mid + 1;
           } else {
-            return seg.value;
+            return segment.value;
           }
         }
 
         return null;
       }
 
-      case 8: // lookup trimmed
-        return this.table.values[glyph - this.table.firstGlyph];
+      case 8: {
+        // lookup trimmed
+        const table = this.#table as TrimmedLookupTable;
+        return table.values[glyph - table.firstGlyph];
+      }
 
       default:
-        throw new Error(`Unknown lookup table format: ${this.table.version}`);
+        throw new Error(`Unknown lookup table format: ${String(version)}`);
     }
   }
 
   @cache
-  glyphsForValue(classValue) {
-    let res = [];
+  glyphsForValue(classValue: number): number[] {
+    let res: number[] = [];
 
-    switch (this.table.version) {
-      case 2: // segment format
-      case 4: {
-        for (let segment of this.table.segments) {
-          if (this.table.version === 2 && segment.value === classValue) {
+    const version = this.#table.version;
+    switch (version) {
+      case 2: {
+        const table = this.#table as SegmentLookupTableV2;
+        for (const segment of table.segments) {
+          if (segment.value === classValue) {
             res.push(...range(segment.firstGlyph, segment.lastGlyph + 1));
-          } else {
-            for (let index = 0; index < segment.values.length; index++) {
-              if (segment.values[index] === classValue) {
-                res.push(segment.firstGlyph + index);
-              }
+          }
+        }
+
+        break;
+      }
+
+      case 4: {
+        const table = this.#table as SegmentLookupTableV4;
+        for (const segment of table.segments) {
+          const values = segment.values;
+          for (let index = 0; index < values.length; index++) {
+            if (values[index] === classValue) {
+              res.push(segment.firstGlyph + index);
             }
           }
         }
@@ -101,7 +195,8 @@ export default class AATLookupTable {
 
       case 6: {
         // lookup single
-        for (let segment of this.table.segments) {
+        const table = this.#table as SingleLookupTable;
+        for (const segment of table.segments) {
           if (segment.value === classValue) {
             res.push(segment.glyph);
           }
@@ -112,9 +207,10 @@ export default class AATLookupTable {
 
       case 8: {
         // lookup trimmed
-        for (let i = 0; i < this.table.values.length; i++) {
-          if (this.table.values[i] === classValue) {
-            res.push(this.table.firstGlyph + i);
+        const table = this.#table as TrimmedLookupTable;
+        for (let i = 0; i < table.values.length; i++) {
+          if (table.values[i] === classValue) {
+            res.push(table.firstGlyph + i);
           }
         }
 
@@ -122,7 +218,7 @@ export default class AATLookupTable {
       }
 
       default:
-        throw new Error(`Unknown lookup table format: ${this.table.version}`);
+        throw new Error(`Unknown lookup table format: ${String(version)}`);
     }
 
     return res;

@@ -1,20 +1,25 @@
-// @ts-nocheck
-
+import type { DecodeStream } from "@chr33s/restructure";
 import CFFDict from "./cff-dict.js";
 import CFFIndex from "./cff-index.js";
 import CFFPointer from "./cff-pointer.js";
 
-class CFFBlendOp {
-  static decode(stream, parent, operands) {
-    let numBlends = operands.pop();
-
-    // TODO: actually blend. For now just consume the deltas
-    // since we don't use any of the values anyway.
-    while (operands.length > numBlends) {
-      operands.pop();
+const CFFBlendOperand = {
+  decode(
+    _stream: DecodeStream,
+    _parent?: Record<string, unknown>,
+    operands: ReadonlyArray<number> = [],
+  ) {
+    const numBlends = operands[operands.length - 1];
+    if (typeof numBlends !== "number") {
+      throw new Error("CFF blend operator missing operand count");
     }
-  }
-}
+
+    const deltaCount = operands.length - 1;
+    if (deltaCount < numBlends) {
+      throw new Error("CFF blend operator missing delta operands");
+    }
+  },
+};
 
 export default new CFFDict([
   // key       name                    type                                          default
@@ -36,6 +41,6 @@ export default new CFFDict([
   [20, "defaultWidthX", "number", 0],
   [21, "nominalWidthX", "number", 0],
   [22, "vsindex", "number", 0],
-  [23, "blend", CFFBlendOp, null],
+  [23, "blend", CFFBlendOperand, null],
   [19, "Subrs", new CFFPointer(new CFFIndex(), { type: "local" }), null],
 ]);

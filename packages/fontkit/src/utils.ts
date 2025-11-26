@@ -1,6 +1,4 @@
-// @ts-nocheck
-
-export function binarySearch(arr, cmp) {
+export function binarySearch<T>(arr: T[], cmp: (value: T) => number): number {
   let min = 0;
   let max = arr.length - 1;
   while (min <= max) {
@@ -19,8 +17,8 @@ export function binarySearch(arr, cmp) {
   return -1;
 }
 
-export function range(index, end) {
-  let range = [];
+export function range(index: number, end: number): number[] {
+  let range: number[] = [];
   while (index < end) {
     range.push(index++);
   }

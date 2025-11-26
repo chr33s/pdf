@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 /**
  * This decorator caches the results of a getter or method such that
  * the results are lazily computed once, and then cached.

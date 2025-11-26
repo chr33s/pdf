@@ -1,9 +1,9 @@
-// @ts-nocheck
-
 import unicode from "@chr33s/unicode-properties";
 import UnicodeTrie from "@chr33s/unicode-trie";
 import * as base64 from "base64-arraybuffer";
 import pako from "pako";
+import type GlyphInfo from "../glyph-info.js";
+import type ShapingPlan from "../shaping-plan.js";
 import DefaultShaper from "./default-shaper.js";
 
 // Trie is serialized as a Buffer in node, but here
@@ -35,7 +35,9 @@ const INIT = "init";
 const NONE = null;
 
 // Each entry is [prevAction, curAction, nextState]
-const STATE_TABLE = [
+type StateAction = [string | null, string | null, number];
+
+const STATE_TABLE: StateAction[][] = [
   //   Non_Joining,        Left_Joining,       Right_Joining,     Dual_Joining,           ALAPH,            DALATH RISH
   // State 0: prev was U,  not willing to join.
   [
@@ -117,7 +119,7 @@ const STATE_TABLE = [
  * https://github.com/behdad/harfbuzz/blob/master/src/hb-ot-shape-complex-arabic.cc
  */
 export default class ArabicShaper extends DefaultShaper {
-  static planFeatures(plan) {
+  static planFeatures(plan: ShapingPlan): void {
     plan.add(["ccmp", "locl"]);
     for (let i = 0; i < FEATURES.length; i++) {
       let feature = FEATURES[i];
@@ -127,17 +129,17 @@ export default class ArabicShaper extends DefaultShaper {
     plan.addStage("mset");
   }
 
-  static assignFeatures(plan, glyphs) {
+  static assignFeatures(plan: ShapingPlan, glyphs: GlyphInfo[]): void {
     super.assignFeatures(plan, glyphs);
 
     let prev = -1;
     let state = 0;
-    let actions = [];
+    let actions: Array<string | null> = [];
 
     // Apply the state machine to map glyphs to features
     for (let i = 0; i < glyphs.length; i++) {
       let curAction, prevAction;
-      var glyph = glyphs[i];
+      const glyph = glyphs[i];
       let type = getShapingClass(glyph.codePoints[0]);
       if (type === ShapingClasses.Transparent) {
         actions[i] = NONE;
@@ -165,7 +167,7 @@ export default class ArabicShaper extends DefaultShaper {
   }
 }
 
-function getShapingClass(codePoint) {
+function getShapingClass(codePoint: number): number {
   let res = trie.get(codePoint);
   if (res) {
     return res - 1;

@@ -4,8 +4,13 @@ import fontkit from "./add-test-helpers-to-fontkit.js";
 import { here } from "./utils/dir.js";
 
 const __dirname = here(import.meta.url);
-const xAdvances = (positions: Array<{ xAdvance: number }>) =>
-  positions.map((position) => position.xAdvance);
+const xAdvances = (positions: Array<{ xAdvance: number }> | null) => {
+  if (!positions) {
+    throw new Error("Expected layout positions to be available");
+  }
+
+  return positions.map((position) => position.xAdvance);
+};
 
 describe("glyph positioning", function () {
   describe("basic positioning", function () {

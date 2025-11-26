@@ -1,5 +1,4 @@
-// @ts-nocheck
-
+import type { DecodeStream } from "@chr33s/restructure";
 import * as r from "@chr33s/restructure";
 import TTFFont from "./ttf-font.js";
 
@@ -41,17 +40,66 @@ let DFontHeader = new r.Struct({
   mapLength: r.uint32,
 });
 
+type DFontRef = {
+  id: number;
+  nameOffset: number;
+  attr: number;
+  dataOffset: number;
+  handle: number;
+  name?: string | null;
+};
+
+type DFontType = {
+  name: string;
+  maxTypeIndex: number;
+  refList: DFontRef[];
+};
+
+type DFontMapStruct = {
+  typeList: {
+    length: number;
+    types: DFontType[];
+  };
+  nameListOffset: number;
+};
+
+type DFontHeaderStruct = {
+  dataOffset: number;
+  map: DFontMapStruct;
+  dataLength: number;
+  mapLength: number;
+};
+
+type BufferLike = Buffer | ArrayBuffer | ArrayBufferView;
+
+function toBuffer(source: BufferLike): Buffer {
+  if (Buffer.isBuffer(source)) {
+    return source;
+  }
+
+  if (source instanceof ArrayBuffer) {
+    return Buffer.from(source);
+  }
+
+  return Buffer.from(source.buffer, source.byteOffset, source.byteLength);
+}
+
 export default class DFont {
-  static probe(buffer) {
-    let stream = new r.DecodeStream(buffer);
+  #stream: DecodeStream;
+  #header: DFontHeaderStruct;
+  #sfnt: DFontType | null;
+
+  static probe(buffer: BufferLike): boolean {
+    const stream = new r.DecodeStream(toBuffer(buffer));
+    let header: DFontHeaderStruct;
 
     try {
-      var header = DFontHeader.decode(stream);
+      header = DFontHeader.decode(stream) as DFontHeaderStruct;
     } catch {
       return false;
     }
 
-    for (let type of header.map.typeList.types) {
+    for (const type of header.map.typeList.types) {
       if (type.name === "sfnt") {
         return true;
       }
@@ -60,35 +108,42 @@ export default class DFont {
     return false;
   }
 
-  constructor(stream) {
-    this.stream = stream;
-    this.header = DFontHeader.decode(this.stream);
+  constructor(stream: DecodeStream) {
+    this.#stream = stream;
+    this.#header = DFontHeader.decode(this.#stream) as DFontHeaderStruct;
+    this.#sfnt = null;
 
-    for (let type of this.header.map.typeList.types) {
-      for (let ref of type.refList) {
+    for (const type of this.#header.map.typeList.types) {
+      for (const ref of type.refList) {
         if (ref.nameOffset >= 0) {
-          this.stream.pos = ref.nameOffset + this.header.map.nameListOffset;
-          ref.name = DFontName.decode(this.stream);
+          this.#stream.pos = ref.nameOffset + this.#header.map.nameListOffset;
+          const decodedName = DFontName.decode(this.#stream) as string | Buffer;
+          ref.name =
+            typeof decodedName === "string"
+              ? decodedName
+              : decodedName.toString("utf8");
         } else {
           ref.name = null;
         }
       }
 
       if (type.name === "sfnt") {
-        this.sfnt = type;
+        this.#sfnt = type;
       }
     }
   }
 
-  getFont(name) {
-    if (!this.sfnt) {
+  getFont(name: string): TTFFont | null {
+    if (!this.#sfnt) {
       return null;
     }
 
-    for (let ref of this.sfnt.refList) {
-      let pos = this.header.dataOffset + ref.dataOffset + 4;
-      let stream = new r.DecodeStream(this.stream.buffer.slice(pos));
-      let font = new TTFFont(stream);
+    for (const ref of this.#sfnt.refList) {
+      const pos = this.#header.dataOffset + ref.dataOffset + 4;
+      const baseBuffer = this.#stream.buffer as Buffer;
+      const slice = baseBuffer.slice(pos);
+      const stream = new r.DecodeStream(slice);
+      const font = new TTFFont(stream);
       if (font.postscriptName === name) {
         return font;
       }
@@ -97,11 +152,16 @@ export default class DFont {
     return null;
   }
 
-  get fonts() {
-    let fonts = [];
-    for (let ref of this.sfnt.refList) {
-      let pos = this.header.dataOffset + ref.dataOffset + 4;
-      let stream = new r.DecodeStream(this.stream.buffer.slice(pos));
+  get fonts(): TTFFont[] {
+    if (!this.#sfnt) {
+      return [];
+    }
+
+    const baseBuffer = this.#stream.buffer as Buffer;
+    const fonts: TTFFont[] = [];
+    for (const ref of this.#sfnt.refList) {
+      const pos = this.#header.dataOffset + ref.dataOffset + 4;
+      const stream = new r.DecodeStream(baseBuffer.slice(pos));
       fonts.push(new TTFFont(stream));
     }
 

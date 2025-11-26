@@ -1,9 +1,86 @@
-// @ts-nocheck
-
 import unicode from "@chr33s/unicode-properties";
 import { cache } from "../decorators.js";
 import Path from "./path.js";
 import StandardNames from "./standard-names.js";
+
+type MetricRecord = {
+  advance: number;
+  bearing: number;
+};
+
+type MetricArray = {
+  length: number;
+  get(index: number): MetricRecord | undefined;
+};
+
+type BearingArray = {
+  get(index: number): number | undefined;
+};
+
+export type MetricTable = {
+  metrics: MetricArray;
+  bearings: BearingArray;
+};
+
+type GlyphPointLike = {
+  x: number;
+  y: number;
+  endContour?: boolean;
+  copy(): GlyphPointLike;
+};
+
+export type GlyphImage = {
+  originX: number;
+  originY: number;
+  type: string;
+  data: Buffer;
+};
+
+type CmapProcessorLike = {
+  codePointsForGlyph(gid: number): number[];
+};
+
+export type VariationProcessor = {
+  getAdvanceAdjustment(gid: number, table: unknown): number;
+  getBlendVector(itemStore: unknown, outerIndex?: number): number[];
+  getDelta(itemStore: unknown, outerIndex: number, innerIndex: number): number;
+  transformPoints(gid: number, points: GlyphPointLike[]): void;
+  getNormalizedCoords(): number[];
+};
+
+export type FontLike = {
+  unitsPerEm: number;
+  head: { unitsPerEm: number };
+  hhea: { ascent: number; descent: number };
+  hmtx: MetricTable;
+  vmtx?: MetricTable | null;
+  HVAR?: unknown;
+  morx?: unknown;
+  GSUB?: unknown;
+  GPOS?: unknown;
+  kern?: { tables?: unknown[] } | null;
+  glyphsForString(text: string): Glyph[];
+  glyphForCodePoint(codePoint: number): Glyph;
+  getGlyph(glyphId: number, codePoints?: number[]): Glyph;
+  _cmapProcessor: CmapProcessorLike;
+  _variationProcessor?: VariationProcessor | null;
+  [key: string]: any;
+};
+
+type GlyphMetrics = {
+  advanceWidth: number;
+  advanceHeight: number;
+  leftBearing: number;
+  topBearing: number;
+};
+
+export type CanvasContextLike = {
+  save(): void;
+  scale(x: number, y: number): void;
+  fill(): void;
+  restore(): void;
+  [key: string]: (...args: number[]) => unknown;
+};
 
 /**
  * Glyph objects represent a glyph in the font. They have various properties for accessing metrics and
@@ -14,7 +91,15 @@ import StandardNames from "./standard-names.js";
  * on the font format, but they all inherit from this class.
  */
 export default class Glyph {
-  constructor(id, codePoints, font) {
+  [key: string]: unknown;
+  id: number;
+  codePoints: number[];
+  protected _font: FontLike;
+  protected _metrics: GlyphMetrics | null;
+  isMark: boolean;
+  isLigature: boolean;
+
+  constructor(id: number, codePoints: number[], font: FontLike) {
     /**
      * The glyph id in the font
      * @type {number}
@@ -29,6 +114,7 @@ export default class Glyph {
      */
     this.codePoints = codePoints;
     this._font = font;
+    this._metrics = null;
 
     // TODO: get this info from GDEF if available
     this.isMark =
@@ -36,7 +122,7 @@ export default class Glyph {
     this.isLigature = this.codePoints.length > 1;
   }
 
-  _getPath() {
+  _getPath(): Path {
     return new Path();
   }
 
@@ -48,28 +134,33 @@ export default class Glyph {
     return this.path.bbox;
   }
 
-  _getTableMetrics(table) {
+  _getTableMetrics(table: MetricTable): MetricRecord {
     if (this.id < table.metrics.length) {
-      return table.metrics.get(this.id);
+      const metric = table.metrics.get(this.id);
+      if (metric) {
+        return metric;
+      }
     }
 
-    let metric = table.metrics.get(table.metrics.length - 1);
-    let res = {
-      advance: metric ? metric.advance : 0,
-      bearing: table.bearings.get(this.id - table.metrics.length) || 0,
+    const metric = table.metrics.get(table.metrics.length - 1);
+    const bearing = table.bearings.get(this.id - table.metrics.length) || 0;
+    const fallbackAdvance = metric ? metric.advance : 0;
+    const res: MetricRecord = {
+      advance: fallbackAdvance,
+      bearing,
     };
 
     return res;
   }
 
-  _getMetrics(cbox) {
+  _getMetrics(cbox?: { maxY: number } | null): GlyphMetrics {
     if (this._metrics) {
       return this._metrics;
     }
 
-    let { advance: advanceWidth, bearing: leftBearing } = this._getTableMetrics(
-      this._font.hmtx,
-    );
+    const { advance: advanceWidthRaw, bearing: leftBearing } =
+      this._getTableMetrics(this._font.hmtx);
+    let advanceWidth = advanceWidthRaw;
 
     // For vertical metrics, use vmtx if available, or fall back to global data from OS/2 or hhea
     if (this._font.vmtx) {
@@ -148,7 +239,7 @@ export default class Glyph {
    * @param {number} size
    * @return {Path}
    */
-  getScaledPath(size) {
+  getScaledPath(size: number): Path {
     let scale = (1 / this._font.unitsPerEm) * size;
     return this.path.scale(scale);
   }
@@ -158,7 +249,7 @@ export default class Glyph {
    * @type {number}
    */
   @cache
-  get advanceWidth() {
+  get advanceWidth(): number {
     return this._getMetrics().advanceWidth;
   }
 
@@ -167,11 +258,21 @@ export default class Glyph {
    * @type {number}
    */
   @cache
-  get advanceHeight() {
+  get advanceHeight(): number {
     return this._getMetrics().advanceHeight;
   }
 
-  get ligatureCaretPositions() {}
+  get ligatureCaretPositions(): number[] | null {
+    return null;
+  }
+
+  get layers(): unknown[] {
+    return [];
+  }
+
+  getImageForSize(_size: number): GlyphImage | null {
+    return null;
+  }
 
   _getName() {
     let { post } = this._font;
@@ -213,7 +314,7 @@ export default class Glyph {
    * @param {CanvasRenderingContext2d} ctx
    * @param {number} size
    */
-  render(ctx, size) {
+  render(ctx: CanvasContextLike, size: number): void {
     ctx.save();
 
     let scale = (1 / this._font.head.unitsPerEm) * size;

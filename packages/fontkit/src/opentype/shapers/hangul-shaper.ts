@@ -1,6 +1,6 @@
-// @ts-nocheck
-
+import type { FontLike } from "../../glyph/glyph.js";
 import GlyphInfo from "../glyph-info.js";
+import type ShapingPlan from "../shaping-plan.js";
 import DefaultShaper from "./default-shaper.js";
 
 /**
@@ -26,16 +26,17 @@ import DefaultShaper from "./default-shaper.js";
  *   - http://ktug.org/~nomos/harfbuzz-hangul/hangulshaper.pdf
  */
 export default class HangulShaper extends DefaultShaper {
-  static zeroMarkWidths = "NONE";
-  static planFeatures(plan) {
+  static override zeroMarkWidths: typeof DefaultShaper.zeroMarkWidths = "NONE";
+
+  static planFeatures(plan: ShapingPlan): void {
     plan.add(["ljmo", "vjmo", "tjmo"], false);
   }
 
-  static assignFeatures(plan, glyphs) {
+  static assignFeatures(plan: ShapingPlan, glyphs: GlyphInfo[]): void {
     let state = 0;
     let i = 0;
     while (i < glyphs.length) {
-      let action;
+      let action: number;
       let glyph = glyphs[i];
       let code = glyph.codePoints[0];
       let type = getType(code);
@@ -85,19 +86,21 @@ const V_END = V_BASE + V_COUNT - 1;
 const T_END = T_BASE + T_COUNT - 1;
 const DOTTED_CIRCLE = 0x25cc;
 
-const isL = (code) =>
+const isL = (code: number): boolean =>
   (0x1100 <= code && code <= 0x115f) || (0xa960 <= code && code <= 0xa97c);
-const isV = (code) =>
+const isV = (code: number): boolean =>
   (0x1160 <= code && code <= 0x11a7) || (0xd7b0 <= code && code <= 0xd7c6);
-const isT = (code) =>
+const isT = (code: number): boolean =>
   (0x11a8 <= code && code <= 0x11ff) || (0xd7cb <= code && code <= 0xd7fb);
-const isTone = (code) => 0x302e <= code && code <= 0x302f;
-const isLVT = (code) => HANGUL_BASE <= code && code <= HANGUL_END;
-const isLV = (code) =>
+const isTone = (code: number): boolean => 0x302e <= code && code <= 0x302f;
+const isLVT = (code: number): boolean =>
+  HANGUL_BASE <= code && code <= HANGUL_END;
+const isLV = (code: number): boolean =>
   code - HANGUL_BASE < HANGUL_COUNT && (code - HANGUL_BASE) % T_COUNT === 0;
-const isCombiningL = (code) => L_BASE <= code && code <= L_END;
-const isCombiningV = (code) => V_BASE <= code && code <= V_END;
-const isCombiningT = (code) => T_BASE + 1 && 1 <= code && code <= T_END;
+const isCombiningL = (code: number): boolean => L_BASE <= code && code <= L_END;
+const isCombiningV = (code: number): boolean => V_BASE <= code && code <= V_END;
+const isCombiningT = (code: number): boolean =>
+  T_BASE + 1 <= code && code <= T_END;
 
 // Character categories
 const X = 0; // Other character
@@ -109,7 +112,7 @@ const LVT = 5; // Composed <LVT> syllable
 const M = 6; // Tone mark
 
 // This function classifies a character using the above categories.
-function getType(code) {
+function getType(code: number): number {
   if (isL(code)) {
     return L;
   }
@@ -140,7 +143,9 @@ const INVALID = 5;
 
 // Build a state machine that accepts valid syllables, and applies actions along the way.
 // The logic this is implementing is documented at the top of the file.
-const STATE_TABLE = [
+type StateAction = [number, number];
+
+const STATE_TABLE: StateAction[][] = [
   //       X                 L                 V                T                  LV                LVT               M
   // State 0: start state
   [
@@ -187,11 +192,17 @@ const STATE_TABLE = [
   ],
 ];
 
-function getGlyph(font, code, features) {
-  return new GlyphInfo(font, font.glyphForCodePoint(code).id, [code], features);
+function getGlyph(
+  font: FontLike,
+  code: number,
+  features: GlyphInfo["features"],
+): GlyphInfo {
+  return new GlyphInfo(font, font.glyphForCodePoint(code).id, [code], {
+    ...features,
+  });
 }
 
-function decompose(glyphs, i, font) {
+function decompose(glyphs: GlyphInfo[], i: number, font: FontLike): number {
   let glyph = glyphs[i];
   let code = glyph.codePoints[0];
 
@@ -230,7 +241,7 @@ function decompose(glyphs, i, font) {
   return i + insert.length - 1;
 }
 
-function compose(glyphs, i, font) {
+function compose(glyphs: GlyphInfo[], i: number, font: FontLike): number {
   let glyph = glyphs[i];
   let code = glyphs[i].codePoints[0];
   let type = getType(code);
@@ -239,7 +250,10 @@ function compose(glyphs, i, font) {
   let prevType = getType(prev);
 
   // Figure out what type of syllable we're dealing with
-  let lv, ljmo, vjmo, tjmo;
+  let lv: number | undefined;
+  let ljmo: GlyphInfo | undefined;
+  let vjmo: GlyphInfo | undefined;
+  let tjmo: GlyphInfo | undefined;
   if (prevType === LV && type === T) {
     // <LV,T>
     lv = prev;
@@ -300,7 +314,7 @@ function compose(glyphs, i, font) {
   return i;
 }
 
-function getLength(code) {
+function getLength(code: number): number | undefined {
   switch (getType(code)) {
     case LV:
     case LVT:
@@ -312,7 +326,7 @@ function getLength(code) {
   }
 }
 
-function reorderToneMark(glyphs, i, font) {
+function reorderToneMark(glyphs: GlyphInfo[], i: number, font: FontLike): void {
   let glyph = glyphs[i];
   let code = glyphs[i].codePoints[0];
 
@@ -322,13 +336,17 @@ function reorderToneMark(glyphs, i, font) {
   }
 
   let prev = glyphs[i - 1].codePoints[0];
-  let len = getLength(prev);
+  let len = getLength(prev) ?? 1;
 
   glyphs.splice(i, 1);
-  return glyphs.splice(i - len, 0, glyph);
+  glyphs.splice(i - len, 0, glyph);
 }
 
-function insertDottedCircle(glyphs, i, font) {
+function insertDottedCircle(
+  glyphs: GlyphInfo[],
+  i: number,
+  font: FontLike,
+): number {
   let glyph = glyphs[i];
   let code = glyphs[i].codePoints[0];
 

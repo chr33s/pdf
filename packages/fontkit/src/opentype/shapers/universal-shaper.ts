@@ -1,24 +1,30 @@
-// @ts-nocheck
-
-import { StateMachine } from "@chr33s/dfa";
+import { StateMachine, type StateMachineConfig } from "@chr33s/dfa";
 import UnicodeTrie from "@chr33s/unicode-trie";
 import * as base64 from "base64-arraybuffer";
 import pako from "pako";
+import type { FontLike } from "../../glyph/glyph.js";
 import GlyphInfo from "../glyph-info.js";
+import type ShapingPlan from "../shaping-plan.js";
 import DefaultShaper from "./default-shaper.js";
 
 import base64DeflatedTrie from "./trie-use-data.js";
 import base64DeflatedUseData from "./use-data.js";
 
-// Trie is serialized as a Buffer in node, but here
-// we may be running in a browser so we make an Uint8Array
+type UniversalShapingData = StateMachineConfig & {
+  categories: Record<number | string, string>;
+  decompositions: Record<number | string, number[]>;
+};
+
+const textDecoder = new TextDecoder();
+const decodeBase64 = (encoded: string): Uint8Array =>
+  new Uint8Array(base64.decode(encoded));
+const inflateBase64 = (encoded: string): Uint8Array =>
+  pako.inflate(decodeBase64(encoded));
+
 const useData = JSON.parse(
-  String.fromCharCode.apply(
-    String,
-    pako.inflate(base64.decode(base64DeflatedUseData)),
-  ),
-);
-const trieData = pako.inflate(base64.decode(base64DeflatedTrie));
+  textDecoder.decode(inflateBase64(base64DeflatedUseData)),
+) as UniversalShapingData;
+const trieData = inflateBase64(base64DeflatedTrie);
 
 const { categories, decompositions } = useData;
 
@@ -31,8 +37,10 @@ const stateMachine = new StateMachine(useData);
  * See https://www.microsoft.com/typography/OpenTypeDev/USE/intro.htm.
  */
 export default class UniversalShaper extends DefaultShaper {
-  static zeroMarkWidths = "BEFORE_GPOS";
-  static planFeatures(plan) {
+  static override zeroMarkWidths: typeof DefaultShaper.zeroMarkWidths =
+    "BEFORE_GPOS";
+
+  static override planFeatures(plan: ShapingPlan): void {
     plan.addStage(setupSyllables);
 
     // Default glyph pre-processing group
@@ -58,93 +66,105 @@ export default class UniversalShaper extends DefaultShaper {
     plan.addStage(["abvs", "blws", "pres", "psts", "dist", "abvm", "blwm"]);
   }
 
-  static assignFeatures(plan, glyphs) {
-    // Decompose split vowels
-    // TODO: do this in a more general unicode normalizer
+  static override assignFeatures(plan: ShapingPlan, glyphs: GlyphInfo[]): void {
+    // Decompose split vowels. TODO: replace this with a general unicode normalizer.
     for (let i = glyphs.length - 1; i >= 0; i--) {
-      let codepoint = glyphs[i].codePoints[0];
-      if (decompositions[codepoint]) {
-        let decomposed = decompositions[codepoint].map((c) => {
-          let g = plan.font.glyphForCodePoint(c);
-          return new GlyphInfo(plan.font, g.id, [c], glyphs[i].features);
-        });
-
-        glyphs.splice(i, 1, ...decomposed);
+      const codepoint = glyphs[i].codePoints[0];
+      if (codepoint == null) {
+        continue;
       }
+
+      const decomposition = decompositions[codepoint];
+      if (!decomposition || decomposition.length === 0) {
+        continue;
+      }
+
+      const decomposed = decomposition.map((cp) => {
+        const glyph = plan.font.glyphForCodePoint(cp);
+        return new GlyphInfo(plan.font, glyph.id, [cp], glyphs[i].features);
+      });
+
+      glyphs.splice(i, 1, ...decomposed);
     }
   }
 }
 
-function useCategory(glyph) {
-  return trie.get(glyph.codePoints[0]);
+function useCategory(glyph: GlyphInfo): number {
+  const codePoint = glyph.codePoints[0] ?? 0;
+  return trie.get(codePoint);
 }
 
 class USEInfo {
-  constructor(category, syllableType, syllable) {
+  category: string;
+  syllableType: string;
+  syllable: number;
+
+  constructor(category: string, syllableType: string, syllable: number) {
     this.category = category;
     this.syllableType = syllableType;
     this.syllable = syllable;
   }
 }
 
-function setupSyllables(font, glyphs) {
+function setupSyllables(_font: FontLike, glyphs: GlyphInfo[]): void {
   let syllable = 0;
-  for (let [start, end, tags] of stateMachine.match(glyphs.map(useCategory))) {
-    ++syllable;
+  for (const [start, end, tags] of stateMachine.match(
+    glyphs.map(useCategory),
+  )) {
+    syllable++;
 
     // Create shaper info
     for (let i = start; i <= end; i++) {
-      glyphs[i].shaperInfo = new USEInfo(
-        categories[useCategory(glyphs[i])],
-        tags[0],
-        syllable,
-      );
+      const category = categories[useCategory(glyphs[i])] ?? "X";
+      const syllableType = tags[0] ?? "";
+      glyphs[i].shaperInfo = new USEInfo(category, syllableType, syllable);
     }
 
-    // Assign rphf feature
-    let limit =
-      glyphs[start].shaperInfo.category === "R" ? 1 : Math.min(3, end - start);
+    const startInfo = getUseInfo(glyphs[start]);
+    const limit = startInfo.category === "R" ? 1 : Math.min(3, end - start);
     for (let i = start; i < start + limit; i++) {
       glyphs[i].features.rphf = true;
     }
   }
 }
 
-function clearSubstitutionFlags(font, glyphs) {
-  for (let glyph of glyphs) {
+function clearSubstitutionFlags(_font: FontLike, glyphs: GlyphInfo[]): void {
+  for (const glyph of glyphs) {
     glyph.substituted = false;
   }
 }
 
-function recordRphf(font, glyphs) {
-  for (let glyph of glyphs) {
+function recordRphf(_font: FontLike, glyphs: GlyphInfo[]): void {
+  for (const glyph of glyphs) {
     if (glyph.substituted && glyph.features.rphf) {
       // Mark a substituted repha.
-      glyph.shaperInfo.category = "R";
+      getUseInfo(glyph).category = "R";
     }
   }
 }
 
-function recordPref(font, glyphs) {
-  for (let glyph of glyphs) {
+function recordPref(_font: FontLike, glyphs: GlyphInfo[]): void {
+  for (const glyph of glyphs) {
     if (glyph.substituted) {
       // Mark a substituted pref as VPre, as they behave the same way.
-      glyph.shaperInfo.category = "VPre";
+      getUseInfo(glyph).category = "VPre";
     }
   }
 }
 
-function reorder(font, glyphs) {
-  let dottedCircle = font.glyphForCodePoint(0x25cc).id;
+function reorder(font: FontLike, glyphs: GlyphInfo[]): void {
+  const dottedCircleGlyph = font.glyphForCodePoint(0x25cc);
+  const dottedCircle = dottedCircleGlyph?.id;
 
   for (
     let start = 0, end = nextSyllable(glyphs, 0);
     start < glyphs.length;
     start = end, end = nextSyllable(glyphs, start)
   ) {
-    let i, j;
-    let info = glyphs[start].shaperInfo;
-    let type = info.syllableType;
+    let i: number;
+    let j: number;
+    let info = getUseInfo(glyphs[start]);
+    const type = info.syllableType;
 
     // Only a few syllable types need reordering.
     if (
@@ -156,12 +176,12 @@ function reorder(font, glyphs) {
     }
 
     // Insert a dotted circle glyph in broken clusters.
-    if (type === "broken_cluster" && dottedCircle) {
-      let g = new GlyphInfo(font, dottedCircle, [0x25cc]);
+    if (type === "broken_cluster" && dottedCircle != null) {
+      const g = new GlyphInfo(font, dottedCircle, [0x25cc]);
       g.shaperInfo = info;
 
       // Insert after possible Repha.
-      for (i = start; i < end && glyphs[i].shaperInfo.category === "R"; i++);
+      for (i = start; i < end && getUseInfo(glyphs[i]).category === "R"; i++);
       glyphs.splice(++i, 0, g);
       end++;
     }
@@ -170,9 +190,9 @@ function reorder(font, glyphs) {
     if (info.category === "R" && end - start > 1) {
       // Got a repha. Reorder it to after first base, before first halant.
       for (i = start + 1; i < end; i++) {
-        info = glyphs[i].shaperInfo;
+        info = getUseInfo(glyphs[i]);
         if (isBase(info) || isHalant(glyphs[i])) {
-          // If we hit a halant, move before it; otherwise it's a base: move to it's
+          // If we hit a halant, move before it; otherwise it's a base: move to its
           // place, and shift things in between backward.
           if (isHalant(glyphs[i])) {
             i--;
@@ -191,9 +211,9 @@ function reorder(font, glyphs) {
 
     // Move things back.
     for (i = start, j = end; i < end; i++) {
-      info = glyphs[i].shaperInfo;
+      info = getUseInfo(glyphs[i]);
       if (isBase(info) || isHalant(glyphs[i])) {
-        // If we hit a halant, move after it; otherwise it's a base: move to it's
+        // If we hit a halant, move after it; otherwise it's a base: move to its
         // place, and shift things in between backward.
         j = isHalant(glyphs[i]) ? i + 1 : i;
       } else if (
@@ -206,20 +226,31 @@ function reorder(font, glyphs) {
   }
 }
 
-function nextSyllable(glyphs, start) {
-  if (start >= glyphs.length) return start;
-  let syllable = glyphs[start].shaperInfo.syllable;
+function nextSyllable(glyphs: GlyphInfo[], start: number): number {
+  if (start >= glyphs.length) {
+    return start;
+  }
+
+  const syllable = getUseInfo(glyphs[start]).syllable;
   while (
     ++start < glyphs.length &&
-    glyphs[start].shaperInfo.syllable === syllable
+    getUseInfo(glyphs[start]).syllable === syllable
   );
   return start;
 }
 
-function isHalant(glyph) {
-  return glyph.shaperInfo.category === "H" && !glyph.isLigated;
+function getUseInfo(glyph: GlyphInfo): USEInfo {
+  if (!glyph.shaperInfo) {
+    throw new Error("Missing USE shaper info on glyph.");
+  }
+
+  return glyph.shaperInfo as USEInfo;
 }
 
-function isBase(info) {
+function isHalant(glyph: GlyphInfo): boolean {
+  return getUseInfo(glyph).category === "H" && !glyph.isLigated;
+}
+
+function isBase(info: USEInfo): boolean {
   return info.category === "B" || info.category === "GB";
 }
