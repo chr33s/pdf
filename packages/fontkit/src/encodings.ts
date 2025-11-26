@@ -27,7 +27,7 @@ export function getEncoding(
 }
 
 // Map of platform ids to encoding ids.
-export const ENCODINGS: PlatformEncodingMap = [
+const ENCODINGS: PlatformEncodingMap = [
   // unicode
   ["utf16be", "utf16be", "utf16be", "utf16be", "utf16be", "utf16be"],
 
@@ -107,7 +107,7 @@ export const ENCODINGS: PlatformEncodingMap = [
 
 // Overrides for Mac scripts by language id.
 // See http://unicode.org/Public/MAPPINGS/VENDORS/APPLE/Readme.txt
-export const MAC_LANGUAGE_ENCODINGS: Record<number, string> = {
+const MAC_LANGUAGE_ENCODINGS: Record<number, string> = {
   15: "maciceland",
   17: "macturkish",
   18: "maccroatian",

@@ -12,9 +12,6 @@
     "test": "vitest run",
     "typecheck": "tsc --project tsconfig.typecheck.json"
   },
-  "dependencies": {
-    "base64-js": "^1.5.1"
-  },
   "devDependencies": {
     "@types/node": "^24.10.1",
     "typescript": "^5.9.3",

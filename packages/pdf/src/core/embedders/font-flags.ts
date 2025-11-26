@@ -1,6 +1,6 @@
 import { Font } from "../../types/fontkit.js";
 
-export interface FontFlagOptions {
+interface FontFlagOptions {
   fixedPitch?: boolean;
   serif?: boolean;
   symbolic?: boolean;

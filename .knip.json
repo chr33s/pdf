@@ -1,0 +1,16 @@
+{
+	"$schema": "./node_modules/knip/schema.json",
+	"ignore": ["packages/brotli/vendor/**/*"],
+	"ignoreBinaries": ["make"],
+	"workspaces": {
+		"packages/*": {
+			"entry": ["src/index.ts"],
+			"project": "**/*.ts"
+		},
+		"packages/pdf": {
+			"entry": ["src/index.ts", "scratchpad/index.ts"],
+			"ignore": ["apps/**"],
+			"project": "**/*.ts"
+		}
+	}
+}

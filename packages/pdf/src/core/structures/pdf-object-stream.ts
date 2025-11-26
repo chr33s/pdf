@@ -7,7 +7,7 @@ import PDFContext from "../pdf-context.js";
 import CharCodes from "../syntax/char-codes.js";
 import PDFFlateStream from "./pdf-flate-stream.js";
 
-export type IndirectObject = [PDFRef, PDFObject];
+type IndirectObject = [PDFRef, PDFObject];
 
 class PDFObjectStream extends PDFFlateStream {
   static withContextAndObjects = (

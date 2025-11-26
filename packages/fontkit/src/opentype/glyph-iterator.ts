@@ -1,6 +1,6 @@
 import type GlyphInfo from "./glyph-info.js";
 
-export type GlyphIteratorFlags = {
+type GlyphIteratorFlags = {
   ignoreMarks?: boolean;
   ignoreBaseGlyphs?: boolean;
   ignoreLigatures?: boolean;

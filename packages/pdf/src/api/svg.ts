@@ -94,7 +94,7 @@ type TransformAttributes = {
   clipSpaces: Space[];
 };
 
-export type SVGElement = HTMLElement & {
+type SVGElement = HTMLElement & {
   svgAttributes: InheritedAttributes & SVGAttributes & TransformAttributes;
 };
 

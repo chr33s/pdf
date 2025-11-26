@@ -8,7 +8,7 @@ export const error = (msg: string) => {
   throw new Error(msg);
 };
 
-export type ISectionName =
+type ISectionName =
   | "StartFontMetrics"
   | "StartCharMetrics"
   | "StartKernPairs"

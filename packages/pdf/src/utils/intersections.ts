@@ -19,7 +19,7 @@ import {
   vector,
 } from "./maths.js";
 
-export const intersections = (
+const intersections = (
   A: GraphicElement,
   B: GraphicElement,
 ): Coordinates[] => {
@@ -41,7 +41,7 @@ export const intersections = (
   return A;
 };
 
-export const intersection = (
+const intersection = (
   A: GraphicElement,
   B: GraphicElement,
 ): Coordinates | undefined => intersections(A, B)[0];
@@ -210,7 +210,7 @@ const intersectionsRectangle = (
   return intersections(new Plot([P1, P2, P3, P4, P1]), B);
 };
 
-export const intersectionCircleLine = (A: Circle, B: Line): Coordinates[] => {
+const intersectionCircleLine = (A: Circle, B: Line): Coordinates[] => {
   const rA = A.ray();
   const O = A.center();
   const H = B.orthoProjection(O);
@@ -228,7 +228,7 @@ export const intersectionCircleLine = (A: Circle, B: Line): Coordinates[] => {
   }
 };
 
-export const intersectionCircle = (A: Circle, B: Circle): Coordinates[] => {
+const intersectionCircle = (A: Circle, B: Circle): Coordinates[] => {
   const oA = A.center();
   const oB = B.center();
   const rA = A.ray();
@@ -267,7 +267,7 @@ const intersectionsCircle = (
   return B;
 };
 
-export const getIntersections = (elements: GraphicElement[]) => {
+const getIntersections = (elements: GraphicElement[]) => {
   const checked: GraphicElement[] = [];
   const inters: Coordinates[] = [];
   elements.forEach((elt) => {

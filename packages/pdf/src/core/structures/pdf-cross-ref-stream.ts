@@ -17,32 +17,32 @@ const entryType = {
   Compressed: 2,
 } as const;
 
-export const EntryType = entryType;
+const EntryType = entryType;
 
-export type EntryType = (typeof entryType)[keyof typeof entryType];
+type EntryType = (typeof entryType)[keyof typeof entryType];
 
-export interface DeletedEntry {
+interface DeletedEntry {
   type: (typeof entryType)["Deleted"];
   ref: PDFRef;
   nextFreeObjectNumber: number;
 }
 
-export interface UncompressedEntry {
+interface UncompressedEntry {
   type: (typeof entryType)["Uncompressed"];
   ref: PDFRef;
   offset: number;
 }
 
-export interface CompressedEntry {
+interface CompressedEntry {
   type: (typeof entryType)["Compressed"];
   ref: PDFRef;
   objectStreamRef: PDFRef;
   index: number;
 }
 
-export type Entry = DeletedEntry | UncompressedEntry | CompressedEntry;
+type Entry = DeletedEntry | UncompressedEntry | CompressedEntry;
 
-export type EntryTuple = [number, number, number];
+type EntryTuple = [number, number, number];
 
 /**
  * Entries should be added using the [[addDeletedEntry]],

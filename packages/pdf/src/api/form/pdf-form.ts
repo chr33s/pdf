@@ -43,7 +43,7 @@ import PDFRadioGroup from "./pdf-radio-group.js";
 import PDFSignature from "./pdf-signature.js";
 import PDFTextField from "./pdf-text-field.js";
 
-export interface FlattenOptions {
+interface FlattenOptions {
   updateFieldAppearances: boolean;
 }
 

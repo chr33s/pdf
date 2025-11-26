@@ -13,7 +13,7 @@ IsDigit[CharCodes.Seven] = 1;
 IsDigit[CharCodes.Eight] = 1;
 IsDigit[CharCodes.Nine] = 1;
 
-export const IsNumericPrefix = new Uint8Array(256);
+const IsNumericPrefix = new Uint8Array(256);
 
 IsNumericPrefix[CharCodes.Period] = 1;
 IsNumericPrefix[CharCodes.Plus] = 1;

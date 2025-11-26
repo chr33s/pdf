@@ -12,7 +12,7 @@ import PDFSecurity from "../security/pdf-security.js";
 import PDFObjectStream from "../structures/pdf-object-stream.js";
 import CharCodes from "../syntax/char-codes.js";
 
-export interface SerializationInfo {
+interface SerializationInfo {
   size: number;
   header: PDFHeader;
   indirectObjects: [PDFRef, PDFObject][];

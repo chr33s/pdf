@@ -32,9 +32,9 @@
     "@types/clone": "^2.1.4",
     "@types/concat-stream": "^2.0.3",
     "@types/deep-equal": "^1.0.4",
-    "@types/iconv-lite": "^0.0.1",
     "@types/node": "^24.10.1",
     "@types/pako": "^2.0.4",
+    "@vitest/coverage-v8": "^4.0.14",
     "concat-stream": "^2.0.0",
     "typescript": "^5.9.3",
     "vitest": "^4.0.12"

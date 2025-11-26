@@ -11,7 +11,7 @@ export let BigMetrics = new r.Struct({
   vertAdvance: r.uint8,
 });
 
-export let SmallMetrics = new r.Struct({
+let SmallMetrics = new r.Struct({
   height: r.uint8,
   width: r.uint8,
   bearingX: r.int8,
@@ -29,7 +29,7 @@ class ByteAligned {}
 
 class BitAligned {}
 
-export let glyph = new r.VersionedStruct("version", {
+let glyph = new r.VersionedStruct("version", {
   1: {
     metrics: SmallMetrics,
     data: ByteAligned,

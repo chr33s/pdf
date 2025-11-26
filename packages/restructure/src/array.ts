@@ -4,7 +4,7 @@ import type EncodeStream from "./encode-stream.js";
 import { Number as NumberT } from "./number.js";
 import { resolveLength, type LengthLike } from "./utils.js";
 
-export type LengthType = "count" | "bytes";
+type LengthType = "count" | "bytes";
 
 export default class ArrayT<T = unknown, TResult = T[]> extends Base<TResult> {
   public type: any;

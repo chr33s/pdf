@@ -6,8 +6,8 @@ import {
   Variable,
 } from "./nodes.js";
 
-export type SymbolTableStatement = Node;
-export type ExternalSymbolMap = Record<string, number>;
+type SymbolTableStatement = Node;
+type ExternalSymbolMap = Record<string, number>;
 
 /**
  * Processes a list of statements into a symbol table

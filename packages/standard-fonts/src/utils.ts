@@ -20,7 +20,7 @@ for (let i = 0; i < chars.length; i++) {
   lookup[chars.charCodeAt(i)] = i;
 }
 
-export const decodeFromBase64 = (base64: string): Uint8Array => {
+const decodeFromBase64 = (base64: string): Uint8Array => {
   let bufferLength = base64.length * 0.75;
   const len = base64.length;
   let i;

@@ -3,7 +3,7 @@ import { assertIs } from "../utils/index.js";
 import Embeddable from "./embeddable.js";
 import PDFDocument from "./pdf-document.js";
 
-export type ImageEmbedder = JpegEmbedder | PngEmbedder;
+type ImageEmbedder = JpegEmbedder | PngEmbedder;
 
 /**
  * Represents an image that has been embedded in a [[PDFDocument]].

@@ -20,9 +20,9 @@
   },
   "devDependencies": {
     "@chr33s/codepoints": "file:../codepoints",
-    "@types/base64-arraybuffer": "^0.1.0",
     "@types/node": "^24.10.1",
     "@types/pako": "^2.0.4",
+    "@vitest/coverage-v8": "^4.0.14",
     "typescript": "^5.9.3",
     "vitest": "^4.0.12"
   },

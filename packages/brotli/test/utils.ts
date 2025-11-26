@@ -3,7 +3,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __filename = fileURLToPath(import.meta.url);
-export const __dirname = dirname(__filename);
+const __dirname = dirname(__filename);
 
 export const normalize = (buffer: Uint8Array<ArrayBufferLike>) => {
   const input = Buffer.isBuffer(buffer) ? buffer : Buffer.from(buffer);

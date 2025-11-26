@@ -81,7 +81,7 @@ import PDFSvg from "./pdf-svg.js";
 import { PageSizes } from "./sizes.js";
 import type { StandardFont } from "./standard-fonts.js";
 
-export type BasePDFAttachment = {
+type BasePDFAttachment = {
   name: string;
   data: Uint8Array;
   mimeType: string | undefined;
@@ -91,12 +91,12 @@ export type BasePDFAttachment = {
   modificationDate: Date | undefined;
 };
 
-export type SavedPDFAttachment = BasePDFAttachment & {
+type SavedPDFAttachment = BasePDFAttachment & {
   embeddedFileDict: PDFDict;
   specRef: PDFRef;
 };
 
-export type UnsavedPDFAttachment = BasePDFAttachment & {
+type UnsavedPDFAttachment = BasePDFAttachment & {
   pdfEmbeddedFile: PDFEmbeddedFile;
 };
 

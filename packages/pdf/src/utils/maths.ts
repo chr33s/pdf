@@ -2,7 +2,7 @@ import { Coordinates } from "../types/index.js";
 import Point from "./elements/point.js";
 
 /** This value represents the precision we accept for float values */
-export const FLOAT_APPROXIMATION = 0.000001;
+const FLOAT_APPROXIMATION = 0.000001;
 
 /** Calculates the distance between 2 points */
 export const distance = (A: Point, B: Point) => norm(vector(A, B));
@@ -31,7 +31,7 @@ export const isEqual = (a: number, b: number): boolean =>
   Math.round(Math.abs(a - b) / FLOAT_APPROXIMATION) === 0;
 
 /** Return true if a is proportional to b: (a = kb), considering float imprecision */
-export const isProportional = (a: number, b: number): boolean =>
+const isProportional = (a: number, b: number): boolean =>
   isEqual((Math.abs(a) + FLOAT_APPROXIMATION / 10) % b, 0);
 
 /** Calculate the scalar product between 2 vectors */

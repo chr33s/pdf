@@ -18,8 +18,10 @@
     "packages/*"
   ],
   "devDependencies": {
+    "knip": "^5.70.2",
     "oxfmt": "^0.14.0",
     "oxlint": "^1.29.0",
-    "oxlint-tsgolint": "^0.8.1"
+    "oxlint-tsgolint": "^0.8.1",
+    "typescript": "^5.9.3"
   }
 }

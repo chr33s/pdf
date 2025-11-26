@@ -41,7 +41,7 @@ interface UserPermissions {
   documentAssembly?: boolean;
 }
 
-export type EncryptFn = (buffer: Uint8Array) => Uint8Array;
+type EncryptFn = (buffer: Uint8Array) => Uint8Array;
 
 /**
  * Interface options for security

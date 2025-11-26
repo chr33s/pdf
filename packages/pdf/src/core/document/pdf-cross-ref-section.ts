@@ -2,7 +2,7 @@ import { copyStringIntoBuffer, padStart } from "../../utils/index.js";
 import PDFRef from "../objects/pdf-ref.js";
 import CharCodes from "../syntax/char-codes.js";
 
-export interface Entry {
+interface Entry {
   ref: PDFRef;
   offset: number;
   deleted: boolean;

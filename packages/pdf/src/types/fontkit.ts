@@ -1,7 +1,7 @@
 /**
  * Represents a glyph bounding box
  */
-export interface BoundingBox {
+interface BoundingBox {
   minX: number /** The minimum X position in the bounding box */;
   minY: number /** The minimum Y position in the bounding box */;
   maxX: number /** The maxmimum X position in the bounding box */;
@@ -15,7 +15,7 @@ export interface BoundingBox {
  * for each glyph in the font. Paths can be converted to SVG path data strings,
  * or to functions that can be applied to render the path to a graphics context.
  */
-export interface Path {
+interface Path {
   /**
    * This property represents the path’s bounding box, i.e. the smallest
    * rectangle that contains the entire path shape. This is the exact
@@ -138,7 +138,7 @@ export interface Glyph {
   getImageForSize(size: number): GlyphImage | null;
 }
 
-export interface GlyphImage {
+interface GlyphImage {
   originX: number;
   originY: number;
   type: string;
@@ -148,7 +148,7 @@ export interface GlyphImage {
 /**
  * Represents positioning information for a glyph in a GlyphRun.
  */
-export interface GlyphPosition {
+interface GlyphPosition {
   /**
    * The amount to move the virtual pen in the X direction after rendering
    * this glyph.
@@ -178,7 +178,7 @@ export interface GlyphPosition {
  * Represents a run of Glyph and GlyphPosition objects.
  * Returned by the Font.layout method.
  */
-export interface GlyphRun {
+interface GlyphRun {
   /**
    * An array of Glyph objects in the run
    */
@@ -228,7 +228,7 @@ export interface GlyphRun {
   bbox: BoundingBox;
 }
 
-export interface SubsetStream {
+interface SubsetStream {
   on: (
     eventType: "data" | "end",
     callback: (data: Uint8Array) => any,
@@ -253,7 +253,7 @@ export interface Subset {
  * A map of OpenType features as described in OpenType's spec:
  * https://docs.microsoft.com/en-gb/typography/opentype/spec/featurelist.
  */
-export interface OpenTypeFeatures {
+interface OpenTypeFeatures {
   aalt?: boolean;
   abvf?: boolean;
   abvm?: boolean;
@@ -489,7 +489,7 @@ export interface OpenTypeFeatures {
  * Reference manual:
  * https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6AATIntro.html
  */
-export interface AATFeatures {
+interface AATFeatures {
   acnt?: boolean;
   ankr?: boolean;
   avar?: boolean;

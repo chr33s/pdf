@@ -8,7 +8,7 @@ import { assertIs, assertOrUndefined } from "../utils/index.js";
 import Embeddable from "./embeddable.js";
 import PDFDocument from "./pdf-document.js";
 
-export type FontEmbedder = CustomFontEmbedder | StandardFontEmbedder;
+type FontEmbedder = CustomFontEmbedder | StandardFontEmbedder;
 
 /**
  * Represents a font that has been embedded in a [[PDFDocument]].

@@ -28,7 +28,7 @@ export interface IFontMetrics {
   FontBBox: [number, number, number, number];
 }
 
-export type IFontMetricKey = keyof IFontMetrics;
+type IFontMetricKey = keyof IFontMetrics;
 
 type FontMetricEntry = {
   key: IFontMetricKey;

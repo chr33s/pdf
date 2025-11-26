@@ -11,7 +11,7 @@ import PDFHexString from "../objects/pdf-hex-string.js";
 import PDFRef from "../objects/pdf-ref.js";
 import PDFContext from "../pdf-context.js";
 
-export interface Glyph {
+interface Glyph {
   code: number;
   name: string;
 }

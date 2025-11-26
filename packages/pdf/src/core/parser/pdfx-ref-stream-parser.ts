@@ -8,7 +8,7 @@ import PDFRef from "../objects/pdf-ref.js";
 import ByteStream from "./byte-stream.js";
 import PDFContext from "../pdf-context.js";
 
-export interface Entry {
+interface Entry {
   ref: PDFRef;
   offset: number;
   deleted: boolean;

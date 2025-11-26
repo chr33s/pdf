@@ -12,7 +12,7 @@ const _END_OF_LINE_CLASS = 3;
 
 const DONT_ADVANCE = 0x4000;
 
-export type StateArray = {
+type StateArray = {
   getItem(index: number): number[];
 };
 

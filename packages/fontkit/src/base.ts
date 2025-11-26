@@ -22,7 +22,7 @@ type DirectoryData = {
   tables: Record<string, DirectoryEntry>;
 };
 
-export interface FontInstance {
+interface FontInstance {
   [key: string]: unknown;
   postscriptName: string | null;
   fullName: string | null;

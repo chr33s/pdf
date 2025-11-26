@@ -148,7 +148,7 @@ for (let script in UNICODE_SCRIPTS) {
   }
 }
 
-export function fromUnicode(script: string): UnicodeScriptValue | undefined {
+function fromUnicode(script: string): UnicodeScriptValue | undefined {
   return UNICODE_SCRIPTS[script];
 }
 

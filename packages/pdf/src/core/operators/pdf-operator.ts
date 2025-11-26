@@ -9,7 +9,7 @@ import PDFContext from "../pdf-context.js";
 import CharCodes from "../syntax/char-codes.js";
 import type { PDFOperatorName } from "./pdf-operator-names.js";
 
-export type PDFOperatorArg =
+type PDFOperatorArg =
   | string
   | PDFName
   | PDFArray
