@@ -110,8 +110,16 @@ function getNamedFormat(format: FontConstructor): FontConstructor {
   return NamedFormat;
 }
 
-const fontkit: FontkitRegistry = {
+const fontkit: FontkitRegistry & {
+  defaultLanguage: string;
+  setDefaultLanguage: (lang?: string) => void;
+} = {
   logErrors: false,
+  defaultLanguage: "en",
+
+  setDefaultLanguage: (lang = "en") => {
+    fontkit.defaultLanguage = lang;
+  },
 
   registerFormat: (format: FontConstructor) => {
     formats.push(getNamedFormat(format));

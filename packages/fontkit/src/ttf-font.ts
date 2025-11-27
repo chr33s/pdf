@@ -53,6 +53,7 @@ type CmapTableData = ConstructorParameters<typeof CmapProcessor>[0];
  */
 class TTFFontBase implements GlyphFontLike {
   [key: string]: unknown;
+  defaultLanguage: string | null = null;
   stream: DecodeStream;
   variationCoords: VariationCoords | null;
   directory!: DirectoryData;
@@ -142,6 +143,10 @@ class TTFFontBase implements GlyphFontLike {
     }
   }
 
+  setDefaultLanguage(lang: string | null = null): void {
+    this.defaultLanguage = lang;
+  }
+
   private _getTable(table: DirectoryEntry): unknown {
     if (!(table.tag in this._tables)) {
       try {
@@ -190,17 +195,11 @@ class TTFFontBase implements GlyphFontLike {
   }
 
   /**
-   * The unique PostScript name for this font
+   * The unique PostScript name for this font, e.g. "Helvetica-Bold"
    * @type {string}
    */
   get postscriptName() {
-    let name = this.name.records.postscriptName;
-    if (name) {
-      let lang = Object.keys(name)[0];
-      return name[lang];
-    }
-
-    return null;
+    return this.getName("postscriptName");
   }
 
   get cff(): unknown {
@@ -212,10 +211,21 @@ class TTFFontBase implements GlyphFontLike {
    * `lang` is a BCP-47 language code.
    * @return {string}
    */
-  getName(key: string, lang = "en"): string | null {
-    let record = this.name.records[key];
+  getName(
+    key: string,
+    lang: string = this.defaultLanguage || fontkit.defaultLanguage,
+  ): string | null {
+    let record = this.name && this.name.records[key];
     if (record) {
-      return record[lang];
+      // Attempt to retrieve the entry, depending on which translation is available:
+      return (
+        record[lang] ||
+        record[this.defaultLanguage || ""] ||
+        record[fontkit.defaultLanguage] ||
+        record["en"] ||
+        record[Object.keys(record)[0]] || // Seriously, ANY language would be fine
+        null
+      );
     }
 
     return null;

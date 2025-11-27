@@ -3,7 +3,6 @@ import cloneDeep from "clone";
 import TTFGlyphEncoder from "../glyph/ttf-glyph-encoder.js";
 import type TTFGlyph from "../glyph/ttf-glyph.js";
 import Directory from "../tables/directory.js";
-import Tables from "../tables/index.js";
 import type TTFFont from "../ttf-font.js";
 import Subset from "./subset.js";
 
@@ -96,7 +95,6 @@ export default class TTFSubset extends Subset<TTFFont> {
     maxp.numGlyphs = this.glyf.length;
 
     this.loca.offsets.push(this.offset);
-    Tables.loca.preEncode.call(this.loca);
 
     let head = cloneDeep(this.font.head);
     head.indexToLocFormat = this.loca.version;

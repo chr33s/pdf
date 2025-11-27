@@ -11,7 +11,7 @@
     }
   },
   "scripts": {
-    "build": "make && tsc && cp src/brotli.wasm dist/brotli.wasm",
+    "build": "make && tsc && cp src/brotli.js src/brotli.wasm dist/",
     "clean": "rm -rf dist src/{brotli.d.ts,brotli.js,brotli.wasm}",
     "test": "vitest run",
     "typecheck": "tsc --project tsconfig.typecheck.json"

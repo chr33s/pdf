@@ -12,7 +12,7 @@
     }
   },
   "scripts": {
-    "build": "npm run generate && tsc && npm run copy:shaper-data && npm run build:browser && tsdown && npm run copy:wasm",
+    "build": "npm run generate && tsc && npm run copy:shaper-data && tsdown && npm run copy:wasm",
     "clean": "rm -rf dist src/opentype/shapers/*.json src/opentype/shapers/*-data.js",
     "copy:shaper-data": "node ./scripts/copy-shaper-json.ts",
     "copy:wasm": "cp ../brotli/dist/brotli.wasm dist/brotli.wasm",
