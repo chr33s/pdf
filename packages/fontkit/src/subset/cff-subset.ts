@@ -232,17 +232,10 @@ export default class CFFSubset extends Subset {
   }
 
   private buildCFFBuffer(topDict: Record<string, unknown>) {
-    const cffRecord = this.cff as Record<string, any>;
-    let offSize = cffRecord.offSize;
-    if (offSize == null) {
-      const header = cffRecord.header as { offSize?: number } | undefined;
-      offSize = header?.offSize ?? 4;
-    }
-
     const top = {
       version: 1,
       hdrSize: this.cff.hdrSize,
-      offSize,
+      offSize: 4,
       header: this.cff.header,
       nameIndex: [this.cff.postscriptName],
       topDictIndex: [topDict],

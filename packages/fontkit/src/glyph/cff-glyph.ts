@@ -80,7 +80,7 @@ export default class CFFGlyph extends Glyph {
     const gsubrs = (cff.globalSubrIndex || []) as SubroutineRecord[];
     const gsubrsBias = this.bias(gsubrs);
 
-    const privateDict = cff.privateDictForGlyph(this.id);
+    const privateDict = cff.privateDictForGlyph(this.id) || {};
     const subrs = (privateDict.Subrs || []) as SubroutineRecord[];
     const subrsBias = this.bias(subrs);
 

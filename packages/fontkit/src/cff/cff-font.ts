@@ -164,7 +164,7 @@ class CFFFont {
 
           if (gid < ranges[mid].first) {
             high = mid - 1;
-          } else if (mid < high && gid > ranges[mid + 1].first) {
+          } else if (mid < high && gid >= ranges[mid + 1].first) {
             low = mid + 1;
           } else {
             return ranges[mid].fd;
@@ -178,11 +178,11 @@ class CFFFont {
   privateDictForGlyph(gid: number) {
     if (this.topDict.FDSelect) {
       let fd = this.fdForGlyph(gid);
-      if (this.topDict.FDArray[fd]) {
+      if (fd != null && this.topDict.FDArray[fd]) {
         return this.topDict.FDArray[fd].Private;
       }
 
-      return null;
+      return {};
     }
 
     if (this.version < 2) {

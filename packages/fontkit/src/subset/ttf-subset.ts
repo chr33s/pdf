@@ -8,7 +8,7 @@ import type TTFFont from "../ttf-font.js";
 import Subset from "./subset.js";
 
 type MetricRecord = { advance: number; bearing: number };
-type LocaTable = { offsets: number[]; version?: number };
+type LocaTable = { offsets: number[]; version?: number; _processed?: boolean };
 type HmtxTable = { metrics: MetricRecord[]; bearings: number[] };
 
 export default class TTFSubset extends Subset<TTFFont> {
@@ -75,6 +75,7 @@ export default class TTFSubset extends Subset<TTFFont> {
     this.offset = 0;
     this.loca = {
       offsets: [],
+      version: this.font.loca.version,
     };
 
     this.hmtx = {
