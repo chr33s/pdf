@@ -25,20 +25,6 @@ jobs:
           cache: "npm"
           node-version-file: "package.json"
       - run: npm ci --include=dev
-      - run: |
-          git clone https://github.com/emscripten-core/emsdk.git
-          cd emsdk
-          git checkout -b 4.0.20
-          ./emsdk install 4.0.20
-          ./emsdk activate 4.0.20
-          EMSDK=$GITHUB_WORKSPACE/emsdk
-          echo "EMSDK=$EMSDK" >> $GITHUB_ENV
-          EMSCRIPTEN_ROOT=$EMSDK/upstream/emscripten
-          echo "EMSCRIPTEN_ROOT=$EMSCRIPTEN_ROOT" >> $GITHUB_ENV
-          echo "$EMSDK:$EMSCRIPTEN_ROOT" >> $GITHUB_PATH
-          perl -pi -e "s|NODE_JS = emsdk_path \+ '/node/[^']*/bin/node'|NODE_JS = 'node'|" "$EMSDK/.emscripten"
-          source "$EMSDK/emsdk_env.sh"
-          emcc --version
       - run: npm run workspace build
       - run: npm run check
       - run: npm run workspace test
