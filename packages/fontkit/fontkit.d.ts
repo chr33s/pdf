@@ -36,6 +36,11 @@ export interface Path {
   cbox: BoundingBox;
 
   /**
+   * This property represents the commands to draw an SVG path.
+   */
+  commands: { args: number[]; command: string }[];
+
+  /**
    * Moves the virtual pen to the given x, y coordinates.
    */
   moveTo(x: number, y: number): void;

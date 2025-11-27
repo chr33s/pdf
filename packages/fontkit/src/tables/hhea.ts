@@ -2,7 +2,8 @@ import * as r from "@chr33s/restructure";
 
 // horizontal header
 export default new r.Struct({
-  version: r.int32,
+  majorVersion: r.uint16,
+  minorVersion: r.uint16,
   ascent: r.int16, // Distance from baseline of highest ascender
   descent: r.int16, // Distance from baseline of lowest descender
   lineGap: r.int16, // Typographic line gap
