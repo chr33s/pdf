@@ -204,9 +204,7 @@ describe("glyphs", function () {
     let font: Awaited<ReturnType<typeof fontkit.open>>;
 
     beforeAll(async () => {
-      font = await fontkit.open(
-        __dirname + "/data/source-sans-pro/source-sans-pro-regular.woff",
-      );
+      font = await fontkit.open(__dirname + "/data/source-sans-pro/source-sans-pro-regular.woff");
     });
 
     test("should get a TTFGlyph", function () {

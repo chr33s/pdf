@@ -11,7 +11,8 @@ describe("shaping", function () {
   const fontCache: Record<string, FontInstance> = {};
   const testFont = (description: string, font: string, text: string, output: string) => {
     test(description, async function () {
-      let f = fontCache[font] || (fontCache[font] = await fontkit.open(__dirname + "/data/" + font));
+      let f =
+        fontCache[font] || (fontCache[font] = await fontkit.open(__dirname + "/data/" + font));
       let { glyphs, positions } = f.layout(text);
       if (!positions) {
         throw new Error("Expected layout positions to be available");
