@@ -2,6 +2,7 @@
 	"$schema": "./node_modules/oxlint/configuration_schema.json",
 	"ignorePatterns": [
 		"**/dist",
+		"**/emsdk/*",
 		"packages/brotli/src/*.js",
 		"packages/brotli/src/brotli.d.ts",
 		"packages/brotli/vendor",

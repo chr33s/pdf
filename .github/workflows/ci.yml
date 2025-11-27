@@ -25,7 +25,6 @@ jobs:
           cache: "npm"
           node-version-file: "package.json"
       - run: npm ci --include=dev
-      - run: npm run check
       - run: |
           git clone https://github.com/emscripten-core/emsdk.git
           cd emsdk
@@ -41,6 +40,7 @@ jobs:
           source "$EMSDK/emsdk_env.sh"
           emcc --version
       - run: npm run workspace build
+      - run: npm run check
       - run: npm run workspace test
       - uses: actions/upload-artifact@v4
         with:
