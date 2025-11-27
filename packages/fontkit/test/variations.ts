@@ -10,6 +10,13 @@ const hasSkiaFont = await access(SKIA_FONT_PATH)
   .then(() => true)
   .catch(() => false);
 
+type VariationAxis = {
+  name: string;
+  min: number;
+  default: number;
+  max: number;
+};
+
 describe("variations", function () {
   describe.runIf(hasSkiaFont)("Skia", function () {
     let font: Awaited<ReturnType<typeof fontkit.open>>;
@@ -19,7 +26,7 @@ describe("variations", function () {
     });
 
     test("should get available variation axes", function () {
-      let axes = font.variationAxes;
+      let axes = font.variationAxes as Record<string, VariationAxis>;
       expect(Object.keys(axes)).toEqual(["wght", "wdth"]);
       expect(axes.wght.name).toBe("Weight");
       expect(axes.wdth.name).toBe("Width");

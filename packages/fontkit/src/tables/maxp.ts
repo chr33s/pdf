@@ -1,8 +1,10 @@
 import * as r from "@chr33s/restructure";
 
+import { version16Dot16 } from "../utils.js";
+
 // maxiumum profile
 export default new r.Struct({
-  version: r.int32,
+  version: version16Dot16,
   numGlyphs: r.uint16, // The number of glyphs in the font
   maxPoints: r.uint16, // Maximum points in a non-composite glyph
   maxContours: r.uint16, // Maximum contours in a non-composite glyph

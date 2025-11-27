@@ -5,7 +5,10 @@ fontkit.logErrors = true;
 
 type VariationSettings = Record<string, number>;
 type FontSelector = string | VariationSettings | null | undefined;
-type FontInstance = Awaited<ReturnType<typeof fontkit.create>>;
+type BaseFontInstance = Awaited<ReturnType<typeof fontkit.create>>;
+export type FontInstance = BaseFontInstance & {
+  setDefaultLanguage(lang?: string | null): void;
+};
 
 type FontkitWithHelpers = typeof fontkit & {
   open: (filename: string, postscriptName?: FontSelector) => Promise<FontInstance>;
@@ -19,7 +22,7 @@ const fontkitWithHelpers = fontkit as FontkitWithHelpers;
  */
 fontkitWithHelpers.open = async (filename, postscriptName) => {
   const buffer = await fs.promises.readFile(filename);
-  return fontkitWithHelpers.create(buffer, postscriptName ?? undefined);
+  return fontkitWithHelpers.create(buffer, postscriptName ?? undefined) as Promise<FontInstance>;
 };
 
 export default fontkitWithHelpers;

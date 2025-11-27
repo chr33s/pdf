@@ -58,6 +58,18 @@ describe("font subsetting", function () {
       expect(f.numGlyphs).toBe(4);
       expect(f.getGlyph(1).path.toSVG()).toBe(font.glyphsForString("é")[0].path.toSVG());
     });
+
+    test("should produce a subset including font table OS/2", async function () {
+      let subset = font.createSubset();
+      for (let glyph of font.glyphsForString("hello")) {
+        subset.includeGlyph(glyph);
+      }
+      subset.includeTable("OS/2");
+
+      const buf = subset.encodeBuffer();
+      let f = await fontkit.create(buf);
+      expect("OS/2" in f).toBe(true);
+    });
   });
 
   describe("CFF subsetting", function () {

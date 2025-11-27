@@ -72,6 +72,10 @@ type GlyphMetrics = {
   advanceHeight: number;
   leftBearing: number;
   topBearing: number;
+  width: number;
+  height: number;
+  rightBearing: number;
+  bottomBearing: number;
 };
 
 export type CanvasContextLike = {
@@ -152,9 +156,12 @@ export default class Glyph {
     return res;
   }
 
-  _getMetrics(cbox?: { maxY: number } | null): GlyphMetrics {
+  _getMetrics(cbox?: { maxY: number; width: number; height: number } | null): GlyphMetrics {
     if (this._metrics) {
       return this._metrics;
+    }
+    if (typeof cbox === "undefined" || cbox === null) {
+      ({ cbox } = this);
     }
 
     const { advance: advanceWidthRaw, bearing: leftBearing } = this._getTableMetrics(
@@ -162,34 +169,36 @@ export default class Glyph {
     );
     let advanceWidth = advanceWidthRaw;
 
-    // For vertical metrics, use vmtx if available, or fall back to global data from OS/2 or hhea
+    // For vertical metrics, use vmtx if available, or fall back to global data
     if (this._font.vmtx) {
       var { advance: advanceHeight, bearing: topBearing } = this._getTableMetrics(this._font.vmtx);
     } else {
-      let os2;
       if (typeof cbox === "undefined" || cbox === null) {
         ({ cbox } = this);
       }
 
-      if ((os2 = this._font["OS/2"]) && os2.version > 0) {
-        var advanceHeight = Math.abs(os2.typoAscender - os2.typoDescender);
-        var topBearing = os2.typoAscender - cbox.maxY;
-      } else {
-        let { hhea } = this._font;
-        var advanceHeight = Math.abs(hhea.ascent - hhea.descent);
-        var topBearing = hhea.ascent - cbox.maxY;
-      }
+      var advanceHeight = Math.abs(this._font.ascent - this._font.descent);
+      var topBearing = this._font.ascent - cbox.maxY;
     }
 
     if (this._font._variationProcessor && this._font.HVAR) {
       advanceWidth += this._font._variationProcessor.getAdvanceAdjustment(this.id, this._font.HVAR);
     }
 
+    let width = cbox.width;
+    let height = cbox.height;
+    let rightBearing = advanceWidth - leftBearing - width;
+    let bottomBearing = advanceHeight - topBearing - height;
+
     return (this._metrics = {
+      width,
+      height,
       advanceWidth,
       advanceHeight,
       leftBearing,
       topBearing,
+      rightBearing,
+      bottomBearing,
     });
   }
 
@@ -250,12 +259,66 @@ export default class Glyph {
   }
 
   /**
+   * The glyph's width.
+   * @type {number}
+   */
+  @cache
+  get width() {
+    return this._getMetrics().width;
+  }
+
+  /**
+   * The glyph's height.
+   * @type {number}
+   */
+  @cache
+  get height() {
+    return this._getMetrics().height;
+  }
+
+  /**
    * The glyph's advance height.
    * @type {number}
    */
   @cache
   get advanceHeight(): number {
     return this._getMetrics().advanceHeight;
+  }
+
+  /**
+   * The glyph's left side bearing.
+   * @type {number}
+   */
+  @cache
+  get leftBearing() {
+    return this._getMetrics().leftBearing;
+  }
+
+  /**
+   * The glyph's top side bearing.
+   * @type {number}
+   */
+  @cache
+  get topBearing() {
+    return this._getMetrics().topBearing;
+  }
+
+  /**
+   * The glyph's right side bearing.
+   * @type {number}
+   */
+  @cache
+  get rightBearing() {
+    return this._getMetrics().rightBearing;
+  }
+
+  /**
+   * The glyph's bottom side bearing.
+   * @type {number}
+   */
+  @cache
+  get bottomBearing() {
+    return this._getMetrics().bottomBearing;
   }
 
   get ligatureCaretPositions(): number[] | null {

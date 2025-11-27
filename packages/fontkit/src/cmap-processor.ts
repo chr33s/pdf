@@ -299,6 +299,7 @@ export default class CmapProcessor {
 
   getVariationSelector(codepoint: number, variationSelector: number): number {
     if (!this.#uvs) {
+      // This font file does not contain information about variation forms.
       return 0;
     }
 
@@ -307,8 +308,8 @@ export default class CmapProcessor {
       selectors,
       (record: VariationSelectorRecord) => variationSelector - record.varSelector,
     );
-
     if (selectorIndex === -1) {
+      // There is no information about the specified variation form.
       return 0;
     }
 
@@ -324,16 +325,21 @@ export default class CmapProcessor {
             ? +1
             : 0,
       );
+      if (matchIndex !== -1) {
+        // Since this variation is the default form of this character,
+        // the base character’s glyph should be searched for as usual.
+        return 0;
+      }
     }
 
-    if (matchIndex !== -1 && sel.nonDefaultUVS) {
+    if (sel.nonDefaultUVS) {
       const nonDefaultRecords = materialize(sel.nonDefaultUVS);
       const nonDefaultIndex = binarySearch(
         nonDefaultRecords,
         (record: UVSMapping) => codepoint - record.unicodeValue,
       );
-
       if (nonDefaultIndex !== -1) {
+        // The glyph for this variation form has been identified.
         return nonDefaultRecords[nonDefaultIndex].glyphID;
       }
     }
@@ -419,7 +425,7 @@ export default class CmapProcessor {
               }
             }
 
-            if (g === gid) {
+            if ((g & 0xffff) === gid) {
               res.push(c);
             }
           }

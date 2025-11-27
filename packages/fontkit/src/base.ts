@@ -46,7 +46,7 @@ interface FontInstance {
   variationAxes: Record<string, unknown>;
   namedVariations: Record<string, VariationSettings>;
   cff: unknown;
-  "OS/2": { sFamilyClass: number };
+  "OS/2"?: { sFamilyClass: number };
   head: { macStyle: { italic: boolean } };
   post: { isFixedPitch: boolean };
   hasGlyphForCodePoint(codePoint: number): boolean;

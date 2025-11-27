@@ -1,3 +1,5 @@
+import { StandardEncoding } from "../cff/cff-encodings.js";
+import CFFStandardStrings from "../cff/cff-standard-strings.js";
 import Glyph from "./glyph.js";
 import Path from "./path.js";
 
@@ -88,11 +90,22 @@ export default class CFFGlyph extends Glyph {
     let vsindex = privateDict.vsindex;
     const variationProcessor = this._font._variationProcessor;
 
+    let encodingVector;
+    const font = this._font;
+
     const checkWidth = (): void => {
       if (width == null) {
         width = stack.shift() + privateDict.nominalWidthX;
       }
     };
+
+    function glyphForName(name) {
+      if (!encodingVector) {
+        encodingVector = cff.topDict.charset.glyphs.map((g) => CFFStandardStrings[g]);
+      }
+      const glyphId = Math.max(0, encodingVector.indexOf(name) + 1); // .notdef is not included, hence + 1
+      return font.getGlyph(glyphId);
+    }
 
     const parseStems = (): void => {
       if (stack.length % 2 !== 0) {
@@ -218,7 +231,23 @@ export default class CFFGlyph extends Glyph {
                 break;
               }
 
-              if (stack.length > 0) {
+              if (stack.length >= 4) {
+                // Type 2 Charstring Format Appendix C
+                // treat like Type 1 seac command (standard encoding accented character)
+                const acharName = StandardEncoding?.[stack.pop()];
+                const bcharName = StandardEncoding?.[stack.pop()];
+                const ady = stack.pop();
+                const adx = stack.pop();
+                // const asb = stack.pop(); // ignored for Type 2
+
+                const achar = glyphForName(acharName);
+                const bchar = glyphForName(bcharName);
+
+                const aPathShifted = achar.path.translate(adx, ady);
+                path.commands = [...bchar.path.commands, ...aPathShifted.commands];
+
+                open = false;
+              } else if (stack.length > 0) {
                 checkWidth();
               }
 

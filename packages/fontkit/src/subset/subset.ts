@@ -8,11 +8,13 @@ export default abstract class Subset<TFont extends FontLike = FontLike> {
   protected font: TFont;
   protected glyphs: number[];
   protected mapping: Record<number, number>;
+  protected tables: string[];
 
   constructor(font: TFont) {
     this.font = font;
     this.glyphs = [];
     this.mapping = {};
+    this.tables = [];
 
     // always include the missing glyph
     this.includeGlyph(0);
@@ -27,6 +29,12 @@ export default abstract class Subset<TFont extends FontLike = FontLike> {
     }
 
     return this.mapping[glyphId];
+  }
+
+  includeTable(table: unknown) {
+    if (typeof table === "string" && table.length === 4) {
+      this.tables.push(table);
+    }
   }
 
   /**

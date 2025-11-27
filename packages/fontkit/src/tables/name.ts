@@ -63,6 +63,9 @@ const NAMES = [
   "postscriptCIDFontName",
   "wwsFamilyName",
   "wwsSubfamilyName",
+  "lightBackgroundPalette",
+  "darkBackgroundPalette",
+  "variationsPostScriptName",
 ];
 
 NameTable.process = function (_stream) {
@@ -80,18 +83,37 @@ NameTable.process = function (_stream) {
     }
 
     // if the nameID is >= 256, it is a font feature record (AAT)
-    let key = record.nameID >= 256 ? "fontFeatures" : NAMES[record.nameID] || record.nameID;
+    // or friendly stylistic set name or variable font instance name
+    let key =
+      record.nameID >= 256
+        ? "fontFeatures"
+        : record.nameID >= 26 && record.nameID <= 255
+          ? "reservedNameID"
+          : NAMES[record.nameID] || record.nameID;
     if (records[key] == null) {
       records[key] = {};
     }
 
-    let obj = records[key];
-    if (record.nameID >= 256) {
-      obj = obj[record.nameID] || (obj[record.nameID] = {});
-    }
+    let addRecord = (key: string, record: any) => {
+      if (records[key] == null) {
+        records[key] = {};
+      }
 
-    if (typeof record.string === "string" || typeof obj[language] !== "string") {
-      obj[language] = record.string;
+      let obj = records[key];
+      if (key === "fontFeatures") {
+        obj = obj[record.nameID] || (obj[record.nameID] = {});
+      }
+
+      if (typeof record.string === "string" || typeof obj[language] !== "string") {
+        obj[language] = record.string;
+      }
+    };
+
+    addRecord(key, record);
+
+    // if the nameID is 2 or 17, it may also be a font feature record (AAT).
+    if (record.nameID == 2 || record.nameID == 17) {
+      addRecord("fontFeatures", record);
     }
   }
 

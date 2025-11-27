@@ -46,6 +46,12 @@ type VariationAxisInfo = {
 type VariationAxisMap = Record<string, VariationAxisInfo>;
 type NamedVariationMap = Record<string, VariationSettings>;
 type CmapTableData = ConstructorParameters<typeof CmapProcessor>[0];
+type FontMetrics = {
+  ascent: number;
+  descent: number;
+  lineGap: number;
+  lineHeight: number;
+};
 
 /**
  * This is the base class for all SFNT-based font formats in fontkit.
@@ -112,11 +118,22 @@ class TTFFontBase implements GlyphFontLike {
   sbix?: unknown;
   COLR?: unknown;
   CPAL?: unknown;
-  ["OS/2"]!: { sFamilyClass: number } & Record<string, unknown>;
+  ["OS/2"]?: {
+    sFamilyClass: number;
+    fsSelection?: { useTypoMetrics?: boolean };
+    typoAscender?: number;
+    typoDescender?: number;
+    typoLineGap?: number;
+    winAscent?: number;
+    winDescent?: number;
+    capHeight?: number;
+    xHeight?: number;
+  };
   loca!: { offsets: number[]; version?: number };
   protected _directoryPos: number;
   protected _tables: Record<string, unknown>;
   protected _glyphs: GlyphCache;
+  protected _metrics?: FontMetrics;
 
   static probe(buffer: Buffer): boolean {
     let format = buffer.toString("ascii", 0, 4);
@@ -192,6 +209,46 @@ class TTFFontBase implements GlyphFontLike {
 
     this.stream.pos = pos;
     return result;
+  }
+
+  _getMetrics(): FontMetrics {
+    if (this._metrics) {
+      return this._metrics;
+    }
+
+    let { "OS/2": os2, hhea } = this;
+    let useTypoMetrics = os2?.fsSelection?.useTypoMetrics;
+    let ascent: number, descent: number, lineGap: number, lineHeight: number;
+
+    // Use the same approach as FreeType
+    // https://gitlab.freedesktop.org/freetype/freetype/-/blob/4d8db130ea4342317581bab65fc96365ce806b77/src/sfnt/sfobjs.c#L1310
+
+    if (useTypoMetrics && os2) {
+      ascent = os2.typoAscender ?? 0;
+      descent = os2.typoDescender ?? 0;
+      lineGap = os2.typoLineGap ?? 0;
+      lineHeight = ascent - descent + lineGap;
+    } else {
+      ascent = hhea.ascent;
+      descent = hhea.descent;
+      lineGap = hhea.lineGap;
+      lineHeight = ascent - descent + lineGap;
+    }
+
+    if ((!ascent || !descent) && os2) {
+      if (os2.typoAscender || os2.typoDescender) {
+        ascent = os2.typoAscender ?? 0;
+        descent = os2.typoDescender ?? 0;
+        lineGap = os2.typoLineGap ?? 0;
+        lineHeight = ascent - descent + lineGap;
+      } else {
+        ascent = os2.winAscent ?? 0;
+        descent = -(os2.winDescent ?? 0);
+        lineHeight = ascent - descent;
+      }
+    }
+
+    return (this._metrics = { ascent, descent, lineGap, lineHeight });
   }
 
   /**
@@ -276,7 +333,7 @@ class TTFFontBase implements GlyphFontLike {
    * @type {number}
    */
   get ascent() {
-    return this.hhea.ascent;
+    return this._getMetrics().ascent;
   }
 
   /**
@@ -284,7 +341,7 @@ class TTFFontBase implements GlyphFontLike {
    * @type {number}
    */
   get descent() {
-    return this.hhea.descent;
+    return this._getMetrics().descent;
   }
 
   /**
@@ -292,7 +349,7 @@ class TTFFontBase implements GlyphFontLike {
    * @type {number}
    */
   get lineGap() {
-    return this.hhea.lineGap;
+    return this._getMetrics().lineGap;
   }
 
   /**
@@ -317,6 +374,15 @@ class TTFFontBase implements GlyphFontLike {
    */
   get italicAngle() {
     return this.post.italicAngle;
+  }
+
+  /**
+   * The vertical space between adjacent lines (their baselines) of text.
+   * See [here](https://en.wikipedia.org/wiki/Leading) for more details.
+   * @type {number}
+   */
+  get lineHeight() {
+    return this._getMetrics().lineHeight;
   }
 
   /**
