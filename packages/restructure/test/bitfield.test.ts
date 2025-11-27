@@ -1,6 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { Bitfield, DecodeStream, EncodeStream, uint8 } from "../src/index.js";
-import { expectStream } from "./helpers.js";
+import { Bitfield, uint8 } from "../src/index.js";
 
 describe("Bitfield", () => {
   const bitfield = new Bitfield(uint8, [
@@ -24,8 +23,7 @@ describe("Bitfield", () => {
   });
 
   test("should decode", () => {
-    const stream = new DecodeStream(Buffer.from([JACK | MACK | PACK | NACK | QUACK]));
-    expect(bitfield.decode(stream)).to.deep.equal({
+    expect(bitfield.fromBuffer(new Uint8Array([JACK | MACK | PACK | NACK | QUACK]))).to.deep.equal({
       Jack: true,
       Kack: false,
       Lack: false,
@@ -37,23 +35,18 @@ describe("Bitfield", () => {
     });
   });
 
-  test("should encode", async () => {
-    const stream = new EncodeStream();
-    const expectation = expectStream(stream, (buf) => {
-      expect(buf).to.deep.equal(Buffer.from([JACK | MACK | PACK | NACK | QUACK]));
-    });
-
-    bitfield.encode(stream, {
-      Jack: true,
-      Kack: false,
-      Lack: false,
-      Mack: true,
-      Nack: true,
-      Oack: false,
-      Pack: true,
-      Quack: true,
-    });
-    stream.end();
-    await expectation;
+  test("should encode", () => {
+    expect(
+      bitfield.toBuffer({
+        Jack: true,
+        Kack: false,
+        Lack: false,
+        Mack: true,
+        Nack: true,
+        Oack: false,
+        Pack: true,
+        Quack: true,
+      }),
+    ).to.deep.equal(new Uint8Array([JACK | MACK | PACK | NACK | QUACK]));
   });
 });

@@ -42,7 +42,7 @@
     "typecheck": "tsc --project tsconfig.typecheck.json",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage && open coverage/index.html",
-    "build": "tsc",
+    "build": "tsc && tsdown",
     "scratchpad:start": "tsc --build scratchpad/tsconfig.json --watch",
     "scratchpad:run": "node scratchpad/build/scratchpad/index.js",
     "scratchpad:flame": "rm -rf isolate*.log && node --prof scratchpad/build/scratchpad/index.js && node --prof-process --preprocess -j isolate*.log | flamebearer",
@@ -51,6 +51,7 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
+      "browser": "./dist/index.min.mjs",
       "default": "./dist/index.js"
     }
   },
@@ -69,6 +70,7 @@
     "@vitest/coverage-v8": "^4.0.12",
     "flamebearer": "^1.1.3",
     "http-server": "^14.1.1",
+    "tsdown": "^0.16.7",
     "typescript": "^5.9.3",
     "vitest": "^4.0.12"
   },

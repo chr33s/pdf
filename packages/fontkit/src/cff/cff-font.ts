@@ -27,20 +27,20 @@ class CFFFont {
     return new CFFFont(stream);
   }
 
-  static size(value: Record<string, unknown> | Buffer) {
-    if (Buffer.isBuffer(value)) {
+  static size(value: Record<string, unknown> | Uint8Array) {
+    if (value instanceof Uint8Array) {
       return value.length;
     }
 
     return CFFTop.size(value);
   }
 
-  static encode(stream: EncodeStream | null, value: Record<string, unknown> | Buffer) {
+  static encode(stream: EncodeStream | null, value: Record<string, unknown> | Uint8Array) {
     if (!stream) {
       return;
     }
 
-    if (Buffer.isBuffer(value)) {
+    if (value instanceof Uint8Array) {
       stream.writeBuffer(value);
       return;
     }

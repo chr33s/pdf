@@ -14,8 +14,8 @@ type UsageMap = Record<number, boolean>;
 
 export default class CFFSubset extends Subset {
   private readonly cff: CFFFont;
-  private charstrings: Buffer[] = [];
-  private gsubrs: Buffer[] = [];
+  private charstrings: Uint8Array[] = [];
+  private gsubrs: Uint8Array[] = [];
   private strings?: string[];
 
   constructor(font: FontLike) {
@@ -47,15 +47,15 @@ export default class CFFSubset extends Subset {
     this.gsubrs = this.subsetSubrs(this.cff.globalSubrIndex, gsubrs);
   }
 
-  subsetSubrs(subrs: SubroutineList, used: UsageMap): Buffer[] {
-    const res: Buffer[] = [];
+  subsetSubrs(subrs: SubroutineList, used: UsageMap): Uint8Array[] {
+    const res: Uint8Array[] = [];
     for (let i = 0; i < subrs.length; i++) {
       let subr = subrs[i];
       if (subr && used[i]) {
         this.cff.stream.pos = subr.offset;
         res.push(this.cff.stream.readBuffer(subr.length));
       } else {
-        res.push(Buffer.from([11])); // return
+        res.push(new Uint8Array([11])); // return
       }
     }
 
@@ -243,9 +243,11 @@ export default class CFFSubset extends Subset {
       globalSubrIndex: this.gsubrs,
     };
 
-    const cffStream = new EncodeStream();
+    // Calculate size and add some padding for safety
+    const size = CFFTop.size(top);
+    const paddedSize = Math.max(size * 2, size + 4096);
+    const cffStream = new EncodeStream(new Uint8Array(paddedSize));
     CFFTop.encode(cffStream, top);
-    cffStream.end();
-    return cffStream.toBuffer();
+    return cffStream.buffer.subarray(0, cffStream.pos);
   }
 }

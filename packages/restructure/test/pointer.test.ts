@@ -1,55 +1,54 @@
 import { describe, expect, test } from "vitest";
 import { DecodeStream, EncodeStream, Pointer, Struct, VoidPointer, uint8 } from "../src/index.js";
-import { expectStream } from "./helpers.js";
 
 describe("Pointer", () => {
   describe("decode", () => {
     test("should handle null pointers", () => {
-      const stream = new DecodeStream(Buffer.from([0]));
+      const stream = new DecodeStream(new Uint8Array([0]));
       const pointer = new Pointer(uint8, uint8);
       expect(pointer.decode(stream, { _startOffset: 50 })).to.equal(null);
     });
 
     test("should use local offsets from start of parent by default", () => {
-      const stream = new DecodeStream(Buffer.from([1, 53]));
+      const stream = new DecodeStream(new Uint8Array([1, 53]));
       const pointer = new Pointer(uint8, uint8);
       expect(pointer.decode(stream, { _startOffset: 0 })).to.equal(53);
     });
 
     test("should support immediate offsets", () => {
-      const stream = new DecodeStream(Buffer.from([1, 53]));
+      const stream = new DecodeStream(new Uint8Array([1, 53]));
       const pointer = new Pointer(uint8, uint8, { type: "immediate" });
       expect(pointer.decode(stream, {})).to.equal(53);
     });
 
     test("should support offsets relative to the parent", () => {
-      const stream = new DecodeStream(Buffer.from([0, 0, 1, 53]));
+      const stream = new DecodeStream(new Uint8Array([0, 0, 1, 53]));
       stream.pos = 2;
       const pointer = new Pointer(uint8, uint8, { type: "parent" });
       expect(pointer.decode(stream, { parent: { _startOffset: 2 } })).to.equal(53);
     });
 
     test("should support global offsets", () => {
-      const stream = new DecodeStream(Buffer.from([1, 2, 4, 0, 0, 0, 53]));
+      const stream = new DecodeStream(new Uint8Array([1, 2, 4, 0, 0, 0, 53]));
       const pointer = new Pointer(uint8, uint8, { type: "global" });
       stream.pos = 2;
       expect(pointer.decode(stream, { parent: { parent: { _startOffset: 2 } } })).to.equal(53);
     });
 
     test("should support offsets relative to a property on the parent", () => {
-      const stream = new DecodeStream(Buffer.from([1, 0, 0, 0, 0, 53]));
+      const stream = new DecodeStream(new Uint8Array([1, 0, 0, 0, 0, 53]));
       const pointer = new Pointer(uint8, uint8, { relativeTo: "parent.ptr" });
       expect(pointer.decode(stream, { _startOffset: 0, parent: { ptr: 4 } })).to.equal(53);
     });
 
     test("should support returning pointer if there is no decode type", () => {
-      const stream = new DecodeStream(Buffer.from([4]));
+      const stream = new DecodeStream(new Uint8Array([4]));
       const pointer = new Pointer(uint8, "void");
       expect(pointer.decode(stream, { _startOffset: 0 })).to.equal(4);
     });
 
     test("should support decoding pointers lazily", () => {
-      const stream = new DecodeStream(Buffer.from([1, 53]));
+      const stream = new DecodeStream(new Uint8Array([1, 53]));
       const struct = new Struct({
         ptr: new Pointer(uint8, uint8, { lazy: true }),
       });
@@ -111,12 +110,8 @@ describe("Pointer", () => {
   });
 
   describe("encode", () => {
-    test("should handle null pointers", async () => {
-      const stream = new EncodeStream();
-      const expectation = expectStream(stream, (buf) => {
-        expect(buf).to.deep.equal(Buffer.from([0]));
-      });
-
+    test("should handle null pointers", () => {
+      const stream = new EncodeStream(new Uint8Array(1));
       const ptr = new Pointer(uint8, uint8);
       const ctx: any = {
         pointerSize: 0,
@@ -127,16 +122,11 @@ describe("Pointer", () => {
 
       ptr.encode(stream, null, ctx);
       expect(ctx.pointerSize).to.equal(0);
-      stream.end();
-      await expectation;
+      expect(stream.buffer.subarray(0, stream.pos)).to.deep.equal(new Uint8Array([0]));
     });
 
-    test("should handle local offsets", async () => {
-      const stream = new EncodeStream();
-      const expectation = expectStream(stream, (buf) => {
-        expect(buf).to.deep.equal(Buffer.from([1]));
-      });
-
+    test("should handle local offsets", () => {
+      const stream = new EncodeStream(new Uint8Array(1));
       const ptr = new Pointer(uint8, uint8);
       const ctx: any = {
         pointerSize: 0,
@@ -148,16 +138,11 @@ describe("Pointer", () => {
       ptr.encode(stream, 10, ctx);
       expect(ctx.pointerOffset).to.equal(2);
       expect(ctx.pointers).to.deep.equal([{ type: uint8, val: 10, parent: ctx }]);
-      stream.end();
-      await expectation;
+      expect(stream.buffer.subarray(0, stream.pos)).to.deep.equal(new Uint8Array([1]));
     });
 
-    test("should handle immediate offsets", async () => {
-      const stream = new EncodeStream();
-      const expectation = expectStream(stream, (buf) => {
-        expect(buf).to.deep.equal(Buffer.from([0]));
-      });
-
+    test("should handle immediate offsets", () => {
+      const stream = new EncodeStream(new Uint8Array(1));
       const ptr = new Pointer(uint8, uint8, { type: "immediate" });
       const ctx: any = {
         pointerSize: 0,
@@ -169,16 +154,11 @@ describe("Pointer", () => {
       ptr.encode(stream, 10, ctx);
       expect(ctx.pointerOffset).to.equal(2);
       expect(ctx.pointers).to.deep.equal([{ type: uint8, val: 10, parent: ctx }]);
-      stream.end();
-      await expectation;
+      expect(stream.buffer.subarray(0, stream.pos)).to.deep.equal(new Uint8Array([0]));
     });
 
-    test("should handle offsets relative to parent", async () => {
-      const stream = new EncodeStream();
-      const expectation = expectStream(stream, (buf) => {
-        expect(buf).to.deep.equal(Buffer.from([2]));
-      });
-
+    test("should handle offsets relative to parent", () => {
+      const stream = new EncodeStream(new Uint8Array(1));
       const ptr = new Pointer(uint8, uint8, { type: "parent" });
       const ctx: any = {
         parent: {
@@ -192,16 +172,11 @@ describe("Pointer", () => {
       ptr.encode(stream, 10, ctx);
       expect(ctx.parent.pointerOffset).to.equal(6);
       expect(ctx.parent.pointers).to.deep.equal([{ type: uint8, val: 10, parent: ctx }]);
-      stream.end();
-      await expectation;
+      expect(stream.buffer.subarray(0, stream.pos)).to.deep.equal(new Uint8Array([2]));
     });
 
-    test("should handle global offsets", async () => {
-      const stream = new EncodeStream();
-      const expectation = expectStream(stream, (buf) => {
-        expect(buf).to.deep.equal(Buffer.from([5]));
-      });
-
+    test("should handle global offsets", () => {
+      const stream = new EncodeStream(new Uint8Array(1));
       const ptr = new Pointer(uint8, uint8, { type: "global" });
       const ctx: any = {
         parent: {
@@ -221,16 +196,11 @@ describe("Pointer", () => {
       expect(ctx.parent.parent.parent.pointers).to.deep.equal([
         { type: uint8, val: 10, parent: ctx },
       ]);
-      stream.end();
-      await expectation;
+      expect(stream.buffer.subarray(0, stream.pos)).to.deep.equal(new Uint8Array([5]));
     });
 
-    test("should support offsets relative to a property on the parent", async () => {
-      const stream = new EncodeStream();
-      const expectation = expectStream(stream, (buf) => {
-        expect(buf).to.deep.equal(Buffer.from([6]));
-      });
-
+    test("should support offsets relative to a property on the parent", () => {
+      const stream = new EncodeStream(new Uint8Array(1));
       const ptr = new Pointer(uint8, uint8, { relativeTo: "ptr" });
       const ctx: any = {
         pointerSize: 0,
@@ -243,16 +213,11 @@ describe("Pointer", () => {
       ptr.encode(stream, 10, ctx);
       expect(ctx.pointerOffset).to.equal(11);
       expect(ctx.pointers).to.deep.equal([{ type: uint8, val: 10, parent: ctx }]);
-      stream.end();
-      await expectation;
+      expect(stream.buffer.subarray(0, stream.pos)).to.deep.equal(new Uint8Array([6]));
     });
 
-    test("should support void pointers", async () => {
-      const stream = new EncodeStream();
-      const expectation = expectStream(stream, (buf) => {
-        expect(buf).to.deep.equal(Buffer.from([1]));
-      });
-
+    test("should support void pointers", () => {
+      const stream = new EncodeStream(new Uint8Array(1));
       const ptr = new Pointer(uint8, "void");
       const ctx: any = {
         pointerSize: 0,
@@ -264,12 +229,11 @@ describe("Pointer", () => {
       ptr.encode(stream, new VoidPointer(uint8, 55), ctx);
       expect(ctx.pointerOffset).to.equal(2);
       expect(ctx.pointers).to.deep.equal([{ type: uint8, val: 55, parent: ctx }]);
-      stream.end();
-      await expectation;
+      expect(stream.buffer.subarray(0, stream.pos)).to.deep.equal(new Uint8Array([1]));
     });
 
     test("should throw if not a void pointer instance", () => {
-      const stream = new EncodeStream();
+      const stream = new EncodeStream(new Uint8Array(10));
       const ptr = new Pointer(uint8, "void");
       const ctx: any = {
         pointerSize: 0,

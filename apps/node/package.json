@@ -4,6 +4,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@chr33s/fontkit": "../../packages/fontkit/src/index.js",
     "@chris/pdf": "../../packages/pdf/src/index.js"
   },
   "devDependencies": {

@@ -1,11 +1,10 @@
 import { describe, expect, test } from "vitest";
 import { DecodeStream, EncodeStream, LazyArray as LazyArrayT, uint8 } from "../src/index.js";
-import { expectStream } from "./helpers.js";
 
 describe("LazyArray", () => {
   describe("decode", () => {
     test("should decode items lazily", () => {
-      const stream = new DecodeStream(Buffer.from([1, 2, 3, 4, 5]));
+      const stream = new DecodeStream(new Uint8Array([1, 2, 3, 4, 5]));
       const array = new LazyArrayT(uint8, 4);
 
       const arr = array.decode(stream);
@@ -23,7 +22,7 @@ describe("LazyArray", () => {
     });
 
     test("should be able to convert to an array", () => {
-      const stream = new DecodeStream(Buffer.from([1, 2, 3, 4, 5]));
+      const stream = new DecodeStream(new Uint8Array([1, 2, 3, 4, 5]));
       const array = new LazyArrayT(uint8, 4);
       const arr = array.decode(stream);
 
@@ -31,15 +30,15 @@ describe("LazyArray", () => {
     });
 
     test("should have an inspect method", () => {
-      const stream = new DecodeStream(Buffer.from([1, 2, 3, 4, 5]));
+      const stream = new DecodeStream(new Uint8Array([1, 2, 3, 4, 5]));
       const array = new LazyArrayT(uint8, 4);
       const arr = array.decode(stream);
 
-      expect(arr.inspect()).to.equal("[ 1, 2, 3, 4 ]");
+      expect(arr.inspect()).to.equal("[1,2,3,4]");
     });
 
     test("should decode length as number before array", () => {
-      const stream = new DecodeStream(Buffer.from([4, 1, 2, 3, 4, 5]));
+      const stream = new DecodeStream(new Uint8Array([4, 1, 2, 3, 4, 5]));
       const array = new LazyArrayT(uint8, uint8);
       const arr = array.decode(stream);
 
@@ -49,7 +48,7 @@ describe("LazyArray", () => {
 
   describe("size", () => {
     test("should work with LazyArrays", () => {
-      const stream = new DecodeStream(Buffer.from([1, 2, 3, 4, 5]));
+      const stream = new DecodeStream(new Uint8Array([1, 2, 3, 4, 5]));
       const array = new LazyArrayT(uint8, 4);
       const arr = array.decode(stream);
 
@@ -58,19 +57,14 @@ describe("LazyArray", () => {
   });
 
   describe("encode", () => {
-    test("should work with LazyArrays", async () => {
-      const stream = new DecodeStream(Buffer.from([1, 2, 3, 4, 5]));
+    test("should work with LazyArrays", () => {
+      const stream = new DecodeStream(new Uint8Array([1, 2, 3, 4, 5]));
       const array = new LazyArrayT(uint8, 4);
       const arr = array.decode(stream);
 
-      const enc = new EncodeStream();
-      const expectation = expectStream(enc, (buf) => {
-        expect(buf).to.deep.equal(Buffer.from([1, 2, 3, 4]));
-      });
-
+      const enc = new EncodeStream(new Uint8Array(array.size(arr)));
       array.encode(enc, arr);
-      enc.end();
-      await expectation;
+      expect(enc.buffer).to.deep.equal(new Uint8Array([1, 2, 3, 4]));
     });
   });
 });

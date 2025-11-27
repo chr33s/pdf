@@ -8,14 +8,15 @@ export { default as PDFWriter } from "./writers/pdf-writer.js";
 
 export { default as PDFCrossRefSection } from "./document/pdf-cross-ref-section.js";
 export { default as PDFHeader } from "./document/pdf-header.js";
-export { default as PDFTrailer } from "./document/pdf-trailer.js";
 export { default as PDFTrailerDict } from "./document/pdf-trailer-dict.js";
+export { default as PDFTrailer } from "./document/pdf-trailer.js";
 
 export { default as CustomFontEmbedder } from "./embedders/custom-font-embedder.js";
 export { default as CustomFontSubsetEmbedder } from "./embedders/custom-font-subset-embedder.js";
 export { AFRelationship, default as FileEmbedder } from "./embedders/file-embedder.js";
 export { default as JpegEmbedder } from "./embedders/jpeg-embedder.js";
-export { default as PDFPageEmbedder, PageBoundingBox } from "./embedders/pdf-page-embedder.js";
+export { default as PDFPageEmbedder } from "./embedders/pdf-page-embedder.js";
+export type { PageBoundingBox } from "./embedders/pdf-page-embedder.js";
 export { default as PngEmbedder } from "./embedders/png-embedder.js";
 export { default as StandardFontEmbedder } from "./embedders/standard-font-embedder.js";
 
@@ -49,15 +50,16 @@ export { default as PDFObjectStream } from "./structures/pdf-object-stream.js";
 export { default as PDFPageLeaf } from "./structures/pdf-page-leaf.js";
 export { default as PDFPageTree } from "./structures/pdf-page-tree.js";
 
-export { default as PDFOperator } from "./operators/pdf-operator.js";
 export { default as PDFOperatorNames } from "./operators/pdf-operator-names.js";
+export { default as PDFOperator } from "./operators/pdf-operator.js";
 
 export { default as PDFObjectParser } from "./parser/pdf-object-parser.js";
 export { default as PDFObjectStreamParser } from "./parser/pdf-object-stream-parser.js";
 export { default as PDFParser } from "./parser/pdf-parser.js";
 export { default as PDFXRefStreamParser } from "./parser/pdfx-ref-stream-parser.js";
 
-export { default as PDFSecurity, SecurityOptions } from "./security/pdf-security.js";
+export { default as PDFSecurity } from "./security/pdf-security.js";
+export type { SecurityOptions } from "./security/pdf-security.js";
 
 export { decodePDFRawStream } from "./streams/decode.js";
 

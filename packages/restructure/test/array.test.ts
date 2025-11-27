@@ -1,74 +1,59 @@
 import { describe, expect, test } from "vitest";
-import {
-  Array as ArrayT,
-  DecodeStream,
-  EncodeStream,
-  Pointer,
-  uint16,
-  uint8,
-} from "../src/index.js";
-import { expectStream } from "./helpers.js";
+import { Array as ArrayT, DecodeStream, Pointer, uint16, uint8 } from "../src/index.js";
 
 describe("Array", () => {
   describe("decode", () => {
     test("should decode fixed length", () => {
-      const stream = new DecodeStream(Buffer.from([1, 2, 3, 4, 5]));
       const array = new ArrayT(uint8, 4);
-      expect(array.decode(stream)).to.deep.equal([1, 2, 3, 4]);
+      expect(array.fromBuffer(new Uint8Array([1, 2, 3, 4, 5]))).to.deep.equal([1, 2, 3, 4]);
     });
 
     test("should decode fixed amount of bytes", () => {
-      const stream = new DecodeStream(Buffer.from([1, 2, 3, 4, 5]));
       const array = new ArrayT(uint16, 4, "bytes");
-      expect(array.decode(stream)).to.deep.equal([258, 772]);
+      expect(array.fromBuffer(new Uint8Array([1, 2, 3, 4, 5]))).to.deep.equal([258, 772]);
     });
 
     test("should decode length from parent key", () => {
-      const stream = new DecodeStream(Buffer.from([1, 2, 3, 4, 5]));
+      const stream = new DecodeStream(new Uint8Array([1, 2, 3, 4, 5]));
       const array = new ArrayT(uint8, "len");
       expect(array.decode(stream, { len: 4 })).to.deep.equal([1, 2, 3, 4]);
     });
 
     test("should decode amount of bytes from parent key", () => {
-      const stream = new DecodeStream(Buffer.from([1, 2, 3, 4, 5]));
+      const stream = new DecodeStream(new Uint8Array([1, 2, 3, 4, 5]));
       const array = new ArrayT(uint16, "len", "bytes");
       expect(array.decode(stream, { len: 4 })).to.deep.equal([258, 772]);
     });
 
     test("should decode length as number before array", () => {
-      const stream = new DecodeStream(Buffer.from([4, 1, 2, 3, 4, 5]));
       const array = new ArrayT(uint8, uint8);
-      expect(array.decode(stream)).to.deep.equal([1, 2, 3, 4]);
+      expect(array.fromBuffer(new Uint8Array([4, 1, 2, 3, 4, 5]))).to.deep.equal([1, 2, 3, 4]);
     });
 
     test("should decode amount of bytes as number before array", () => {
-      const stream = new DecodeStream(Buffer.from([4, 1, 2, 3, 4, 5]));
       const array = new ArrayT(uint16, uint8, "bytes");
-      expect(array.decode(stream)).to.deep.equal([258, 772]);
+      expect(array.fromBuffer(new Uint8Array([4, 1, 2, 3, 4, 5]))).to.deep.equal([258, 772]);
     });
 
     test("should decode length from function", () => {
-      const stream = new DecodeStream(Buffer.from([1, 2, 3, 4, 5]));
       const array = new ArrayT(uint8, () => 4);
-      expect(array.decode(stream)).to.deep.equal([1, 2, 3, 4]);
+      expect(array.fromBuffer(new Uint8Array([1, 2, 3, 4, 5]))).to.deep.equal([1, 2, 3, 4]);
     });
 
     test("should decode amount of bytes from function", () => {
-      const stream = new DecodeStream(Buffer.from([1, 2, 3, 4, 5]));
       const array = new ArrayT(uint16, () => 4, "bytes");
-      expect(array.decode(stream)).to.deep.equal([258, 772]);
+      expect(array.fromBuffer(new Uint8Array([1, 2, 3, 4, 5]))).to.deep.equal([258, 772]);
     });
 
     test("should decode to the end of the parent if no length is given", () => {
-      const stream = new DecodeStream(Buffer.from([1, 2, 3, 4, 5]));
+      const stream = new DecodeStream(new Uint8Array([1, 2, 3, 4, 5]));
       const array = new ArrayT(uint8);
       expect(array.decode(stream, { _length: 4, _startOffset: 0 })).to.deep.equal([1, 2, 3, 4]);
     });
 
     test("should decode to the end of the stream if no parent and length is given", () => {
-      const stream = new DecodeStream(Buffer.from([1, 2, 3, 4]));
       const array = new ArrayT(uint8);
-      expect(array.decode(stream)).to.deep.equal([1, 2, 3, 4]);
+      expect(array.fromBuffer(new Uint8Array([1, 2, 3, 4]))).to.deep.equal([1, 2, 3, 4]);
     });
   });
 
@@ -90,43 +75,21 @@ describe("Array", () => {
   });
 
   describe("encode", () => {
-    test("should encode using array length", async () => {
-      const stream = new EncodeStream();
-      const expectation = expectStream(stream, (buf) => {
-        expect(buf).to.deep.equal(Buffer.from([1, 2, 3, 4]));
-      });
-
+    test("should encode using array length", () => {
       const array = new ArrayT(uint8, 10);
-      array.encode(stream, [1, 2, 3, 4]);
-      stream.end();
-
-      await expectation;
+      expect(array.toBuffer([1, 2, 3, 4])).to.deep.equal(new Uint8Array([1, 2, 3, 4]));
     });
 
-    test("should encode length as number before array", async () => {
-      const stream = new EncodeStream();
-      const expectation = expectStream(stream, (buf) => {
-        expect(buf).to.deep.equal(Buffer.from([4, 1, 2, 3, 4]));
-      });
-
+    test("should encode length as number before array", () => {
       const array = new ArrayT(uint8, uint8);
-      array.encode(stream, [1, 2, 3, 4]);
-      stream.end();
-
-      await expectation;
+      expect(array.toBuffer([1, 2, 3, 4])).to.deep.equal(new Uint8Array([4, 1, 2, 3, 4]));
     });
 
-    test("should add pointers after array if length is encoded at start", async () => {
-      const stream = new EncodeStream();
-      const expectation = expectStream(stream, (buf) => {
-        expect(buf).to.deep.equal(Buffer.from([4, 5, 6, 7, 8, 1, 2, 3, 4]));
-      });
-
+    test("should add pointers after array if length is encoded at start", () => {
       const array = new ArrayT(new Pointer(uint8, uint8), uint8);
-      array.encode(stream, [1, 2, 3, 4]);
-      stream.end();
-
-      await expectation;
+      expect(array.toBuffer([1, 2, 3, 4])).to.deep.equal(
+        new Uint8Array([4, 5, 6, 7, 8, 1, 2, 3, 4]),
+      );
     });
   });
 });

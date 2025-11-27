@@ -1,146 +1,161 @@
-import iconv from "iconv-lite";
-import { Readable } from "node:stream";
 import DecodeStream from "./decode-stream.js";
 
-export default class EncodeStream extends Readable {
-  public buffer: Buffer;
-  public bufferOffset = 0;
+const textEncoder = new TextEncoder();
+const isBigEndian = new Uint8Array(new Uint16Array([0x1234]).buffer)[0] === 0x12;
+
+export default class EncodeStream {
+  public buffer: Uint8Array;
+  public view: DataView;
   public pos = 0;
-  #chunks: Buffer[] = [];
   [key: string]: any;
 
-  constructor(bufferSize = 65536) {
-    super();
-    this.buffer = Buffer.alloc(bufferSize);
+  constructor(buffer: Uint8Array) {
+    this.buffer = buffer;
+    this.view = new DataView(this.buffer.buffer, this.buffer.byteOffset, this.buffer.byteLength);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  _read(): void {}
-
-  ensure(bytes: number): void {
-    if (this.bufferOffset + bytes > this.buffer.length) {
-      this.flush();
+  /**
+   * Ensure the buffer has enough space for the given number of bytes.
+   * If not, grow the buffer.
+   */
+  ensureCapacity(bytes: number): void {
+    const needed = this.pos + bytes;
+    if (needed <= this.buffer.length) {
+      return;
     }
+    // Grow by at least 2x or to the needed size, whichever is larger
+    const newSize = Math.max(this.buffer.length * 2, needed);
+    const newBuffer = new Uint8Array(newSize);
+    newBuffer.set(this.buffer);
+    this.buffer = newBuffer;
+    this.view = new DataView(this.buffer.buffer, this.buffer.byteOffset, this.buffer.byteLength);
   }
 
-  flush(): void {
-    if (this.bufferOffset > 0) {
-      const chunk = Buffer.from(this.buffer.slice(0, this.bufferOffset));
-      this.#chunks.push(chunk);
-      this.push(chunk);
-      this.bufferOffset = 0;
-    }
-  }
-
-  writeBuffer(buffer: Buffer): void {
-    this.flush();
-    const chunk = Buffer.from(buffer);
-    this.#chunks.push(chunk);
-    this.push(chunk);
+  writeBuffer(buffer: Uint8Array): void {
+    this.ensureCapacity(buffer.length);
+    this.buffer.set(buffer, this.pos);
     this.pos += buffer.length;
   }
 
-  writeString(value: string, encoding: string = "ascii"): void {
+  writeString(string: string, encoding: string = "ascii"): void {
+    let buf: Uint8Array;
     switch (encoding) {
       case "utf16le":
-      case "ucs2":
+      case "utf16-le":
+      case "ucs2": // node treats this the same as utf16.
+        buf = stringToUtf16(string, isBigEndian);
+        break;
+
+      case "utf16be":
+      case "utf16-be":
+        buf = stringToUtf16(string, !isBigEndian);
+        break;
+
       case "utf8":
+        buf = textEncoder.encode(string);
+        break;
+
       case "ascii":
-        this.writeBuffer(Buffer.from(value, encoding));
+        buf = stringToAscii(string);
         break;
-      case "utf16be": {
-        const buf = Buffer.from(value, "utf16le");
-        for (let i = 0; i < buf.length - 1; i += 2) {
-          const byte = buf[i];
-          buf[i] = buf[i + 1];
-          buf[i + 1] = byte;
-        }
-        this.writeBuffer(buf);
-        break;
-      }
-      default: {
-        if (iconv) {
-          this.writeBuffer(iconv.encode(value, encoding));
-          break;
-        }
-        throw new Error("Install iconv-lite to enable additional string encodings.");
-      }
+
+      default:
+        throw new Error(`Unsupported encoding: ${encoding}`);
     }
+
+    this.writeBuffer(buf);
   }
 
-  writeUInt24BE(value: number): void {
-    this.ensure(3);
-    this.buffer[this.bufferOffset++] = (value >>> 16) & 0xff;
-    this.buffer[this.bufferOffset++] = (value >>> 8) & 0xff;
-    this.buffer[this.bufferOffset++] = value & 0xff;
-    this.pos += 3;
+  writeUInt24BE(val: number): void {
+    this.ensureCapacity(3);
+    this.buffer[this.pos++] = (val >>> 16) & 0xff;
+    this.buffer[this.pos++] = (val >>> 8) & 0xff;
+    this.buffer[this.pos++] = val & 0xff;
   }
 
-  writeUInt24LE(value: number): void {
-    this.ensure(3);
-    this.buffer[this.bufferOffset++] = value & 0xff;
-    this.buffer[this.bufferOffset++] = (value >>> 8) & 0xff;
-    this.buffer[this.bufferOffset++] = (value >>> 16) & 0xff;
-    this.pos += 3;
+  writeUInt24LE(val: number): void {
+    this.ensureCapacity(3);
+    this.buffer[this.pos++] = val & 0xff;
+    this.buffer[this.pos++] = (val >>> 8) & 0xff;
+    this.buffer[this.pos++] = (val >>> 16) & 0xff;
   }
 
-  writeInt24BE(value: number): void {
-    if (value >= 0) {
-      this.writeUInt24BE(value);
+  writeInt24BE(val: number): void {
+    if (val >= 0) {
+      this.writeUInt24BE(val);
     } else {
-      this.writeUInt24BE(value + 0xffffff + 1);
+      this.writeUInt24BE(val + 0xffffff + 1);
     }
   }
 
-  writeInt24LE(value: number): void {
-    if (value >= 0) {
-      this.writeUInt24LE(value);
+  writeInt24LE(val: number): void {
+    if (val >= 0) {
+      this.writeUInt24LE(val);
     } else {
-      this.writeUInt24LE(value + 0xffffff + 1);
+      this.writeUInt24LE(val + 0xffffff + 1);
     }
   }
 
-  fill(value: number, length: number): void {
-    if (length < this.buffer.length) {
-      this.ensure(length);
-      this.buffer.fill(value, this.bufferOffset, this.bufferOffset + length);
-      this.bufferOffset += length;
-      this.pos += length;
-    } else {
-      const buf = Buffer.alloc(length, value);
-      this.writeBuffer(buf);
-    }
-  }
-
-  end(): this {
-    this.flush();
-    this.push(null);
-    return this;
-  }
-
-  toBuffer(): Buffer {
-    this.flush();
-    return Buffer.concat(this.#chunks);
+  fill(val: number, length: number): void {
+    this.ensureCapacity(length);
+    this.buffer.fill(val, this.pos, this.pos + length);
+    this.pos += length;
   }
 }
 
-const writeMethodNames = Object.getOwnPropertyNames(Buffer.prototype).filter((key) =>
-  key.startsWith("write"),
-);
-
-for (const key of writeMethodNames) {
-  const baseName = key.replace(/write|[BL]E/g, "");
-  const bytes = DecodeStream.TYPES[baseName as keyof typeof DecodeStream.TYPES];
-  if (!bytes) {
-    continue;
+function stringToUtf16(string: string, swap: boolean): Uint8Array {
+  const buf = new Uint16Array(string.length);
+  for (let i = 0; i < string.length; i++) {
+    let code = string.charCodeAt(i);
+    if (swap) {
+      code = (code >> 8) | ((code & 0xff) << 8);
+    }
+    buf[i] = code;
   }
+  return new Uint8Array(buf.buffer);
+}
 
-  Object.defineProperty(EncodeStream.prototype, key, {
-    value(this: EncodeStream, value: number) {
-      this.ensure(bytes);
-      (this.buffer as any)[key](value, this.bufferOffset);
-      this.bufferOffset += bytes;
+function stringToAscii(string: string): Uint8Array {
+  const buf = new Uint8Array(string.length);
+  for (let i = 0; i < string.length; i++) {
+    // Match node.js behavior - encoding allows 8-bit rather than 7-bit.
+    buf[i] = string.charCodeAt(i);
+  }
+  return buf;
+}
+
+// Generate write methods from DataView prototype
+for (const key of Object.getOwnPropertyNames(DataView.prototype)) {
+  if (key.slice(0, 3) === "set") {
+    let type = key.slice(3).replace("Ui", "UI");
+    if (type === "Float32") {
+      type = "Float";
+    } else if (type === "Float64") {
+      type = "Double";
+    }
+    const bytes = DecodeStream.TYPES[type as keyof typeof DecodeStream.TYPES];
+    if (!bytes) {
+      continue;
+    }
+
+    (EncodeStream.prototype as any)["write" + type + (bytes === 1 ? "" : "BE")] = function (
+      this: EncodeStream,
+      value: number,
+    ) {
+      this.ensureCapacity(bytes);
+      (this.view as any)[key](this.pos, value, false);
       this.pos += bytes;
-    },
-  });
+    };
+
+    if (bytes !== 1) {
+      (EncodeStream.prototype as any)["write" + type + "LE"] = function (
+        this: EncodeStream,
+        value: number,
+      ) {
+        this.ensureCapacity(bytes);
+        (this.view as any)[key](this.pos, value, true);
+        this.pos += bytes;
+      };
+    }
+  }
 }

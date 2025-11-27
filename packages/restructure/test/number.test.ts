@@ -35,7 +35,6 @@ import {
   uint32le,
   uint8,
 } from "../src/index.js";
-import { expectStream } from "./helpers.js";
 
 type IntegerCase = {
   name: string;
@@ -46,41 +45,11 @@ type IntegerCase = {
 };
 
 const integerCases: IntegerCase[] = [
-  {
-    name: "uint8",
-    type: uint8,
-    buffer: [0xab, 0xff],
-    expected: [0xab, 0xff],
-    size: 1,
-  },
-  {
-    name: "uint16be",
-    type: uint16be,
-    buffer: [0xab, 0xff],
-    expected: [0xabff],
-    size: 2,
-  },
-  {
-    name: "uint16le",
-    type: uint16le,
-    buffer: [0xff, 0xab],
-    expected: [0xabff],
-    size: 2,
-  },
-  {
-    name: "uint24be",
-    type: uint24be,
-    buffer: [0xff, 0xab, 0x24],
-    expected: [0xffab24],
-    size: 3,
-  },
-  {
-    name: "uint24le",
-    type: uint24le,
-    buffer: [0x24, 0xab, 0xff],
-    expected: [0xffab24],
-    size: 3,
-  },
+  { name: "uint8", type: uint8, buffer: [0xab, 0xff], expected: [0xab, 0xff], size: 1 },
+  { name: "uint16be", type: uint16be, buffer: [0xab, 0xff], expected: [0xabff], size: 2 },
+  { name: "uint16le", type: uint16le, buffer: [0xff, 0xab], expected: [0xabff], size: 2 },
+  { name: "uint24be", type: uint24be, buffer: [0xff, 0xab, 0x24], expected: [0xffab24], size: 3 },
+  { name: "uint24le", type: uint24le, buffer: [0x24, 0xab, 0xff], expected: [0xffab24], size: 3 },
   {
     name: "uint32be",
     type: uint32be,
@@ -95,41 +64,11 @@ const integerCases: IntegerCase[] = [
     expected: [0xffab24bf],
     size: 4,
   },
-  {
-    name: "int8",
-    type: int8,
-    buffer: [0x7f, 0xff],
-    expected: [127, -1],
-    size: 1,
-  },
-  {
-    name: "int16be",
-    type: int16be,
-    buffer: [0xff, 0xab],
-    expected: [-85],
-    size: 2,
-  },
-  {
-    name: "int16le",
-    type: int16le,
-    buffer: [0xab, 0xff],
-    expected: [-85],
-    size: 2,
-  },
-  {
-    name: "int24be",
-    type: int24be,
-    buffer: [0xff, 0xab, 0x24],
-    expected: [-21724],
-    size: 3,
-  },
-  {
-    name: "int24le",
-    type: int24le,
-    buffer: [0x24, 0xab, 0xff],
-    expected: [-21724],
-    size: 3,
-  },
+  { name: "int8", type: int8, buffer: [0x7f, 0xff], expected: [127, -1], size: 1 },
+  { name: "int16be", type: int16be, buffer: [0xff, 0xab], expected: [-85], size: 2 },
+  { name: "int16le", type: int16le, buffer: [0xab, 0xff], expected: [-85], size: 2 },
+  { name: "int24be", type: int24be, buffer: [0xff, 0xab, 0x24], expected: [-21724], size: 3 },
+  { name: "int24le", type: int24le, buffer: [0x24, 0xab, 0xff], expected: [-21724], size: 3 },
   {
     name: "int32be",
     type: int32be,
@@ -240,7 +179,7 @@ describe("Number", () => {
 
   describe.each(integerCases)("$name", ({ type, buffer, expected, size }) => {
     test("should decode", () => {
-      const stream = new DecodeStream(Buffer.from(buffer));
+      const stream = new DecodeStream(new Uint8Array(buffer));
       expected.forEach((value) => {
         expect(type.decode(stream)).to.equal(value);
       });
@@ -250,23 +189,18 @@ describe("Number", () => {
       expect(type.size()).to.equal(size);
     });
 
-    test("should encode", async () => {
-      const stream = new EncodeStream();
-      const expectation = expectStream(stream, (buf) => {
-        expect(buf).to.deep.equal(Buffer.from(buffer));
-      });
-
+    test("should encode", () => {
+      const stream = new EncodeStream(new Uint8Array(buffer.length));
       expected.forEach((value) => {
         type.encode(stream, value);
       });
-      stream.end();
-      await expectation;
+      expect(stream.buffer).to.deep.equal(new Uint8Array(buffer));
     });
   });
 
   describe.each(floatCases)("$name", ({ type, buffer, expected, size, precision }) => {
     test("should decode", () => {
-      const stream = new DecodeStream(Buffer.from(buffer));
+      const stream = new DecodeStream(new Uint8Array(buffer));
       const value = type.decode(stream);
       if (precision) {
         expect(value).to.be.closeTo(expected, precision);
@@ -279,15 +213,10 @@ describe("Number", () => {
       expect(type.size()).to.equal(size);
     });
 
-    test("should encode", async () => {
-      const stream = new EncodeStream();
-      const expectation = expectStream(stream, (buf) => {
-        expect(buf).to.deep.equal(Buffer.from(buffer));
-      });
-
+    test("should encode", () => {
+      const stream = new EncodeStream(new Uint8Array(buffer.length));
       type.encode(stream, expected);
-      stream.end();
-      await expectation;
+      expect(stream.buffer).to.deep.equal(new Uint8Array(buffer));
     });
   });
 });

@@ -29,15 +29,16 @@ export default abstract class Subset<TFont extends FontLike = FontLike> {
     return this.mapping[glyphId];
   }
 
-  encodeStream(): r.EncodeStream {
-    let stream = new r.EncodeStream();
-
-    process.nextTick(() => {
-      this.encode(stream);
-      stream.end();
-    });
-
-    return stream;
+  /**
+   * Encode the subset to a Uint8Array buffer.
+   */
+  encodeBuffer(): Uint8Array {
+    // Use a large initial buffer - fonts can be several MB
+    // 64KB per glyph is a generous estimate for most fonts
+    const estimatedSize = Math.max(this.glyphs.length * 64 * 1024, 1024 * 1024);
+    const stream = new r.EncodeStream(new Uint8Array(estimatedSize));
+    this.encode(stream);
+    return stream.buffer.subarray(0, stream.pos);
   }
 
   protected abstract encode(stream: r.EncodeStream): void;

@@ -7,7 +7,6 @@ import {
   uint8,
   VersionedStruct,
 } from "../src/index.js";
-import { expectStream } from "./helpers.js";
 
 describe("VersionedStruct", () => {
   const baseStruct = new VersionedStruct(uint8, {
@@ -24,14 +23,22 @@ describe("VersionedStruct", () => {
 
   describe("decode", () => {
     test("should get version from number type", () => {
-      const stream0 = new DecodeStream(Buffer.from("\x00\x05devon\x15", "binary"));
+      // \x00\x05devon\x15
+      const stream0 = new DecodeStream(
+        new Uint8Array([0x00, 0x05, 0x64, 0x65, 0x76, 0x6f, 0x6e, 0x15]),
+      );
       expect(baseStruct.decode(stream0)).to.deep.equal({
         version: 0,
         name: "devon",
         age: 21,
       });
 
-      const stream1 = new DecodeStream(Buffer.from("\x01\x0adevon 👍\x15\x00", "utf8"));
+      // \x01\x0adevon 👍\x15\x00 in utf8
+      const stream1 = new DecodeStream(
+        new Uint8Array([
+          0x01, 0x0a, 0x64, 0x65, 0x76, 0x6f, 0x6e, 0x20, 0xf0, 0x9f, 0x91, 0x8d, 0x15, 0x00,
+        ]),
+      );
       expect(baseStruct.decode(stream1)).to.deep.equal({
         version: 1,
         name: "devon 👍",
@@ -41,7 +48,10 @@ describe("VersionedStruct", () => {
     });
 
     test("should throw for unknown version", () => {
-      const stream = new DecodeStream(Buffer.from("\x05\x05devon\x15", "binary"));
+      // \x05\x05devon\x15
+      const stream = new DecodeStream(
+        new Uint8Array([0x05, 0x05, 0x64, 0x65, 0x76, 0x6f, 0x6e, 0x15]),
+      );
       expect(() => baseStruct.decode(stream)).to.throw(/unknown version/i);
     });
 
@@ -60,7 +70,10 @@ describe("VersionedStruct", () => {
         },
       });
 
-      const stream0 = new DecodeStream(Buffer.from("\x00\x15\x01\x05devon", "binary"));
+      // \x00\x15\x01\x05devon
+      const stream0 = new DecodeStream(
+        new Uint8Array([0x00, 0x15, 0x01, 0x05, 0x64, 0x65, 0x76, 0x6f, 0x6e]),
+      );
       expect(struct.decode(stream0)).to.deep.equal({
         version: 0,
         age: 21,
@@ -68,7 +81,12 @@ describe("VersionedStruct", () => {
         name: "devon",
       });
 
-      const stream1 = new DecodeStream(Buffer.from("\x01\x15\x01\x0adevon 👍\x00", "utf8"));
+      // \x01\x15\x01\x0adevon 👍\x00 in utf8
+      const stream1 = new DecodeStream(
+        new Uint8Array([
+          0x01, 0x15, 0x01, 0x0a, 0x64, 0x65, 0x76, 0x6f, 0x6e, 0x20, 0xf0, 0x9f, 0x91, 0x8d, 0x00,
+        ]),
+      );
       expect(struct.decode(stream1)).to.deep.equal({
         version: 1,
         age: 21,
@@ -91,14 +109,20 @@ describe("VersionedStruct", () => {
         },
       });
 
-      const stream0 = new DecodeStream(Buffer.from("\x05devon\x15", "binary"));
+      // \x05devon\x15
+      const stream0 = new DecodeStream(new Uint8Array([0x05, 0x64, 0x65, 0x76, 0x6f, 0x6e, 0x15]));
       expect(struct.decode(stream0, { version: 0 })).to.deep.equal({
         version: 0,
         name: "devon",
         age: 21,
       });
 
-      const stream1 = new DecodeStream(Buffer.from("\x0adevon 👍\x15\x00", "utf8"));
+      // \x0adevon 👍\x15\x00 in utf8
+      const stream1 = new DecodeStream(
+        new Uint8Array([
+          0x0a, 0x64, 0x65, 0x76, 0x6f, 0x6e, 0x20, 0xf0, 0x9f, 0x91, 0x8d, 0x15, 0x00,
+        ]),
+      );
       expect(struct.decode(stream1, { version: 1 })).to.deep.equal({
         version: 1,
         name: "devon 👍",
@@ -124,20 +148,31 @@ describe("VersionedStruct", () => {
         }),
       });
 
-      const stream0 = new DecodeStream(Buffer.from("\x00\x05devon\x15", "binary"));
+      // \x00\x05devon\x15
+      const stream0 = new DecodeStream(
+        new Uint8Array([0x00, 0x05, 0x64, 0x65, 0x76, 0x6f, 0x6e, 0x15]),
+      );
       expect(struct.decode(stream0, { version: 0 })).to.deep.equal({
         version: 0,
         name: "devon",
         age: 21,
       });
 
-      const stream1 = new DecodeStream(Buffer.from("\x01\x00\x05pasta", "binary"));
+      // \x01\x00\x05pasta
+      const stream1 = new DecodeStream(
+        new Uint8Array([0x01, 0x00, 0x05, 0x70, 0x61, 0x73, 0x74, 0x61]),
+      );
       expect(struct.decode(stream1, { version: 0 })).to.deep.equal({
         version: 0,
         name: "pasta",
       });
 
-      const stream2 = new DecodeStream(Buffer.from("\x01\x01\x09ice cream\x01", "binary"));
+      // \x01\x01\x09ice cream\x01
+      const stream2 = new DecodeStream(
+        new Uint8Array([
+          0x01, 0x01, 0x09, 0x69, 0x63, 0x65, 0x20, 0x63, 0x72, 0x65, 0x61, 0x6d, 0x01,
+        ]),
+      );
       expect(struct.decode(stream2, { version: 0 })).to.deep.equal({
         version: 1,
         name: "ice cream",
@@ -151,7 +186,10 @@ describe("VersionedStruct", () => {
         (this as any).processed = true;
       };
 
-      const stream = new DecodeStream(Buffer.from("\x00\x05devon\x15", "binary"));
+      // \x00\x05devon\x15
+      const stream = new DecodeStream(
+        new Uint8Array([0x00, 0x05, 0x64, 0x65, 0x76, 0x6f, 0x6e, 0x15]),
+      );
       expect(struct.decode(stream)).to.deep.equal({
         version: 0,
         name: "devon",
@@ -234,31 +272,52 @@ describe("VersionedStruct", () => {
   });
 
   describe("encode", () => {
-    test("should encode objects to buffers", async () => {
-      const stream = new EncodeStream();
-      const expectation = expectStream(stream, (buf) => {
-        expect(buf).to.deep.equal(Buffer.from("\x00\x05devon\x15\x01\x0adevon 👍\x15\x00", "utf8"));
-      });
+    test("should encode objects to buffers", () => {
+      const value1 = { version: 0, name: "devon", age: 21 };
+      const value2 = { version: 1, name: "devon 👍", age: 21, gender: 0 };
+      const totalSize = baseStruct.size(value1) + baseStruct.size(value2);
+      const stream = new EncodeStream(new Uint8Array(totalSize));
 
-      baseStruct.encode(stream, { version: 0, name: "devon", age: 21 });
-      baseStruct.encode(stream, {
-        version: 1,
-        name: "devon 👍",
-        age: 21,
-        gender: 0,
-      });
-      stream.end();
-      await expectation;
+      baseStruct.encode(stream, value1);
+      baseStruct.encode(stream, value2);
+
+      // \x00\x05devon\x15\x01\x0adevon 👍\x15\x00
+      expect(stream.buffer).to.deep.equal(
+        new Uint8Array([
+          0x00,
+          0x05,
+          0x64,
+          0x65,
+          0x76,
+          0x6f,
+          0x6e,
+          0x15, // version 0
+          0x01,
+          0x0a,
+          0x64,
+          0x65,
+          0x76,
+          0x6f,
+          0x6e,
+          0x20,
+          0xf0,
+          0x9f,
+          0x91,
+          0x8d,
+          0x15,
+          0x00, // version 1
+        ]),
+      );
     });
 
     test("should throw for unknown version", () => {
-      const stream = new EncodeStream();
+      const stream = new EncodeStream(new Uint8Array(100));
       expect(() => baseStruct.encode(stream, { version: 5, name: "devon", age: 21 })).to.throw(
         /unknown version/i,
       );
     });
 
-    test("should support common header block", async () => {
+    test("should support common header block", () => {
       const struct = new VersionedStruct(uint8, {
         header: {
           age: uint8,
@@ -273,26 +332,46 @@ describe("VersionedStruct", () => {
         },
       });
 
-      const stream = new EncodeStream();
-      const expectation = expectStream(stream, (buf) => {
-        expect(buf).to.deep.equal(
-          Buffer.from("\x00\x15\x01\x05devon\x01\x15\x01\x0adevon 👍\x00", "utf8"),
-        );
-      });
+      const value1 = { version: 0, age: 21, alive: 1, name: "devon" };
+      const value2 = { version: 1, age: 21, alive: 1, name: "devon 👍", gender: 0 };
+      const totalSize = struct.size(value1) + struct.size(value2);
+      const stream = new EncodeStream(new Uint8Array(totalSize));
 
-      struct.encode(stream, { version: 0, age: 21, alive: 1, name: "devon" });
-      struct.encode(stream, {
-        version: 1,
-        age: 21,
-        alive: 1,
-        name: "devon 👍",
-        gender: 0,
-      });
-      stream.end();
-      await expectation;
+      struct.encode(stream, value1);
+      struct.encode(stream, value2);
+
+      // \x00\x15\x01\x05devon\x01\x15\x01\x0adevon 👍\x00
+      expect(stream.buffer).to.deep.equal(
+        new Uint8Array([
+          0x00,
+          0x15,
+          0x01,
+          0x05,
+          0x64,
+          0x65,
+          0x76,
+          0x6f,
+          0x6e, // version 0
+          0x01,
+          0x15,
+          0x01,
+          0x0a,
+          0x64,
+          0x65,
+          0x76,
+          0x6f,
+          0x6e,
+          0x20,
+          0xf0,
+          0x9f,
+          0x91,
+          0x8d,
+          0x00, // version 1
+        ]),
+      );
     });
 
-    test("should encode pointer data after structure", async () => {
+    test("should encode pointer data after structure", () => {
       const struct = new VersionedStruct(uint8, {
         0: {
           name: new StringT(uint8, "ascii"),
@@ -305,36 +384,79 @@ describe("VersionedStruct", () => {
         },
       });
 
-      const stream = new EncodeStream();
-      const expectation = expectStream(stream, (buf) => {
-        expect(buf).to.deep.equal(Buffer.from("\x01\x05devon\x15\x09\x05hello", "utf8"));
-      });
+      const value = { version: 1, name: "devon", age: 21, ptr: "hello" };
+      const stream = new EncodeStream(new Uint8Array(struct.size(value)));
+      struct.encode(stream, value);
 
-      struct.encode(stream, {
-        version: 1,
-        name: "devon",
-        age: 21,
-        ptr: "hello",
-      });
-      stream.end();
-      await expectation;
+      // \x01\x05devon\x15\x09\x05hello
+      expect(stream.buffer).to.deep.equal(
+        new Uint8Array([
+          0x01,
+          0x05,
+          0x64,
+          0x65,
+          0x76,
+          0x6f,
+          0x6e, // \x01\x05devon
+          0x15, // age: 21
+          0x09, // pointer offset
+          0x05,
+          0x68,
+          0x65,
+          0x6c,
+          0x6c,
+          0x6f, // \x05hello
+        ]),
+      );
     });
 
-    test("should support preEncode hook", async () => {
+    test("should support preEncode hook", () => {
       const struct = baseStruct;
       struct.preEncode = function preEncode() {
         (this as any).version = (this as any).gender != null ? 1 : 0;
       };
 
-      const stream = new EncodeStream();
-      const expectation = expectStream(stream, (buf) => {
-        expect(buf).to.deep.equal(Buffer.from("\x00\x05devon\x15\x01\x0adevon 👍\x15\x00", "utf8"));
-      });
+      const value1 = { name: "devon", age: 21 } as any;
+      const value2 = { name: "devon 👍", age: 21, gender: 0 } as any;
+      // Need to compute sizes after preEncode would set version
+      value1.version = 0;
+      value2.version = 1;
+      const totalSize = struct.size(value1) + struct.size(value2);
+      const stream = new EncodeStream(new Uint8Array(totalSize));
 
-      struct.encode(stream, { name: "devon", age: 21 } as any);
-      struct.encode(stream, { name: "devon 👍", age: 21, gender: 0 } as any);
-      stream.end();
-      await expectation;
+      // Reset versions for encode to set them via preEncode
+      delete value1.version;
+      delete value2.version;
+      struct.encode(stream, value1);
+      struct.encode(stream, value2);
+
+      // \x00\x05devon\x15\x01\x0adevon 👍\x15\x00
+      expect(stream.buffer).to.deep.equal(
+        new Uint8Array([
+          0x00,
+          0x05,
+          0x64,
+          0x65,
+          0x76,
+          0x6f,
+          0x6e,
+          0x15, // version 0
+          0x01,
+          0x0a,
+          0x64,
+          0x65,
+          0x76,
+          0x6f,
+          0x6e,
+          0x20,
+          0xf0,
+          0x9f,
+          0x91,
+          0x8d,
+          0x15,
+          0x00, // version 1
+        ]),
+      );
     });
   });
 });

@@ -1,9 +1,11 @@
-import { inspect } from "node:util";
 import ArrayT from "./array.js";
 import type DecodeStream from "./decode-stream.js";
 import type EncodeStream from "./encode-stream.js";
 import { Number as NumberT } from "./number.js";
 import { resolveLength } from "./utils.js";
+
+// Node.js inspect symbol for custom formatting
+const inspectSymbol = Symbol.for("nodejs.util.inspect.custom");
 
 export class LazyArray<T = unknown> {
   #base: number;
@@ -49,11 +51,11 @@ export class LazyArray<T = unknown> {
   }
 
   inspect(): string {
-    return inspect(this.toArray());
+    return JSON.stringify(this.toArray());
   }
 
-  [inspect.custom](): string {
-    return inspect(this.toArray());
+  [inspectSymbol](): string {
+    return JSON.stringify(this.toArray());
   }
 }
 

@@ -1,189 +1,110 @@
 import { describe, expect, test } from "vitest";
 import { EncodeStream } from "../src/index.js";
-import { expectStream } from "./helpers.js";
 
 describe("EncodeStream", () => {
-  test("should write a buffer", async () => {
-    const stream = new EncodeStream();
-    const expectation = expectStream(stream, (buf) => {
-      expect(buf).to.deep.equal(Buffer.from([1, 2, 3]));
-    });
-
-    stream.writeBuffer(Buffer.from([1, 2, 3]));
-    stream.end();
-    await expectation;
+  test("should write a buffer", () => {
+    const stream = new EncodeStream(new Uint8Array(3));
+    stream.writeBuffer(new Uint8Array([1, 2, 3]));
+    expect(stream.buffer).to.deep.equal(new Uint8Array([1, 2, 3]));
   });
 
-  test("should writeUInt16BE", async () => {
-    const stream = new EncodeStream();
-    const expectation = expectStream(stream, (buf) => {
-      expect(buf).to.deep.equal(Buffer.from([0xab, 0xcd]));
-    });
-
+  test("should writeUInt16BE", () => {
+    const stream = new EncodeStream(new Uint8Array(2));
     stream.writeUInt16BE(0xabcd);
-    stream.end();
-    await expectation;
+    expect(stream.buffer).to.deep.equal(new Uint8Array([0xab, 0xcd]));
   });
 
-  test("should writeUInt16LE", async () => {
-    const stream = new EncodeStream();
-    const expectation = expectStream(stream, (buf) => {
-      expect(buf).to.deep.equal(Buffer.from([0xab, 0xcd]));
-    });
-
+  test("should writeUInt16LE", () => {
+    const stream = new EncodeStream(new Uint8Array(2));
     stream.writeUInt16LE(0xcdab);
-    stream.end();
-    await expectation;
+    expect(stream.buffer).to.deep.equal(new Uint8Array([0xab, 0xcd]));
   });
 
-  test("should writeUInt24BE", async () => {
-    const stream = new EncodeStream();
-    const expectation = expectStream(stream, (buf) => {
-      expect(buf).to.deep.equal(Buffer.from([0xab, 0xcd, 0xef]));
-    });
-
+  test("should writeUInt24BE", () => {
+    const stream = new EncodeStream(new Uint8Array(3));
     stream.writeUInt24BE(0xabcdef);
-    stream.end();
-    await expectation;
+    expect(stream.buffer).to.deep.equal(new Uint8Array([0xab, 0xcd, 0xef]));
   });
 
-  test("should writeUInt24LE", async () => {
-    const stream = new EncodeStream();
-    const expectation = expectStream(stream, (buf) => {
-      expect(buf).to.deep.equal(Buffer.from([0xef, 0xcd, 0xab]));
-    });
-
+  test("should writeUInt24LE", () => {
+    const stream = new EncodeStream(new Uint8Array(3));
     stream.writeUInt24LE(0xabcdef);
-    stream.end();
-    await expectation;
+    expect(stream.buffer).to.deep.equal(new Uint8Array([0xef, 0xcd, 0xab]));
   });
 
-  test("should writeInt24BE", async () => {
-    const stream = new EncodeStream();
-    const expectation = expectStream(stream, (buf) => {
-      expect(buf).to.deep.equal(Buffer.from([0xff, 0xab, 0x24, 0xab, 0xcd, 0xef]));
-    });
-
+  test("should writeInt24BE", () => {
+    const stream = new EncodeStream(new Uint8Array(6));
     stream.writeInt24BE(-21724);
     stream.writeInt24BE(0xabcdef);
-    stream.end();
-    await expectation;
+    expect(stream.buffer).to.deep.equal(new Uint8Array([0xff, 0xab, 0x24, 0xab, 0xcd, 0xef]));
   });
 
-  test("should writeInt24LE", async () => {
-    const stream = new EncodeStream();
-    const expectation = expectStream(stream, (buf) => {
-      expect(buf).to.deep.equal(Buffer.from([0x24, 0xab, 0xff, 0xef, 0xcd, 0xab]));
-    });
-
+  test("should writeInt24LE", () => {
+    const stream = new EncodeStream(new Uint8Array(6));
     stream.writeInt24LE(-21724);
     stream.writeInt24LE(0xabcdef);
-    stream.end();
-    await expectation;
+    expect(stream.buffer).to.deep.equal(new Uint8Array([0x24, 0xab, 0xff, 0xef, 0xcd, 0xab]));
   });
 
-  test("should fill", async () => {
-    const stream = new EncodeStream();
-    const expectation = expectStream(stream, (buf) => {
-      expect(buf).to.deep.equal(Buffer.from([10, 10, 10, 10, 10]));
-    });
-
+  test("should fill", () => {
+    const stream = new EncodeStream(new Uint8Array(5));
     stream.fill(10, 5);
-    stream.end();
-    await expectation;
+    expect(stream.buffer).to.deep.equal(new Uint8Array([10, 10, 10, 10, 10]));
   });
 
   describe("writeString", () => {
-    test("should encode ascii by default", async () => {
-      const stream = new EncodeStream();
+    test("should encode ascii by default", () => {
       const expected = Buffer.from("some text", "ascii");
-      const expectation = expectStream(stream, (buf) => {
-        expect(buf).to.deep.equal(expected);
-      });
-
+      const stream = new EncodeStream(new Uint8Array(expected.length));
       stream.writeString("some text");
-      stream.end();
-      await expectation;
+      expect(stream.buffer).to.deep.equal(new Uint8Array(expected));
     });
 
-    test("should encode ascii", async () => {
-      const stream = new EncodeStream();
+    test("should encode ascii", () => {
       const expected = Buffer.from("some text", "ascii");
-      const expectation = expectStream(stream, (buf) => {
-        expect(buf).to.deep.equal(expected);
-      });
-
+      const stream = new EncodeStream(new Uint8Array(expected.length));
       stream.writeString("some text", "ascii");
-      stream.end();
-      await expectation;
+      expect(stream.buffer).to.deep.equal(new Uint8Array(expected));
     });
 
-    test("should encode utf8", async () => {
-      const stream = new EncodeStream();
+    test("should encode utf8", () => {
       const expected = Buffer.from("unicode! 👍", "utf8");
-      const expectation = expectStream(stream, (buf) => {
-        expect(buf).to.deep.equal(expected);
-      });
-
+      const stream = new EncodeStream(new Uint8Array(expected.length));
       stream.writeString("unicode! 👍", "utf8");
-      stream.end();
-      await expectation;
+      expect(stream.buffer).to.deep.equal(new Uint8Array(expected));
     });
 
-    test("should encode utf16le", async () => {
-      const stream = new EncodeStream();
+    test("should encode utf16le", () => {
       const expected = Buffer.from("unicode! 👍", "utf16le");
-      const expectation = expectStream(stream, (buf) => {
-        expect(buf).to.deep.equal(expected);
-      });
-
+      const stream = new EncodeStream(new Uint8Array(expected.length));
       stream.writeString("unicode! 👍", "utf16le");
-      stream.end();
-      await expectation;
+      expect(stream.buffer).to.deep.equal(new Uint8Array(expected));
     });
 
-    test("should encode ucs2", async () => {
-      const stream = new EncodeStream();
+    test("should encode ucs2", () => {
       const expected = Buffer.from("unicode! 👍", "ucs2");
-      const expectation = expectStream(stream, (buf) => {
-        expect(buf).to.deep.equal(expected);
-      });
-
+      const stream = new EncodeStream(new Uint8Array(expected.length));
       stream.writeString("unicode! 👍", "ucs2");
-      stream.end();
-      await expectation;
+      expect(stream.buffer).to.deep.equal(new Uint8Array(expected));
     });
 
-    test("should encode utf16be", async () => {
-      const stream = new EncodeStream();
+    test("should encode utf16be", () => {
       const expected = Buffer.from("unicode! 👍", "utf16le");
       for (let i = 0; i < expected.length - 1; i += 2) {
         const byte = expected[i];
         expected[i] = expected[i + 1];
         expected[i + 1] = byte;
       }
-      const expectation = expectStream(stream, (buf) => {
-        expect(buf).to.deep.equal(expected);
-      });
-
+      const stream = new EncodeStream(new Uint8Array(expected.length));
       stream.writeString("unicode! 👍", "utf16be");
-      stream.end();
-      await expectation;
+      expect(stream.buffer).to.deep.equal(new Uint8Array(expected));
     });
 
-    test("should encode macroman", async () => {
-      const stream = new EncodeStream();
-      const expected = Buffer.from([
-        0x8a, 0x63, 0x63, 0x65, 0x6e, 0x74, 0x65, 0x64, 0x20, 0x63, 0x68, 0x87, 0x72, 0x61, 0x63,
-        0x74, 0x65, 0x72, 0x73,
-      ]);
-      const expectation = expectStream(stream, (buf) => {
-        expect(buf).to.deep.equal(expected);
-      });
-
-      stream.writeString("äccented cháracters", "mac");
-      stream.end();
-      await expectation;
+    test("should throw for unsupported encoding", () => {
+      const stream = new EncodeStream(new Uint8Array(19));
+      expect(() => stream.writeString("äccented cháracters", "mac")).to.throw(
+        "Unsupported encoding: mac",
+      );
     });
   });
 });

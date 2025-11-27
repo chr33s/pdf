@@ -4,7 +4,6 @@ type PlatformEncodingMap = ReadonlyArray<EncodingTable>;
 
 /**
  * Gets an encoding name from platform, encoding, and language ids.
- * Returned encoding names can be used in iconv-lite to decode text.
  */
 export function getEncoding(platformID: number, encodingID: number, languageID = 0): EncodingName {
   if (platformID === 1) {
@@ -22,10 +21,97 @@ export function getEncoding(platformID: number, encodingID: number, languageID =
   return platformEncodings[encodingID] ?? null;
 }
 
+// Encodings supported by TextDecoder for single-byte mapping
+const SINGLE_BYTE_ENCODINGS = new Set([
+  "x-mac-roman",
+  "x-mac-cyrillic",
+  "iso-8859-6",
+  "iso-8859-8",
+]);
+
+// Mac encodings not supported by TextDecoder - manual mapping tables
+// These are the high 128 characters (0x80-0xFF) for each encoding
+// prettier-ignore
+const MAC_ENCODINGS: Record<string, string> = {
+  "x-mac-croatian":
+    "ÄÅÇÉÑÖÜáàâäãåçéèêëíìîïñóòôöõúùûü†°¢£§•¶ß®Š™´¨≠ŽØ∞±≤≥∆µ∂∑∏š∫ªºΩžø¿¡¬√ƒ≈Ć«Č… ÀÃÕŒœĐ—\u201C\u201D\u2018\u2019÷◊©⁄€‹›Æ»–·‚„‰ÂćÁčÈÍÎÏÌÓÔđÒÚÛÙıˆ˜¯πË˚¸Êæˇ",
+  "x-mac-gaelic":
+    "ÄÅÇÉÑÖÜáàâäãåçéèêëíìîïñóòôöõúùûü†°¢£§•¶ß®©™´¨≠ÆØḂ±≤≥ḃĊċḊḋḞḟĠġṀæøṁṖṗɼƒſṠ«»… ÀÃÕŒœ–—\u201C\u201D\u2018\u2019ṡẛÿŸṪ€‹›Ŷŷṫ·Ỳỳ⁊ÂÊÁËÈÍÎÏÌÓÔ♣ÒÚÛÙıÝýŴŵẄẅẀẁẂẃ",
+  "x-mac-greek":
+    "Ä¹²É³ÖÜ΅àâä΄¨çéèêë£™îï•½‰ôö¦€ùûü†ΓΔΘΛΞΠß®©ΣΪ§≠°·Α±≤≥¥ΒΕΖΗΙΚΜΦΫΨΩάΝ¬ΟΡ≈Τ«»… ΥΧΆΈœ–―\u201C\u201D\u2018\u2019÷ΉΊΌΎέήίόΏύαβψδεφγηιξκλμνοπώρστθωςχυζϊϋΐΰ\u00AD",
+  "x-mac-icelandic":
+    "ÄÅÇÉÑÖÜáàâäãåçéèêëíìîïñóòôöõúùûüÝ°¢£§•¶ß®©™´¨≠ÆØ∞±≤≥¥µ∂∑∏π∫ªºΩæø¿¡¬√ƒ≈∆«»… ÀÃÕŒœ–—\u201C\u201D\u2018\u2019÷◊ÿŸ⁄€ÐðÞþý·‚„‰ÂÊÁËÈÍÎÏÌÓÔÒÚÛÙıˆ˜¯˘˙˚¸˝˛ˇ",
+  "x-mac-inuit":
+    "ᐃᐄᐅᐆᐊᐋᐱᐲᐳᐴᐸᐹᑉᑎᑏᑐᑑᑕᑖᑦᑭᑮᑯᑰᑲᑳᒃᒋᒌᒍᒎᒐᒑ°ᒡᒥᒦ•¶ᒧ®©™ᒨᒪᒫᒻᓂᓃᓄᓅᓇᓈᓐᓯᓰᓱᓲᓴᓵᔅᓕᓖᓗᓘᓚᓛᓪᔨᔩᔪᔫᔭ… ᔮᔾᕕᕖᕗ–—\u201C\u201D\u2018\u2019ᕘᕙᕚᕝᕞᕟᕠᕡᖃᖄᖅᖆᖇᖈᖉᖊᖋᖌᖍᖎᖏᖐᖑᖒᖓᖔᖕᙱᙲᙳᙴᙵᙶᖖᖗᖘᖙᖚᖛᖜᖝᖞᖟᖠᖡᖢᖣᖤᖥᖦᕼŁł",
+  "x-mac-ce":
+    "ÄĀāÉĄÖÜáąČäčĆćéŹźĎíďĒēĖóėôöõúĚěü†°Ę£§•¶ß®©™ę¨≠ģĮįĪ≤≥īĶ∂∑łĻļĽľĹĺŅņŃ¬√ńŇ∆«»… ňŐÕőŌ–—\u201C\u201D\u2018\u2019÷◊ōŔŕŘ‹›řŖŗŠ‚„šŚśÁŤťÍŽžŪÓÔūŮÚůŰűŲųÝýķŻŁżĢˇ",
+  "x-mac-romanian":
+    "ÄÅÇÉÑÖÜáàâäãåçéèêëíìîïñóòôöõúùûü†°¢£§•¶ß®©™´¨≠ĂȘ∞±≤≥¥µ∂∑∏π∫ªºΩăș¿¡¬√ƒ≈∆«»… ÀÃÕŒœ–—\u201C\u201D\u2018\u2019÷◊ÿŸ⁄€‹›Țț‡·‚„‰ÂÊÁËÈÍÎÏÌÓÔÒÚÛÙıˆ˜¯˘˙˚¸˝˛ˇ",
+  "x-mac-turkish":
+    "ÄÅÇÉÑÖÜáàâäãåçéèêëíìîïñóòôöõúùûü†°¢£§•¶ß®©™´¨≠ÆØ∞±≤≥¥µ∂∑∏π∫ªºΩæø¿¡¬√ƒ≈∆«»… ÀÃÕŒœ–—\u201C\u201D\u2018\u2019÷◊ÿŸĞğİıŞş‡·‚„‰ÂÊÁËÈÍÎÏÌÓÔÒÚÛÙˆ˜¯˘˙˚¸˝˛ˇ",
+};
+
+const encodingCache = new Map<string, Map<number, number>>();
+
+/**
+ * Gets a mapping from unicode code points to encoded byte values for a given encoding.
+ * This is used for fonts that use non-unicode cmap tables.
+ */
+export function getEncodingMapping(encoding: string): Map<number, number> | undefined {
+  const cached = encodingCache.get(encoding);
+  if (cached) {
+    return cached;
+  }
+
+  // These encodings aren't supported by TextDecoder.
+  const mapping = MAC_ENCODINGS[encoding];
+  if (mapping) {
+    const res = new Map<number, number>();
+    for (let i = 0; i < mapping.length; i++) {
+      res.set(mapping.charCodeAt(i), 0x80 + i);
+    }
+    encodingCache.set(encoding, res);
+    return res;
+  }
+
+  // Only single byte encodings can be mapped 1:1.
+  if (SINGLE_BYTE_ENCODINGS.has(encoding)) {
+    // TextEncoder only supports utf8, whereas TextDecoder supports legacy encodings.
+    // Use this to create a mapping of code points.
+    try {
+      const decoder = new TextDecoder(encoding);
+      const bytes = new Uint8Array(0x80);
+      for (let i = 0; i < 0x80; i++) {
+        bytes[i] = 0x80 + i;
+      }
+
+      const res = new Map<number, number>();
+      const s = decoder.decode(bytes);
+      for (let i = 0; i < 0x80; i++) {
+        res.set(s.charCodeAt(i), 0x80 + i);
+      }
+
+      encodingCache.set(encoding, res);
+      return res;
+    } catch {
+      return undefined;
+    }
+  }
+
+  return undefined;
+}
+
+/**
+ * Checks if an encoding is supported.
+ */
+export function encodingExists(encoding: string): boolean {
+  return MAC_ENCODINGS[encoding] !== undefined || SINGLE_BYTE_ENCODINGS.has(encoding);
+}
+
 // Map of platform ids to encoding ids.
 const ENCODINGS: PlatformEncodingMap = [
   // unicode
-  ["utf16be", "utf16be", "utf16be", "utf16be", "utf16be", "utf16be"],
+  ["utf-16be", "utf-16be", "utf-16be", "utf-16be", "utf-16be", "utf-16be", "utf-16be"],
 
   // macintosh
   // Mappings available at http://unicode.org/Public/MAPPINGS/VENDORS/APPLE/
@@ -47,18 +133,18 @@ const ENCODINGS: PlatformEncodingMap = [
   // 15	Telugu	              32	(Uninterpreted)
   // 16	Kannada
   [
-    "macroman",
+    "x-mac-roman",
     "shift-jis",
     "big5",
     "euc-kr",
     "iso-8859-6",
     "iso-8859-8",
-    "macgreek",
-    "maccyrillic",
-    "symbol",
-    "Devanagari",
-    "Gurmukhi",
-    "Gujarati",
+    "x-mac-greek",
+    "x-mac-cyrillic",
+    "x-mac-symbol",
+    "x-mac-devanagari",
+    "x-mac-gurmukhi",
+    "x-mac-gujarati",
     "Oriya",
     "Bengali",
     "Tamil",
@@ -68,57 +154,57 @@ const ENCODINGS: PlatformEncodingMap = [
     "Sinhalese",
     "Burmese",
     "Khmer",
-    "macthai",
+    "iso-8859-11",
     "Laotian",
     "Georgian",
     "Armenian",
-    "gb-2312-80",
+    "gbk",
     "Tibetan",
     "Mongolian",
     "Geez",
-    "maccenteuro",
+    "x-mac-ce",
     "Vietnamese",
     "Sindhi",
   ],
 
   // ISO (deprecated)
-  ["ascii"],
+  ["ascii", null, "iso-8859-1"],
 
   // windows
   // Docs here: http://msdn.microsoft.com/en-us/library/system.text.encoding(v=vs.110).aspx
   [
     "symbol",
-    "utf16be",
+    "utf-16be",
     "shift-jis",
     "gb18030",
     "big5",
-    "wansung",
+    "euc-kr",
     "johab",
     null,
     null,
     null,
-    "utf16be",
+    "utf-16be",
   ],
 ];
 
 // Overrides for Mac scripts by language id.
 // See http://unicode.org/Public/MAPPINGS/VENDORS/APPLE/Readme.txt
 const MAC_LANGUAGE_ENCODINGS: Record<number, string> = {
-  15: "maciceland",
-  17: "macturkish",
-  18: "maccroatian",
-  24: "maccenteuro",
-  25: "maccenteuro",
-  26: "maccenteuro",
-  27: "maccenteuro",
-  28: "maccenteuro",
-  30: "maciceland",
-  37: "macromania",
-  38: "maccenteuro",
-  39: "maccenteuro",
-  40: "maccenteuro",
-  143: "macinuit", // Unsupported by iconv-lite
-  146: "macgaelic", // Unsupported by iconv-lite
+  15: "x-mac-icelandic",
+  17: "x-mac-turkish",
+  18: "x-mac-croatian",
+  24: "x-mac-ce",
+  25: "x-mac-ce",
+  26: "x-mac-ce",
+  27: "x-mac-ce",
+  28: "x-mac-ce",
+  30: "x-mac-icelandic",
+  37: "x-mac-romanian",
+  38: "x-mac-ce",
+  39: "x-mac-ce",
+  40: "x-mac-ce",
+  143: "x-mac-inuit",
+  146: "x-mac-gaelic",
 };
 
 // Map of platform ids to BCP-47 language codes.

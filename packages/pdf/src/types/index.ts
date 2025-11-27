@@ -6,7 +6,7 @@ import Plot from "../utils/elements/plot.js";
 import Point from "../utils/elements/point.js";
 import Rectangle from "../utils/elements/rectangle.js";
 import Segment from "../utils/elements/segment.js";
-export { TransformationMatrix } from "./matrix.js";
+export type { TransformationMatrix } from "./matrix.js";
 
 export type Size = {
   width: number;

@@ -1,19 +1,16 @@
 import { describe, expect, test } from "vitest";
-import { Boolean as BooleanT, DecodeStream, EncodeStream, uint8 } from "../src/index.js";
-import { expectStream } from "./helpers.js";
+import { Boolean as BooleanT, uint8 } from "../src/index.js";
 
 describe("Boolean", () => {
   describe("decode", () => {
     test("should decode 0 as false", () => {
-      const stream = new DecodeStream(Buffer.from([0]));
       const boolean = new BooleanT(uint8);
-      expect(boolean.decode(stream)).to.equal(false);
+      expect(boolean.fromBuffer(new Uint8Array([0]))).to.equal(false);
     });
 
     test("should decode 1 as true", () => {
-      const stream = new DecodeStream(Buffer.from([1]));
       const boolean = new BooleanT(uint8);
-      expect(boolean.decode(stream)).to.equal(true);
+      expect(boolean.fromBuffer(new Uint8Array([1]))).to.equal(true);
     });
   });
 
@@ -25,28 +22,14 @@ describe("Boolean", () => {
   });
 
   describe("encode", () => {
-    test("should encode false as 0", async () => {
-      const stream = new EncodeStream();
+    test("should encode false as 0", () => {
       const boolean = new BooleanT(uint8);
-      const expectation = expectStream(stream, (buf) => {
-        expect(buf).to.deep.equal(Buffer.from([0]));
-      });
-
-      boolean.encode(stream, false);
-      stream.end();
-      await expectation;
+      expect(boolean.toBuffer(false)).to.deep.equal(new Uint8Array([0]));
     });
 
-    test("should encode true as 1", async () => {
-      const stream = new EncodeStream();
+    test("should encode true as 1", () => {
       const boolean = new BooleanT(uint8);
-      const expectation = expectStream(stream, (buf) => {
-        expect(buf).to.deep.equal(Buffer.from([1]));
-      });
-
-      boolean.encode(stream, true);
-      stream.end();
-      await expectation;
+      expect(boolean.toBuffer(true)).to.deep.equal(new Uint8Array([1]));
     });
   });
 });

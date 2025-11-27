@@ -1,4 +1,9 @@
-import iconv from "iconv-lite";
+// Node back-compat.
+const ENCODING_MAPPING: Record<string, string> = {
+  utf16le: "utf-16le",
+  ucs2: "utf-16le",
+  utf16be: "utf-16be",
+};
 
 export default class DecodeStream {
   public static readonly TYPES = {
@@ -16,48 +21,30 @@ export default class DecodeStream {
 
   public pos = 0;
   public length: number;
-  public buffer: Buffer;
+  public buffer: Uint8Array;
+  public view: DataView;
   [key: string]: any;
 
-  constructor(buffer: Buffer) {
-    this.buffer = buffer;
-    this.length = buffer.length;
+  constructor(buffer: Uint8Array | Buffer) {
+    this.buffer = buffer instanceof Uint8Array ? buffer : new Uint8Array(buffer);
+    this.view = new DataView(this.buffer.buffer, this.buffer.byteOffset, this.buffer.byteLength);
+    this.length = this.buffer.length;
   }
 
-  readString(length: number, encoding: string = "ascii"): string | Buffer {
-    switch (encoding) {
-      case "utf16le":
-      case "ucs2":
-      case "utf8":
-      case "ascii":
-        return this.buffer.toString(encoding, this.pos, (this.pos += length));
-      case "utf16be": {
-        const buf = Buffer.from(this.readBuffer(length));
-        for (let i = 0; i < buf.length - 1; i += 2) {
-          const byte = buf[i];
-          buf[i] = buf[i + 1];
-          buf[i + 1] = byte;
-        }
-        return buf.toString("utf16le");
-      }
-      default: {
-        const buf = this.readBuffer(length);
-        if (iconv) {
-          try {
-            return iconv.decode(buf, encoding);
-          } catch {
-            // ignore and fall through to returning the raw buffer
-          }
-        }
-        return buf;
-      }
+  readString(length: number, encoding: string = "ascii"): string | Uint8Array {
+    encoding = ENCODING_MAPPING[encoding] || encoding;
+
+    const buf = this.readBuffer(length);
+    try {
+      const decoder = new TextDecoder(encoding);
+      return decoder.decode(buf);
+    } catch {
+      return buf;
     }
   }
 
-  readBuffer(length: number): Buffer {
-    const start = this.pos;
-    this.pos += length;
-    return this.buffer.slice(start, this.pos);
+  readBuffer(length: number): Uint8Array {
+    return this.buffer.slice(this.pos, (this.pos += length));
   }
 
   readUInt24BE(): number {
@@ -77,22 +64,34 @@ export default class DecodeStream {
   }
 }
 
-const readMethodNames = Object.getOwnPropertyNames(Buffer.prototype).filter((key) =>
-  key.startsWith("read"),
-);
+// Generate read methods from DataView prototype
+for (const key of Object.getOwnPropertyNames(DataView.prototype)) {
+  if (key.slice(0, 3) === "get") {
+    let type = key.slice(3).replace("Ui", "UI");
+    if (type === "Float32") {
+      type = "Float";
+    } else if (type === "Float64") {
+      type = "Double";
+    }
+    const bytes = DecodeStream.TYPES[type as keyof typeof DecodeStream.TYPES];
+    if (!bytes) {
+      continue;
+    }
 
-for (const key of readMethodNames) {
-  const baseName = key.replace(/read|[BL]E/g, "");
-  const bytes = DecodeStream.TYPES[baseName as keyof typeof DecodeStream.TYPES];
-  if (!bytes) {
-    continue;
-  }
-
-  Object.defineProperty(DecodeStream.prototype, key, {
-    value(this: DecodeStream) {
-      const result = (this.buffer as any)[key](this.pos);
+    (DecodeStream.prototype as any)["read" + type + (bytes === 1 ? "" : "BE")] = function (
+      this: DecodeStream,
+    ) {
+      const ret = (this.view as any)[key](this.pos, false);
       this.pos += bytes;
-      return result;
-    },
-  });
+      return ret;
+    };
+
+    if (bytes !== 1) {
+      (DecodeStream.prototype as any)["read" + type + "LE"] = function (this: DecodeStream) {
+        const ret = (this.view as any)[key](this.pos, true);
+        this.pos += bytes;
+        return ret;
+      };
+    }
+  }
 }

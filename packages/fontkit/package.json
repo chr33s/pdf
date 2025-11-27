@@ -7,13 +7,15 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
+      "browser": "./dist/index.min.mjs",
       "default": "./dist/index.js"
     }
   },
   "scripts": {
-    "build": "npm run generate && tsc && npm run copy:shaper-data",
+    "build": "npm run generate && tsc && npm run copy:shaper-data && npm run build:browser && tsdown && npm run copy:wasm",
     "clean": "rm -rf dist src/opentype/shapers/*.json src/opentype/shapers/*-data.js",
     "copy:shaper-data": "node ./scripts/copy-shaper-json.ts",
+    "copy:wasm": "cp ../brotli/dist/brotli.wasm dist/brotli.wasm",
     "generate": "node src/opentype/shapers/generate-data.ts && node src/opentype/shapers/gen-use.ts && node src/opentype/shapers/gen-indic.ts",
     "test": "vitest run",
     "typecheck": "tsc --project tsconfig.typecheck.json"
@@ -28,7 +30,6 @@
     "base64-arraybuffer": "^1.0.2",
     "clone": "^2.1.2",
     "deep-equal": "^2.2.3",
-    "iconv-lite": "^0.7.0",
     "pako": "^2.1.0"
   },
   "devDependencies": {
@@ -40,6 +41,7 @@
     "@types/pako": "^2.0.4",
     "@vitest/coverage-v8": "^4.0.14",
     "concat-stream": "^2.0.0",
+    "tsdown": "^0.16.7",
     "typescript": "^5.9.3",
     "vitest": "^4.0.12"
   },

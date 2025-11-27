@@ -14,7 +14,6 @@
 
 ## TODO
 
-- [ ] tsdown esm .min version for packages/[fontkit,pdf] as exports#browser and use in apps/*
 - [ ] Audit dependencies
 
 node-html-better-parser -> node-html-parser

@@ -157,11 +157,11 @@ export default class CFFIndex<T = Buffer> {
     }
   }
 
-  #ensureBuffer(value: T): Buffer {
-    if (Buffer.isBuffer(value)) {
+  #ensureBuffer(value: T): Uint8Array {
+    if (value instanceof Uint8Array) {
       return value;
     }
 
-    throw new Error("CFFIndex expects Buffer values when no type is provided");
+    throw new Error("CFFIndex expects Uint8Array values when no type is provided");
   }
 }

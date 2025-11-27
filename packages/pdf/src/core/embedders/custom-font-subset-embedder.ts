@@ -1,6 +1,6 @@
 import { Font, Fontkit, Glyph, Subset, TypeFeatures } from "../../types/fontkit.js";
 
-import { Cache, mergeUint8Arrays, toHexStringOfMinLength } from "../../utils/index.js";
+import { Cache, toHexStringOfMinLength } from "../../utils/index.js";
 import PDFHexString from "../objects/pdf-hex-string.js";
 import CustomFontEmbedder from "./custom-font-embedder.js";
 
@@ -65,14 +65,7 @@ class CustomFontSubsetEmbedder extends CustomFontEmbedder {
   }
 
   protected serializeFont(): Promise<Uint8Array> {
-    return new Promise((resolve, reject) => {
-      const parts: Uint8Array[] = [];
-      this.#subset
-        .encodeStream()
-        .on("data", (bytes) => parts.push(bytes))
-        .on("end", () => resolve(mergeUint8Arrays(parts)))
-        .on("error" as any, (err) => reject(err));
-    });
+    return Promise.resolve(this.#subset.encodeBuffer());
   }
 }
 

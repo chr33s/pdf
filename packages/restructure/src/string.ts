@@ -58,14 +58,23 @@ function encodingWidth(encoding: string): number {
   }
 }
 
-function encodingForByteLength(encoding: string): BufferEncoding {
-  if (encoding === "utf16be") {
-    return "utf16le";
+const textEncoder = new TextEncoder();
+
+function byteLength(string: string, encoding: string): number {
+  switch (encoding) {
+    case "utf8":
+      return textEncoder.encode(string).length;
+    case "utf16le":
+    case "utf16be":
+    case "ucs2":
+      return string.length * 2;
+    case "ascii":
+    default:
+      return string.length;
   }
-  return encoding as BufferEncoding;
 }
 
-export default class StringT extends Base<string | Buffer> {
+export default class StringT extends Base<string | Uint8Array> {
   public length?: LengthLike;
   public encoding: EncodingResolver;
 
@@ -75,7 +84,7 @@ export default class StringT extends Base<string | Buffer> {
     this.encoding = encoding;
   }
 
-  decode(stream: DecodeStream, parent?: any): string | Buffer {
+  decode(stream: DecodeStream, parent?: any): string | Uint8Array {
     const encoding = resolveEncodingValue(this.encoding, parent);
     const width = encodingWidth(encoding);
 
@@ -111,7 +120,7 @@ export default class StringT extends Base<string | Buffer> {
     }
 
     const encoding = resolveEncodingValue(this.encoding, parent, true);
-    let size = Buffer.byteLength(value, encodingForByteLength(encoding));
+    let size = byteLength(value, encoding);
 
     if (this.length instanceof NumberT) {
       size += this.length.size();
@@ -129,8 +138,7 @@ export default class StringT extends Base<string | Buffer> {
     const width = encodingWidth(encoding);
 
     if (this.length instanceof NumberT) {
-      const byteLengthEncoding = encodingForByteLength(encoding);
-      this.length.encode(stream, Buffer.byteLength(value, byteLengthEncoding));
+      this.length.encode(stream, byteLength(value, encoding));
     }
 
     stream.writeString(value, encoding);

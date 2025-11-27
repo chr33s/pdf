@@ -1,30 +1,10 @@
 import { playwright } from "@vitest/browser-playwright";
-import { existsSync, readFileSync } from "fs";
+import { readFileSync } from "fs";
 import { resolve } from "path";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
-import { defineConfig, Plugin } from "vitest/config";
+import { defineConfig } from "vitest/config";
 
 const repoRoot = resolve(__dirname, "../..");
-
-// Custom plugin to serve files from repo root
-function serveRepoRoot(): Plugin {
-  return {
-    name: "serve-repo-root",
-    configureServer(server) {
-      server.middlewares.use((req, res, next) => {
-        if (req.url?.startsWith("/packages/")) {
-          const filePath = resolve(repoRoot, req.url.slice(1));
-          if (existsSync(filePath)) {
-            const content = readFileSync(filePath);
-            res.end(content);
-            return;
-          }
-        }
-        next();
-      });
-    },
-  };
-}
 
 export default defineConfig({
   plugins: [
@@ -36,17 +16,40 @@ export default defineConfig({
       },
       protocolImports: true,
     }),
-    serveRepoRoot(),
+    {
+      name: "serve-pdf-assets",
+      configureServer(server) {
+        server.middlewares.use((req, res, next) => {
+          if (req.url?.startsWith("/packages/pdf/assets/")) {
+            const assetPath = resolve(repoRoot, req.url.slice(1));
+            try {
+              const content = readFileSync(assetPath);
+              res.setHeader("Content-Type", "application/octet-stream");
+              res.end(content);
+            } catch {
+              next();
+            }
+          } else if (req.url?.endsWith("brotli.wasm")) {
+            // Serve the brotli.wasm file from wherever it's requested
+            const wasmPath = resolve(repoRoot, "packages/brotli/dist/brotli.wasm");
+            try {
+              const content = readFileSync(wasmPath);
+              res.setHeader("Content-Type", "application/wasm");
+              res.end(content);
+            } catch {
+              next();
+            }
+          } else {
+            next();
+          }
+        });
+      },
+    },
   ],
   server: {
     fs: {
       allow: [repoRoot],
       strict: false,
-    },
-  },
-  build: {
-    commonjsOptions: {
-      transformMixedEsModules: true,
     },
   },
   test: {
@@ -61,33 +64,9 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@chr33s/pdf": resolve(__dirname, "../../packages/pdf/dist/index.js"),
-      "@chr33s/fontkit": resolve(__dirname, "../../packages/fontkit/dist/index.js"),
-    },
-  },
-  optimizeDeps: {
-    include: [
-      "buffer",
-      "iconv-lite",
-      "safer-buffer",
-      "color",
-      "node-html-better-parser",
-      "pako",
-      "crypto-js",
-      "clone",
-      "base64-arraybuffer",
-      "deep-equal",
-      "vite-plugin-node-polyfills/shims/buffer",
-      "vite-plugin-node-polyfills/shims/global",
-      "vite-plugin-node-polyfills/shims/process",
-      "node:stream",
-      "node:util",
-      "module",
-    ],
-    esbuildOptions: {
-      define: {
-        global: "globalThis",
-      },
+      "@chr33s/pdf": resolve(__dirname, "../../packages/pdf/dist/index.min.js"),
+      "@chr33s/fontkit": resolve(__dirname, "../../packages/fontkit/dist/index.min.js"),
+      "/packages/pdf/assets": resolve(__dirname, "../../packages/pdf/assets"),
     },
   },
 });

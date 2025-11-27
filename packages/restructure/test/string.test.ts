@@ -1,13 +1,11 @@
 import { describe, expect, test } from "vitest";
-import { DecodeStream, EncodeStream, String as StringT, uint8 } from "../src/index.js";
-import { expectStream } from "./helpers.js";
+import { DecodeStream, String as StringT, uint8 } from "../src/index.js";
 
 describe("String", () => {
   describe("decode", () => {
     test("should decode fixed length", () => {
-      const stream = new DecodeStream(Buffer.from("testing"));
       const string = new StringT(7);
-      expect(string.decode(stream)).to.equal("testing");
+      expect(string.fromBuffer(Buffer.from("testing"))).to.equal("testing");
     });
 
     test("should decode length from parent key", () => {
@@ -17,21 +15,18 @@ describe("String", () => {
     });
 
     test("should decode length as number before string", () => {
-      const stream = new DecodeStream(Buffer.from("\x07testing", "binary"));
       const string = new StringT(uint8);
-      expect(string.decode(stream)).to.equal("testing");
+      expect(string.fromBuffer(Buffer.from("\x07testing", "binary"))).to.equal("testing");
     });
 
     test("should decode utf8", () => {
-      const stream = new DecodeStream(Buffer.from("🍻"));
       const string = new StringT(4, "utf8");
-      expect(string.decode(stream)).to.equal("🍻");
+      expect(string.fromBuffer(Buffer.from("🍻"))).to.equal("🍻");
     });
 
     test("should decode encoding computed from function", () => {
-      const stream = new DecodeStream(Buffer.from("🍻"));
       const string = new StringT(4, () => "utf8");
-      expect(string.decode(stream)).to.equal("🍻");
+      expect(string.fromBuffer(Buffer.from("🍻"))).to.equal("🍻");
     });
 
     test("should decode null-terminated string and read past terminator", () => {
@@ -42,9 +37,8 @@ describe("String", () => {
     });
 
     test("should decode remainder of buffer when null-byte missing", () => {
-      const stream = new DecodeStream(Buffer.from("🍻"));
       const string = new StringT(undefined, "utf8");
-      expect(string.decode(stream)).to.equal("🍻");
+      expect(string.fromBuffer(Buffer.from("🍻"))).to.equal("🍻");
     });
   });
 
@@ -86,76 +80,34 @@ describe("String", () => {
   });
 
   describe("encode", () => {
-    test("should encode using string length", async () => {
-      const stream = new EncodeStream();
-      const expectation = expectStream(stream, (buf) => {
-        expect(buf).to.deep.equal(Buffer.from("testing"));
-      });
-
+    test("should encode using string length", () => {
       const string = new StringT(7);
-      string.encode(stream, "testing");
-      stream.end();
-      await expectation;
+      expect(string.toBuffer("testing")).to.deep.equal(Buffer.from("testing"));
     });
 
-    test("should encode length as number before string", async () => {
-      const stream = new EncodeStream();
-      const expectation = expectStream(stream, (buf) => {
-        expect(buf).to.deep.equal(Buffer.from("\x07testing", "binary"));
-      });
-
+    test("should encode length as number before string", () => {
       const string = new StringT(uint8);
-      string.encode(stream, "testing");
-      stream.end();
-      await expectation;
+      expect(string.toBuffer("testing")).to.deep.equal(Buffer.from("\x07testing", "binary"));
     });
 
-    test("should encode length as number before utf8 string", async () => {
-      const stream = new EncodeStream();
-      const expectation = expectStream(stream, (buf) => {
-        expect(buf).to.deep.equal(Buffer.from("\x0ctesting 😜", "utf8"));
-      });
-
+    test("should encode length as number before utf8 string", () => {
       const string = new StringT(uint8, "utf8");
-      string.encode(stream, "testing 😜");
-      stream.end();
-      await expectation;
+      expect(string.toBuffer("testing 😜")).to.deep.equal(Buffer.from("\x0ctesting 😜", "utf8"));
     });
 
-    test("should encode utf8", async () => {
-      const stream = new EncodeStream();
-      const expectation = expectStream(stream, (buf) => {
-        expect(buf).to.deep.equal(Buffer.from("🍻"));
-      });
-
+    test("should encode utf8", () => {
       const string = new StringT(4, "utf8");
-      string.encode(stream, "🍻");
-      stream.end();
-      await expectation;
+      expect(string.toBuffer("🍻")).to.deep.equal(Buffer.from("🍻"));
     });
 
-    test("should encode encoding computed from function", async () => {
-      const stream = new EncodeStream();
-      const expectation = expectStream(stream, (buf) => {
-        expect(buf).to.deep.equal(Buffer.from("🍻"));
-      });
-
+    test("should encode encoding computed from function", () => {
       const string = new StringT(4, () => "utf8");
-      string.encode(stream, "🍻");
-      stream.end();
-      await expectation;
+      expect(string.toBuffer("🍻")).to.deep.equal(Buffer.from("🍻"));
     });
 
-    test("should encode null-terminated string", async () => {
-      const stream = new EncodeStream();
-      const expectation = expectStream(stream, (buf) => {
-        expect(buf).to.deep.equal(Buffer.from("🍻\x00"));
-      });
-
+    test("should encode null-terminated string", () => {
       const string = new StringT(undefined, "utf8");
-      string.encode(stream, "🍻");
-      stream.end();
-      await expectation;
+      expect(string.toBuffer("🍻")).to.deep.equal(Buffer.from("🍻\x00"));
     });
   });
 });

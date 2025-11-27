@@ -13,7 +13,7 @@ type HmtxTable = { metrics: MetricRecord[]; bearings: number[] };
 
 export default class TTFSubset extends Subset<TTFFont> {
   private readonly glyphEncoder: TTFGlyphEncoder;
-  private glyf: Buffer[] = [];
+  private glyf: Uint8Array[] = [];
   private offset = 0;
   private loca: LocaTable = { offsets: [] };
   private hmtx: HmtxTable = { metrics: [], bearings: [] };
@@ -42,10 +42,11 @@ export default class TTFSubset extends Subset<TTFFont> {
 
     // if it is a compound glyph, include its components
     if (glyf && glyf.numberOfContours < 0) {
-      buffer = Buffer.from(buffer);
+      buffer = new Uint8Array(buffer);
+      const view = new DataView(buffer.buffer, buffer.byteOffset, buffer.byteLength);
       for (let component of glyf.components) {
         gid = this.includeGlyph(component.glyphID);
-        buffer.writeUInt16BE(gid, component.pos);
+        view.setUint16(component.pos, gid, false); // big endian
       }
     } else if (glyf && this.font._variationProcessor) {
       // If this is a TrueType variation glyph, re-encode the path

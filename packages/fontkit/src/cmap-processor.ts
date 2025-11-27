@@ -1,8 +1,6 @@
 import { cache } from "./decorators.js";
-import { getEncoding } from "./encodings.js";
+import { encodingExists, getEncoding, getEncodingMapping } from "./encodings.js";
 import { binarySearch, range } from "./utils.js";
-
-import iconv from "iconv-lite";
 
 type LazyArrayLike<T> = {
   get(index: number): T;
@@ -126,7 +124,7 @@ function isVariationSelectorTable(table: AnyCmapSubtable | null): table is CmapF
 
 export default class CmapProcessor {
   #cmap!: PrimaryCmapSubtable;
-  #encoding: string | null;
+  #encoding: Map<number, number> | null;
   #uvs: CmapFormat14Subtable | null;
 
   constructor(cmapTable: CmapTable) {
@@ -149,9 +147,8 @@ export default class CmapProcessor {
       this.#cmap = unicodeCmap;
     }
 
-    // If no unicode cmap was found, and iconv-lite is installed,
-    // take the first table with a supported encoding.
-    if (!this.#cmap && iconv) {
+    // If no unicode cmap was found, take the first table with a supported encoding.
+    if (!this.#cmap) {
       for (const cmap of cmapTable.tables) {
         if (!cmap.table) {
           continue;
@@ -163,10 +160,13 @@ export default class CmapProcessor {
           (cmap.table.language ?? 0) - 1,
         );
 
-        if (encoding && iconv.encodingExists(encoding)) {
-          this.#cmap = cmap.table as PrimaryCmapSubtable;
-          this.#encoding = encoding;
-          break;
+        if (encoding && encodingExists(encoding)) {
+          const mapping = getEncodingMapping(encoding);
+          if (mapping) {
+            this.#cmap = cmap.table as PrimaryCmapSubtable;
+            this.#encoding = mapping;
+            break;
+          }
         }
       }
     }
@@ -213,11 +213,7 @@ export default class CmapProcessor {
     // If there is no Unicode cmap in this font, we need to re-encode
     // the codepoint in the encoding that the cmap supports.
     if (this.#encoding) {
-      const buf = iconv.encode(String.fromCodePoint(codepoint), this.#encoding);
-      codepoint = 0;
-      for (let i = 0; i < buf.length; i++) {
-        codepoint = (codepoint << 8) | buf[i];
-      }
+      codepoint = this.#encoding.get(codepoint) ?? codepoint;
 
       // Otherwise, try to get a Unicode variation selector for this codepoint if one is provided.
     } else if (variationSelector) {

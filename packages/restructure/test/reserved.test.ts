@@ -1,6 +1,5 @@
 import { describe, expect, test } from "vitest";
 import { DecodeStream, EncodeStream, Reserved, uint16, uint8 } from "../src/index.js";
-import { expectStream } from "./helpers.js";
 
 describe("Reserved", () => {
   test("should have a default count of 1", () => {
@@ -14,21 +13,16 @@ describe("Reserved", () => {
   });
 
   test("should decode", () => {
-    const stream = new DecodeStream(Buffer.from([0, 0]));
+    const stream = new DecodeStream(new Uint8Array([0, 0]));
     const reserved = new Reserved(uint16);
     expect(reserved.decode(stream)).to.equal(undefined);
     expect(stream.pos).to.equal(2);
   });
 
-  test("should encode", async () => {
-    const stream = new EncodeStream();
+  test("should encode", () => {
     const reserved = new Reserved(uint16);
-    const expectation = expectStream(stream, (buf) => {
-      expect(buf).to.deep.equal(Buffer.from([0, 0]));
-    });
-
+    const stream = new EncodeStream(new Uint8Array(2));
     reserved.encode(stream);
-    stream.end();
-    await expectation;
+    expect(stream.buffer).to.deep.equal(new Uint8Array([0, 0]));
   });
 });
