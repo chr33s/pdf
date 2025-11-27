@@ -1,5 +1,6 @@
 {
 	"deno.enable": true,
+	"deno.enablePaths": ["./apps/deno"],
 	"editor.codeActionsOnSave": {
 		"source.fixAll": "always",
 		"source.organizeImports": "always"

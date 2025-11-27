@@ -5,6 +5,8 @@
     "all": "run () { for cmd in clean build check test; do npm run workspace -- \"$cmd\" || return $?; done; }; run",
     "check": "oxfmt --check && oxlint --type-aware",
     "fix": "oxfmt && oxlint --type-aware --fix",
+    "test:apps": "cd deno && deno task test && cd .. && npm run test --prefix=./node && npm run test --prefix=./react-native ** npm run test --prefix=./web",
+    "test:in-docker": "docker buildx build --tag pdf . --load",
     "workspace": "run () { for pkg in brotli codepoints dfa restructure standard-fonts tiny-inflate unicode-trie unicode-properties upng fontkit pdf; do npm --workspace=packages/$pkg run \"$@\" --if-present || return $?; done; }; run \"$@\""
   },
   "packageManager": "npm@10.0.0+",

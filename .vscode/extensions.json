@@ -1,5 +1,6 @@
 {
 	"recommendations": [
+		"denoland.vscode-deno",
 		"oxc.oxc-vscode"
 	]
 }

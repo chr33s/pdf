@@ -46,14 +46,7 @@
     "scratchpad:start": "tsc --build scratchpad/tsconfig.json --watch",
     "scratchpad:run": "node scratchpad/build/scratchpad/index.js",
     "scratchpad:flame": "rm -rf isolate*.log && node --prof scratchpad/build/scratchpad/index.js && node --prof-process --preprocess -j isolate*.log | flamebearer",
-    "verify": "node scripts/verify-stream-fixtures.ts",
-    "apps:node": "tsc --build apps/node/tsconfig.json && node apps/node-build/index.js",
-    "apps:deno": "deno run --allow-read --allow-write --allow-run apps/deno/index.ts",
-    "apps:web": "http-server -c-1 .",
-    "apps:web:mac": "bash -c 'sleep 1 && open http://localhost:8080/apps/web/test1.html' & npm run apps:web",
-    "apps:rn:ios": "cd apps/rn && npm run add ./../.. --force && react-native run-ios",
-    "apps:rn:android": "npm run apps:rn:emulator & cd apps/rn && npm run add ./../.. --force && react-native run-android",
-    "apps:rn:emulator": "emulator -avd \"$(emulator -list-avds | head -n 1)\" & bash -c 'sleep 5 && adb reverse tcp:8080 tcp:8080 && adb reverse tcp:8081 tcp:8081'"
+    "verify": "node scripts/verify-stream-fixtures.ts"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

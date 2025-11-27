@@ -1,0 +1,12 @@
+{
+  "type": "module",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@chris/pdf": "../../packages/pdf/src/index.js"
+  },
+  "devDependencies": {
+    "vitest": "^4.0.14"
+  }
+}

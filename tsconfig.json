@@ -17,6 +17,9 @@
     "forceConsistentCasingInFileNames": true,
   },
   "exclude": [
-     "**/dist"
+     "**/dist",
+     "**/vendor",
+     "apps/web",
+     "packages/dfa"
   ]
 }

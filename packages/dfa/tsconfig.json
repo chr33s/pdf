@@ -7,7 +7,7 @@
   },
   "include": [
     "dfa.d.ts",
-    "src/**/*"
+    "src/**/*.ts"
   ],
   "exclude": [
     "dist"
