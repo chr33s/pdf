@@ -2,12 +2,12 @@
 
 - [@chr33s/brotli](./packages/brotli/)
 - [@chr33s/codepoints](./packages/codepoints/)
+- [@chr33s/compression](./packages/compression/)
 - [@chr33s/dfa](./packages/dfa/)
 - [@chr33s/font-kit](./packages/fontkit/)
 - [@chr33s/pdf](./packages/pdf/)
 - [@chr33s/restructure](./packages/restructure/)
 - [@chr33s/standard-fonts](./packages/standard-fonts/)
-- [@chr33s/tiny-inflate](./packages/tiny-inflate/)
 - [@chr33s/unicode-properties](./packages/unicode-properties/)
 - [@chr33s/unicode-trie](./packages/unicode-trie/)
 - [@chr33s/upng](./packages/upng/)
@@ -19,8 +19,6 @@
 node-html-better-parser -> node-html-parser
 crypto-js -> crypto.subtle
 deep-equal -> fast-deep-equal
-tiny-inflate -> pako | fflate
-pako -> fflate | DecompressionStream (!support:react-native)
 brotli -> https://github.com/google/brotli/blob/master/js/
 
 ## Notes

@@ -82,7 +82,7 @@ interface FontkitRegistry {
   create(
     data: Buffer | ArrayBuffer | Uint8Array,
     postscriptName?: VariationSettings | string,
-  ): FontInstance;
+  ): Promise<FontInstance>;
 }
 
 const formats: FontConstructor[] = [];
@@ -110,6 +110,13 @@ function getNamedFormat(format: FontConstructor): FontConstructor {
   return NamedFormat;
 }
 
+// Lazy initialization function - will be set by index.ts
+let initFn: (() => Promise<unknown>) | null = null;
+
+export function setInitializer(fn: () => Promise<unknown>): void {
+  initFn = fn;
+}
+
 const fontkit: FontkitRegistry & {
   defaultLanguage: string;
   setDefaultLanguage: (lang?: string) => void;
@@ -125,7 +132,12 @@ const fontkit: FontkitRegistry & {
     formats.push(getNamedFormat(format));
   },
 
-  create: (uint8ArrayFontData, postscriptName) => {
+  create: async (uint8ArrayFontData, postscriptName) => {
+    // Auto-initialize shapers on first use
+    if (initFn) {
+      await initFn();
+    }
+
     const normalizedData =
       uint8ArrayFontData instanceof ArrayBuffer
         ? new Uint8Array(uint8ArrayFontData)
@@ -134,7 +146,13 @@ const fontkit: FontkitRegistry & {
     for (let i = 0; i < formats.length; i++) {
       const format = formats[i];
       if (format.probe(buffer)) {
-        const font = new format(new r.DecodeStream(buffer));
+        const font = new format(new r.DecodeStream(buffer)) as FontInstance & {
+          init?: () => Promise<void>;
+        };
+        // Initialize async resources if the font has an init method (e.g., WOFF)
+        if (typeof font.init === "function") {
+          await font.init();
+        }
         if (postscriptName) {
           const resolvedFont = font.getFont(postscriptName);
           if (!resolvedFont) {

@@ -3,12 +3,12 @@
 // from Unicode properties (currently just for the Arabic shaper).
 //
 import codepoints from "@chr33s/codepoints";
+import { deflate } from "@chr33s/compression";
 import { builder as UnicodeTrieBuilder } from "@chr33s/unicode-trie";
 import * as base64 from "base64-arraybuffer";
 import fs from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import pako from "pako";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -45,7 +45,7 @@ for (let i = 0; i < codepoints.length; i++) {
 // Trie is serialized suboptimally as JSON so it can be loaded via require,
 // allowing unicode-properties to work in the browser
 const filePath = join(__dirname, "trie.json");
-const compressedTrie = pako.deflate(trie.toBuffer());
+const compressedTrie = await deflate(await trie.toBuffer());
 const jsonBase64DeflatedTrie = JSON.stringify(base64.encode(toArrayBuffer(compressedTrie)));
 await fs.writeFile(filePath, jsonBase64DeflatedTrie);
 

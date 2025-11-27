@@ -1,9 +1,9 @@
 import codePoints from "@chr33s/codepoints";
+import { deflate } from "@chr33s/compression";
 import { builder as UnicodeTrieBuilder } from "@chr33s/unicode-trie";
 import base64 from "base64-arraybuffer";
 import { writeFile } from "node:fs/promises";
 import path from "node:path";
-import pako from "pako";
 
 type IndexLookup = Record<string, number>;
 
@@ -117,8 +117,8 @@ for (const entry of entries) {
   trie.set(entry.code, val);
 }
 
-const trieBuffer = trie.toBuffer();
-const compressedTrie = pako.deflate(trieBuffer);
+const trieBuffer = await trie.toBuffer();
+const compressedTrie = await deflate(trieBuffer);
 const triePayload = base64.encode(
   compressedTrie.buffer.slice(
     compressedTrie.byteOffset,
@@ -140,7 +140,7 @@ const data = {
 };
 
 const dataBytes = encoder.encode(JSON.stringify(data));
-const compressedData = pako.deflate(dataBytes);
+const compressedData = await deflate(dataBytes);
 const dataPayload = base64.encode(
   compressedData.buffer.slice(
     compressedData.byteOffset,

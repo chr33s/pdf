@@ -34,7 +34,7 @@
     "conversion"
   ],
   "dependencies": {
-    "pako": "^2.1.0"
+    "@chr33s/compression": "file:../compression"
   },
   "devDependencies": {
     "typescript": "^5.9.3",

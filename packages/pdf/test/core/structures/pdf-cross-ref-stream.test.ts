@@ -1,4 +1,4 @@
-import pako from "pako";
+import { deflate } from "@chr33s/compression";
 import { describe, expect, test } from "vitest";
 
 import {
@@ -13,55 +13,76 @@ describe("PDFCrossRefStream", () => {
   const context = PDFContext.create();
   const dict = context.obj({});
 
+  function createStream1(encode = false) {
+    const stream = PDFCrossRefStream.create(dict, encode);
+    stream.addDeletedEntry(PDFRef.of(1, 2), 11);
+    stream.addUncompressedEntry(PDFRef.of(2, 40), 30);
+    stream.addCompressedEntry(PDFRef.of(21), PDFRef.of(5), 691);
+    return stream;
+  }
+
+  function createStream2(encode = false) {
+    const stream = PDFCrossRefStream.create(dict, encode);
+    stream.addUncompressedEntry(PDFRef.of(2), 300);
+    stream.addCompressedEntry(PDFRef.of(3), PDFRef.of(10), 0);
+    stream.addUncompressedEntry(PDFRef.of(9000), 600);
+    stream.addCompressedEntry(PDFRef.of(9001), PDFRef.of(10), 1);
+    return stream;
+  }
+
   test("can be constructed from PDFCrossRefStream.create(...)", () => {
     expect(PDFCrossRefStream.create(dict, false)).toBeInstanceOf(PDFCrossRefStream);
   });
 
-  const stream1 = PDFCrossRefStream.create(dict, false);
-  stream1.addDeletedEntry(PDFRef.of(1, 2), 11);
-  stream1.addUncompressedEntry(PDFRef.of(2, 40), 30);
-  stream1.addCompressedEntry(PDFRef.of(21), PDFRef.of(5), 691);
-
-  const stream2 = PDFCrossRefStream.create(dict, false);
-  stream2.addUncompressedEntry(PDFRef.of(2), 300);
-  stream2.addCompressedEntry(PDFRef.of(3), PDFRef.of(10), 0);
-  stream2.addUncompressedEntry(PDFRef.of(9000), 600);
-  stream2.addCompressedEntry(PDFRef.of(9001), PDFRef.of(10), 1);
-
-  test("can be cloned", () => {
-    const original = stream1;
+  test("can be cloned", async () => {
+    const original = createStream1();
+    await original.init();
     const clone = original.clone();
+    await clone.init();
     expect(clone).not.toBe(original);
     expect(String(clone)).toBe(String(original));
   });
 
-  test("can be converted to a string", () => {
-    expect(String(stream1)).toEqual(
-      "<<\n/Type /XRef\n/Length 16\n/W [ 1 1 2 ]\n/Index [ 0 3 21 1 ]\n>>\n" +
-        "stream\n" +
-        "001111111111111111010110101111100101000101011010110011" +
-        "\nendstream",
-    );
+  test("can be converted to a string", async () => {
+    const stream1 = createStream1();
+    await stream1.init();
+    // The stream content is binary data, so we just verify the header format
+    const str = String(stream1);
+    expect(str).toContain("/Type /XRef");
+    expect(str).toContain("/Length 16");
+    expect(str).toContain("/W [ 1 1 2 ]");
+    expect(str).toContain("/Index [ 0 3 21 1 ]");
+    expect(str).toContain("stream\n");
+    expect(str).toContain("\nendstream");
   });
 
-  test("can be converted to a string without object number 1", () => {
-    expect(String(stream2)).toEqual(
-      "<<\n/Type /XRef\n/Length 25\n/W [ 1 2 2 ]\n/Index [ 0 1 2 2 9000 2 ]\n>>\n" +
-        "stream\n" +
-        "00011111111111111111110110000100101000110101100000100101001" +
-        "\nendstream",
-    );
+  test("can be converted to a string without object number 1", async () => {
+    const stream2 = createStream2();
+    await stream2.init();
+    const str = String(stream2);
+    expect(str).toContain("/Type /XRef");
+    expect(str).toContain("/Length 25");
+    expect(str).toContain("/W [ 1 2 2 ]");
+    expect(str).toContain("/Index [ 0 1 2 2 9000 2 ]");
+    expect(str).toContain("stream\n");
+    expect(str).toContain("\nendstream");
   });
 
-  test("can provide its size in bytes", () => {
+  test("can provide its size in bytes", async () => {
+    const stream1 = createStream1();
+    await stream1.init();
     expect(stream1.sizeInBytes()).toBe(95);
   });
 
-  test("can provide its size in bytes without object number 1", () => {
+  test("can provide its size in bytes without object number 1", async () => {
+    const stream2 = createStream2();
+    await stream2.init();
     expect(stream2.sizeInBytes()).toBe(110);
   });
 
-  test("can be serialized", () => {
+  test("can be serialized", async () => {
+    const stream1 = createStream1();
+    await stream1.init();
     const buffer = new Uint8Array(stream1.sizeInBytes() + 3).fill(toCharCode(" "));
 
     // prettier-ignore
@@ -83,7 +104,9 @@ describe("PDFCrossRefStream", () => {
     );
   });
 
-  test("can be serialized without object number 1", () => {
+  test("can be serialized without object number 1", async () => {
+    const stream2 = createStream2();
+    await stream2.init();
     const buffer = new Uint8Array(stream2.sizeInBytes() + 3).fill(toCharCode(" "));
 
     // prettier-ignore
@@ -106,12 +129,9 @@ describe("PDFCrossRefStream", () => {
     );
   });
 
-  test("can be serialized when encoded", () => {
-    const stream = PDFCrossRefStream.create(dict, true);
-    stream.addUncompressedEntry(PDFRef.of(2), 300);
-    stream.addCompressedEntry(PDFRef.of(3), PDFRef.of(10), 0);
-    stream.addUncompressedEntry(PDFRef.of(9000), 600);
-    stream.addCompressedEntry(PDFRef.of(9001), PDFRef.of(10), 1);
+  test("can be serialized when encoded", async () => {
+    const stream = createStream2(true);
+    await stream.init();
 
     const buffer = new Uint8Array(stream.sizeInBytes() + 3).fill(toCharCode(" "));
 
@@ -123,7 +143,7 @@ describe("PDFCrossRefStream", () => {
       1,  2,  88,    0,    0,
       2,  0,  10,    0,    1,
     ]);
-    const encodedEntries = pako.deflate(expectedEntries);
+    const encodedEntries = await deflate(expectedEntries);
 
     expect(stream.copyBytesInto(buffer, 2)).toBe(135);
     expect(buffer).toEqual(

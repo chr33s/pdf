@@ -1,6 +1,6 @@
+import { PNG } from "../../utils/png.js";
 import PDFRef from "../objects/pdf-ref.js";
 import PDFContext from "../pdf-context.js";
-import { PNG } from "../../utils/png.js";
 
 /**
  * A note of thanks to the developers of https://github.com/foliojs/pdfkit, as
@@ -29,9 +29,9 @@ class PngEmbedder {
   }
 
   async embedIntoContext(context: PDFContext, ref?: PDFRef): Promise<PDFRef> {
-    const SMask = this.#embedAlphaChannel(context);
+    const SMask = await this.#embedAlphaChannel(context);
 
-    const xObject = context.flateStream(this.#image.rgbChannel, {
+    const xObject = await context.flateStream(this.#image.rgbChannel, {
       Type: "XObject",
       Subtype: "Image",
       BitsPerComponent: this.#image.bitsPerComponent,
@@ -49,10 +49,10 @@ class PngEmbedder {
     }
   }
 
-  #embedAlphaChannel(context: PDFContext): PDFRef | undefined {
+  async #embedAlphaChannel(context: PDFContext): Promise<PDFRef | undefined> {
     if (!this.#image.alphaChannel) return undefined;
 
-    const xObject = context.flateStream(this.#image.alphaChannel, {
+    const xObject = await context.flateStream(this.#image.alphaChannel, {
       Type: "XObject",
       Subtype: "Image",
       Height: this.#image.height,

@@ -1,4 +1,4 @@
-import inflate from "@chr33s/tiny-inflate";
+import { inflateRaw } from "@chr33s/compression";
 import { swap32LE } from "./swap.js";
 
 export type UnicodeTrieJSON = {
@@ -68,34 +68,53 @@ class UnicodeTrie {
   readonly highStart: number;
   readonly errorValue: number;
 
-  constructor(source: UnicodeTrieInit) {
-    if (isUnicodeTrieJSON(source)) {
-      const typedData =
-        source.data instanceof Uint32Array ? source.data : new Uint32Array(source.data);
-      this.data = typedData;
-      this.highStart = source.highStart;
-      this.errorValue = source.errorValue;
-      return;
-    }
+  private constructor(data: Uint32Array, highStart: number, errorValue: number) {
+    this.data = data;
+    this.highStart = highStart;
+    this.errorValue = errorValue;
+  }
 
+  /**
+   * Create a UnicodeTrie from a JSON object (synchronous)
+   */
+  static fromJSON(source: UnicodeTrieJSON): UnicodeTrie {
+    const typedData =
+      source.data instanceof Uint32Array ? source.data : new Uint32Array(source.data);
+    return new UnicodeTrie(typedData, source.highStart, source.errorValue);
+  }
+
+  /**
+   * Create a UnicodeTrie from compressed binary data (async)
+   */
+  static async fromBuffer(source: ArrayBufferLike | ArrayBufferView): Promise<UnicodeTrie> {
     const bytes = toUint8Array(source);
     const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
     const highStart = view.getUint32(0, true);
     const errorValue = view.getUint32(4, true);
-    const uncompressedLength = view.getUint32(8, true);
+    // uncompressedLength at offset 8 is not needed for async inflate
 
     let payload = bytes.subarray(12);
-    payload = inflate(payload, new Uint8Array(uncompressedLength));
-    payload = inflate(payload, new Uint8Array(uncompressedLength));
+    payload = await inflateRaw(payload);
+    payload = await inflateRaw(payload);
     swap32LE(payload);
 
-    this.data = new Uint32Array(
+    const data = new Uint32Array(
       payload.buffer,
       payload.byteOffset,
       payload.byteLength / Uint32Array.BYTES_PER_ELEMENT,
     );
-    this.highStart = highStart;
-    this.errorValue = errorValue;
+
+    return new UnicodeTrie(data, highStart, errorValue);
+  }
+
+  /**
+   * Create a UnicodeTrie from any supported source (async)
+   */
+  static async create(source: UnicodeTrieInit): Promise<UnicodeTrie> {
+    if (isUnicodeTrieJSON(source)) {
+      return UnicodeTrie.fromJSON(source);
+    }
+    return UnicodeTrie.fromBuffer(source);
   }
 
   get(codePoint: number): number {

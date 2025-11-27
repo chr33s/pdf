@@ -629,4 +629,4 @@ export interface Font {
   createSubset(): Subset;
 }
 
-export function create(buffer: Uint8Array, postscriptName?: string): Font;
+export function create(buffer: Uint8Array, postscriptName?: string): Promise<Font>;

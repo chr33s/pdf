@@ -5,47 +5,21 @@ fontkit.logErrors = true;
 
 type VariationSettings = Record<string, number>;
 type FontSelector = string | VariationSettings | null | undefined;
-type FontInstance = ReturnType<typeof fontkit.create>;
-type AsyncCallback = (err: Error | null, font?: FontInstance) => void;
+type FontInstance = Awaited<ReturnType<typeof fontkit.create>>;
 
 type FontkitWithHelpers = typeof fontkit & {
-  openSync: (filename: string, postscriptName?: FontSelector) => FontInstance;
-  open: (
-    filename: string,
-    postscriptNameOrCallback: FontSelector | AsyncCallback,
-    maybeCallback?: AsyncCallback,
-  ) => void;
+  open: (filename: string, postscriptName?: FontSelector) => Promise<FontInstance>;
 };
 
 const fontkitWithHelpers = fontkit as FontkitWithHelpers;
 
-fontkitWithHelpers.openSync = (filename, postscriptName) => {
-  const buffer = fs.readFileSync(filename);
+/**
+ * Open a font file asynchronously.
+ * This is the primary way to load fonts - initialization happens automatically.
+ */
+fontkitWithHelpers.open = async (filename, postscriptName) => {
+  const buffer = await fs.promises.readFile(filename);
   return fontkitWithHelpers.create(buffer, postscriptName ?? undefined);
-};
-
-fontkitWithHelpers.open = (filename, postscriptNameOrCallback, maybeCallback) => {
-  const callback: AsyncCallback =
-    typeof postscriptNameOrCallback === "function"
-      ? postscriptNameOrCallback
-      : (maybeCallback ?? (() => undefined));
-
-  const postscriptName =
-    typeof postscriptNameOrCallback === "function" ? undefined : postscriptNameOrCallback;
-
-  fs.readFile(filename, (err, buffer) => {
-    if (err) {
-      callback(err);
-      return;
-    }
-
-    try {
-      const loadedFont = fontkitWithHelpers.create(buffer, postscriptName ?? undefined);
-      callback(null, loadedFont);
-    } catch (error) {
-      callback(error as Error);
-    }
-  });
 };
 
 export default fontkitWithHelpers;

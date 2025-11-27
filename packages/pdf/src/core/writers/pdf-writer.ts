@@ -1,14 +1,15 @@
 import { copyStringIntoBuffer, waitForTick } from "../../utils/index.js";
 import PDFCrossRefSection from "../document/pdf-cross-ref-section.js";
 import PDFHeader from "../document/pdf-header.js";
-import PDFTrailer from "../document/pdf-trailer.js";
 import PDFTrailerDict from "../document/pdf-trailer-dict.js";
+import PDFTrailer from "../document/pdf-trailer.js";
 import PDFDict from "../objects/pdf-dict.js";
 import PDFObject from "../objects/pdf-object.js";
 import PDFRef from "../objects/pdf-ref.js";
 import PDFStream from "../objects/pdf-stream.js";
 import PDFContext from "../pdf-context.js";
 import PDFSecurity from "../security/pdf-security.js";
+import PDFFlateStream from "../structures/pdf-flate-stream.js";
 import PDFObjectStream from "../structures/pdf-object-stream.js";
 import CharCodes from "../syntax/char-codes.js";
 
@@ -124,6 +125,12 @@ class PDFWriter {
     for (let idx = 0, len = indirectObjects.length; idx < len; idx++) {
       const indirectObject = indirectObjects[idx];
       const [ref, object] = indirectObject;
+
+      // Initialize flate streams before computing size
+      if (object instanceof PDFFlateStream && !object.isInitialized()) {
+        await object.init();
+      }
+
       if (security) this.encrypt(ref, object, security);
       xref.addEntry(ref, size);
       size += this.computeIndirectObjectSize(indirectObject);

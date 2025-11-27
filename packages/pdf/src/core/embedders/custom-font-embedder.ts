@@ -100,7 +100,7 @@ class CustomFontEmbedder {
 
   protected async embedFontDict(context: PDFContext, ref?: PDFRef): Promise<PDFRef> {
     const cidFontDictRef = await this.embedCIDFontDict(context);
-    const unicodeCMapRef = this.embedUnicodeCmap(context);
+    const unicodeCMapRef = await this.embedUnicodeCmap(context);
 
     const fontDict = context.obj({
       Type: "Font",
@@ -176,15 +176,15 @@ class CustomFontEmbedder {
   }
 
   protected async embedFontStream(context: PDFContext): Promise<PDFRef> {
-    const fontStream = context.flateStream(await this.serializeFont(), {
+    const fontStream = await context.flateStream(await this.serializeFont(), {
       Subtype: this.isCFF() ? "CIDFontType0C" : undefined,
     });
     return context.register(fontStream);
   }
 
-  protected embedUnicodeCmap(context: PDFContext): PDFRef {
+  protected async embedUnicodeCmap(context: PDFContext): Promise<PDFRef> {
     const cmap = createCmap(this.glyphCache.access(), this.glyphId.bind(this));
-    const cmapStream = context.flateStream(cmap);
+    const cmapStream = await context.flateStream(cmap);
     return context.register(cmapStream);
   }
 

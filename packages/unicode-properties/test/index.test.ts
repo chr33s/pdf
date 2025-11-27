@@ -1,9 +1,15 @@
-import { describe, expect, test } from "vitest";
-import unicode from "../src/index.js";
+import { beforeAll, describe, expect, test } from "vitest";
+import createUnicodeProperties, { type UnicodePropertiesAPI } from "../src/index.js";
 
 const code = (char: string) => char.charCodeAt(0);
 
 describe("unicode-properties", () => {
+  let unicode: UnicodePropertiesAPI;
+
+  beforeAll(async () => {
+    unicode = await createUnicodeProperties();
+  });
+
   test("getCategory", () => {
     expect(unicode.getCategory(code("2"))).toBe("Nd");
     expect(unicode.getCategory(code("x"))).toBe("Ll");

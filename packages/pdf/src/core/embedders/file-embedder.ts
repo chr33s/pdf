@@ -49,7 +49,7 @@ class FileEmbedder {
   async embedIntoContext(context: PDFContext, ref?: PDFRef): Promise<PDFRef> {
     const { mimeType, description, creationDate, modificationDate, afRelationship } = this.options;
 
-    const embeddedFileStream = context.flateStream(this.#fileData, {
+    const embeddedFileStream = await context.flateStream(this.#fileData, {
       Type: "EmbeddedFile",
       Subtype: mimeType ?? undefined,
       Params: {

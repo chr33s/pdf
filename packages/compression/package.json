@@ -1,7 +1,7 @@
 {
-  "name": "@chr33s/unicode-trie",
+  "name": "@chr33s/compression",
   "version": "3.0.0",
-  "description": "Unicode Trie data structure for fast character metadata lookup, ported from ICU",
+  "description": "Compression utilities using web CompressionStream and DecompressionStream APIs",
   "type": "module",
   "sideEffects": false,
   "exports": {
@@ -18,17 +18,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/devongovett/unicode-trie.git"
+    "url": "git://github.com/chr33s/pdf.git"
   },
-  "author": "Devon Govett <devongovett@gmail.com>",
+  "author": "chr33s",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/devongovett/unicode-trie/issues"
-  },
-  "homepage": "https://github.com/devongovett/unicode-trie",
-  "dependencies": {
-    "@chr33s/compression": "file:../compression"
-  },
   "devDependencies": {
     "@types/node": "^24.10.1",
     "typescript": "^5.9.3",

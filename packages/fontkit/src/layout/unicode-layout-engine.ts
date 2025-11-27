@@ -1,4 +1,4 @@
-import unicode from "@chr33s/unicode-properties";
+import { unicode } from "@chr33s/unicode-properties";
 import type Glyph from "../glyph/glyph.js";
 import type { FontLike } from "../glyph/glyph.js";
 import type GlyphPosition from "./glyph-position.js";

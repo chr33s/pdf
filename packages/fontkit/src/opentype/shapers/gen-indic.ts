@@ -1,11 +1,11 @@
 import codepoints from "@chr33s/codepoints";
+import { deflate } from "@chr33s/compression";
 import { compile as compileModule } from "@chr33s/dfa";
 import { builder as UnicodeTrieBuilder } from "@chr33s/unicode-trie";
 import * as base64 from "base64-arraybuffer";
 import fs from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import pako from "pako";
 
 const MODULE_CANDIDATES = ["./indic-data.ts", "./indic-gen-data.js"] as const;
 
@@ -280,7 +280,7 @@ for (let i = 0; i < codepoints.length; i++) {
 // Trie is serialized suboptimally as JSON so it can be loaded via require,
 // allowing unicode-properties to work in the browser
 const trieFilePath = join(__dirname, "trie-indic.json");
-const deflatedTrie = pako.deflate(trie.toBuffer());
+const deflatedTrie = await deflate(await trie.toBuffer());
 const jsonBase64DeflatedTrie = JSON.stringify(base64.encode(toArrayBuffer(deflatedTrie)));
 await fs.writeFile(trieFilePath, jsonBase64DeflatedTrie);
 
@@ -291,7 +291,7 @@ let stateMachine = compile(await fs.readFile(join(__dirname, "indic.machine"), "
 
 const indicFilePath = join(__dirname, "indic.json");
 const stateMachineJsonBytes = textEncoder.encode(JSON.stringify(stateMachine));
-const deflatedIndic = pako.deflate(stateMachineJsonBytes);
+const deflatedIndic = await deflate(stateMachineJsonBytes);
 const jsonBase64DeflatedIndic = JSON.stringify(base64.encode(toArrayBuffer(deflatedIndic)));
 await fs.writeFile(indicFilePath, jsonBase64DeflatedIndic);
 

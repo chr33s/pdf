@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { beforeAll, describe, expect, test } from "vitest";
 
 import BBox from "../src/glyph/b-box.js";
 import fontkit from "./add-test-helpers-to-fontkit.js";
@@ -7,7 +7,11 @@ import { here } from "./utils/dir.js";
 const __dirname = here(import.meta.url);
 
 describe("metadata", function () {
-  let font = fontkit.openSync(__dirname + "/data/noto-sans/noto-sans.ttc", "NotoSans");
+  let font: Awaited<ReturnType<typeof fontkit.open>>;
+
+  beforeAll(async () => {
+    font = await fontkit.open(__dirname + "/data/noto-sans/noto-sans.ttc", "NotoSans");
+  });
 
   test("has metadata properties", function () {
     expect(font.fullName).toBe("Noto Sans");

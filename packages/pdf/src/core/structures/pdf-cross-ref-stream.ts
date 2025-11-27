@@ -75,7 +75,7 @@ class PDFCrossRefStream extends PDFFlateStream {
     this.#entryTuplesCache.invalidate();
     this.#maxByteWidthsCache.invalidate();
     this.#indexCache.invalidate();
-    this.contentsCache.invalidate();
+    this.invalidate();
   }
 
   addUncompressedEntry(ref: PDFRef, offset: number) {
@@ -84,7 +84,7 @@ class PDFCrossRefStream extends PDFFlateStream {
     this.#entryTuplesCache.invalidate();
     this.#maxByteWidthsCache.invalidate();
     this.#indexCache.invalidate();
-    this.contentsCache.invalidate();
+    this.invalidate();
   }
 
   addCompressedEntry(ref: PDFRef, objectStreamRef: PDFRef, index: number) {
@@ -93,7 +93,7 @@ class PDFCrossRefStream extends PDFFlateStream {
     this.#entryTuplesCache.invalidate();
     this.#maxByteWidthsCache.invalidate();
     this.#indexCache.invalidate();
-    this.contentsCache.invalidate();
+    this.invalidate();
   }
 
   clone(context?: PDFContext): PDFCrossRefStream {

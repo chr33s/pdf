@@ -1,5 +1,5 @@
 import { access } from "node:fs/promises";
-import { describe, expect, test } from "vitest";
+import { beforeAll, describe, expect, test } from "vitest";
 import fontkit from "./add-test-helpers-to-fontkit.js";
 import { here } from "./utils/dir.decompress-jsons.js";
 
@@ -12,12 +12,11 @@ const hasSkiaFont = await access(SKIA_FONT_PATH)
 
 describe("variations", function () {
   describe.runIf(hasSkiaFont)("Skia", function () {
-    let font: any; // NOTE: workaround runIf vitest issue
-    try {
-      font = fontkit.openSync(SKIA_FONT_PATH);
-    } catch {
-      // noop
-    }
+    let font: Awaited<ReturnType<typeof fontkit.open>>;
+
+    beforeAll(async () => {
+      font = await fontkit.open(SKIA_FONT_PATH);
+    });
 
     test("should get available variation axes", function () {
       let axes = font.variationAxes;
@@ -87,48 +86,48 @@ describe("variations", function () {
   });
 
   describe("truetype variations", function () {
-    test("should support sharing all points", function () {
-      let font = fontkit.openSync(__dirname + "/data/fonttest/test-gvar-one.ttf");
+    test("should support sharing all points", async function () {
+      let font = await fontkit.open(__dirname + "/data/fonttest/test-gvar-one.ttf");
 
       expect(font.getVariation({ wght: 300 }).glyphsForString("彌")[0].path.toSVG()).toBe(
         "M371 -102L371 539L914 539L914 -27Q914 -102 840 -102Q796 -102 755 -98L742 -59Q790 -66 836 -66Q871 -66 871 -31L871 504L414 504L414 -102ZM203 -94Q138 -94 86 -90L74 -52Q137 -59 188 -59Q211 -59 222 -46.5Q233 -34 235.5 12Q238 58 240 134.5Q242 211 242 262L74 262L94 527L242 527L242 719L63 719L63 754L285 754L285 492L133 492L117 297L285 297Q285 241 284 185Q284 104 281 46Q278 -20 269 -49Q260 -78 241.5 -86Q223 -94 203 -94ZM461 12L434 43Q473 73 503 115Q478 150 441 188L469 211Q501 179 525 147Q538 172 559 230L594 211Q571 152 551 117Q577 84 602 43L566 20Q544 64 528 86Q500 44 461 12ZM465 258L438 285Q474 316 501 351Q474 388 445 418L473 441Q500 414 523 381Q546 413 563 453L598 434Q571 382 549 352Q576 320 598 285L563 262Q546 294 525 322Q491 280 465 258ZM707 12L680 43Q717 68 753 115Q731 147 691 188L719 211Q739 190 754 172Q769 154 774 147Q793 185 809 230L844 211Q822 155 801 117Q828 82 852 43L820 20Q798 58 778 87Q747 43 707 12ZM621 -94L621 730L664 730L664 -94ZM348 570L324 605Q425 629 527 688L555 656Q491 621 438.5 601Q386 581 348 570ZM715 258L688 285Q727 318 753 351Q733 378 695 418L723 441Q754 410 775 381Q794 407 813 453L848 434Q826 387 801 352Q823 321 848 281L813 262Q791 301 775 323Q749 288 715 258ZM348 719L348 754L941 754L941 719ZM936 570Q870 602 817 621.5Q764 641 727 652L749 688Q852 655 957 605Z",
       );
     });
 
-    test("should support sharing enumerated points", function () {
-      let font = fontkit.openSync(__dirname + "/data/fonttest/test-gvar-two.ttf");
+    test("should support sharing enumerated points", async function () {
+      let font = await fontkit.open(__dirname + "/data/fonttest/test-gvar-two.ttf");
 
       expect(font.getVariation({ wght: 300 }).glyphsForString("彌")[0].path.toSVG()).toBe(
         "M371 -102L371 539L914 539L914 -27Q914 -102 840 -102Q796 -102 755 -98L742 -59Q790 -66 836 -66Q871 -66 871 -31L871 504L414 504L414 -102ZM203 -94Q138 -94 86 -90L74 -52Q137 -59 188 -59Q211 -59 222 -46.5Q233 -34 235.5 12Q238 58 240 134.5Q242 211 242 262L74 262L94 527L242 527L242 719L63 719L63 754L285 754L285 492L133 492L117 297L285 297Q285 241 284 185Q284 104 281 46Q278 -20 269 -49Q260 -78 241.5 -86Q223 -94 203 -94ZM461 12L434 43Q473 73 503 115Q478 150 441 188L469 211Q501 179 525 147Q538 172 559 230L594 211Q571 152 551 117Q577 84 602 43L566 20Q544 64 528 86Q500 44 461 12ZM465 258L438 285Q474 316 501 351Q474 388 445 418L473 441Q500 414 523 381Q546 413 563 453L598 434Q571 382 549 352Q576 320 598 285L563 262Q546 294 525 322Q491 280 465 258ZM707 12L680 43Q717 68 753 115Q731 147 691 188L719 211Q739 190 754 172Q769 154 774 147Q793 185 809 230L844 211Q822 155 801 117Q828 82 852 43L820 20Q798 58 778 87Q747 43 707 12ZM621 -94L621 730L664 730L664 -94ZM348 570L324 605Q425 629 527 688L555 656Q491 621 438.5 601Q386 581 348 570ZM715 258L688 285Q727 318 753 351Q733 378 695 418L723 441Q754 410 775 381Q794 407 813 453L848 434Q826 387 801 352Q823 321 848 281L813 262Q791 301 775 323Q749 288 715 258ZM348 719L348 754L941 754L941 719ZM936 570Q870 602 817 621.5Q764 641 727 652L749 688Q852 655 957 605Z",
       );
     });
 
-    test("should support sharing no points", function () {
-      let font = fontkit.openSync(__dirname + "/data/fonttest/test-gvar-three.ttf");
+    test("should support sharing no points", async function () {
+      let font = await fontkit.open(__dirname + "/data/fonttest/test-gvar-three.ttf");
 
       expect(font.getVariation({ wght: 300 }).glyphsForString("彌")[0].path.toSVG()).toBe(
         "M371 -102L371 539L914 539L914 -27Q914 -102 840 -102Q796 -102 755 -98L742 -59Q790 -66 836 -66Q871 -66 871 -31L871 504L414 504L414 -102ZM203 -94Q138 -94 86 -90L74 -52Q137 -59 188 -59Q211 -59 222 -46.5Q233 -34 235.5 12Q238 58 240 134.5Q242 211 242 262L74 262L94 527L242 527L242 719L63 719L63 754L285 754L285 492L133 492L117 297L285 297Q285 241 284 185Q284 104 281 46Q278 -20 269 -49Q260 -78 241.5 -86Q223 -94 203 -94ZM461 12L434 43Q473 73 503 115Q478 150 441 188L469 211Q501 179 525 147Q538 172 559 230L594 211Q571 152 551 117Q577 84 602 43L566 20Q544 64 528 86Q500 44 461 12ZM465 258L438 285Q474 316 501 351Q474 388 445 418L473 441Q500 414 523 381Q546 413 563 453L598 434Q571 382 549 352Q576 320 598 285L563 262Q546 294 525 322Q491 280 465 258ZM707 12L680 43Q717 68 753 115Q731 147 691 188L719 211Q739 190 754 172Q769 154 774 147Q793 185 809 230L844 211Q822 155 801 117Q828 82 852 43L820 20Q798 58 778 87Q747 43 707 12ZM621 -94L621 730L664 730L664 -94ZM348 570L324 605Q425 629 527 688L555 656Q491 621 438.5 601Q386 581 348 570ZM715 258L688 285Q727 318 753 351Q733 378 695 418L723 441Q754 410 775 381Q794 407 813 453L848 434Q826 387 801 352Q823 321 848 281L813 262Q791 301 775 323Q749 288 715 258ZM348 719L348 754L941 754L941 719ZM936 570Q870 602 817 621.5Q764 641 727 652L749 688Q852 655 957 605Z",
       );
     });
 
-    test("should use the HVAR table when available for variation metrics", function () {
-      let font = fontkit.openSync(__dirname + "/data/fonttest/test-gvar-four.ttf");
+    test("should use the HVAR table when available for variation metrics", async function () {
+      let font = await fontkit.open(__dirname + "/data/fonttest/test-gvar-four.ttf");
 
       expect(
         Math.round(font.getVariation({ wght: 150 }).glyphsForString("O")[0].advanceWidth),
       ).toBe(706);
     });
 
-    test("should fall back to the last entry in an HVAR table", function () {
-      let font = fontkit.openSync(__dirname + "/data/fonttest/test-hvar-two.ttf");
+    test("should fall back to the last entry in an HVAR table", async function () {
+      let font = await fontkit.open(__dirname + "/data/fonttest/test-hvar-two.ttf");
 
       expect(
         Math.round(font.getVariation({ wght: 400 }).glyphsForString("A")[0].advanceWidth),
       ).toBe(584);
     });
 
-    test("should support adjusting GPOS mark anchor points for variations", function () {
-      let font = fontkit.openSync(__dirname + "/data/mada/mada-vf.ttf", {
+    test("should support adjusting GPOS mark anchor points for variations", async function () {
+      let font = await fontkit.open(__dirname + "/data/mada/mada-vf.ttf", {
         wght: 900,
       });
       let run = font.layout("ف");
@@ -141,7 +140,11 @@ describe("variations", function () {
   });
 
   describe("CFF2 variations", function () {
-    let font = fontkit.openSync(__dirname + "/data/fonttest/adobe-vf-prototype-subset.otf");
+    let font: Awaited<ReturnType<typeof fontkit.open>>;
+
+    beforeAll(async () => {
+      font = await fontkit.open(__dirname + "/data/fonttest/adobe-vf-prototype-subset.otf");
+    });
 
     test("applies variations to CFF2 glyphs", function () {
       expect(font.getVariation({ wght: 100 }).glyphsForString("$")[0].path.toSVG()).toBe(

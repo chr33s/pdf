@@ -1,4 +1,4 @@
-import pako from "pako";
+import { deflateRaw } from "@chr33s/compression";
 
 import UnicodeTrie from "./index.js";
 import { swap32LE } from "./swap.js";
@@ -968,7 +968,7 @@ class UnicodeTrieBuilder {
       data[destIdx++] = this.#data[i];
     }
 
-    const dest = new UnicodeTrie({
+    const dest = UnicodeTrie.fromJSON({
       data,
       highStart: this.#highStart,
       errorValue: this.#errorValue,
@@ -984,7 +984,7 @@ class UnicodeTrieBuilder {
   //   uint32_t errorValue;
   //   uint32_t uncompressedDataLength;
   //   uint8_t trieData[dataLength];
-  toBuffer(): Buffer {
+  async toBuffer(): Promise<Buffer> {
     const trie = this.freeze();
 
     const data = new Uint8Array(trie.data.buffer);
@@ -992,8 +992,8 @@ class UnicodeTrieBuilder {
     // swap bytes to little-endian
     swap32LE(data);
 
-    let compressed = pako.deflateRaw(data);
-    compressed = pako.deflateRaw(compressed);
+    let compressed = await deflateRaw(data);
+    compressed = await deflateRaw(compressed);
 
     const buf = Buffer.alloc(compressed.length + 12);
     buf.writeUInt32LE(trie.highStart, 0);

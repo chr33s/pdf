@@ -53,27 +53,29 @@ describe("unicode trie", () => {
     expect(trie.get(0x110000)).toBe(666);
   });
 
-  test("toBuffer written in little-endian", () => {
+  test("toBuffer produces valid compressed output", async () => {
     const builder = new UnicodeTrieBuilder();
     builder.set(0x4567, 99);
 
-    const buf = builder.toBuffer();
-    const bufferExpected = Buffer.from([
-      0, 72, 0, 0, 0, 0, 0, 0, 128, 36, 0, 0, 123, 123, 206, 144, 235, 128, 2, 143, 67, 96, 225,
-      171, 23, 55, 54, 38, 231, 47, 44, 127, 233, 90, 109, 194, 92, 246, 126, 197, 131, 223, 31, 56,
-      102, 78, 154, 20, 108, 117, 88, 244, 93, 192, 190, 218, 229, 156, 12, 107, 86, 235, 125, 96,
-      102, 0, 129, 15, 239, 109, 219, 204, 58, 151, 92, 52, 126, 152, 198, 14, 0,
-    ]);
-    expect(buf.toString("hex")).toBe(bufferExpected.toString("hex"));
+    const buf = await builder.toBuffer();
+    // Verify buffer has correct header format
+    expect(buf.length).toBeGreaterThan(12);
+    // Verify high start and error values in header
+    expect(buf.readUInt32LE(0)).toBe(builder.freeze().highStart);
+    expect(buf.readUInt32LE(4)).toBe(builder.freeze().errorValue);
+    // Verify that the output can be loaded back as a valid trie
+    const trie = await UnicodeTrie.create(buf);
+    expect(trie.get(0x4567)).toBe(99);
+    expect(trie.get(0x4566)).toBe(0);
   });
 
-  test("should work with compressed serialization format", () => {
+  test("should work with compressed serialization format", async () => {
     const builder = new UnicodeTrieBuilder(10, 666);
     builder.setRange(13, 6666, 7788, false);
     builder.setRange(6000, 7000, 9900, true);
 
-    const buf = builder.toBuffer();
-    const trie = new UnicodeTrie(buf);
+    const buf = await builder.toBuffer();
+    const trie = await UnicodeTrie.create(buf);
     expect(trie.get(12)).toBe(10);
     expect(trie.get(13)).toBe(7788);
     expect(trie.get(5999)).toBe(7788);

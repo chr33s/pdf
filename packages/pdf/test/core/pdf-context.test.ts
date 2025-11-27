@@ -1,4 +1,4 @@
-import pako from "pako";
+import { deflate } from "@chr33s/compression";
 import { describe, expect, test } from "vitest";
 
 import {
@@ -77,10 +77,10 @@ describe("PDFContext", () => {
     expect(context.lookup(numberRef)).toBe(pdfNumber);
   });
 
-  test("stream creation", () => {
+  test("stream creation", async () => {
     const context = PDFContext.create();
 
-    const stream = context.flateStream("stuff and things!");
+    const stream = await context.flateStream("stuff and things!");
     const buffer = new Uint8Array(stream.sizeInBytes());
     stream.copyBytesInto(buffer, 0);
 
@@ -91,7 +91,7 @@ describe("PDFContext", () => {
         "/Length 25\n",
         ">>\n",
         "stream\n",
-        pako.deflate("stuff and things!"),
+        await deflate("stuff and things!"),
         "\nendstream",
       ),
     );

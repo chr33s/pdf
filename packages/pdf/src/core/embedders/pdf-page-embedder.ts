@@ -99,7 +99,7 @@ class PDFPageEmbedder {
     const decodedContents = this.#decodeContents(Contents);
 
     const { left, bottom, right, top } = this.boundingBox;
-    const xObject = context.flateStream(decodedContents, {
+    const xObject = await context.flateStream(decodedContents, {
       Type: "XObject",
       Subtype: "Form",
       FormType: 1,

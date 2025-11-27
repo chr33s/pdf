@@ -18,14 +18,13 @@
     "typecheck": "tsc --project tsconfig.typecheck.json"
   },
   "dependencies": {
+    "@chr33s/compression": "file:../compression",
     "@chr33s/unicode-trie": "file:../unicode-trie",
-    "base64-arraybuffer": "^1.0.2",
-    "pako": "^2.1.0"
+    "base64-arraybuffer": "^1.0.2"
   },
   "devDependencies": {
     "@chr33s/codepoints": "file:../codepoints",
     "@types/node": "^24.10.1",
-    "@types/pako": "^2.0.4",
     "@vitest/coverage-v8": "^4.0.14",
     "typescript": "^5.9.3",
     "vitest": "^4.0.12"

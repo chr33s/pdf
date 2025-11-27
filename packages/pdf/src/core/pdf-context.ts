@@ -1,4 +1,4 @@
-import pako from "pako";
+import { deflate } from "@chr33s/compression";
 
 import { typedArrayFor } from "../utils/index.js";
 import { SimpleRNG } from "../utils/rng.js";
@@ -16,8 +16,8 @@ import PDFRawStream from "./objects/pdf-raw-stream.js";
 import PDFRef from "./objects/pdf-ref.js";
 import PDFStream from "./objects/pdf-stream.js";
 import PDFString from "./objects/pdf-string.js";
-import PDFOperator from "./operators/pdf-operator.js";
 import Ops from "./operators/pdf-operator-names.js";
+import PDFOperator from "./operators/pdf-operator.js";
 import PDFSecurity from "./security/pdf-security.js";
 import PDFContentStream from "./structures/pdf-content-stream.js";
 
@@ -282,8 +282,11 @@ class PDFContext {
     return PDFRawStream.of(this.obj(dict), typedArrayFor(contents));
   }
 
-  flateStream(contents: string | Uint8Array, dict: LiteralObject = {}): PDFRawStream {
-    return this.stream(pako.deflate(typedArrayFor(contents)), {
+  async flateStream(
+    contents: string | Uint8Array,
+    dict: LiteralObject = {},
+  ): Promise<PDFRawStream> {
+    return this.stream(await deflate(typedArrayFor(contents)), {
       ...dict,
       Filter: "FlateDecode",
     });

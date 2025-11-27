@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { UPNG, type Image, type ImageTabs } from "../src/upng.js";
 
 describe("UPNG basic encode/decode", () => {
-  it("round-trips a small opaque RGBA image", () => {
+  it("round-trips a small opaque RGBA image", async () => {
     const w = 2;
     const h = 2;
     const src = new Uint8Array([
@@ -23,7 +23,7 @@ describe("UPNG basic encode/decode", () => {
       0,
       255, // yellow
     ]);
-    const encoded = UPNG.encode([src.buffer], w, h, 0);
+    const encoded = await UPNG.encode([src.buffer], w, h, 0);
     const decoded = UPNG.decode(encoded);
 
     expect(decoded.width).toBe(w);
@@ -36,12 +36,12 @@ describe("UPNG basic encode/decode", () => {
     expect(Array.from(out)).toEqual(Array.from(src));
   });
 
-  it("round-trips an image with transparency (forces alpha ctype 6 or pal+TRNS)", () => {
+  it("round-trips an image with transparency (forces alpha ctype 6 or pal+TRNS)", async () => {
     const w = 2;
     const h = 2;
     const buf = new Uint8Array([255, 0, 0, 255, 255, 0, 0, 0, 0, 255, 0, 255, 0, 255, 0, 0]).buffer;
 
-    const encoded = UPNG.encode([buf], w, h, 0);
+    const encoded = await UPNG.encode([buf], w, h, 0);
     const decoded = UPNG.decode(encoded);
     const [rgbaBuf] = UPNG.toRGBA8(decoded);
     const out = new Uint8Array(rgbaBuf);
@@ -53,12 +53,12 @@ describe("UPNG basic encode/decode", () => {
 });
 
 describe("UPNG.toRGBA8", () => {
-  it("returns a single frame buffer for non-animated PNG", () => {
+  it("returns a single frame buffer for non-animated PNG", async () => {
     const w = 1;
     const h = 1;
     const buf = new Uint8Array([10, 20, 30, 40]).buffer;
 
-    const encoded = UPNG.encode([buf], w, h, 0);
+    const encoded = await UPNG.encode([buf], w, h, 0);
     const decoded = UPNG.decode(encoded);
 
     expect(decoded.tabs.acTL).toBeUndefined();
@@ -69,7 +69,7 @@ describe("UPNG.toRGBA8", () => {
     expect(Array.from(rgba)).toEqual([10, 20, 30, 40]);
   });
 
-  it("returns buffers for each animation frame and respects blend/dispose", () => {
+  it("returns buffers for each animation frame and respects blend/dispose", async () => {
     const w = 2;
     const h = 1;
 
@@ -77,7 +77,7 @@ describe("UPNG.toRGBA8", () => {
     const frame1 = new Uint8Array([0, 0, 255, 255, 255, 255, 255, 255]).buffer;
 
     const dels = [100, 200];
-    const encoded = UPNG.encode([frame0, frame1], w, h, 0, dels, { loop: 0 });
+    const encoded = await UPNG.encode([frame0, frame1], w, h, 0, dels, { loop: 0 });
     const decoded = UPNG.decode(encoded);
 
     expect(decoded.tabs.acTL).toBeDefined();
@@ -100,7 +100,7 @@ describe("UPNG.decode ancillary chunks", () => {
     expect(() => UPNG.decode(bogus)).toThrow(/not a PNG/i);
   });
 
-  it("parses tEXt & zTXt chunks into tabs", () => {
+  it("parses tEXt & zTXt chunks into tabs", async () => {
     const w = 1;
     const h = 1;
     const buf = new Uint8Array([0, 0, 0, 255]).buffer;
@@ -110,7 +110,7 @@ describe("UPNG.decode ancillary chunks", () => {
       iTXt: { Comment: "Hello world" },
     };
 
-    const encoded = UPNG.encode([buf], w, h, 0, undefined, tabs);
+    const encoded = await UPNG.encode([buf], w, h, 0, undefined, tabs);
     const decoded = UPNG.decode(encoded);
 
     if (decoded.tabs.tEXt) {
@@ -123,13 +123,13 @@ describe("UPNG.decode ancillary chunks", () => {
 });
 
 describe("UPNG #getBPP and #filterZero via encode/decode", () => {
-  it("handles grayscale (ctype 0) depth 8 correctly", () => {
+  it("handles grayscale (ctype 0) depth 8 correctly", async () => {
     const w = 3;
     const h = 1;
     const gray = new Uint8Array([50, 50, 50, 255, 100, 100, 100, 255, 200, 200, 200, 255]).buffer;
 
     // Use encodeLL to force grayscale: cc=1, ac=0
-    const encoded = UPNG.encodeLL([gray], w, h, 1, 0, 8);
+    const encoded = await UPNG.encodeLL([gray], w, h, 1, 0, 8);
     const decoded = UPNG.decode(encoded);
     expect(decoded.ctype).toBe(0);
 
@@ -143,14 +143,14 @@ describe("UPNG #getBPP and #filterZero via encode/decode", () => {
     expect(out[4]).toBe(100);
   });
 
-  it("handles palette-based images (ctype 3) when color count is small", () => {
+  it("handles palette-based images (ctype 3) when color count is small", async () => {
     const w = 2;
     const h = 2;
     const buf = new Uint8Array([255, 0, 0, 255, 0, 255, 0, 255, 255, 0, 0, 255, 0, 255, 0, 255])
       .buffer;
 
     // Force small palette size to encourage PLTE path
-    const encoded = UPNG.encode([buf], w, h, 4);
+    const encoded = await UPNG.encode([buf], w, h, 4);
     const decoded = UPNG.decode(encoded);
 
     expect(decoded.ctype).toBe(3);
@@ -164,7 +164,7 @@ describe("UPNG #getBPP and #filterZero via encode/decode", () => {
 });
 
 describe("UPNG filter/deflate pipeline", () => {
-  it("produces valid data when using filter strategy 0 (none)", () => {
+  it("produces valid data when using filter strategy 0 (none)", async () => {
     const w = 4;
     const h = 2;
     const buf = new Uint8Array(w * h * 4);
@@ -176,7 +176,7 @@ describe("UPNG filter/deflate pipeline", () => {
     }
 
     // encodeLL with levelZero=true via encodeLL -> #compressPNG(filter=0, levelZero=true)
-    const encoded = UPNG.encodeLL([buf.buffer], w, h, 3, 1, 8);
+    const encoded = await UPNG.encodeLL([buf.buffer], w, h, 3, 1, 8);
     const decoded = UPNG.decode(encoded);
     const [rgbaBuf] = UPNG.toRGBA8(decoded);
     const out = new Uint8Array(rgbaBuf);
@@ -186,7 +186,7 @@ describe("UPNG filter/deflate pipeline", () => {
 });
 
 describe("UPNG internal dithering path (by effect)", () => {
-  it("dithers when quantizing with palette (non-empty result)", () => {
+  it("dithers when quantizing with palette (non-empty result)", async () => {
     const w = 4;
     const h = 4;
     const buf = new Uint8Array(w * h * 4);
@@ -198,7 +198,7 @@ describe("UPNG internal dithering path (by effect)", () => {
     }
 
     // cnum=16 palette size, dithering enabled via encode (6th param of prms)
-    const encoded = (UPNG as any).encode([buf.buffer], w, h, 16, undefined, undefined, false);
+    const encoded = await (UPNG as any).encode([buf.buffer], w, h, 16, undefined, undefined, false);
     const decoded = UPNG.decode(encoded);
     const [rgbaBuf] = UPNG.toRGBA8(decoded);
     const out = new Uint8Array(rgbaBuf);
@@ -208,7 +208,7 @@ describe("UPNG internal dithering path (by effect)", () => {
 });
 
 describe("UPNG animated encodeLL", () => {
-  it("encodes multiple frames as an animated PNG with acTL", () => {
+  it("encodes multiple frames as an animated PNG with acTL", async () => {
     const w = 2;
     const h = 2;
 
@@ -223,7 +223,7 @@ describe("UPNG animated encodeLL", () => {
     const delays = [100, 200];
     const tabs = { loop: 0 };
 
-    const encoded = UPNG.encodeLL([frame0, frame1], w, h, 4, 1, 8, delays, tabs);
+    const encoded = await UPNG.encodeLL([frame0, frame1], w, h, 4, 1, 8, delays, tabs);
     const decoded = UPNG.decode(encoded) as Image;
 
     // We should have animation control chunk parsed

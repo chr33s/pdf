@@ -22,15 +22,14 @@
   },
   "dependencies": {
     "@chr33s/brotli": "file:../brotli",
+    "@chr33s/compression": "file:../compression",
     "@chr33s/dfa": "file:../dfa",
     "@chr33s/restructure": "file:../restructure",
-    "@chr33s/tiny-inflate": "file:../tiny-inflate",
     "@chr33s/unicode-properties": "file:../unicode-properties",
     "@chr33s/unicode-trie": "file:../unicode-trie",
     "base64-arraybuffer": "^1.0.2",
     "clone": "^2.1.2",
-    "deep-equal": "^2.2.3",
-    "pako": "^2.1.0"
+    "deep-equal": "^2.2.3"
   },
   "devDependencies": {
     "@chr33s/codepoints": "file:../codepoints",
@@ -38,7 +37,6 @@
     "@types/concat-stream": "^2.0.3",
     "@types/deep-equal": "^1.0.4",
     "@types/node": "^24.10.1",
-    "@types/pako": "^2.0.4",
     "@vitest/coverage-v8": "^4.0.14",
     "concat-stream": "^2.0.0",
     "tsdown": "^0.16.7",

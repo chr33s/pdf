@@ -10,6 +10,7 @@ import PDFStream from "../objects/pdf-stream.js";
 import PDFContext from "../pdf-context.js";
 import PDFCatalog from "../structures/pdf-catalog.js";
 import PDFCrossRefStream from "../structures/pdf-cross-ref-stream.js";
+import PDFFlateStream from "../structures/pdf-flate-stream.js";
 import PDFObjectStream from "../structures/pdf-object-stream.js";
 import PDFPageLeaf from "../structures/pdf-page-leaf.js";
 import PDFPageTree from "../structures/pdf-page-tree.js";
@@ -58,6 +59,11 @@ class PDFStreamWriter extends PDFWriter {
       const indirectObject = indirectObjects[idx];
       const [ref, object] = indirectObject;
 
+      // Initialize flate streams before computing size
+      if (object instanceof PDFFlateStream && !object.isInitialized()) {
+        await object.init();
+      }
+
       const shouldNotCompress =
         ref === this.context.trailerInfo.Encrypt ||
         object instanceof PDFStream ||
@@ -97,6 +103,9 @@ class PDFStreamWriter extends PDFWriter {
         this.#encodeStreams,
       );
 
+      // Initialize the object stream before computing size
+      await objectStream.init();
+
       if (security) this.encrypt(ref, objectStream, security);
 
       xrefStream.addUncompressedEntry(ref, size);
@@ -110,6 +119,10 @@ class PDFStreamWriter extends PDFWriter {
     const xrefStreamRef = PDFRef.of(objectNumber++);
     xrefStream.dict.set(PDFName.of("Size"), PDFNumber.of(objectNumber));
     xrefStream.addUncompressedEntry(xrefStreamRef, size);
+
+    // Initialize the xref stream before computing size
+    await xrefStream.init();
+
     const xrefOffset = size;
     size += this.computeIndirectObjectSize([xrefStreamRef, xrefStream]);
 

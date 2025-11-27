@@ -1,17 +1,17 @@
-import { describe, expect, test } from "vitest";
+import { beforeAll, describe, expect, test } from "vitest";
 
 import fontkit from "./add-test-helpers-to-fontkit.js";
 import { here } from "./utils/dir.js";
 
 const __dirname = here(import.meta.url);
-type FontInstance = ReturnType<typeof fontkit.openSync>;
+type FontInstance = Awaited<ReturnType<typeof fontkit.open>>;
 const glyphIds = (glyphs: Array<{ id: number }>) => glyphs.map((glyph) => glyph.id);
 
 describe("shaping", function () {
   const fontCache: Record<string, FontInstance> = {};
   const testFont = (description: string, font: string, text: string, output: string) => {
-    test(description, function () {
-      let f = fontCache[font] || (fontCache[font] = fontkit.openSync(__dirname + "/data/" + font));
+    test(description, async function () {
+      let f = fontCache[font] || (fontCache[font] = await fontkit.open(__dirname + "/data/" + font));
       let { glyphs, positions } = f.layout(text);
       if (!positions) {
         throw new Error("Expected layout positions to be available");
@@ -37,7 +37,11 @@ describe("shaping", function () {
   };
 
   describe("general shaping tests", function () {
-    let font = fontkit.openSync(__dirname + "/data/amiri/amiri-regular.ttf");
+    let font: FontInstance;
+
+    beforeAll(async () => {
+      font = await fontkit.open(__dirname + "/data/amiri/amiri-regular.ttf");
+    });
 
     test("should use correct script and language when features are not specified", function () {
       let { glyphs } = font.layout("۴", "arab", "URD");
@@ -113,7 +117,11 @@ describe("shaping", function () {
   });
 
   describe("hangul shaper", function () {
-    let font = fontkit.openSync(__dirname + "/data/noto-sans-cjk/noto-sans-cj-kkr-regular.otf");
+    let font: FontInstance;
+
+    beforeAll(async () => {
+      font = await fontkit.open(__dirname + "/data/noto-sans-cjk/noto-sans-cj-kkr-regular.otf");
+    });
 
     test("should use composed versions if supported by the font", function () {
       let { glyphs } = font.layout(

@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { beforeAll, describe, expect, test } from "vitest";
 
 import fontkit from "./add-test-helpers-to-fontkit.js";
 import { here } from "./utils/dir.js";
@@ -10,7 +10,11 @@ const glyphCodePoints = (glyphs: Array<{ codePoints: number[] }>) =>
 
 describe("character to glyph mapping", function () {
   describe("basic cmap handling", function () {
-    let font = fontkit.openSync(__dirname + "/data/open-sans/open-sans-regular.ttf");
+    let font: Awaited<ReturnType<typeof fontkit.open>>;
+
+    beforeAll(async () => {
+      font = await fontkit.open(__dirname + "/data/open-sans/open-sans-regular.ttf");
+    });
 
     test("should get characterSet", function () {
       expect(Array.isArray(font.characterSet)).toBe(true);
@@ -36,21 +40,25 @@ describe("character to glyph mapping", function () {
       return expect(glyphCodePoints(glyphs)).toEqual([[104], [101], [108], [108], [111]]);
     });
 
-    test("should support unicode variation selectors", function () {
-      let font = fontkit.openSync(__dirname + "/data/fonttest/test-cmap14.otf");
+    test("should support unicode variation selectors", async function () {
+      let font = await fontkit.open(__dirname + "/data/fonttest/test-cmap14.otf");
       let glyphs = font.glyphsForString("\u{82a6}\u{82a6}\u{E0100}\u{82a6}\u{E0101}");
       expect(glyphIds(glyphs)).toEqual([1, 1, 2]);
     });
 
-    test("should support legacy encodings when no unicode cmap is found", function () {
-      let font = fontkit.openSync(__dirname + "/data/fonttest/test-cmap-mac-turkish.ttf");
+    test("should support legacy encodings when no unicode cmap is found", async function () {
+      let font = await fontkit.open(__dirname + "/data/fonttest/test-cmap-mac-turkish.ttf");
       let glyphs = font.glyphsForString("“ABÇĞIİÖŞÜ”");
       expect(glyphIds(glyphs)).toEqual([200, 34, 35, 126, 176, 42, 178, 140, 181, 145, 201]);
     });
   });
 
   describe("opentype features", function () {
-    let font = fontkit.openSync(__dirname + "/data/source-sans-pro/source-sans-pro-regular.otf");
+    let font: Awaited<ReturnType<typeof fontkit.open>>;
+
+    beforeAll(async () => {
+      font = await fontkit.open(__dirname + "/data/source-sans-pro/source-sans-pro-regular.otf");
+    });
 
     test("should list available features", () =>
       expect(font.availableFeatures).toEqual([
@@ -105,7 +113,11 @@ describe("character to glyph mapping", function () {
   });
 
   describe("AAT features", function () {
-    let font = fontkit.openSync(__dirname + "/data/play/play-regular.ttf");
+    let font: Awaited<ReturnType<typeof fontkit.open>>;
+
+    beforeAll(async () => {
+      font = await fontkit.open(__dirname + "/data/play/play-regular.ttf");
+    });
 
     test("should list available features", () =>
       expect(font.availableFeatures).toEqual([
@@ -140,8 +152,8 @@ describe("character to glyph mapping", function () {
       return expect(glyphCodePoints(glyphs)).toEqual([[105], [102], [102]]);
     });
 
-    test("should apply indic reordering features", function () {
-      let f = fontkit.openSync(__dirname + "/data/khmer/khmer.ttf");
+    test("should apply indic reordering features", async function () {
+      let f = await fontkit.open(__dirname + "/data/khmer/khmer.ttf");
       let { glyphs } = f.layout("ខ្ញុំអាចញ៉ាំកញ្ចក់បាន ដោយគ្មានបញ្ហា");
       expect(glyphIds(glyphs)).toEqual([
         45, 153, 177, 112, 248, 188, 49, 296, 44, 187, 149, 44, 117, 236, 188, 63, 3, 107, 226, 188,
@@ -183,14 +195,14 @@ describe("character to glyph mapping", function () {
   });
 
   describe("glyph id to strings", function () {
-    test("should return strings from cmap that map to a given glyph", function () {
-      let font = fontkit.openSync(__dirname + "/data/open-sans/open-sans-regular.ttf");
+    test("should return strings from cmap that map to a given glyph", async function () {
+      let font = await fontkit.open(__dirname + "/data/open-sans/open-sans-regular.ttf");
       let strings = font.stringsForGlyph(68);
       expect(strings).toEqual(["a"]);
     });
 
-    test("should return strings from AAT morx table that map to the given glyph", function () {
-      let font = fontkit.openSync(__dirname + "/data/play/play-regular.ttf");
+    test("should return strings from AAT morx table that map to the given glyph", async function () {
+      let font = await fontkit.open(__dirname + "/data/play/play-regular.ttf");
       let strings = font.stringsForGlyph(767);
       expect(strings).toEqual(["ffi"]);
     });

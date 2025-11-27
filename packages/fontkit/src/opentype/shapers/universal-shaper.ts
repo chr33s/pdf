@@ -1,33 +1,8 @@
-import { StateMachine, type StateMachineConfig } from "@chr33s/dfa";
-import UnicodeTrie from "@chr33s/unicode-trie";
-import * as base64 from "base64-arraybuffer";
-import pako from "pako";
 import type { FontLike } from "../../glyph/glyph.js";
 import GlyphInfo from "../glyph-info.js";
 import type ShapingPlan from "../shaping-plan.js";
 import DefaultShaper from "./default-shaper.js";
-
-import base64DeflatedTrie from "./trie-use-data.js";
-import base64DeflatedUseData from "./use-data.js";
-
-type UniversalShapingData = StateMachineConfig & {
-  categories: Record<number | string, string>;
-  decompositions: Record<number | string, number[]>;
-};
-
-const textDecoder = new TextDecoder();
-const decodeBase64 = (encoded: string): Uint8Array => new Uint8Array(base64.decode(encoded));
-const inflateBase64 = (encoded: string): Uint8Array => pako.inflate(decodeBase64(encoded));
-
-const useData = JSON.parse(
-  textDecoder.decode(inflateBase64(base64DeflatedUseData)),
-) as UniversalShapingData;
-const trieData = inflateBase64(base64DeflatedTrie);
-
-const { categories, decompositions } = useData;
-
-const trie = new UnicodeTrie(trieData);
-const stateMachine = new StateMachine(useData);
+import { getShaperData } from "./init.js";
 
 /**
  * This shaper is an implementation of the Universal Shaping Engine, which
@@ -64,6 +39,7 @@ export default class UniversalShaper extends DefaultShaper {
   }
 
   static override assignFeatures(plan: ShapingPlan, glyphs: GlyphInfo[]): void {
+    const { useDecompositions } = getShaperData();
     // Decompose split vowels. TODO: replace this with a general unicode normalizer.
     for (let i = glyphs.length - 1; i >= 0; i--) {
       const codepoint = glyphs[i].codePoints[0];
@@ -71,7 +47,7 @@ export default class UniversalShaper extends DefaultShaper {
         continue;
       }
 
-      const decomposition = decompositions[codepoint];
+      const decomposition = useDecompositions[codepoint];
       if (!decomposition || decomposition.length === 0) {
         continue;
       }
@@ -87,8 +63,9 @@ export default class UniversalShaper extends DefaultShaper {
 }
 
 function useCategory(glyph: GlyphInfo): number {
+  const { useTrie } = getShaperData();
   const codePoint = glyph.codePoints[0] ?? 0;
-  return trie.get(codePoint);
+  return useTrie.get(codePoint);
 }
 
 class USEInfo {
@@ -104,13 +81,14 @@ class USEInfo {
 }
 
 function setupSyllables(_font: FontLike, glyphs: GlyphInfo[]): void {
+  const { useMachine, useCategories } = getShaperData();
   let syllable = 0;
-  for (const [start, end, tags] of stateMachine.match(glyphs.map(useCategory))) {
+  for (const [start, end, tags] of useMachine.match(glyphs.map(useCategory))) {
     syllable++;
 
     // Create shaper info
     for (let i = start; i <= end; i++) {
-      const category = categories[useCategory(glyphs[i])] ?? "X";
+      const category = useCategories[useCategory(glyphs[i])] ?? "X";
       const syllableType = tags[0] ?? "";
       glyphs[i].shaperInfo = new USEInfo(category, syllableType, syllable);
     }

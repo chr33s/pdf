@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { beforeAll, describe, expect, test } from "vitest";
 
 import BBox from "../src/glyph/b-box.js";
 import fontkit from "./add-test-helpers-to-fontkit.js";
@@ -8,8 +8,13 @@ const __dirname = here(import.meta.url);
 
 describe("glyphs", function () {
   describe("truetype glyphs", function () {
-    let font = fontkit.openSync(__dirname + "/data/open-sans/open-sans-regular.ttf");
-    let mada = fontkit.openSync(__dirname + "/data/mada/mada-vf.ttf");
+    let font: Awaited<ReturnType<typeof fontkit.open>>;
+    let mada: Awaited<ReturnType<typeof fontkit.open>>;
+
+    beforeAll(async () => {
+      font = await fontkit.open(__dirname + "/data/open-sans/open-sans-regular.ttf");
+      mada = await fontkit.open(__dirname + "/data/mada/mada-vf.ttf");
+    });
 
     test("should get a TTFGlyph", function () {
       let glyph = font.getGlyph(39); // D
@@ -78,7 +83,11 @@ describe("glyphs", function () {
   });
 
   describe("CFF glyphs", function () {
-    let font = fontkit.openSync(__dirname + "/data/source-sans-pro/source-sans-pro-regular.otf");
+    let font: Awaited<ReturnType<typeof fontkit.open>>;
+
+    beforeAll(async () => {
+      font = await fontkit.open(__dirname + "/data/source-sans-pro/source-sans-pro-regular.otf");
+    });
 
     test("should get a CFFGlyph", function () {
       let glyph = font.getGlyph(5); // D
@@ -109,7 +118,11 @@ describe("glyphs", function () {
   });
 
   describe("SBIX glyphs", function () {
-    let font = fontkit.openSync(__dirname + "/data/ss-emoji/ss-emoji-apple.ttf");
+    let font: Awaited<ReturnType<typeof fontkit.open>>;
+
+    beforeAll(async () => {
+      font = await fontkit.open(__dirname + "/data/ss-emoji/ss-emoji-apple.ttf");
+    });
 
     test("should get an SBIXGlyph", function () {
       let glyph = font.glyphsForString("😜")[0];
@@ -142,7 +155,11 @@ describe("glyphs", function () {
   });
 
   describe("COLR glyphs", function () {
-    let font = fontkit.openSync(__dirname + "/data/ss-emoji/ss-emoji-microsoft.ttf");
+    let font: Awaited<ReturnType<typeof fontkit.open>>;
+
+    beforeAll(async () => {
+      font = await fontkit.open(__dirname + "/data/ss-emoji/ss-emoji-microsoft.ttf");
+    });
 
     test("should get an SBIXGlyph", function () {
       let glyph = font.glyphsForString("😜")[0];
@@ -184,7 +201,13 @@ describe("glyphs", function () {
   });
 
   describe("WOFF glyphs", function () {
-    let font = fontkit.openSync(__dirname + "/data/source-sans-pro/source-sans-pro-regular.woff");
+    let font: Awaited<ReturnType<typeof fontkit.open>>;
+
+    beforeAll(async () => {
+      font = await fontkit.open(
+        __dirname + "/data/source-sans-pro/source-sans-pro-regular.woff",
+      );
+    });
 
     test("should get a TTFGlyph", function () {
       let glyph = font.glyphsForString("T")[0];
@@ -205,7 +228,11 @@ describe("glyphs", function () {
   });
 
   describe("WOFF2 glyph", function () {
-    let font = fontkit.openSync(__dirname + "/data/source-sans-pro/source-sans-pro-regular.woff2");
+    let font: Awaited<ReturnType<typeof fontkit.open>>;
+
+    beforeAll(async () => {
+      font = await fontkit.open(__dirname + "/data/source-sans-pro/source-sans-pro-regular.woff2");
+    });
 
     test("should get a WOFF2Glyph", function () {
       let glyph = font.glyphsForString("T")[0];

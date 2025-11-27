@@ -1,11 +1,11 @@
 import codepoints from "@chr33s/codepoints";
+import { deflate } from "@chr33s/compression";
 import { compile as compileModule } from "@chr33s/dfa";
 import { builder as UnicodeTrieBuilder } from "@chr33s/unicode-trie";
 import * as base64 from "base64-arraybuffer";
 import fs from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import pako from "pako";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const textEncoder = new TextEncoder();
@@ -262,7 +262,7 @@ function decompose(code: number): number[] {
 // Trie is serialized suboptimally as JSON so it can be loaded via require,
 // allowing unicode-properties to work in the browser
 const trieFilePath = join(__dirname, "trie-use.json");
-const deflatedTrie = pako.deflate(trie.toBuffer());
+const deflatedTrie = await deflate(await trie.toBuffer());
 const jsonBase64DeflatedTrie = JSON.stringify(base64.encode(toArrayBuffer(deflatedTrie)));
 await fs.writeFile(trieFilePath, jsonBase64DeflatedTrie);
 
@@ -280,7 +280,7 @@ let json = Object.assign(
 
 const useFilePath = join(__dirname, "use.json");
 const useJsonBytes = textEncoder.encode(JSON.stringify(json));
-const deflatedUse = pako.deflate(useJsonBytes);
+const deflatedUse = await deflate(useJsonBytes);
 const jsonBase64DeflatedUse = JSON.stringify(base64.encode(toArrayBuffer(deflatedUse)));
 await fs.writeFile(useFilePath, jsonBase64DeflatedUse);
 

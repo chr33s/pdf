@@ -1,16 +1,8 @@
-import unicode from "@chr33s/unicode-properties";
-import UnicodeTrie from "@chr33s/unicode-trie";
-import * as base64 from "base64-arraybuffer";
-import pako from "pako";
+import { unicode } from "@chr33s/unicode-properties";
 import type GlyphInfo from "../glyph-info.js";
 import type ShapingPlan from "../shaping-plan.js";
 import DefaultShaper from "./default-shaper.js";
-
-// Trie is serialized as a Buffer in node, but here
-// we may be running in a browser so we make an Uint8Array
-import base64DeflatedTrie from "./trie-data.js";
-const trieData = pako.inflate(base64.decode(base64DeflatedTrie));
-const trie = new UnicodeTrie(trieData);
+import { getShaperData } from "./init.js";
 
 const FEATURES = ["isol", "fina", "fin2", "fin3", "medi", "med2", "init"];
 
@@ -168,7 +160,8 @@ export default class ArabicShaper extends DefaultShaper {
 }
 
 function getShapingClass(codePoint: number): number {
-  let res = trie.get(codePoint);
+  const { arabicTrie } = getShaperData();
+  let res = arabicTrie.get(codePoint);
   if (res) {
     return res - 1;
   }

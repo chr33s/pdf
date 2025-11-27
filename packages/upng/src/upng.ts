@@ -1,4 +1,4 @@
-import pako from "pako";
+import { deflate } from "@chr33s/compression";
 
 import { Bin } from "./bin.js";
 import { CRC } from "./crc.js";
@@ -718,7 +718,7 @@ export class UPNG {
     }
   }
 
-  static encode(
+  static async encode(
     bufs: ArrayBuffer[],
     w: number,
     h: number,
@@ -749,12 +749,12 @@ export class UPNG {
       plte: compressed.plte,
     };
 
-    this.#compressPNG(nimg, -1);
+    await this.#compressPNG(nimg, -1);
 
-    return this.#main(nimg, w, h, dels, tabs);
+    return await this.#main(nimg, w, h, dels, tabs);
   }
 
-  static encodeLL(
+  static async encodeLL(
     bufs: ArrayBuffer[],
     w: number,
     h: number,
@@ -820,9 +820,9 @@ export class UPNG {
       });
     }
 
-    this.#compressPNG(nimg, 0, true);
+    await this.#compressPNG(nimg, 0, true);
 
-    const out = this.#main(nimg, w, h, dels, tabs);
+    const out = await this.#main(nimg, w, h, dels, tabs);
     return out;
   }
 
@@ -890,7 +890,7 @@ export class UPNG {
     return out;
   }
 
-  static #main(nimg: Image, w: number, h: number, dels?: number[], tabs?: ImageTabs) {
+  static async #main(nimg: Image, w: number, h: number, dels?: number[], tabs?: ImageTabs) {
     if (tabs == null) tabs = {};
     const wUi = Bin.writeUint.bind(Bin);
     const wUs = Bin.writeUshort.bind(Bin);
@@ -905,7 +905,7 @@ export class UPNG {
     if (tabs["sRGB"] != null) leng += 8 + 1 + 4;
     if (tabs["pHYs"] != null) leng += 8 + 9 + 4;
     if (tabs["iCCP"] != null) {
-      cicc = pako.deflate(tabs["iCCP"]);
+      cicc = await deflate(tabs["iCCP"]);
       leng += 8 + 11 + 2 + cicc.length + 4;
     }
     if (nimg.ctype == 3) {
@@ -1087,12 +1087,20 @@ export class UPNG {
     return data.buffer;
   }
 
-  static #compressPNG(out: Image, filter: number, levelZero?: boolean) {
+  static async #compressPNG(out: Image, filter: number, levelZero?: boolean) {
     for (let i = 0; i < out.frames.length; i++) {
       const frm = out.frames[i];
       const nh = frm.rect.height;
       const fdata = new Uint8Array(nh * frm.bpl! + nh);
-      frm.cimg = this.#encodeFilterZero(frm.img!, nh, frm.bpp!, frm.bpl!, fdata, filter, levelZero);
+      frm.cimg = await this.#encodeFilterZero(
+        frm.img!,
+        nh,
+        frm.bpp!,
+        frm.bpl!,
+        fdata,
+        filter,
+        levelZero,
+      );
     }
   }
 
@@ -1391,25 +1399,25 @@ export class UPNG {
     this.#copyTile(cimg, w, h, nimg, rec.width, rec.height, -rec.x, -rec.y, 2);
   }
 
-  static #encodeFilterZero(
+  static async #encodeFilterZero(
     img: Uint8Array,
     h: number,
     bpp: number,
     bpl: number,
     data: Uint8Array,
     filter: number,
-    levelZero?: boolean,
+    _levelZero?: boolean,
   ) {
     const fls: Uint8Array[] = [];
     let ftry = [0, 1, 2, 3, 4];
     if (filter != -1) ftry = [filter];
     else if (h * bpl > 500000 || bpp == 1) ftry = [0];
-    let opts: pako.DeflateFunctionOptions = {};
-    if (levelZero) opts = { level: 0 };
 
     for (let i = 0; i < ftry.length; i++) {
       for (let y = 0; y < h; y++) this.#filterLine(data, img, y, bpl, bpp, ftry[i]);
-      fls.push(pako.deflate(data, opts));
+      // Use level 0 for fast compression when levelZero is set
+      // Web CompressionStream doesn't support compression levels, so we always use default
+      fls.push(await deflate(data));
     }
 
     let ti = 0;

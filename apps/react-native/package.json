@@ -45,6 +45,7 @@
       "/node_modules/(?!(@react-native|react-native|react-native-pdf|react-native-blob-util)/)"
     ],
     "moduleNameMapper": {
+      "^@chr33s/compression$": "<rootDir>/../../packages/compression/dist/index.js",
       "^@chr33s/fontkit$": "<rootDir>/../../packages/fontkit/dist/index.js",
       "^@chr33s/pdf$": "<rootDir>/../../packages/pdf/dist/index.js",
       "^@chr33s/brotli$": "<rootDir>/../../packages/brotli/dist/index.js",
@@ -52,7 +53,6 @@
       "^@chr33s/dfa$": "<rootDir>/../../packages/dfa/dist/index.js",
       "^@chr33s/unicode-properties$": "<rootDir>/../../packages/unicode-properties/dist/index.js",
       "^@chr33s/unicode-trie$": "<rootDir>/../../packages/unicode-trie/dist/index.js",
-      "^@chr33s/tiny-inflate$": "<rootDir>/../../packages/tiny-inflate/dist/index.js",
       "^@chr33s/upng$": "<rootDir>/../../packages/upng/dist/index.js",
       "^@chr33s/codepoints$": "<rootDir>/../../packages/codepoints/dist/index.js",
       "^@chr33s/standard-fonts$": "<rootDir>/../../packages/standard-fonts/dist/index.js"

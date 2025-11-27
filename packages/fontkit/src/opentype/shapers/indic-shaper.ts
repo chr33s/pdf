@@ -1,8 +1,4 @@
-import { StateMachine } from "@chr33s/dfa";
-import unicode from "@chr33s/unicode-properties";
-import UnicodeTrie from "@chr33s/unicode-trie";
-import * as base64 from "base64-arraybuffer";
-import pako from "pako";
+import { unicode } from "@chr33s/unicode-properties";
 import type { FontLike } from "../../glyph/glyph.js";
 import * as Script from "../../layout/script.js";
 import GlyphInfo from "../glyph-info.js";
@@ -17,10 +13,7 @@ import {
   JOINER_FLAGS,
   POSITIONS,
 } from "./indic-data.js";
-
-import base64DeflatedIndicMachine from "./indic-gen-data.js";
-import base64DeflatedTrie from "./trie-indic-data.js";
-import base64DeflatedUseData from "./use-data.js";
+import { getShaperData } from "./init.js";
 
 type IndicConfig = (typeof INDIC_CONFIGS)[keyof typeof INDIC_CONFIGS];
 type IndicPlan = ShapingPlan & {
@@ -30,21 +23,6 @@ type IndicPlan = ShapingPlan & {
 };
 
 const INDIC_DECOMPOSITIONS_MAP = INDIC_DECOMPOSITIONS as Record<number, number[]>;
-
-// Trie is serialized as a Buffer in node, but here
-// we may be running in a browser so we make an Uint8Array
-const textDecoder = new TextDecoder();
-const decodeInflatedJson = (encoded: string) =>
-  JSON.parse(textDecoder.decode(pako.inflate(base64.decode(encoded))));
-
-const indicMachine = decodeInflatedJson(base64DeflatedIndicMachine);
-const useData = decodeInflatedJson(base64DeflatedUseData);
-const trieData = pako.inflate(base64.decode(base64DeflatedTrie));
-
-const { decompositions } = useData;
-
-const trie = new UnicodeTrie(trieData);
-const stateMachine = new StateMachine(indicMachine);
 
 /**
  * The IndicShaper supports indic scripts e.g. Devanagari, Kannada, etc.
@@ -98,10 +76,11 @@ export default class IndicShaper extends DefaultShaper {
   static assignFeatures(plan: IndicPlan, glyphs: GlyphInfo[]): void {
     // Decompose split matras
     // TODO: do this in a more general unicode normalizer
+    const { indicDecompositions } = getShaperData();
     for (let i = glyphs.length - 1; i >= 0; i--) {
       let codepoint = glyphs[i].codePoints[0];
       const builtin = INDIC_DECOMPOSITIONS_MAP[codepoint];
-      let d = builtin || decompositions[codepoint];
+      let d = builtin || indicDecompositions[codepoint];
       if (d) {
         let decomposed = d.map((c: number) => {
           let g = plan.font.glyphForCodePoint(c);
@@ -115,11 +94,13 @@ export default class IndicShaper extends DefaultShaper {
 }
 
 function indicCategory(glyph: GlyphInfo): number {
-  return trie.get(glyph.codePoints[0]) >> 8;
+  const { indicTrie } = getShaperData();
+  return indicTrie.get(glyph.codePoints[0]) >> 8;
 }
 
 function indicPosition(glyph: GlyphInfo): number {
-  return 1 << (trie.get(glyph.codePoints[0]) & 0xff);
+  const { indicTrie } = getShaperData();
+  return 1 << (indicTrie.get(glyph.codePoints[0]) & 0xff);
 }
 
 class IndicInfo {
@@ -141,9 +122,10 @@ function getIndicInfo(glyph: GlyphInfo): IndicInfo {
 }
 
 function setupSyllables(font: FontLike, glyphs: GlyphInfo[]): void {
+  const { indicMachine } = getShaperData();
   let syllable = 0;
   let last = 0;
-  for (let [start, end, tags] of stateMachine.match(glyphs.map(indicCategory))) {
+  for (let [start, end, tags] of indicMachine.match(glyphs.map(indicCategory))) {
     if (start > last) {
       ++syllable;
       for (let i = last; i < start; i++) {
