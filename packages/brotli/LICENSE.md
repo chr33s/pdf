@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2018 Andrew Dillon
+Copyright (c) 2017 Google Inc
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

@@ -1,4 +1,0 @@
-[submodule "vendor/brotli"]
-	path = packages/brotli/vendor/brotli
-	url = git@github.com:google/brotli.git
-	branch = v1.2

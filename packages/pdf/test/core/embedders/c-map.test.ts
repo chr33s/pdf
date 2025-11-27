@@ -28,8 +28,8 @@ const allGlyphsInFontSortedById = (font: Font) => {
 };
 
 describe("createCmap", () => {
-  test("creates CMaps for embedded ubuntu-R font files", () => {
-    const font = fontkit.create(ubuntuFont);
+  test("creates CMaps for embedded ubuntu-R font files", async () => {
+    const font = await fontkit.create(ubuntuFont);
 
     const glyphs = allGlyphsInFontSortedById(font);
     const cmap = createCmap(glyphs, (g) => (g ? g.id : -1));
@@ -37,8 +37,8 @@ describe("createCmap", () => {
     expect(cmap).toEqual(String(ubuntuFontCmap));
   });
 
-  test("creates CMaps for embedded source-han-serif-jp-regular font files", () => {
-    const font = fontkit.create(sourceHansJpFont);
+  test("creates CMaps for embedded source-han-serif-jp-regular font files", async () => {
+    const font = await fontkit.create(sourceHansJpFont);
 
     const glyphs = allGlyphsInFontSortedById(font);
     const cmap = createCmap(glyphs, (g) => (g ? g.id : -1));

@@ -12,10 +12,9 @@
     }
   },
   "scripts": {
-    "build": "npm run generate && tsc && npm run copy:shaper-data && tsdown && npm run copy:wasm",
+    "build": "npm run generate && tsc && npm run copy:shaper-data && tsdown",
     "clean": "rm -rf dist src/opentype/shapers/*.json src/opentype/shapers/*-data.js",
     "copy:shaper-data": "node ./scripts/copy-shaper-json.ts",
-    "copy:wasm": "cp ../brotli/dist/brotli.wasm dist/brotli.wasm",
     "generate": "node src/opentype/shapers/generate-data.ts && node src/opentype/shapers/gen-use.ts && node src/opentype/shapers/gen-indic.ts",
     "test": "vitest run",
     "typecheck": "tsc --project tsconfig.typecheck.json"

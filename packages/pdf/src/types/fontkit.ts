@@ -631,5 +631,5 @@ export interface Font {
 }
 
 export interface Fontkit {
-  create(buffer: Uint8Array | ArrayBuffer | Buffer, postscriptName?: string): Font;
+  create(buffer: Uint8Array | ArrayBuffer | Buffer, postscriptName?: string): Promise<Font>;
 }

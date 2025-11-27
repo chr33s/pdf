@@ -1,9 +1,4 @@
 node_modules/
-scripts/
 test/
-vendor/
-*.o
-*.c
-Makefile
 tsconfig.json
 vitest.config.ts

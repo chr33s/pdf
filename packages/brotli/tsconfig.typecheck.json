@@ -9,8 +9,6 @@
   ],
   "exclude": [
     "dist",
-    "node_modules",
-    "src/brotli.d.ts",
-    "vendor"
+    "node_modules"
   ]
 }

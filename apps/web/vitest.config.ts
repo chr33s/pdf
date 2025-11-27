@@ -29,16 +29,6 @@ export default defineConfig({
             } catch {
               next();
             }
-          } else if (req.url?.endsWith("brotli.wasm")) {
-            // Serve the brotli.wasm file from wherever it's requested
-            const wasmPath = resolve(repoRoot, "packages/brotli/dist/brotli.wasm");
-            try {
-              const content = readFileSync(wasmPath);
-              res.setHeader("Content-Type", "application/wasm");
-              res.end(content);
-            } catch {
-              next();
-            }
           } else {
             next();
           }

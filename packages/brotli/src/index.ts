@@ -1,2 +1,3 @@
-export { compress } from "./compress.js";
-export { decompress } from "./decompress.js";
+import { brotliDecode } from "./decode.js";
+
+export { brotliDecode as decode, brotliDecode as decompress };

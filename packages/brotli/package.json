@@ -1,7 +1,7 @@
 {
   "name": "@chr33s/brotli",
   "version": "3.0.0",
-  "description": "A port of the Brotli compression algorithm as used in WOFF2",
+  "description": "Brotli compression algorithm as used in WOFF2",
   "type": "module",
   "sideEffects": false,
   "exports": {
@@ -11,8 +11,8 @@
     }
   },
   "scripts": {
-    "build": "make && tsc && cp src/brotli.js src/brotli.wasm dist/",
-    "clean": "rm -rf dist src/{brotli.d.ts,brotli.js,brotli.wasm}",
+    "build": "tsc",
+    "clean": "rm -rf dist",
     "test": "vitest run",
     "typecheck": "tsc --project tsconfig.typecheck.json"
   },
@@ -23,7 +23,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Hopding/brotli.js.git"
+    "url": "https://github.com/chr33s/pdf.git"
   },
   "keywords": [
     "compress",
@@ -31,13 +31,10 @@
     "encode",
     "decode"
   ],
-  "author": "Andrew Dillon <andrew.dillon.j@gmail.com>",
-  "contributors": [
-    "Devon Govett <devongovett@gmail.com> (http://badassjs.com/)"
-  ],
+  "author": "Google Inc",
   "bugs": {
-    "url": "https://github.com/Hopding/brotli.js/issues"
+    "url": "https://github.com/chr33s/pdf/issues"
   },
   "license": "MIT",
-  "homepage": "https://github.com/Hopding/brotli.js"
+  "homepage": "https://github.com/chr33s/pdf"
 }

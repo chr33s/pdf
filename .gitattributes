@@ -1,5 +1,6 @@
 * text eol=lf
 
+packages/brotli/test/data/** binary eol=lf
 packages/pdf/test/core/streams/data/** binary eol=lf
 packages/pdf/assets/**/* binary eol=lf
 
