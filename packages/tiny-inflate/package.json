@@ -1,6 +1,6 @@
 {
   "name": "@chr33s/tiny-inflate",
-  "version": "1.0.3",
+  "version": "3.0.0",
   "description": "A tiny inflate implementation",
   "type": "module",
   "sideEffects": false,

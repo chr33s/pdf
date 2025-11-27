@@ -1,7 +1,7 @@
 {
   "name": "@chr33s/upng",
   "license": "MIT",
-  "version": "1.0.1",
+  "version": "3.0.0",
   "description": "Small, fast and advanced PNG / APNG encoder and decoder",
   "type": "module",
   "sideEffects": false,

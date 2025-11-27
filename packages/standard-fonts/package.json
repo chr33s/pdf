@@ -1,6 +1,6 @@
 {
   "name": "@chr33s/standard-fonts",
-  "version": "1.0.0",
+  "version": "3.0.0",
   "description": "Metrics for the Standard 14 PDF fonts and their encodings",
   "type": "module",
   "sideEffects": false,

@@ -1,6 +1,6 @@
 {
   "name": "@chr33s/fontkit",
-  "version": "1.1.0",
+  "version": "3.0.0",
   "description": "An advanced font engine for Node and the browser",
   "type": "module",
   "sideEffects": false,
