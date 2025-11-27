@@ -13,7 +13,7 @@
     "rewriteRelativeImportExtensions": true,
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
-    "allowJs": true,
+    "allowJs": false,
     "forceConsistentCasingInFileNames": true,
   },
   "exclude": [

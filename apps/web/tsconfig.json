@@ -11,5 +11,5 @@
     "declaration": false,
     "types": ["vitest/globals"]
   },
-  "include": ["tests/**/*.ts", "vitest.config.ts"]
+  "include": ["test/**/*.ts", "vitest.config.ts"]
 }

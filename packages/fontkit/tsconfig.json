@@ -6,6 +6,6 @@
     "experimentalDecorators": true,
     "strict": false
   },
-  "include": ["./fontkit.d.ts", "src/**/*"],
+  "include": ["./fontkit.d.ts", "src/**/*.ts"],
   "exclude": ["dist", "node_modules", "test"]
 }

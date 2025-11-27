@@ -4,13 +4,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "android": "react-native run-android",
-    "ios": "react-native run-ios",
-    "start": "react-native start",
+    "android": "rnc-cli run-android",
+    "ios": "rnc-cli run-ios",
+    "start": "rnc-cli start",
     "test": "jest"
   },
   "dependencies": {
-    "@babel/runtime": "^7.25.0",
     "@chr33s/fontkit": "file:../../packages/fontkit",
     "@chr33s/pdf": "file:./../../packages/pdf",
     "react": "19.2.0",
@@ -22,10 +21,7 @@
     "@babel/core": "^7.25.2",
     "@babel/preset-env": "^7.25.3",
     "@react-native-community/cli": "20.0.2",
-    "@react-native-community/cli-platform-android": "20.0.2",
-    "@react-native-community/cli-platform-ios": "20.0.2",
     "@react-native/babel-preset": "0.82.1",
-    "@react-native/eslint-config": "0.82.1",
     "@react-native/metro-config": "0.82.1",
     "@react-native/typescript-config": "0.82.1",
     "@types/jest": "^30.0.0",
@@ -38,8 +34,13 @@
   },
   "jest": {
     "preset": "react-native",
-    "testMatch": ["**/test/*.test.tsx"],
-    "moduleDirectories": ["node_modules", "<rootDir>/node_modules"],
+    "testMatch": [
+      "**/test/*.test.tsx"
+    ],
+    "moduleDirectories": [
+      "node_modules",
+      "<rootDir>/node_modules"
+    ],
     "transformIgnorePatterns": [
       "/node_modules/(?!(@react-native|react-native|react-native-pdf|react-native-blob-util)/)"
     ],

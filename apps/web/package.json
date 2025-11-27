@@ -3,6 +3,10 @@
   "scripts": {
     "test": "vitest run"
   },
+  "dependencies": {
+    "@chr33s/fontkit": "../../packages/fontkit/dist/index.min.js",
+    "@chris/pdf": "../../packages/pdf/dist/index.min.js"
+  },
   "devDependencies": {
     "@vitest/browser": "^4.0.14",
     "@vitest/browser-playwright": "^4.0.14",
