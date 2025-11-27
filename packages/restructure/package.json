@@ -2,10 +2,14 @@
   "name": "@chr33s/restructure",
   "version": "0.0.1",
   "description": "Declaratively encode and decode binary data",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
   "type": "module",
   "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf dist",

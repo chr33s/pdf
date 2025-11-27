@@ -2,10 +2,14 @@
   "name": "@chr33s/fontkit",
   "version": "1.1.0",
   "description": "An advanced font engine for Node and the browser",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
   "type": "module",
   "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
   "scripts": {
     "build": "npm run generate && tsc && npm run copy:shaper-data",
     "clean": "rm -rf dist src/opentype/shapers/*.json src/opentype/shapers/*-data.js",

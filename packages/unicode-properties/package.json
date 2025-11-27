@@ -4,8 +4,12 @@
   "description": "Provides fast access to unicode character properties",
   "type": "module",
   "sideEffects": false,
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
   "scripts": {
     "build": "npm run clean && npm run generate && tsc",
     "clean": "rm -rf dist src/data.js src/trie.js",

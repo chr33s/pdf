@@ -14,7 +14,6 @@
 
 ## TODO
 
-- [ ] update packages/*/packages.json from #main,#types to use the modern exports {}
 - [ ] tsdown esm .min version for packages/[fontkit,pdf] as exports#browser and use in apps/*
 - [ ] Audit dependencies
 

@@ -48,8 +48,12 @@
     "scratchpad:flame": "rm -rf isolate*.log && node --prof scratchpad/build/scratchpad/index.js && node --prof-process --preprocess -j isolate*.log | flamebearer",
     "verify": "node scripts/verify-stream-fixtures.ts"
   },
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
   "dependencies": {
     "@chr33s/standard-fonts": "file:../standard-fonts",
     "@chr33s/upng": "file:../upng",
