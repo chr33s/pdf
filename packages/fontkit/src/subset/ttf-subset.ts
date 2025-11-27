@@ -140,8 +140,7 @@ export default class TTFSubset extends Subset<TTFFont> {
       fpgm: this.font.fpgm,
     };
 
-    for (const i in this.tables) {
-      const table = this.tables[i];
+    for (const table of this.tables) {
       t[table] = cloneDeep(this.font[table]);
     }
 

@@ -169,16 +169,19 @@ export default class Glyph {
     );
     let advanceWidth = advanceWidthRaw;
 
+    let advanceHeight: number;
+    let topBearing: number;
+
     // For vertical metrics, use vmtx if available, or fall back to global data
     if (this._font.vmtx) {
-      var { advance: advanceHeight, bearing: topBearing } = this._getTableMetrics(this._font.vmtx);
+      ({ advance: advanceHeight, bearing: topBearing } = this._getTableMetrics(this._font.vmtx));
     } else {
       if (typeof cbox === "undefined" || cbox === null) {
         ({ cbox } = this);
       }
 
-      var advanceHeight = Math.abs(this._font.ascent - this._font.descent);
-      var topBearing = this._font.ascent - cbox.maxY;
+      advanceHeight = Math.abs(this._font.ascent - this._font.descent);
+      topBearing = this._font.ascent - cbox.maxY;
     }
 
     if (this._font._variationProcessor && this._font.HVAR) {

@@ -201,7 +201,7 @@ export default class GSUBProcessor extends OTProcessor {
               }
 
               if (glyph.ligatureID === lastLigID) {
-                var ligatureComponent =
+                let ligatureComponent =
                   curComps - lastNumComps + Math.min(glyph.ligatureComponent || 1, lastNumComps);
                 glyph.ligatureComponent = ligatureComponent;
               } else {

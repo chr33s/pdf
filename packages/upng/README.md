@@ -52,9 +52,9 @@ UPNG.js can do a lossy minification of PNG files, similar to [TinyPNG](https://t
 Lossy compression is allowed by the last parameter `cnum`. Set it to zero for a lossless compression, or write the number of allowed colors in the image. Smaller values produce smaller files. **Or just use 0 for lossless / 256 for lossy.**
 
     // Read RGBA from canvas and encode with UPNG
-    var dta = ctx.getImageData(0,0,200,300).data;  // ctx is Context2D of a Canvas
+    let dta = ctx.getImageData(0,0,200,300).data;  // ctx is Context2D of a Canvas
     //  dta = new Uint8Array(200 * 300 * 4);       // or generate pixels manually
-    var png = UPNG.encode([dta.buffer], 200, 300, 0);   console.log(new Uint8Array(png));
+    let png = UPNG.encode([dta.buffer], 200, 300, 0);   console.log(new Uint8Array(png));
 
 #### `UPNG.encodeLL(imgs, w, h, cc, ac, depth, [dels])` - low-level encode
 * `imgs`: array of frames. A frame is an ArrayBuffer containing the pixel data (corresponding to following parameters)
@@ -90,8 +90,8 @@ PNG files may have a various number of channels and a various color depth. The i
 * returns an array of frames. A frame is ArrayBuffer of the image in RGBA format, 8 bits per channel.
 
 ### Example
-    var img  = UPNG.decode(buff);        // put ArrayBuffer of the PNG file into UPNG.decode
-    var rgba = UPNG.toRGBA8(img)[0];     // UPNG.toRGBA8 returns array of frames, size: width * height * 4 bytes.
+    let img  = UPNG.decode(buff);        // put ArrayBuffer of the PNG file into UPNG.decode
+    let rgba = UPNG.toRGBA8(img)[0];     // UPNG.toRGBA8 returns array of frames, size: width * height * 4 bytes.
 
 PNG format uses the Inflate algorithm. Right now, UPNG.js calls [Pako.js](https://github.com/nodeca/pako) for the Inflate and Deflate method.
 
@@ -101,7 +101,7 @@ UPNG.js contains a very good Quantizer of 4-component 8-bit vectors (i.e. pixels
 
 Quantization consists of two important steps: Finding a nice palette and Finding the closest color in the palette for each sample (non-trivial for large palettes). UPNG perfroms both steps.
 
-    var res  = UPNG.quantize(data, psize);
+    let res  = UPNG.quantize(data, psize);
 
 * `data`: ArrayBuffer of samples (byte length is a multiple of four)
 * `psize` : Palette size (how many colors you want to have)

@@ -151,7 +151,7 @@ export default class ArabicShaper extends DefaultShaper {
     // Apply the chosen features to their respective glyphs
     for (let index = 0; index < glyphs.length; index++) {
       let feature;
-      var glyph = glyphs[index];
+      let glyph = glyphs[index];
       if ((feature = actions[index])) {
         glyph.features[feature] = true;
       }

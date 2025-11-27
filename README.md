@@ -1,4 +1,4 @@
-# Monorepo of Modern ESM only pdf-lib & dependency tree
+# Modern ESM only port pdf-lib & dependency tree
 
 - [@chr33s/brotli](./packages/brotli/)
 - [@chr33s/codepoints](./packages/codepoints/)
@@ -14,6 +14,7 @@
 
 ## TODO
 
+- [ ] var [a-z]+ -> const/let
 - [ ] Audit dependencies
 
 node-html-better-parser -> node-html-parser

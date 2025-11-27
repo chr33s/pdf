@@ -340,7 +340,7 @@ export default class TTFGlyph extends Glyph {
     let contours: Point[][] = [];
     let cur: Point[] = [];
     for (let k = 0; k < points.length; k++) {
-      var point = points[k];
+      let point = points[k];
       cur.push(point);
       if (point.endContour) {
         contours.push(cur);
