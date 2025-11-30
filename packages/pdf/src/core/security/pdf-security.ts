@@ -1,7 +1,6 @@
-import CryptoJS from "crypto-js";
+import CryptoJS, { WordArray } from "@chr33s/crypto";
 import PDFContext from "../pdf-context.js";
 
-type WordArray = CryptoJS.lib.WordArray;
 type RandomWordArrayGenerator = (bytes: number) => WordArray;
 
 /**
@@ -223,7 +222,7 @@ class PDFSecurity {
     encryption.R = r;
 
     encryption.O = wordArrayToBuffer(ownerPasswordEntry);
-    encryption.U = wordArrayToBuffer(userPasswordEntry);
+    encryption.U = wordArrayToBuffer(userPasswordEntry!);
     encryption.P = permissions;
 
     return encryption;
@@ -285,11 +284,11 @@ class PDFSecurity {
     encryption.R = 5;
 
     encryption.O = wordArrayToBuffer(ownerPasswordEntry);
-    encryption.OE = wordArrayToBuffer(ownerEncryptionKeyEntry);
+    encryption.OE = wordArrayToBuffer(ownerEncryptionKeyEntry!);
     encryption.U = wordArrayToBuffer(userPasswordEntry);
-    encryption.UE = wordArrayToBuffer(userEncryptionKeyEntry);
+    encryption.UE = wordArrayToBuffer(userEncryptionKeyEntry!);
     encryption.P = permissions;
-    encryption.Perms = wordArrayToBuffer(permissionsEntry);
+    encryption.Perms = wordArrayToBuffer(permissionsEntry!);
 
     return encryption;
   }
@@ -318,7 +317,7 @@ class PDFSecurity {
         return (buffer: Uint8Array) =>
           wordArrayToBuffer(
             CryptoJS.RC4.encrypt(CryptoJS.lib.WordArray.create(buffer as unknown as number[]), key)
-              .ciphertext,
+              .ciphertext!,
           );
       }
 
@@ -347,7 +346,7 @@ class PDFSecurity {
               CryptoJS.lib.WordArray.create(buffer as unknown as number[]),
               key,
               options,
-            ).ciphertext,
+            ).ciphertext!,
           ),
       );
   }
@@ -438,8 +437,8 @@ const getPermissionsR3 = (permissions: UserPermissions = {}) => {
   return flags;
 };
 
-const getUserPasswordR2 = (encryptionKey: CryptoJS.lib.WordArray) =>
-  CryptoJS.RC4.encrypt(processPasswordR2R3R4(), encryptionKey).ciphertext;
+const getUserPasswordR2 = (encryptionKey: WordArray) =>
+  CryptoJS.RC4.encrypt(processPasswordR2R3R4(), encryptionKey).ciphertext!;
 
 const getUserPasswordR3R4 = (documentId: Uint8Array, encryptionKey: WordArray) => {
   const key = encryptionKey.clone();
@@ -453,7 +452,7 @@ const getUserPasswordR3R4 = (documentId: Uint8Array, encryptionKey: WordArray) =
     for (let j = 0; j < xorRound; j++) {
       key.words[j] = encryptionKey.words[j] ^ (i | (i << 8) | (i << 16) | (i << 24));
     }
-    cipher = CryptoJS.RC4.encrypt(cipher, key).ciphertext;
+    cipher = CryptoJS.RC4.encrypt(cipher, key).ciphertext!;
   }
   return cipher.concat(CryptoJS.lib.WordArray.create(null as unknown as undefined, 16));
 };
@@ -463,7 +462,7 @@ const getOwnerPasswordR2R3R4 = (
   keyBits: KeyBits,
   paddedUserPassword: WordArray,
   paddedOwnerPassword: WordArray,
-): CryptoJS.lib.WordArray => {
+): WordArray => {
   let digest = paddedOwnerPassword;
   let round = r >= 3 ? 51 : 1;
   for (let i = 0; i < round; i++) {
@@ -479,7 +478,7 @@ const getOwnerPasswordR2R3R4 = (
     for (let j = 0; j < xorRound; j++) {
       key.words[j] = digest.words[j] ^ (i | (i << 8) | (i << 16) | (i << 24));
     }
-    cipher = CryptoJS.RC4.encrypt(cipher, key).ciphertext;
+    cipher = CryptoJS.RC4.encrypt(cipher, key).ciphertext!;
   }
   return cipher;
 };
@@ -527,7 +526,7 @@ const getUserEncryptionKeyR5 = (
     padding: CryptoJS.pad.NoPadding,
     iv: CryptoJS.lib.WordArray.create(null as unknown as undefined, 16),
   };
-  return CryptoJS.AES.encrypt(encryptionKey, key, options).ciphertext;
+  return CryptoJS.AES.encrypt(encryptionKey, key, options).ciphertext!;
 };
 
 const getOwnerPasswordR5 = (
@@ -558,7 +557,7 @@ const getOwnerEncryptionKeyR5 = (
     padding: CryptoJS.pad.NoPadding,
     iv: CryptoJS.lib.WordArray.create(null as unknown as undefined, 16),
   };
-  return CryptoJS.AES.encrypt(encryptionKey, key, options).ciphertext;
+  return CryptoJS.AES.encrypt(encryptionKey, key, options).ciphertext!;
 };
 
 const getEncryptionKeyR5 = (randomWordArrayGenerator: RandomWordArrayGenerator) =>
@@ -577,7 +576,7 @@ const getEncryptedPermissionsR5 = (
     mode: CryptoJS.mode.ECB,
     padding: CryptoJS.pad.NoPadding,
   };
-  return CryptoJS.AES.encrypt(cipher, encryptionKey, options).ciphertext;
+  return CryptoJS.AES.encrypt(cipher, encryptionKey, options).ciphertext!;
 };
 
 const processPasswordR2R3R4 = (password = "") => {
