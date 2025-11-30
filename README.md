@@ -3,6 +3,7 @@
 - [@chr33s/brotli](./packages/brotli/)
 - [@chr33s/codepoints](./packages/codepoints/)
 - [@chr33s/compression](./packages/compression/)
+- [@chr33s/crypto](./packages/crypto/)
 - [@chr33s/dfa](./packages/dfa/)
 - [@chr33s/font-kit](./packages/fontkit/)
 - [@chr33s/pdf](./packages/pdf/)
@@ -14,13 +15,10 @@
 
 ## TODO
 
-- [ ] var [a-z]+ -> const/let
 - [ ] Audit dependencies
 
-node-html-better-parser -> node-html-parser
-crypto-js -> crypto.subtle
-deep-equal -> fast-deep-equal
-brotli -> https://github.com/google/brotli/blob/master/js/
+node-html-better-parser -> node-html-parser   
+deep-equal -> fast-deep-equal   
 
 ## Notes
 
