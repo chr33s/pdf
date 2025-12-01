@@ -4,6 +4,7 @@
   "scripts": {
     "all": "run () { for cmd in clean build check test; do npm run workspace -- \"$cmd\" || return $?; done; }; run",
     "check": "oxfmt --check && oxlint --type-aware",
+    "docs": "typedoc && node --experimental-strip-types scripts/docs-postprocess.ts",
     "fix": "oxfmt && oxlint --type-aware --fix",
     "test:apps": "cd deno && deno task test && cd .. && npm run test --prefix=./node && npm run test --prefix=./react-native ** npm run test --prefix=./web",
     "test:in-docker": "docker buildx build --tag pdf . --load",
@@ -24,6 +25,9 @@
     "oxfmt": "^0.15.0",
     "oxlint": "^1.30.0",
     "oxlint-tsgolint": "^0.8.3",
+    "typedoc": "^0.28.15",
+    "typedoc-github-wiki-theme": "^2.1.0",
+    "typedoc-plugin-markdown": "^4.9.0",
     "typescript": "^5.9.3"
   }
 }

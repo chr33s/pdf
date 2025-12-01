@@ -1,0 +1,37 @@
+name: Wiki
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          cache: "npm"
+          node-version-file: "package.json"
+      - run: npm ci --include=dev
+      - run: npm run workspace build
+      - run: npm run docs
+      - uses: actions/checkout@v5
+        with:
+          repository: ${{github.repository}}.wiki
+          path: ${{github.repository}}.wiki
+      - run: |
+          set -e
+          cd $GITHUB_WORKSPACE/${{github.repository}}.wiki
+          cp -r $GITHUB_WORKSPACE/docs/* .
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git diff-index --quiet HEAD || git commit -m "update: wiki sync" && git push
