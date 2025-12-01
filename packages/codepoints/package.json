@@ -1,6 +1,6 @@
 {
   "name": "@chr33s/codepoints",
-  "version": "3.0.0",
+  "version": "5.0.0",
   "description": "A parser for files in the Unicode database",
   "type": "module",
   "sideEffects": false,
@@ -23,15 +23,15 @@
     "codepoint"
   ],
   "author": "Devon Govett <devongovett@gmail.com>",
-  "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/devongovett/codepoints.git"
+    "url": "https://github.com/chr33s/pdf.git"
   },
   "bugs": {
-    "url": "https://github.com/devongovett/codepoints/issues"
+    "url": "https://github.com/chr33s/pdf/issues"
   },
-  "homepage": "https://github.com/devongovett/codepoints",
+  "license": "MIT",
+  "homepage": "https://github.com/chr33s/pdf",
   "devDependencies": {
     "@types/node": "^24.10.1",
     "typescript": "^5.6.3",

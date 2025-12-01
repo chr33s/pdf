@@ -1,6 +1,6 @@
 {
   "name": "@chr33s/fontkit",
-  "version": "3.0.0",
+  "version": "5.0.0",
   "description": "An advanced font engine for Node and the browser",
   "type": "module",
   "sideEffects": false,
@@ -42,7 +42,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/Hopding/fontkit.git"
+    "url": "https://github.com/chr33s/pdf.git"
   },
   "keywords": [
     "opentype",
@@ -58,8 +58,8 @@
     "Devon Govett <devongovett@gmail.com> (http://badassjs.com/)"
   ],
   "bugs": {
-    "url": "https://github.com/Hopding/fontkit/issues"
+    "url": "https://github.com/chr33s/pdf/issues"
   },
   "license": "MIT",
-  "homepage": "https://github.com/Hopding/fontkit"
+  "homepage": "https://github.com/chr33s/pdf"
 }

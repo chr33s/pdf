@@ -25,13 +25,9 @@ width // => 713
 ### NPM Module
 To install the latest stable version:
 ```bash
-# With npm
 npm install --save @chr33s/standard-fonts
-
-# With yarn
-yarn add @chr33s/standard-fonts
 ```
-This assumes you're using [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/lang/en/) as your package manager.
+This assumes you're using [npm](https://www.npmjs.com/) as your package manager.
 
 ### ESM Build
 `@chr33s/standard-fonts` now ships only native ES modules compiled from the TypeScript sources. The published entry point is `dist/index.js`, which also ships bundled type declarations in `dist/index.d.ts`. Use Node 18+ or a modern bundler (Vite, Rollup, Webpack, etc.) to consume the package, and bundle it for browsers as needed.

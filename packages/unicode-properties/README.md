@@ -33,14 +33,7 @@ unicodeProperties.isDigit("9".codePointAt(0) ?? 0); //=> true
 ## Installation
 
 ```bash
-# npm
 npm install @chr33s/unicode-properties
-
-# pnpm
-pnpm add @chr33s/unicode-properties
-
-# yarn
-yarn add @chr33s/unicode-properties
 ```
 
 The package is distributed as native ES modules. Use Node.js 18+ or configure your bundler to resolve NodeNext-style imports.

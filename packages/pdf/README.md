@@ -1139,27 +1139,20 @@ To install the latest stable version:
 ```bash
 # With npm
 npm install --save pdf
-
-# With yarn
-yarn add @chr33s/pdf
 ```
 
-This assumes you're using [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/lang/en/) as your package manager.
+This assumes you're using [npm](https://www.npmjs.com/) as your package manager.
 
 ## Fontkit Installation
 
 `pdf` relies upon a sister module to support embedding custom fonts: [`@chr33s/fontkit`](https://www.npmjs.com/package/@chr33s/fontkit). You must add the `@chr33s/fontkit` module to your project and register it using `pdfDoc.registerFontkit(...)` before embedding custom fonts (see the [font embedding example](#embed-font-and-measure-text)). This module is not included by default because not all users need it, and it increases bundle size.
 
-Installing this module is easy. Just like `pdf` itself, `@chr33s/fontkit` can be installed with `npm`/`yarn`.
+Installing this module is easy. Just like `pdf` itself, `@chr33s/fontkit` can be installed with `npm`.
 
 ### Fontkit NPM Module
 
 ```bash
-# With npm
 npm install --save @chr33s/fontkit
-
-# With yarn
-yarn add @chr33s/fontkit
 ```
 
 To register the `fontkit` instance:

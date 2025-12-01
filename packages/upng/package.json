@@ -1,7 +1,7 @@
 {
   "name": "@chr33s/upng",
   "license": "MIT",
-  "version": "3.0.0",
+  "version": "5.0.0",
   "description": "Small, fast and advanced PNG / APNG encoder and decoder",
   "type": "module",
   "sideEffects": false,
@@ -19,14 +19,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Hopding/upng"
+    "url": "https://github.com/chr33s/pdf.git"
   },
   "author": "photopea (https://github.com/photopea)",
   "contributors": [
     "Andrew Dillon (https://github.com/Hopding)",
     "Scimonster (https://github.com/Scimonster)"
   ],
-  "bugs": "https://github.com/Hopding/upng/issues",
+  "bugs": {
+    "url": "https://github.com/chr33s/pdf/issues"
+  },
+  "homepage": "https://github.com/chr33s/pdf",
   "keywords": [
     "png",
     "apng",

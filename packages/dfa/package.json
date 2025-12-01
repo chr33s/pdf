@@ -1,6 +1,6 @@
 {
   "name": "@chr33s/dfa",
-  "version": "3.0.0",
+  "version": "5.0.0",
   "description": "Deterministic finite automata compiler",
   "type": "module",
   "sideEffects": false,
@@ -17,13 +17,21 @@
     "test": "vitest run",
     "typecheck": "tsc --project tsconfig.typecheck.json"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chr33s/pdf.git"
+  },
   "keywords": [
     "state",
     "machine",
     "compiler"
   ],
   "author": "Devon Govett <devongovett@gmail.com>",
+  "bugs": {
+    "url": "https://github.com/chr33s/pdf/issues"
+  },
   "license": "MIT",
+  "homepage": "https://github.com/chr33s/pdf",
   "devDependencies": {
     "@types/node": "^24.10.1",
     "peggy": "^5.0.6",

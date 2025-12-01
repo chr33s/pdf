@@ -5,14 +5,7 @@
 ## Installation
 
 ```bash
-# npm
 npm install @chr33s/brotli
-
-# pnpm
-pnpm add @chr33s/brotli
-
-# yarn
-yarn add @chr33s/brotli
 ```
 
 ## Usage

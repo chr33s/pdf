@@ -12,14 +12,7 @@
 ## Installation
 
 ```bash
-# npm
 npm install @chr33s/restructure
-
-# pnpm
-pnpm add @chr33s/restructure
-
-# yarn
-yarn add @chr33s/restructure
 ```
 
 Use Node.js 18+ or configure your bundler to resolve NodeNext-style ES modules.

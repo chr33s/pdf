@@ -58,14 +58,7 @@ subset.encodeStream()
 ## Installation
 
 ```bash
-# npm
 npm install @chr33s/fontkit
-
-# pnpm
-pnpm add @chr33s/fontkit
-
-# yarn
-yarn add @chr33s/fontkit
 ```
 
 The published artifacts are native ES modules with generated type declarations. Use Node.js 18+ or a contemporary bundler (Vite, Rollup, webpack 5+, etc.) that understands `package.json` `exports` and the NodeNext resolution strategy.

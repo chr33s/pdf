@@ -23,14 +23,7 @@ const pixels = UPNG.toRGBA8(pngImage)[0];
 ## Installation
 
 ```bash
-# npm
 npm install @chr33s/upng
-
-# pnpm
-pnpm add @chr33s/upng
-
-# yarn
-yarn add @chr33s/upng
 ```
 
 Package consumers should run on Node.js 18+ or enable NodeNext-compatible module resolution in their bundler configuration.

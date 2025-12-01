@@ -1,6 +1,6 @@
 {
   "name": "@chr33s/pdf",
-  "version": "3.0.0",
+  "version": "5.0.0",
   "description": "Create and modify PDF files with JavaScript",
   "author": "Andrew Dillon <andrew.dillon.j@gmail.com>",
   "type": "module",
@@ -73,11 +73,14 @@
   },
   "license": "MIT",
   "private": false,
-  "homepage": "https://pdf.js.org",
-  "repository": "git+https://github.com/cantoo-scribe/pdf.git",
-  "bugs": {
-    "url": "https://github.com/cantoo-scribe/pdf/issues"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chr33s/pdf.git"
   },
+  "bugs": {
+    "url": "https://github.com/chr33s/pdf/issues"
+  },
+  "homepage": "https://github.com/chr33s/pdf",
   "keywords": [
     "pdf",
     "pdf",

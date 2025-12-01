@@ -1,6 +1,6 @@
 {
   "name": "@chr33s/standard-fonts",
-  "version": "3.0.0",
+  "version": "5.0.0",
   "description": "Metrics for the Standard 14 PDF fonts and their encodings",
   "type": "module",
   "sideEffects": false,
@@ -19,7 +19,10 @@
     "generate:encodings": "node scripts/encodings/parse.ts",
     "test": "vitest run"
   },
-  "repository": "https://github.com/Hopding/standard-fonts.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chr33s/pdf.git"
+  },
   "keywords": [
     "afm",
     "adobe",
@@ -32,8 +35,11 @@
   "contributors": [
     "Christopher Brown <io@henrian.com> (http://henrian.com)"
   ],
+  "bugs": {
+    "url": "https://github.com/chr33s/pdf/issues"
+  },
   "license": "MIT",
-  "homepage": "https://github.com/Hopding/standard-fonts",
+  "homepage": "https://github.com/chr33s/pdf",
   "dependencies": {
     "pako": "^2.1.0"
   },

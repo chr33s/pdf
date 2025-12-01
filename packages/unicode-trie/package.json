@@ -1,6 +1,6 @@
 {
   "name": "@chr33s/unicode-trie",
-  "version": "3.0.0",
+  "version": "5.0.0",
   "description": "Unicode Trie data structure for fast character metadata lookup, ported from ICU",
   "type": "module",
   "sideEffects": false,
@@ -18,14 +18,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/devongovett/unicode-trie.git"
+    "url": "https://github.com/chr33s/pdf.git"
   },
   "author": "Devon Govett <devongovett@gmail.com>",
-  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/devongovett/unicode-trie/issues"
+    "url": "https://github.com/chr33s/pdf/issues"
   },
-  "homepage": "https://github.com/devongovett/unicode-trie",
+  "license": "MIT",
+  "homepage": "https://github.com/chr33s/pdf",
   "dependencies": {
     "@chr33s/compression": "file:../compression"
   },

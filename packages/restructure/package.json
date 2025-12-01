@@ -1,6 +1,6 @@
 {
   "name": "@chr33s/restructure",
-  "version": "3.0.0",
+  "version": "5.0.0",
   "description": "Declaratively encode and decode binary data",
   "type": "module",
   "sideEffects": false,
@@ -24,7 +24,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/Hopding/restructure.git"
+    "url": "https://github.com/chr33s/pdf.git"
   },
   "keywords": [
     "binary",
@@ -37,10 +37,10 @@
     "Devon Govett <devongovett@gmail.com> (http://badassjs.com/)"
   ],
   "bugs": {
-    "url": "https://github.com/Hopding/png-ts/issues"
+    "url": "https://github.com/chr33s/pdf/issues"
   },
   "license": "MIT",
-  "homepage": "https://github.com/Hopding/restructure",
+  "homepage": "https://github.com/chr33s/pdf",
   "private": false,
   "directories": {
     "test": "test"
