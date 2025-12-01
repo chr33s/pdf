@@ -1,6 +1,12 @@
 # @chr33s/codepoints
 
-A parser for files in the Unicode database. Produces a giant array of codepoint objects for
+> A parser for files in the Unicode database.
+
+`@chr33s/codepoints` lives in the [`chr33s/pdf`](https://github.com/chr33s/pdf) monorepo and provides native ES modules with TypeScript declarations.
+
+## Overview
+
+Produces a giant array of codepoint objects for
 every character represented by Unicode, with many properties derived from files in the Unicode
 database.
 
@@ -9,7 +15,7 @@ as the parsers are not optimized for speed, the text files are huge, and the res
 huge amount of memory. To access this data in real world applications, use modules that have
 precompiled the data into a compressed form:
 
-* [unicode-properties](https://github.com/devongovett/unicode-properties)
+* [@chr33s/unicode-properties](https://github.com/chr33s/pdf/tree/main/packages/unicode-properties)
 
 ## Installation
 

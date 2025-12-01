@@ -1,4 +1,10 @@
-# dfa
+# @chr33s/dfa
+
+> Deterministic finite automata compiler packaged as modern ES modules.
+
+`@chr33s/dfa` lives in the [`chr33s/pdf`](https://github.com/chr33s/pdf) monorepo and provides native ES modules with TypeScript declarations.
+
+## Overview
 
 Compiles a regular expression like syntax to fast deterministic finite automata.
 Useful for pattern matching against non-string sequences.

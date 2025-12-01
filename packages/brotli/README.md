@@ -1,6 +1,8 @@
 # @chr33s/brotli
 
-> Modern ESM build of the Brotli decompression utilities 
+> Modern ESM build of the Brotli decompression utilities.
+
+`@chr33s/brotli` lives in the [`chr33s/pdf`](https://github.com/chr33s/pdf) monorepo and provides native ES modules with TypeScript declarations.
 
 ## Installation
 

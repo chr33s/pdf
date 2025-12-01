@@ -1,6 +1,8 @@
 # @chr33s/crypto
 
-JavaScript library of crypto standards.
+> JavaScript library of crypto standards.
+
+`@chr33s/crypto` lives in the [`chr33s/pdf`](https://github.com/chr33s/pdf) monorepo and provides native ES modules with TypeScript declarations.
 
 ## Install
 
@@ -538,9 +540,9 @@ Include the browser field in the released package.json.
 
 ### 4.1.0
 
-Added url safe variant of base64 encoding. [357](https://github.com/brix/@chr33s/crypto/pull/357)
+Added url safe variant of base64 encoding. [357](https://github.com/brix/crypto-js/pull/357)
 
-Avoid webpack to add crypto-browser package. [364](https://github.com/brix/@chr33s/crypto/pull/364)
+Avoid webpack to add crypto-browser package. [364](https://github.com/brix/crypto-js/pull/364)
 
 ### 4.0.0
 

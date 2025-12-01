@@ -1,5 +1,8 @@
 # @chr33s/unicode-trie
-A data structure for fast Unicode character metadata lookup, ported from ICU
+
+> A data structure for fast Unicode character metadata lookup, ported from ICU.
+
+`@chr33s/unicode-trie` lives in the [`chr33s/pdf`](https://github.com/chr33s/pdf) monorepo and provides native ES modules with TypeScript declarations.
 
 ## Background
 

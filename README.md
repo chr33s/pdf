@@ -1,36 +1,66 @@
-# Modern ESM only port pdf-lib & dependency tree
+# @chr33s/pdf
 
-- [@chr33s/brotli](./packages/brotli/)
-- [@chr33s/codepoints](./packages/codepoints/)
-- [@chr33s/compression](./packages/compression/)
-- [@chr33s/crypto](./packages/crypto/)
-- [@chr33s/dfa](./packages/dfa/)
-- [@chr33s/font-kit](./packages/fontkit/)
-- [@chr33s/pdf](./packages/pdf/)
-- [@chr33s/restructure](./packages/restructure/)
-- [@chr33s/standard-fonts](./packages/standard-fonts/)
-- [@chr33s/unicode-properties](./packages/unicode-properties/)
-- [@chr33s/unicode-trie](./packages/unicode-trie/)
-- [@chr33s/upng](./packages/upng/)
+> Modern ESM-only monorepo for PDF generation and manipulation in JavaScript.
 
-## TODO
+This monorepo contains `@chr33s/pdf` and all its dependencies as native ES modules with full TypeScript support. It evolves from [pdf-lib](https://github.com/Hopding/pdf-lib) with modern tooling, SVG support, and up-to-date dependencies.
 
-- [ ] Audit dependencies
+## Packages
 
-node-html-better-parser -> node-html-parser   
-deep-equal -> fast-deep-equal   
+| Package | Description |
+|---------|-------------|
+| [@chr33s/pdf](./packages/pdf/) | Create and modify PDF documents |
+| [@chr33s/fontkit](./packages/fontkit/) | Advanced font engine for font embedding |
+| [@chr33s/brotli](./packages/brotli/) | Brotli decompression for WOFF2 fonts |
+| [@chr33s/codepoints](./packages/codepoints/) | Unicode database parser (build-time only) |
+| [@chr33s/compression](./packages/compression/) | Compression utilities (deflate, gzip, etc.) |
+| [@chr33s/crypto](./packages/crypto/) | Cryptographic primitives for PDF encryption |
+| [@chr33s/dfa](./packages/dfa/) | Deterministic finite automata compiler |
+| [@chr33s/restructure](./packages/restructure/) | Binary encoding/decoding primitives |
+| [@chr33s/standard-fonts](./packages/standard-fonts/) | Metrics for standard 14 PDF fonts |
+| [@chr33s/unicode-properties](./packages/unicode-properties/) | Fast Unicode character metadata lookup |
+| [@chr33s/unicode-trie](./packages/unicode-trie/) | Compressed Unicode trie data structure |
+| [@chr33s/upng](./packages/upng/) | PNG/APNG encoder and decoder |
 
-## Notes
+## Installation
 
-Monorepo migration
-
-```sh
-git remote add unicode-trie https://github.com/foliojs/unicode-trie
-git fetch unicode-trie
-git merge --allow-unrelated-histories unicode-trie/master
-git mv ...
+```bash
+npm install @chr33s/pdf
 ```
 
-```sh
-npm -ws --if-present run test
+## Quick Start
+
+```ts
+import { PDFDocument } from "@chr33s/pdf";
+
+const pdfDoc = await PDFDocument.create();
+const page = pdfDoc.addPage();
+page.drawText("Hello, World!");
+
+const pdfBytes = await pdfDoc.save();
 ```
+
+## Development
+
+Requirements: Node.js ^22.18.0, npm 10+
+
+```bash
+# Install dependencies
+npm install
+
+# Build all packages
+npm run workspace build
+
+# Run tests
+npm run workspace test
+
+# Full pipeline (clean → build → check → test)
+npm run all
+
+# Format and lint
+npm run check    # verify
+npm run fix      # auto-fix
+```
+
+## License
+
+[MIT](./LICENSE)
