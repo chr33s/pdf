@@ -1,0 +1,10 @@
+{
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"name": "chr33s-pdf",
+	"compatibility_flags": ["nodejs_compat", "enable_nodejs_tty_module", "enable_nodejs_fs_module", "enable_nodejs_http_modules", "enable_nodejs_perf_hooks_module"],
+	"compatibility_date": "2025-10-04",
+	"main": "./worker.ts",
+	"dev": {
+		"port": 8080
+	}
+}
