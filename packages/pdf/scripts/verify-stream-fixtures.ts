@@ -474,7 +474,7 @@ async function verifyEmbeddersData(dir: string) {
       continue;
     }
     const fontBytes = await readFile(fontPath);
-    const font = fontkit.create(fontBytes);
+    const font = await fontkit.create(fontBytes);
     const glyphs = sortedUniq(
       font.characterSet
         .map((codePoint: number) => font.glyphForCodePoint(codePoint))
@@ -737,7 +737,7 @@ async function verifyWritersData(dir: string) {
   ET
 `;
 
-  const contentStream = context.flateStream(contentStreamText);
+  const contentStream = await context.flateStream(contentStreamText);
   const contentStreamRef = PDFRef.of(9000);
   context.assign(contentStreamRef, contentStream);
 

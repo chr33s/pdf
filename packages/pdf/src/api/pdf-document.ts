@@ -1,3 +1,4 @@
+import type { Fontkit } from "@chr33s/fontkit";
 import { HTMLElement, NodeType, parse as parseHtml } from "node-html-better-parser";
 import { CipherTransformFactory } from "../core/crypto.js";
 import FileEmbedder, { AFRelationship } from "../core/embedders/file-embedder.js";
@@ -32,7 +33,6 @@ import {
 import PDFObject from "../core/objects/pdf-object.js";
 import PDFRef from "../core/objects/pdf-ref.js";
 import PDFSecurity, { SecurityOptions } from "../core/security/pdf-security.js";
-import { Fontkit } from "../types/fontkit.js";
 import { TransformationMatrix } from "../types/matrix.js";
 import {
   assertIs,

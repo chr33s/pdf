@@ -12,7 +12,7 @@
   },
   "scripts": {
     "build": "npm run clean && npm run generate && tsc",
-    "clean": "rm -rf dist src/data.js src/trie.js",
+    "clean": "rm -rf dist src/*.js src/*.d.ts",
     "generate": "node scripts/generate.ts",
     "test": "vitest run",
     "typecheck": "tsc --project tsconfig.typecheck.json"

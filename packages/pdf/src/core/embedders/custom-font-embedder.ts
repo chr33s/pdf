@@ -1,4 +1,4 @@
-import { Font, Fontkit, Glyph, TypeFeatures } from "../../types/fontkit.js";
+import type { Font, Fontkit, Glyph, TypeFeatures } from "@chr33s/fontkit";
 
 import { byAscendingId, Cache, sortedUniq, toHexStringOfMinLength } from "../../utils/index.js";
 import PDFHexString from "../objects/pdf-hex-string.js";
@@ -120,7 +120,7 @@ class CustomFontEmbedder {
   }
 
   protected isCFF(): boolean {
-    return this.font.cff;
+    return !!this.font.cff;
   }
 
   protected async embedCIDFontDict(context: PDFContext): Promise<PDFRef> {

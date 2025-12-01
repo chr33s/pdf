@@ -3,7 +3,7 @@ import * as r from "@chr33s/restructure";
 let Setting = new r.Struct({
   setting: r.uint16,
   nameIndex: r.int16,
-  name: (t) => t.parent.parent.parent.name.records.fontFeatures[t.nameIndex],
+  name: (t: any) => t.parent.parent.parent.name.records.fontFeatures[t.nameIndex],
 });
 
 let FeatureName = new r.Struct({
@@ -24,7 +24,7 @@ let FeatureName = new r.Struct({
   ]),
   defaultSetting: r.uint8,
   nameIndex: r.int16,
-  name: (t) => t.parent.parent.name.records.fontFeatures[t.nameIndex],
+  name: (t: any) => t.parent.parent.name.records.fontFeatures[t.nameIndex],
 });
 
 export default new r.Struct({

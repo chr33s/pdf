@@ -209,7 +209,7 @@ function consonantPosition(font: FontLike, consonant: GlyphInfo, virama: GlyphIn
 }
 
 function initialReordering(font: FontLike, glyphs: GlyphInfo[], plan: IndicPlan): void {
-  let indicConfig = plan.indicConfig;
+  let indicConfig = plan.indicConfig!;
   let features = font._layoutEngine.engine.GSUBProcessor.features;
 
   let dottedCircle = font.glyphForCodePoint(0x25cc).id;
@@ -815,7 +815,7 @@ function finalReordering(font: FontLike, glyphs: GlyphInfo[], plan: IndicPlan): 
         (glyphs[start].isLigated && !glyphs[start].isMultiplied)
     ) {
       let newRephPos;
-      let rephPos = indicConfig.rephPos;
+      let rephPos = indicConfig!.rephPos;
       let found = false;
 
       // 1. If reph should be positioned after post-base consonant forms,
@@ -927,10 +927,10 @@ function finalReordering(font: FontLike, glyphs: GlyphInfo[], plan: IndicPlan): 
       }
 
       let reph = glyphs[start];
-      glyphs.splice(start, 0, ...glyphs.splice(start + 1, newRephPos - start));
-      glyphs[newRephPos] = reph;
+      glyphs.splice(start, 0, ...glyphs.splice(start + 1, newRephPos! - start));
+      glyphs[newRephPos!] = reph;
 
-      if (start < base && base <= newRephPos) {
+      if (start < base && base <= newRephPos!) {
         base--;
       }
     }
@@ -1014,7 +1014,7 @@ function finalReordering(font: FontLike, glyphs: GlyphInfo[], plan: IndicPlan): 
   }
 }
 
-function nextSyllable(glyphs, start) {
+function nextSyllable(glyphs: GlyphInfo[], start: number): number {
   if (start >= glyphs.length) return start;
   let syllable = glyphs[start].shaperInfo.syllable;
   while (++start < glyphs.length && glyphs[start].shaperInfo.syllable === syllable);

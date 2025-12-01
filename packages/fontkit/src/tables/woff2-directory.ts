@@ -1,7 +1,7 @@
 import * as r from "@chr33s/restructure";
 
 const Base128 = {
-  decode(stream) {
+  decode(stream: any) {
     let result = 0;
     let iterable = [0, 1, 2, 3, 4];
     for (let j = 0; j < iterable.length; j++) {
@@ -91,10 +91,10 @@ let knownTags = [
 let WOFF2DirectoryEntry = new r.Struct({
   flags: r.uint8,
   customTag: new r.Optional(new r.String(4), (t) => (t.flags & 0x3f) === 0x3f),
-  tag: (t) => t.customTag || knownTags[t.flags & 0x3f], // || (() => { throw new Error(`Bad tag: ${flags & 0x3f}`); })(); },
+  tag: (t: any) => t.customTag || knownTags[t.flags & 0x3f], // || (() => { throw new Error(`Bad tag: ${flags & 0x3f}`); })(); },
   length: Base128,
-  transformVersion: (t) => (t.flags >>> 6) & 0x03,
-  transformed: (t) =>
+  transformVersion: (t: any) => (t.flags >>> 6) & 0x03,
+  transformed: (t: any) =>
     t.tag === "glyf" || t.tag === "loca" ? t.transformVersion === 0 : t.transformVersion !== 0,
   transformLength: new r.Optional(Base128, (t) => t.transformed),
 });
@@ -118,7 +118,7 @@ let WOFF2Directory = new r.Struct({
 });
 
 WOFF2Directory.process = function () {
-  let tables = {};
+  let tables: Record<string, unknown> = {};
   for (let i = 0; i < this.tables.length; i++) {
     let table = this.tables[i];
     tables[table.tag] = table;

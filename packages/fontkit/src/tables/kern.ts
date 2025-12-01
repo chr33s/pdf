@@ -10,12 +10,13 @@ let ClassTable = new r.Struct({
   firstGlyph: r.uint16,
   nGlyphs: r.uint16,
   offsets: new r.Array(r.uint16, "nGlyphs"),
-  max: (t) => t.offsets.length && Math.max.apply(Math, t.offsets),
+  max: (t: { offsets: number[] }) => t.offsets.length && Math.max.apply(Math, t.offsets),
 });
 
 let Kern2Array = new r.Struct({
-  off: (t) => t._startOffset - t.parent.parent._startOffset,
-  len: (t) => ((t.parent.leftTable.max - t.off) / t.parent.rowWidth + 1) * (t.parent.rowWidth / 2),
+  off: (t: any) => t._startOffset - t.parent.parent._startOffset,
+  len: (t: any) =>
+    ((t.parent.leftTable.max - t.off) / t.parent.rowWidth + 1) * (t.parent.rowWidth / 2),
   values: new r.LazyArray(r.int16, "len"),
 });
 

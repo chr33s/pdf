@@ -67,7 +67,6 @@
     "@chr33s/fontkit": "file:../fontkit",
     "@vitest/coverage-v8": "^4.0.12",
     "flamebearer": "^1.1.3",
-    "http-server": "^14.1.1",
     "tsdown": "^0.16.7",
     "typescript": "^5.9.3",
     "vitest": "^4.0.12"

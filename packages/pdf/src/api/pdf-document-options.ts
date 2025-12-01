@@ -1,5 +1,5 @@
+import type { TypeFeatures } from "@chr33s/fontkit";
 import { EmbeddedFileOptions } from "../core/embedders/file-embedder.js";
-import { TypeFeatures } from "../types/fontkit.js";
 
 export type ParseSpeed = number;
 

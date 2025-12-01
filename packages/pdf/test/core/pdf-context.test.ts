@@ -91,7 +91,7 @@ describe("PDFContext", () => {
         "/Length 25\n",
         ">>\n",
         "stream\n",
-        await deflate("stuff and things!"),
+        await deflate(new TextEncoder().encode("stuff and things!")),
         "\nendstream",
       ),
     );

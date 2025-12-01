@@ -18,7 +18,7 @@ let Directory = new r.Struct({
 });
 
 Directory.process = function () {
-  let tables = {};
+  let tables: Record<string, unknown> = {};
   for (let table of this.tables) {
     tables[table.tag] = table;
   }

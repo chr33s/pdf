@@ -3,8 +3,11 @@ import { FontNames } from "@chr33s/standard-fonts";
 import { readFile } from "node:fs/promises";
 import { describe, expect, test } from "vitest";
 
+import type { Fontkit } from "@chr33s/fontkit";
 import { CustomFontEmbedder, StandardFontEmbedder } from "../../src/core/index.js";
 import { breakTextIntoLines } from "../../src/utils/index.js";
+
+const fk = fontkit as unknown as Fontkit;
 
 const font = StandardFontEmbedder.for(FontNames.Helvetica);
 
@@ -68,7 +71,7 @@ describe("breakTextIntoLines", () => {
     const sourceHansBytes = await readFile(
       "assets/fonts/source-hans-jp/source-han-serif-jp-regular.otf",
     );
-    const sourceHansFont = await CustomFontEmbedder.for(fontkit, sourceHansBytes);
+    const sourceHansFont = await CustomFontEmbedder.for(fk, sourceHansBytes);
 
     const input = "遅未亮惑職界転藤柔索名午納，問通桑転加料演載満経信回込町者訟窃。";
     const expected = [

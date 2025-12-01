@@ -1,7 +1,6 @@
 {
 	"$schema": "./node_modules/knip/schema.json",
-	"ignore": ["packages/brotli/vendor/**/*"],
-	"ignoreBinaries": ["make", "open"],
+	"ignoreBinaries": ["open"],
 	"workspaces": {
 		"apps/*": {
 			"entry": ["**/*.ts"],

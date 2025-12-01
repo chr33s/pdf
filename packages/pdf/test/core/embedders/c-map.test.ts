@@ -1,8 +1,8 @@
 import fontkit from "@chr33s/fontkit";
 import { readFile } from "node:fs/promises";
 import { describe, expect, test } from "vitest";
-import type { Font, Glyph } from "../../../src/types/fontkit.js";
 
+import type { Font, Glyph } from "@chr33s/fontkit";
 import { createCmap } from "../../../src/core/embedders/c-map.js";
 import { byAscendingId, sortedUniq } from "../../../src/utils/index.js";
 
@@ -29,7 +29,7 @@ const allGlyphsInFontSortedById = (font: Font) => {
 
 describe("createCmap", () => {
   test("creates CMaps for embedded ubuntu-R font files", async () => {
-    const font = await fontkit.create(ubuntuFont);
+    const font = (await fontkit.create(ubuntuFont)) as unknown as Font;
 
     const glyphs = allGlyphsInFontSortedById(font);
     const cmap = createCmap(glyphs, (g) => (g ? g.id : -1));
@@ -38,7 +38,7 @@ describe("createCmap", () => {
   });
 
   test("creates CMaps for embedded source-han-serif-jp-regular font files", async () => {
-    const font = await fontkit.create(sourceHansJpFont);
+    const font = (await fontkit.create(sourceHansJpFont)) as unknown as Font;
 
     const glyphs = allGlyphsInFontSortedById(font);
     const cmap = createCmap(glyphs, (g) => (g ? g.id : -1));

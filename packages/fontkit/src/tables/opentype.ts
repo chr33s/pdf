@@ -57,7 +57,7 @@ let LookupFlags = new r.Struct({
   ]),
 });
 
-export function LookupList(SubTable) {
+export function LookupList(SubTable: any) {
   let Lookup = new r.Struct({
     lookupType: r.uint16,
     flags: LookupFlags,

@@ -1,4 +1,4 @@
-import { Font, Fontkit, Glyph, Subset, TypeFeatures } from "../../types/fontkit.js";
+import type { Font, Fontkit, Glyph, Subset, TypeFeatures } from "@chr33s/fontkit";
 
 import { Cache, toHexStringOfMinLength } from "../../utils/index.js";
 import PDFHexString from "../objects/pdf-hex-string.js";

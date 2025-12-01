@@ -34,9 +34,3 @@ git mv ...
 ```sh
 npm -ws --if-present run test
 ```
-
-```sh
-cd packages/brotli/vendor/brotli
-git fetch --tags
-git checkout v1.2.0 
-```

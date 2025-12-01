@@ -1,4 +1,4 @@
-import { Glyph } from "../../types/fontkit.js";
+import type { Glyph } from "@chr33s/fontkit";
 
 import { toHexString, toHexStringOfMinLength } from "../../utils/index.js";
 import { hasSurrogates, highSurrogate, isWithinBMP, lowSurrogate } from "../../utils/unicode.js";

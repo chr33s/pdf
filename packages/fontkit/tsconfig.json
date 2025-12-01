@@ -4,9 +4,8 @@
     "allowJs": true,
     "rootDir": "src",
     "outDir": "dist",
-    "experimentalDecorators": true,
-    "strict": false
+    "experimentalDecorators": true
   },
-  "include": ["./fontkit.d.ts", "src/**/*.ts"],
+  "include": ["src/**/*.ts"],
   "exclude": ["dist", "node_modules", "test"]
 }

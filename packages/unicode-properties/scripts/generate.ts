@@ -123,7 +123,7 @@ const triePayload = base64.encode(
   compressedTrie.buffer.slice(
     compressedTrie.byteOffset,
     compressedTrie.byteOffset + compressedTrie.byteLength,
-  ),
+  ) as ArrayBuffer,
 );
 
 const emitModule = (value: string): string =>
@@ -145,6 +145,6 @@ const dataPayload = base64.encode(
   compressedData.buffer.slice(
     compressedData.byteOffset,
     compressedData.byteOffset + compressedData.byteLength,
-  ),
+  ) as ArrayBuffer,
 );
 await writeFile(dataFilePath, emitModule(dataPayload));

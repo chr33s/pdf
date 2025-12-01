@@ -94,7 +94,7 @@ describe("PDFContentStream", () => {
   test("can be serialized when encoded", async () => {
     const contents =
       "BT\n" + "/F1 24 Tf\n" + "100 100 Td\n" + "(Hello World and stuff!) Tj\n" + "ET\n";
-    const encodedContents = await deflate(contents);
+    const encodedContents = await deflate(new TextEncoder().encode(contents));
 
     const stream = PDFContentStream.of(dict, operators, true);
     await stream.init();

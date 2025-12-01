@@ -90,7 +90,7 @@ export default class CFFGlyph extends Glyph {
     let vsindex = privateDict.vsindex;
     const variationProcessor = this._font._variationProcessor;
 
-    let encodingVector;
+    let encodingVector: string[] | undefined;
     const font = this._font;
 
     const checkWidth = (): void => {
@@ -99,11 +99,11 @@ export default class CFFGlyph extends Glyph {
       }
     };
 
-    function glyphForName(name) {
+    function glyphForName(name: string) {
       if (!encodingVector) {
-        encodingVector = cff.topDict.charset.glyphs.map((g) => CFFStandardStrings[g]);
+        encodingVector = cff.topDict.charset.glyphs.map((g: number) => CFFStandardStrings[g]);
       }
-      const glyphId = Math.max(0, encodingVector.indexOf(name) + 1); // .notdef is not included, hence + 1
+      const glyphId = Math.max(0, encodingVector!.indexOf(name) + 1); // .notdef is not included, hence + 1
       return font.getGlyph(glyphId);
     }
 

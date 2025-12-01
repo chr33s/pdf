@@ -9,7 +9,10 @@ let NameRecord = new r.Struct({
   length: r.uint16,
   string: new r.Pointer(
     r.uint16,
-    new r.String("length", (t) => getEncoding(t.platformID, t.encodingID, t.languageID)),
+    new r.String(
+      "length",
+      (t: any) => getEncoding(t.platformID, t.encodingID, t.languageID) ?? undefined,
+    ),
     { type: "parent", relativeTo: "parent.stringOffset", allowNull: false },
   ),
 });
@@ -69,10 +72,10 @@ const NAMES = [
 ];
 
 NameTable.process = function (_stream) {
-  let records = {};
+  let records: Record<string, Record<string, unknown>> = {};
   for (let record of this.records) {
     // find out what language this is for
-    let language = LANGUAGES[record.platformID][record.languageID];
+    let language = (LANGUAGES as any)[record.platformID]?.[record.languageID];
 
     if (language == null && this.langTags != null && record.languageID >= 0x8000) {
       language = this.langTags[record.languageID - 0x8000].tag;
@@ -96,12 +99,13 @@ NameTable.process = function (_stream) {
 
     let addRecord = (key: string, record: any) => {
       if (records[key] == null) {
-        records[key] = {};
+        records[key] = {} as Record<string, unknown>;
       }
 
-      let obj = records[key];
+      let obj: Record<string, unknown> = records[key];
       if (key === "fontFeatures") {
-        obj = obj[record.nameID] || (obj[record.nameID] = {});
+        obj = (obj[record.nameID] ||
+          (obj[record.nameID] = {} as Record<string, unknown>)) as Record<string, unknown>;
       }
 
       if (typeof record.string === "string" || typeof obj[language] !== "string") {

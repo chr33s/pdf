@@ -1,4 +1,4 @@
-import fontkit from "@chr33s/fontkit";
+import fontkit, { type Fontkit } from "@chr33s/fontkit";
 import { readFile } from "node:fs/promises";
 import { afterAll, beforeAll, beforeEach, describe, expect, test, vi } from "vitest";
 import { PDFAttachment } from "../../src/api/pdf-document.js";
@@ -148,8 +148,8 @@ describe("PDFDocument", () => {
       const pdfDoc1 = await PDFDocument.create({ updateMetadata: false });
       const pdfDoc2 = await PDFDocument.create({ updateMetadata: false });
 
-      pdfDoc1.registerFontkit(fontkit);
-      pdfDoc2.registerFontkit(fontkit);
+      pdfDoc1.registerFontkit(fontkit as unknown as Fontkit);
+      pdfDoc2.registerFontkit(fontkit as unknown as Fontkit);
 
       await pdfDoc1.embedFont(customFont);
       await pdfDoc2.embedFont(customFont);

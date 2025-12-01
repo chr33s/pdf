@@ -19,8 +19,7 @@
   "scripts": {
     "build": "tsc",
     "test": "vitest run",
-    "test:watch": "vitest",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --project tsconfig.typecheck.json"
   },
   "exports": {
     ".": {
@@ -52,6 +51,6 @@
   ],
   "devDependencies": {
     "typescript": "^5.8.3",
-    "vitest": "^3.2.1"
+    "vitest": "^4.0.12"
   }
 }

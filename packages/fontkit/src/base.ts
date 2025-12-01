@@ -76,7 +76,7 @@ type FontConstructor = {
   probe(buffer: Buffer): boolean;
 };
 
-interface FontkitRegistry {
+export interface FontkitRegistry {
   logErrors: boolean;
   registerFormat(format: FontConstructor): void;
   create(
@@ -84,6 +84,8 @@ interface FontkitRegistry {
     postscriptName?: VariationSettings | string,
   ): Promise<FontInstance>;
 }
+
+export type { FontInstance };
 
 const formats: FontConstructor[] = [];
 const sanitizedFormats = new WeakMap<FontConstructor, FontConstructor>();

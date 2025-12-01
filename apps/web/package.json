@@ -8,9 +8,7 @@
     "@chris/pdf": "../../packages/pdf/dist/index.min.js"
   },
   "devDependencies": {
-    "@vitest/browser": "^4.0.14",
     "@vitest/browser-playwright": "^4.0.14",
-    "buffer": "^6.0.3",
     "playwright": "^1.49.0",
     "vite-plugin-node-polyfills": "^0.24.0",
     "vitest": "^4.0.14"

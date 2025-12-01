@@ -13,7 +13,7 @@
   },
   "scripts": {
     "build": "npm run generate && tsc && npm run copy:shaper-data && tsdown",
-    "clean": "rm -rf dist src/opentype/shapers/*.json src/opentype/shapers/*-data.js",
+    "clean": "rm -rf dist src/opentype/shapers/*.json src/opentype/shapers/*-data.js src/opentype/shapers/*-data.d.ts",
     "copy:shaper-data": "node ./scripts/copy-shaper-json.ts",
     "generate": "node src/opentype/shapers/generate-data.ts && node src/opentype/shapers/gen-use.ts && node src/opentype/shapers/gen-indic.ts",
     "test": "vitest run",
@@ -33,11 +33,9 @@
   "devDependencies": {
     "@chr33s/codepoints": "file:../codepoints",
     "@types/clone": "^2.1.4",
-    "@types/concat-stream": "^2.0.3",
     "@types/deep-equal": "^1.0.4",
     "@types/node": "^24.10.1",
     "@vitest/coverage-v8": "^4.0.14",
-    "concat-stream": "^2.0.0",
     "tsdown": "^0.16.7",
     "typescript": "^5.9.3",
     "vitest": "^4.0.12"

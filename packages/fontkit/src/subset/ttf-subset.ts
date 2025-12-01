@@ -141,7 +141,7 @@ export default class TTFSubset extends Subset<TTFFont> {
     };
 
     for (const table of this.tables) {
-      t[table] = cloneDeep(this.font[table]);
+      (t as Record<string, unknown>)[table] = cloneDeep(this.font[table]);
     }
 
     Directory.encode(stream, {
