@@ -1,22 +1,22 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 import { CRC } from "../src/crc.js";
 
 describe("table", () => {
-  it("has 256 entries", () => {
+  test("has 256 entries", () => {
     expect(CRC.table).toBeInstanceOf(Uint32Array);
     expect(CRC.table.length).toBe(256);
   });
 });
 
 describe("update", () => {
-  it("returns the same value when updating with zero-length buffer", () => {
+  test("returns the same value when updating with zero-length buffer", () => {
     const initial = 0x12345678;
     const buf = new Uint8Array([1, 2, 3, 4]);
     const result = CRC.update(initial, buf, 0, 0);
     expect(result).toBe(initial);
   });
 
-  it("updates CRC incrementally equivalent to one-shot", () => {
+  test("updates CRC incrementally equivalent to one-shot", () => {
     const text = "Hello, world!";
     const bytes = new TextEncoder().encode(text);
 
@@ -29,7 +29,7 @@ describe("update", () => {
     expect(part2 >>> 0).toBe(full >>> 0);
   });
 
-  it("respects offset and length", () => {
+  test("respects offset and length", () => {
     const buf = new Uint8Array([0, 1, 2, 3, 4, 5]);
     const c1 = CRC.update(0xffffffff, buf, 1, 3);
 
@@ -41,7 +41,7 @@ describe("update", () => {
 });
 
 describe("crc", () => {
-  it("matches known CRC-32 values for test vectors", () => {
+  test("matches known CRC-32 values for test vectors", () => {
     const enc = new TextEncoder();
 
     // Empty buffer (standard CRC-32)
@@ -58,7 +58,7 @@ describe("crc", () => {
     expect(crc2).toBeLessThanOrEqual(0xffffffff);
   });
 
-  it("computes CRC on a subrange using offset and length", () => {
+  test("computes CRC on a subrange using offset and length", () => {
     const enc = new TextEncoder();
     const full = enc.encode("ABCDEF");
     const subCrc = CRC.crc(full, 1, 3); // "BCD"

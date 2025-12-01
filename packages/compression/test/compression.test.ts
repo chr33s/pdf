@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 import { deflate, deflateRaw, gunzip, gzip, inflate, inflateRaw } from "../src/index.js";
 
 describe("compression", () => {
@@ -6,7 +6,7 @@ describe("compression", () => {
   const largeData = new Uint8Array(10000).fill(65); // 10KB of 'A's
 
   describe("deflate/inflate (zlib format)", () => {
-    it("should compress and decompress data", async () => {
+    test("should compress and decompress data", async () => {
       const compressed = await deflate(testData);
       // Small data may not compress smaller due to overhead
       expect(compressed.length).toBeGreaterThan(0);
@@ -15,7 +15,7 @@ describe("compression", () => {
       expect(decompressed).toEqual(testData);
     });
 
-    it("should handle large data", async () => {
+    test("should handle large data", async () => {
       const compressed = await deflate(largeData);
       expect(compressed.length).toBeLessThan(largeData.length);
 
@@ -23,7 +23,7 @@ describe("compression", () => {
       expect(decompressed).toEqual(largeData);
     });
 
-    it("should handle empty data", async () => {
+    test("should handle empty data", async () => {
       const emptyData = new Uint8Array(0);
       const compressed = await deflate(emptyData);
       const decompressed = await inflate(compressed);
@@ -32,7 +32,7 @@ describe("compression", () => {
   });
 
   describe("deflateRaw/inflateRaw (raw deflate format)", () => {
-    it("should compress and decompress data", async () => {
+    test("should compress and decompress data", async () => {
       const compressed = await deflateRaw(testData);
       // Small data may not compress smaller due to overhead
       expect(compressed.length).toBeGreaterThan(0);
@@ -41,7 +41,7 @@ describe("compression", () => {
       expect(decompressed).toEqual(testData);
     });
 
-    it("should handle large data", async () => {
+    test("should handle large data", async () => {
       const compressed = await deflateRaw(largeData);
       expect(compressed.length).toBeLessThan(largeData.length);
 
@@ -51,7 +51,7 @@ describe("compression", () => {
   });
 
   describe("gzip/gunzip", () => {
-    it("should compress and decompress data", async () => {
+    test("should compress and decompress data", async () => {
       const compressed = await gzip(testData);
       // gzip adds header, so small data won't be smaller
       expect(compressed.length).toBeGreaterThan(0);
@@ -62,7 +62,7 @@ describe("compression", () => {
   });
 
   describe("compression ratio", () => {
-    it("should achieve good compression on repetitive data", async () => {
+    test("should achieve good compression on repetitive data", async () => {
       const repetitiveData = new TextEncoder().encode("AAAAAAAAAAAAAAAAAAAA".repeat(100));
       const compressed = await deflate(repetitiveData);
 

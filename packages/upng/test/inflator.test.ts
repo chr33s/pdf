@@ -1,11 +1,11 @@
 import pako from "pako";
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 import { Inflator } from "../src/inflator.js";
 
 describe("Inflator tables initialization", () => {
   const D = Inflator.D;
 
-  it("creates all expected table types with correct lengths", () => {
+  test("creates all expected table types with correct lengths", () => {
     expect(D.m).toBeInstanceOf(Uint16Array);
     expect(D.v).toBeInstanceOf(Uint16Array);
     expect(D.B).toBeInstanceOf(Uint16Array);
@@ -41,7 +41,7 @@ describe("Inflator tables initialization", () => {
     expect(D.j.length).toBe(1 << 15);
   });
 
-  it("precomputes correct fixed Huffman length and distance tables for some entries", () => {
+  test("precomputes correct fixed Huffman length and distance tables for some entries", () => {
     // For fixed Huffman, the first 144 literal/length symbols use 8-bit codes.
     // `tables.s` is the canonical (code,length) pair array backing `g`.
     // Check some sample lengths.
@@ -63,7 +63,7 @@ describe("Inflator tables initialization", () => {
     expect(distLen29).toBe(5);
   });
 
-  it("bit-reversal table i is self-consistent for a few sample entries", () => {
+  test("bit-reversal table i is self-consistent for a few sample entries", () => {
     const i = D.i;
     // For some simple patterns, reversing twice should give the original index
     const samples = [0, 1, 0b101010101010101, 0b111000000000000, 0x7fff];
@@ -76,7 +76,7 @@ describe("Inflator tables initialization", () => {
 });
 
 describe("Inflator helpers", () => {
-  it("H expands buffer capacity when needed and preserves content", () => {
+  test("H expands buffer capacity when needed and preserves content", () => {
     const original = new Uint8Array([1, 2, 3, 4]);
     const same = Inflator.H(original, 4);
     expect(same).toBe(original);
@@ -87,7 +87,7 @@ describe("Inflator helpers", () => {
     expect(Array.from(expanded.slice(0, 4))).toEqual([1, 2, 3, 4]);
   });
 
-  it("C_inner assigns canonical codes consistently with straightforward implementation", () => {
+  test("C_inner assigns canonical codes consistently with straightforward implementation", () => {
     // Build a small length array: 4 symbols with lengths [2,3,3,1]
     const lengths = [2, 3, 3, 1];
     // o: [code0,len0,code1,len1,...] initially codes are 0
@@ -132,7 +132,7 @@ describe("Inflator helpers", () => {
     expect(actualCodes).toEqual(expectedCodes);
   });
 
-  it("d maps lengths into (code,length) pairs and returns max length", () => {
+  test("d maps lengths into (code,length) pairs and returns max length", () => {
     const lengths = [3, 0, 5, 1]; // I = 4 symbols
     const target: number[] = Array.from({ length: 8 }).fill(0) as number[]; // length = 8 => 4 pairs
     const maxBits = Inflator.d(lengths, 0, lengths.length, target);
@@ -145,14 +145,14 @@ describe("Inflator helpers", () => {
 });
 
 describe("Inflator.inflateRaw", () => {
-  it("returns empty output for special case header 0x03 0x00", () => {
+  test("returns empty output for special case header 0x03 0x00", () => {
     const input = new Uint8Array([0x03, 0x00]); // triggers early-return branch
     const result = Inflator.inflateRaw(input);
     expect(result).toBeInstanceOf(Uint8Array);
     expect(result.length).toBe(0);
   });
 
-  it("inflates a stored (uncompressed) block correctly", () => {
+  test("inflates a stored (uncompressed) block correctly", () => {
     // Deflate "ABC" as a single stored block:
     // BFINAL=1, BTYPE=00
     // LEN=3, NLEN=~3 (0xFFFC)
@@ -175,7 +175,7 @@ describe("Inflator.inflateRaw", () => {
     expect(new TextDecoder().decode(out)).toBe("ABC");
   });
 
-  it("inflates a fixed Huffman block identically to pako", () => {
+  test("inflates a fixed Huffman block identically to pako", () => {
     const text = "Hello, world! Hello, world!";
     const encoder = new TextEncoder();
     const data = encoder.encode(text);
@@ -187,7 +187,7 @@ describe("Inflator.inflateRaw", () => {
     expect(new TextDecoder().decode(ours)).toBe(text);
   });
 
-  it("inflates a dynamic Huffman block identically to pako", () => {
+  test("inflates a dynamic Huffman block identically to pako", () => {
     const text = "Dynamic Huffman blocks are used for better compression on varied data.";
     const encoder = new TextEncoder();
     const data = encoder.encode(text);
@@ -199,7 +199,7 @@ describe("Inflator.inflateRaw", () => {
     expect(new TextDecoder().decode(ours)).toBe(text);
   });
 
-  it("supports inflating into a preallocated output buffer", () => {
+  test("supports inflating into a preallocated output buffer", () => {
     const text = "Preallocated output buffer test.";
     const encoder = new TextEncoder();
     const data = encoder.encode(text);
@@ -215,7 +215,7 @@ describe("Inflator.inflateRaw", () => {
     expect(new TextDecoder().decode(result)).toBe(text);
   });
 
-  it("grows output buffer as needed when not provided", () => {
+  test("grows output buffer as needed when not provided", () => {
     const text = "X".repeat(100000); // big to force resizing via H()
     const encoder = new TextEncoder();
     const data = encoder.encode(text);

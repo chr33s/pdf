@@ -1,8 +1,8 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 import { UPNG, type Image, type ImageTabs } from "../src/upng.js";
 
 describe("UPNG basic encode/decode", () => {
-  it("round-trips a small opaque RGBA image", async () => {
+  test("round-trips a small opaque RGBA image", async () => {
     const w = 2;
     const h = 2;
     const src = new Uint8Array([
@@ -36,7 +36,7 @@ describe("UPNG basic encode/decode", () => {
     expect(Array.from(out)).toEqual(Array.from(src));
   });
 
-  it("round-trips an image with transparency (forces alpha ctype 6 or pal+TRNS)", async () => {
+  test("round-trips an image with transparency (forces alpha ctype 6 or pal+TRNS)", async () => {
     const w = 2;
     const h = 2;
     const buf = new Uint8Array([255, 0, 0, 255, 255, 0, 0, 0, 0, 255, 0, 255, 0, 255, 0, 0]).buffer;
@@ -53,7 +53,7 @@ describe("UPNG basic encode/decode", () => {
 });
 
 describe("UPNG.toRGBA8", () => {
-  it("returns a single frame buffer for non-animated PNG", async () => {
+  test("returns a single frame buffer for non-animated PNG", async () => {
     const w = 1;
     const h = 1;
     const buf = new Uint8Array([10, 20, 30, 40]).buffer;
@@ -69,7 +69,7 @@ describe("UPNG.toRGBA8", () => {
     expect(Array.from(rgba)).toEqual([10, 20, 30, 40]);
   });
 
-  it("returns buffers for each animation frame and respects blend/dispose", async () => {
+  test("returns buffers for each animation frame and respects blend/dispose", async () => {
     const w = 2;
     const h = 1;
 
@@ -95,12 +95,12 @@ describe("UPNG.toRGBA8", () => {
 });
 
 describe("UPNG.decode ancillary chunks", () => {
-  it("throws on non-PNG magic", () => {
+  test("throws on non-PNG magic", () => {
     const bogus = new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8]).buffer;
     expect(() => UPNG.decode(bogus)).toThrow(/not a PNG/i);
   });
 
-  it("parses tEXt & zTXt chunks into tabs", async () => {
+  test("parses tEXt & zTXt chunks into tabs", async () => {
     const w = 1;
     const h = 1;
     const buf = new Uint8Array([0, 0, 0, 255]).buffer;
@@ -123,7 +123,7 @@ describe("UPNG.decode ancillary chunks", () => {
 });
 
 describe("UPNG #getBPP and #filterZero via encode/decode", () => {
-  it("handles grayscale (ctype 0) depth 8 correctly", async () => {
+  test("handles grayscale (ctype 0) depth 8 correctly", async () => {
     const w = 3;
     const h = 1;
     const gray = new Uint8Array([50, 50, 50, 255, 100, 100, 100, 255, 200, 200, 200, 255]).buffer;
@@ -143,7 +143,7 @@ describe("UPNG #getBPP and #filterZero via encode/decode", () => {
     expect(out[4]).toBe(100);
   });
 
-  it("handles palette-based images (ctype 3) when color count is small", async () => {
+  test("handles palette-based images (ctype 3) when color count is small", async () => {
     const w = 2;
     const h = 2;
     const buf = new Uint8Array([255, 0, 0, 255, 0, 255, 0, 255, 255, 0, 0, 255, 0, 255, 0, 255])
@@ -164,7 +164,7 @@ describe("UPNG #getBPP and #filterZero via encode/decode", () => {
 });
 
 describe("UPNG filter/deflate pipeline", () => {
-  it("produces valid data when using filter strategy 0 (none)", async () => {
+  test("produces valid data when using filter strategy 0 (none)", async () => {
     const w = 4;
     const h = 2;
     const buf = new Uint8Array(w * h * 4);
@@ -186,7 +186,7 @@ describe("UPNG filter/deflate pipeline", () => {
 });
 
 describe("UPNG internal dithering path (by effect)", () => {
-  it("dithers when quantizing with palette (non-empty result)", async () => {
+  test("dithers when quantizing with palette (non-empty result)", async () => {
     const w = 4;
     const h = 4;
     const buf = new Uint8Array(w * h * 4);
@@ -208,7 +208,7 @@ describe("UPNG internal dithering path (by effect)", () => {
 });
 
 describe("UPNG animated encodeLL", () => {
-  it("encodes multiple frames as an animated PNG with acTL", async () => {
+  test("encodes multiple frames as an animated PNG with acTL", async () => {
     const w = 2;
     const h = 2;
 

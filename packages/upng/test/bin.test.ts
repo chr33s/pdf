@@ -1,20 +1,20 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 import { Bin } from "../src/bin.js";
 
 describe("nextZero", () => {
-  it("returns index of first zero starting at p", () => {
+  test("returns index of first zero starting at p", () => {
     const data = new Uint8Array([1, 2, 3, 0, 4]);
     expect(Bin.nextZero(data, 0)).toBe(3);
   });
 
-  it("returns p when it already points to zero", () => {
+  test("returns p when it already points to zero", () => {
     const data = new Uint8Array([1, 2, 0, 4]);
     expect(Bin.nextZero(data, 2)).toBe(2);
   });
 });
 
 describe("readUshort / writeUshort", () => {
-  it("reads a big-endian unsigned short written by writeUshort", () => {
+  test("reads a big-endian unsigned short written by writeUshort", () => {
     const buff = new Uint8Array(4);
     const value = 0x1234; // 4660
     Bin.writeUshort(buff, 1, value);
@@ -25,7 +25,7 @@ describe("readUshort / writeUshort", () => {
     expect(readValue).toBe(value);
   });
 
-  it("handles minimum and maximum ushort values", () => {
+  test("handles minimum and maximum ushort values", () => {
     const buff = new Uint8Array(4);
 
     Bin.writeUshort(buff, 0, 0);
@@ -37,7 +37,7 @@ describe("readUshort / writeUshort", () => {
 });
 
 describe("readUint / writeUint", () => {
-  it("reads a big-endian unsigned int written by writeUint", () => {
+  test("reads a big-endian unsigned int written by writeUint", () => {
     const buff = new Uint8Array(8);
     const value = 0x12345678; // 305419896
     Bin.writeUint(buff, 2, value);
@@ -51,7 +51,7 @@ describe("readUint / writeUint", () => {
     expect(readValue).toBe(value);
   });
 
-  it("handles minimum and maximum 32-bit unsigned values", () => {
+  test("handles minimum and maximum 32-bit unsigned values", () => {
     const buff = new Uint8Array(4);
 
     Bin.writeUint(buff, 0, 0);
@@ -64,7 +64,7 @@ describe("readUint / writeUint", () => {
 });
 
 describe("readASCII / writeASCII", () => {
-  it("writes and reads ASCII strings correctly", () => {
+  test("writes and reads ASCII strings correctly", () => {
     const buff = new Uint8Array(10);
     const s = "Hello";
     Bin.writeASCII(buff, 2, s);
@@ -82,7 +82,7 @@ describe("readASCII / writeASCII", () => {
     expect(read).toBe(s);
   });
 
-  it("can write shorter strings without touching earlier bytes", () => {
+  test("can write shorter strings without touching earlier bytes", () => {
     const buff = new Uint8Array(5).fill(0xff);
     Bin.writeASCII(buff, 1, "A");
     expect(buff[0]).toBe(0xff);
@@ -91,13 +91,13 @@ describe("readASCII / writeASCII", () => {
 });
 
 describe("readBytes", () => {
-  it("returns a JS array slice of the specified bytes", () => {
+  test("returns a JS array slice of the specified bytes", () => {
     const buff = new Uint8Array([10, 20, 30, 40, 50]);
     const arr = Bin.readBytes(buff, 1, 3);
     expect(arr).toEqual([20, 30, 40]);
   });
 
-  it("works with length 0", () => {
+  test("works with length 0", () => {
     const buff = new Uint8Array([1, 2, 3]);
     const arr = Bin.readBytes(buff, 1, 0);
     expect(arr).toEqual([]);
@@ -105,19 +105,19 @@ describe("readBytes", () => {
 });
 
 describe("pad", () => {
-  it("adds a leading zero for single-character strings", () => {
+  test("adds a leading zero for single-character strings", () => {
     expect(Bin.pad("a")).toBe("0a");
     expect(Bin.pad("1")).toBe("01");
   });
 
-  it("returns the original string if length >= 2", () => {
+  test("returns the original string if length >= 2", () => {
     expect(Bin.pad("10")).toBe("10");
     expect(Bin.pad("abc")).toBe("abc");
   });
 });
 
 describe("readUTF8", () => {
-  it("decodes valid UTF-8 sequences", () => {
+  test("decodes valid UTF-8 sequences", () => {
     // "hé" in UTF-8
     const encoder = new TextEncoder();
     const s = "hé";
@@ -130,7 +130,7 @@ describe("readUTF8", () => {
     expect(decoded).toBe(s);
   });
 
-  it("falls back to ASCII when decodeURIComponent throws", () => {
+  test("falls back to ASCII when decodeURIComponent throws", () => {
     // Create bytes that produce an invalid percent-escape sequence
     // '%' followed by non-hex characters
     const _buff = new Uint8Array([37, 71, 71]); // '%GG'
@@ -156,7 +156,7 @@ describe("readUTF8", () => {
     expect(result).toBe(ascii);
   });
 
-  it("matches ASCII for plain ASCII strings", () => {
+  test("matches ASCII for plain ASCII strings", () => {
     const text = "Hello";
     const encoder = new TextEncoder();
     const bytes = encoder.encode(text);

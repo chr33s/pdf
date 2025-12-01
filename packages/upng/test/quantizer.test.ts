@@ -1,8 +1,8 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, test } from "vitest";
 import { Quantizer } from "../src/quantizer.js";
 
 describe("Quantizer.M4", () => {
-  it("multVec multiplies 4x4 matrix by 4-vector", () => {
+  test("multVec multiplies 4x4 matrix by 4-vector", () => {
     const m = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
     const v = [1, 0, -1, 2];
     const r = Quantizer.M4.multVec(m, v);
@@ -13,14 +13,14 @@ describe("Quantizer.M4", () => {
     expect(r).toEqual([6, 14, 22, 30]);
   });
 
-  it("dot computes 4D dot product", () => {
+  test("dot computes 4D dot product", () => {
     const x = [1, 2, 3, 4];
     const y = [4, 3, 2, 1];
     const d = Quantizer.M4.dot(x, y);
     expect(d).toBe(1 * 4 + 2 * 3 + 3 * 2 + 4 * 1);
   });
 
-  it("sml scales 4-vector", () => {
+  test("sml scales 4-vector", () => {
     const v = [1, -2, 3, -4];
     const s = Quantizer.M4.sml(2, v);
     expect(s).toEqual([2, -4, 6, -8]);
@@ -28,13 +28,13 @@ describe("Quantizer.M4", () => {
 });
 
 describe("Quantizer.basic math helpers", () => {
-  it("dist computes squared 4D distance", () => {
+  test("dist computes squared 4D distance", () => {
     const q = [0, 0, 0, 0];
     const d = Quantizer.dist(q, 1, 2, 3, 4);
     expect(d).toBe(1 * 1 + 2 * 2 + 3 * 3 + 4 * 4);
   });
 
-  it("vecDot matches manual computation", () => {
+  test("vecDot matches manual computation", () => {
     const px = new Uint8Array([10, 20, 30, 40]);
     const e = [0.1, 0.2, 0.3, 0.4];
     const v = Quantizer.vecDot(px, 0, e);
@@ -42,7 +42,7 @@ describe("Quantizer.basic math helpers", () => {
     expect(v).toBeCloseTo(manual);
   });
 
-  it("planeDst returns signed distance from plane", () => {
+  test("planeDst returns signed distance from plane", () => {
     const est = {
       e: [1, 0, 0, 0],
       eMq: 0.5,
@@ -55,7 +55,7 @@ describe("Quantizer.basic math helpers", () => {
 });
 
 describe("Quantizer.stats and estats", () => {
-  it("stats computes count, means and covariance-like accumulators", () => {
+  test("stats computes count, means and covariance-like accumulators", () => {
     // 2 pixels: (255,0,0,255) and (0,255,0,255)
     const img = new Uint8Array([255, 0, 0, 255, 0, 255, 0, 255]);
     const s = Quantizer.stats(img, 0, img.length);
@@ -68,7 +68,7 @@ describe("Quantizer.stats and estats", () => {
     expect(s.m[3] * iN).toBeCloseTo(1, 5);
   });
 
-  it("estats produces expected structure and stable eigenvector", () => {
+  test("estats produces expected structure and stable eigenvector", () => {
     const img = new Uint8Array([255, 0, 0, 255, 0, 255, 0, 255, 0, 0, 255, 255]);
     const stats = Quantizer.stats(img, 0, img.length);
     const est = Quantizer.estats(stats);
@@ -90,7 +90,7 @@ describe("Quantizer.stats and estats", () => {
 });
 
 describe("Quantizer.splitPixels", () => {
-  it("splits pixels into two groups based on plane", () => {
+  test("splits pixels into two groups based on plane", () => {
     // Four pixels: two dark, two bright
     const img = new Uint8Array([
       0,
@@ -154,7 +154,7 @@ describe("Quantizer.getKDtree and getNearest", () => {
     ]);
   });
 
-  it("builds KD tree with requested max leaf count", () => {
+  test("builds KD tree with requested max leaf count", () => {
     const [root, leafs] = Quantizer.getKDtree(img, 4);
     expect(root).toHaveProperty("left");
     expect(root).toHaveProperty("right");
@@ -170,7 +170,7 @@ describe("Quantizer.getKDtree and getNearest", () => {
     }
   });
 
-  it("getNearest returns a leaf whose color is close to the query", () => {
+  test("getNearest returns a leaf whose color is close to the query", () => {
     const [root, leafs] = Quantizer.getKDtree(img, 4);
     const qColor = [1, 0.1, 0.1, 1]; // close to red
     const nearest = Quantizer.getNearest(root, qColor[0], qColor[1], qColor[2], qColor[3]);
@@ -184,7 +184,7 @@ describe("Quantizer.getKDtree and getNearest", () => {
 });
 
 describe("Quantizer palette update and nearest search", () => {
-  it("updatePalette recomputes palette entries as means of assigned pixels", () => {
+  test("updatePalette recomputes palette entries as means of assigned pixels", () => {
     // Image: 4 pixels. First two red-ish, last two green-ish.
     const sb = new Uint8Array([250, 0, 0, 255, 255, 10, 0, 255, 0, 240, 0, 255, 5, 255, 10, 255]);
 
@@ -224,7 +224,7 @@ describe("Quantizer palette update and nearest search", () => {
     expect(plte[6]).toBe(avgB1);
   });
 
-  it("findNearest assigns each pixel to closest palette color and returns average error", () => {
+  test("findNearest assigns each pixel to closest palette color and returns average error", () => {
     const sb = new Uint8Array([
       255,
       0,
@@ -254,7 +254,7 @@ describe("Quantizer palette update and nearest search", () => {
     expect(err).toBe(0);
   });
 
-  it("kmeans runs a single iteration and returns an error value", () => {
+  test("kmeans runs a single iteration and returns an error value", () => {
     const sb = new Uint8Array([255, 0, 0, 255, 250, 0, 10, 255, 0, 255, 0, 255, 0, 245, 10, 255]);
     const plte = new Uint8Array([255, 0, 0, 255, 0, 255, 0, 255]);
     const inds = new Uint8Array([0, 0, 1, 1]);
@@ -268,7 +268,7 @@ describe("Quantizer palette update and nearest search", () => {
 });
 
 describe("Quantizer.remap", () => {
-  it("remap fills destination buffer from palette using indices", () => {
+  test("remap fills destination buffer from palette using indices", () => {
     const pl32 = new Uint32Array([
       0xff0000ff, // red
       0x00ff00ff, // green
@@ -283,7 +283,7 @@ describe("Quantizer.remap", () => {
 });
 
 describe("Quantizer.quantize end-to-end", () => {
-  it("quantizes a tiny image to 2 colors and returns expected shape", () => {
+  test("quantizes a tiny image to 2 colors and returns expected shape", () => {
     // Simple 4-pixel RGBA image: two reds, two greens
     const img = new Uint8Array([255, 0, 0, 255, 250, 10, 0, 255, 0, 255, 0, 255, 5, 240, 10, 255]);
     const abuf = img.buffer;
@@ -312,7 +312,7 @@ describe("Quantizer.quantize end-to-end", () => {
     }
   });
 
-  it("can run with kmeans refinement enabled", () => {
+  test("can run with kmeans refinement enabled", () => {
     const img = new Uint8Array([255, 0, 0, 255, 250, 10, 0, 255, 0, 255, 0, 255, 5, 240, 10, 255]);
     const result = Quantizer.quantize(img.buffer, 2, true);
 
