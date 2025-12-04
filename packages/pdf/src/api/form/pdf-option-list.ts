@@ -1,14 +1,14 @@
+import { rgb } from "../colors.js";
 import PDFDocument from "../pdf-document.js";
 import PDFFont from "../pdf-font.js";
 import PDFPage from "../pdf-page.js";
-import { rgb } from "../colors.js";
 import { degrees } from "../rotations.js";
-import PDFField, { FieldAppearanceOptions, assertFieldAppearanceOptions } from "./pdf-field.js";
 import {
   AppearanceProviderFor,
   defaultOptionListAppearanceProvider,
   normalizeAppearance,
 } from "./appearances.js";
+import PDFField, { FieldAppearanceOptions, assertFieldAppearanceOptions } from "./pdf-field.js";
 
 import {
   AcroChoiceFlags,

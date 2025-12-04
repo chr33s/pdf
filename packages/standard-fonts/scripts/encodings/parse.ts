@@ -1,6 +1,6 @@
 import { deflate } from "@chr33s/compression";
 import * as base64 from "base64-arraybuffer";
-import fs from "mz/fs.js";
+import fs from "node:fs/promises";
 import { basename, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -27,7 +27,7 @@ const __dirname = dirname(__filename);
 const copyFileToSrc = async (src: string) => {
   const fileName = basename(src);
   const dest = dirname(dirname(__dirname)) + "/src/" + fileName;
-  await (fs.copyFile as any)(src, dest);
+  await fs.copyFile(src, dest);
 };
 
 const main = async () => {

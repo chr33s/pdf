@@ -19,7 +19,9 @@ class Cache<T> {
     if (!this.#value) {
       const result = this.#populate();
       if (result instanceof Promise) {
-        throw new Error("Cache.access() cannot be used with async populators. Use accessAsync() instead.");
+        throw new Error(
+          "Cache.access() cannot be used with async populators. Use accessAsync() instead.",
+        );
       }
       this.#value = result;
     }
@@ -29,7 +31,7 @@ class Cache<T> {
   async accessAsync(): Promise<T> {
     if (this.#value) return this.#value;
     if (this.#pending) return this.#pending;
-    
+
     const result = this.#populate();
     if (result instanceof Promise) {
       this.#pending = result;
