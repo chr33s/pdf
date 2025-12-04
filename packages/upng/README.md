@@ -86,7 +86,7 @@ PNG files may have a various number of channels and a various color depth. The i
     let img  = UPNG.decode(buff);        // put ArrayBuffer of the PNG file into UPNG.decode
     let rgba = UPNG.toRGBA8(img)[0];     // UPNG.toRGBA8 returns array of frames, size: width * height * 4 bytes.
 
-PNG format uses the Inflate algorithm. Right now, UPNG.js calls [Pako.js](https://github.com/nodeca/pako) for the Inflate and Deflate method.
+PNG format uses the Inflate algorithm. Right now, UPNG.js calls [@chr33s/compression](https://github.com/chr33s/pdf/tree/main/packages/compression) for the Inflate and Deflate method.
 
 ## Quantizer
 

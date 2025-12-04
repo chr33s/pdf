@@ -41,12 +41,11 @@
   "license": "MIT",
   "homepage": "https://github.com/chr33s/pdf",
   "dependencies": {
-    "pako": "^2.1.0"
+    "@chr33s/compression": "file:../compression"
   },
   "devDependencies": {
     "@types/mz": "^2.7.9",
     "@types/node": "^24.10.1",
-    "@types/pako": "^2.0.4",
     "base64-arraybuffer": "^1.0.2",
     "mz": "^2.7.0",
     "typescript": "^5.9.3",

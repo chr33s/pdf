@@ -1,4 +1,4 @@
-import pako from "pako";
+import { deflateRaw } from "@chr33s/compression";
 import { describe, expect, test } from "vitest";
 import { Inflator } from "../src/inflator.js";
 
@@ -175,36 +175,36 @@ describe("Inflator.inflateRaw", () => {
     expect(new TextDecoder().decode(out)).toBe("ABC");
   });
 
-  test("inflates a fixed Huffman block identically to pako", () => {
+  test("inflates a fixed Huffman block identically to deflateRaw", async () => {
     const text = "Hello, world! Hello, world!";
     const encoder = new TextEncoder();
     const data = encoder.encode(text);
 
-    // pako.deflateRaw uses raw deflate (no zlib wrapper)
-    const compressed = pako.deflateRaw(data);
+    // deflateRaw uses raw deflate (no zlib wrapper)
+    const compressed = await deflateRaw(data);
     const ours = Inflator.inflateRaw(compressed);
 
     expect(new TextDecoder().decode(ours)).toBe(text);
   });
 
-  test("inflates a dynamic Huffman block identically to pako", () => {
+  test("inflates a dynamic Huffman block identically to deflateRaw", async () => {
     const text = "Dynamic Huffman blocks are used for better compression on varied data.";
     const encoder = new TextEncoder();
     const data = encoder.encode(text);
 
-    // Force pako to use dynamic Huffman by default (it usually does anyway)
-    const compressed = pako.deflateRaw(data); // contains dynamic blocks
+    // deflateRaw uses dynamic Huffman by default
+    const compressed = await deflateRaw(data); // contains dynamic blocks
     const ours = Inflator.inflateRaw(compressed);
 
     expect(new TextDecoder().decode(ours)).toBe(text);
   });
 
-  test("supports inflating into a preallocated output buffer", () => {
+  test("supports inflating into a preallocated output buffer", async () => {
     const text = "Preallocated output buffer test.";
     const encoder = new TextEncoder();
     const data = encoder.encode(text);
 
-    const compressed = pako.deflateRaw(data);
+    const compressed = await deflateRaw(data);
 
     // Preallocate a buffer with exactly the required size
     const out = new Uint8Array(text.length);
@@ -215,11 +215,11 @@ describe("Inflator.inflateRaw", () => {
     expect(new TextDecoder().decode(result)).toBe(text);
   });
 
-  test("grows output buffer as needed when not provided", () => {
+  test("grows output buffer as needed when not provided", async () => {
     const text = "X".repeat(100000); // big to force resizing via H()
     const encoder = new TextEncoder();
     const data = encoder.encode(text);
-    const compressed = pako.deflateRaw(data);
+    const compressed = await deflateRaw(data);
 
     const result = Inflator.inflateRaw(compressed);
     expect(result.length).toBe(text.length);

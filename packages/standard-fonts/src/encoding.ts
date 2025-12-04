@@ -2,33 +2,43 @@ import { decompressJson, padStart } from "./utils.js";
 
 import AllEncodingsCompressed from "./all-encodings.compressed.json" with { type: "json" };
 
-const decompressedEncodings = decompressJson(AllEncodingsCompressed);
-
 type EncodingCharCode = number;
 type EncodingCharName = string;
 interface UnicodeMappings {
   [unicodeCodePoint: number]: [EncodingCharCode, EncodingCharName];
 }
 
-const allUnicodeMappings: {
+let allUnicodeMappings: {
   symbol: UnicodeMappings;
   zapfdingbats: UnicodeMappings;
   win1252: UnicodeMappings;
-} = JSON.parse(decompressedEncodings);
+} | null = null;
+
+const getAllUnicodeMappings = async () => {
+  if (allUnicodeMappings) return allUnicodeMappings;
+  const decompressedEncodings = await decompressJson(AllEncodingsCompressed);
+  allUnicodeMappings = JSON.parse(decompressedEncodings);
+  return allUnicodeMappings;
+};
 
 type EncodingNames = "Symbol" | "ZapfDingbats" | "WinAnsi";
 
 class Encoding {
   name: EncodingNames;
-  supportedCodePoints: number[];
-  #unicodeMappings: UnicodeMappings;
+  supportedCodePoints: number[] = [];
+  #unicodeMappings: UnicodeMappings = {};
 
-  constructor(name: EncodingNames, unicodeMappings: UnicodeMappings) {
+  private constructor(name: EncodingNames) {
     this.name = name;
-    this.supportedCodePoints = Object.keys(unicodeMappings)
+  }
+
+  static async create(name: EncodingNames, unicodeMappings: UnicodeMappings): Promise<Encoding> {
+    const encoding = new Encoding(name);
+    encoding.supportedCodePoints = Object.keys(unicodeMappings)
       .map(Number)
       .sort((a, b) => a - b);
-    this.#unicodeMappings = unicodeMappings;
+    encoding.#unicodeMappings = unicodeMappings;
+    return encoding;
   }
 
   canEncodeUnicodeCodePoint = (codePoint: number) => codePoint in this.#unicodeMappings;
@@ -47,8 +57,29 @@ class Encoding {
 
 export type EncodingType = Encoding;
 
-export const Encodings = {
-  Symbol: new Encoding("Symbol", allUnicodeMappings.symbol),
-  ZapfDingbats: new Encoding("ZapfDingbats", allUnicodeMappings.zapfdingbats),
-  WinAnsi: new Encoding("WinAnsi", allUnicodeMappings.win1252),
+let encodingsCache: {
+  Symbol: Encoding;
+  ZapfDingbats: Encoding;
+  WinAnsi: Encoding;
+} | null = null;
+
+export const getEncodings = async () => {
+  if (encodingsCache) return encodingsCache;
+  const mappings = await getAllUnicodeMappings();
+  encodingsCache = {
+    Symbol: await Encoding.create("Symbol", mappings!.symbol),
+    ZapfDingbats: await Encoding.create("ZapfDingbats", mappings!.zapfdingbats),
+    WinAnsi: await Encoding.create("WinAnsi", mappings!.win1252),
+  };
+  return encodingsCache;
 };
+
+/** @deprecated Use getEncodings() instead for async loading */
+export const Encodings = {
+  Symbol: null as unknown as Encoding,
+  ZapfDingbats: null as unknown as Encoding,
+  WinAnsi: null as unknown as Encoding,
+};
+
+// Initialize encodings asynchronously
+getEncodings().then((e) => Object.assign(Encodings, e));

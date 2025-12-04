@@ -98,11 +98,11 @@ export interface ICharMetrics {
 export type IKernPair = [string, string, number];
 
 export class Font {
-  static load = (fontName: IFontNames): Font => {
+  static load = async (fontName: IFontNames): Promise<Font> => {
     const cachedFont = fontCache[fontName];
     if (cachedFont) return cachedFont;
 
-    const json = decompressJson(compressedJsonForFontName[fontName]);
+    const json = await decompressJson(compressedJsonForFontName[fontName]);
     const font = Object.assign(new Font(), JSON.parse(json)) as Font;
 
     const charWidths: Record<string, number> = {};

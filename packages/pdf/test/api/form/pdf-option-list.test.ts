@@ -82,7 +82,7 @@ describe("PDFOptionList", () => {
     const widgets = () => optionList.acroField.getWidgets();
     expect(widgets().length).toBe(0);
 
-    optionList.addToPage(page);
+    await optionList.addToPage(page);
     expect(widgets().length).toBe(1);
     expect(widgets()[0].hasFlag(AnnotationFlags.Print)).toBe(true);
   });
@@ -98,7 +98,7 @@ describe("PDFOptionList", () => {
     const widgets = () => optionList.acroField.getWidgets();
     expect(widgets().length).toBe(0);
 
-    optionList.addToPage(page);
+    await optionList.addToPage(page);
     expect(widgets().length).toBe(1);
     expect(widgets()[0].P()).toBe(page.ref);
   });

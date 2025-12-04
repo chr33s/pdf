@@ -91,7 +91,7 @@ describe("PDFDropdown", () => {
     const widgets = () => dropdown.acroField.getWidgets();
     expect(widgets().length).toBe(0);
 
-    dropdown.addToPage(page);
+    await dropdown.addToPage(page);
     expect(widgets().length).toBe(1);
     expect(widgets()[0].hasFlag(AnnotationFlags.Print)).toBe(true);
   });
@@ -107,7 +107,7 @@ describe("PDFDropdown", () => {
     const widgets = () => dropdown.acroField.getWidgets();
     expect(widgets().length).toBe(0);
 
-    dropdown.addToPage(page);
+    await dropdown.addToPage(page);
     expect(widgets().length).toBe(1);
     expect(widgets()[0].P()).toBe(page.ref);
   });

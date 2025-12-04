@@ -1,7 +1,7 @@
 import fontkit from "@chr33s/fontkit";
 import { FontNames } from "@chr33s/standard-fonts";
 import { readFile } from "node:fs/promises";
-import { describe, expect, test } from "vitest";
+import { beforeAll, describe, expect, test } from "vitest";
 
 import type { Fontkit } from "@chr33s/fontkit";
 import { CustomFontEmbedder, StandardFontEmbedder } from "../../src/core/index.js";
@@ -9,11 +9,15 @@ import { breakTextIntoLines } from "../../src/utils/index.js";
 
 const fk = fontkit as unknown as Fontkit;
 
-const font = StandardFontEmbedder.for(FontNames.Helvetica);
+let font: StandardFontEmbedder;
 
 const textSize = 24;
 
 const computeTextWidth = (text: string) => font.widthOfTextAtSize(text, textSize);
+
+beforeAll(async () => {
+  font = await StandardFontEmbedder.for(FontNames.Helvetica);
+});
 
 describe("breakTextIntoLines", () => {
   test("handles empty wordBreaks arrays", () => {

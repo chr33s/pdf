@@ -1,4 +1,10 @@
-import { Encodings, EncodingType, Font, FontNames, type FontName } from "@chr33s/standard-fonts";
+import {
+  type EncodingType,
+  type FontName,
+  Font,
+  FontNames,
+  getEncodings,
+} from "@chr33s/standard-fonts";
 
 import { toCodePoint, toHexString } from "../../utils/index.js";
 import PDFHexString from "../objects/pdf-hex-string.js";
@@ -16,23 +22,27 @@ interface Glyph {
  *   https://github.com/foliojs/pdfkit/blob/f91bdd61c164a72ea06be1a43dc0a412afc3925f/lib/font/afm.coffee
  */
 class StandardFontEmbedder {
-  static for = (fontName: FontName, customName?: string) =>
-    new StandardFontEmbedder(fontName, customName);
+  static for = async (fontName: FontName, customName?: string): Promise<StandardFontEmbedder> => {
+    const encodings = await getEncodings();
+    // prettier-ignore
+    const encoding = (
+        fontName === FontNames.ZapfDingbats ? encodings.ZapfDingbats
+      : fontName === FontNames.Symbol       ? encodings.Symbol
+      : encodings.WinAnsi
+    );
+    const font = await Font.load(fontName);
+    return new StandardFontEmbedder(font, encoding, customName);
+  };
 
   readonly font: Font;
   readonly encoding: EncodingType;
   readonly fontName: string;
   readonly customName: string | undefined;
 
-  private constructor(fontName: FontName, customName?: string) {
-    // prettier-ignore
-    this.encoding = (
-        fontName === FontNames.ZapfDingbats ? Encodings.ZapfDingbats
-      : fontName === FontNames.Symbol       ? Encodings.Symbol
-      : Encodings.WinAnsi
-    );
-    this.font = Font.load(fontName);
-    this.fontName = this.font.FontName;
+  private constructor(font: Font, encoding: EncodingType, customName?: string) {
+    this.font = font;
+    this.encoding = encoding;
+    this.fontName = font.FontName;
     this.customName = customName;
   }
 
@@ -88,7 +98,7 @@ class StandardFontEmbedder {
       Subtype: "Type1",
       BaseFont: this.customName || this.fontName,
 
-      Encoding: this.encoding === Encodings.WinAnsi ? "WinAnsiEncoding" : undefined,
+      Encoding: this.encoding.name === "WinAnsi" ? "WinAnsiEncoding" : undefined,
     });
 
     if (ref) {

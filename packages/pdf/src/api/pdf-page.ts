@@ -1539,7 +1539,7 @@ export default class PDFPage {
    * @param svg The SVG to be drawn.
    * @param options The options to be used when drawing the SVG.
    */
-  drawSvg(svg: PDFSvg | string, options: PDFPageDrawSVGElementOptions = {}): void {
+  async drawSvg(svg: PDFSvg | string, options: PDFPageDrawSVGElementOptions = {}): Promise<void> {
     assertIs(svg, "svg", ["string", [PDFSvg, "PDFSvg"]]);
     assertOrUndefined(options.x, "options.x", ["number"]);
     assertOrUndefined(options.y, "options.y", ["number"]);
@@ -1547,7 +1547,7 @@ export default class PDFPage {
     assertOrUndefined(options.height, "options.height", ["number"]);
     assertIsOneOfOrUndefined(options.blendMode, "options.blendMode", BlendMode);
 
-    drawSvg(this, svg, {
+    await drawSvg(this, svg, {
       x: options.x ?? this.#x,
       y: options.y ?? this.#y,
       fonts: options.fonts,
@@ -1557,9 +1557,9 @@ export default class PDFPage {
     });
   }
 
-  getFont(): [PDFFont, PDFName] {
+  async getFont(): Promise<[PDFFont, PDFName]> {
     if (!this.#font || !this.#fontKey) {
-      const font = this.doc.embedStandardFont(StandardFonts.Helvetica);
+      const font = await this.doc.embedStandardFont(StandardFonts.Helvetica);
       this.setFont(font);
     }
     return [this.#font!, this.#fontKey!];

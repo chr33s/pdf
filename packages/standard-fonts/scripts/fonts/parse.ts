@@ -1,8 +1,8 @@
+import { deflate } from "@chr33s/compression";
 import * as base64 from "base64-arraybuffer";
 import fs from "mz/fs.js";
 import { basename, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import pako from "pako";
 
 import { type ICharMetrics, parseCharMetricsSection } from "./parse-character-metrics.ts";
 import { type IFontMetrics, parseFontMetricsSection } from "./parse-font-metrics.ts";
@@ -32,13 +32,13 @@ const getAfmFilePaths = async () => {
 
 const textEncoder = new TextEncoder();
 
-const compressJson = (json: string) => {
+const compressJson = async (json: string) => {
   const jsonBytes = textEncoder.encode(json);
-  const compressed = pako.deflate(jsonBytes);
+  const compressed = await deflate(jsonBytes);
   const arrBuf = compressed.buffer.slice(
     compressed.byteOffset,
     compressed.byteOffset + compressed.byteLength,
-  );
+  ) as ArrayBuffer;
   const base64DeflatedJson = JSON.stringify(base64.encode(arrBuf));
   return base64DeflatedJson;
 };
@@ -81,7 +81,7 @@ const main = async () => {
     const compressedJsonFile = afmFile.replace(".afm", ".compressed.json");
 
     await fs.writeFile(jsonFile, jsonMetrics);
-    await fs.writeFile(compressedJsonFile, compressJson(jsonMetrics));
+    await fs.writeFile(compressedJsonFile, await compressJson(jsonMetrics));
     await copyFileToSrc(compressedJsonFile);
   }
 };

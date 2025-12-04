@@ -108,7 +108,7 @@ describe("PDFTextField", () => {
     const widgets = () => textField.acroField.getWidgets();
     expect(widgets().length).toBe(0);
 
-    textField.addToPage(page);
+    await textField.addToPage(page);
     expect(widgets().length).toBe(1);
     expect(widgets()[0].hasFlag(AnnotationFlags.Print)).toBe(true);
   });
@@ -124,7 +124,7 @@ describe("PDFTextField", () => {
     const widgets = () => textField.acroField.getWidgets();
     expect(widgets().length).toBe(0);
 
-    textField.addToPage(page);
+    await textField.addToPage(page);
     expect(widgets().length).toBe(1);
     expect(widgets()[0].P()).toBe(page.ref);
   });
@@ -137,7 +137,7 @@ describe("PDFTextField", () => {
     const textField = form.createTextField("a.hidden.text.field");
     const widgets = () => textField.acroField.getWidgets();
 
-    textField.addToPage(page, { hidden: true });
+    await textField.addToPage(page, { hidden: true });
 
     expect(widgets().length).toBe(1);
     expect(widgets()[0].hasFlag(AnnotationFlags.Hidden)).toBe(true);

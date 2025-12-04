@@ -1168,7 +1168,7 @@ export default class PDFDocument {
 
     let embedder: CustomFontEmbedder | StandardFontEmbedder;
     if (isStandardFont(font)) {
-      embedder = StandardFontEmbedder.for(font, customName);
+      embedder = await StandardFontEmbedder.for(font, customName);
     } else if (canBeConvertedToUint8Array(font)) {
       const bytes = toUint8Array(font);
       const fontkit = this.#assertFontkit();
@@ -1191,19 +1191,19 @@ export default class PDFDocument {
    * For example:
    * ```js
    * import { StandardFonts } from 'pdf'
-   * const helveticaFont = pdfDoc.embedFont(StandardFonts.Helvetica)
+   * const helveticaFont = await pdfDoc.embedStandardFont(StandardFonts.Helvetica)
    * ```
    * @param font The standard font to be embedded.
    * @param customName The name to be used when embedding the font.
    * @returns The embedded font.
    */
-  embedStandardFont(font: StandardFont, customName?: string): PDFFont {
+  async embedStandardFont(font: StandardFont, customName?: string): Promise<PDFFont> {
     assertIs(font, "font", ["string"]);
     if (!isStandardFont(font)) {
       throw new TypeError("`font` must be one of type `StandardFont`");
     }
 
-    const embedder = StandardFontEmbedder.for(font, customName);
+    const embedder = await StandardFontEmbedder.for(font, customName);
 
     const ref = this.context.nextRef();
     const pdfFont = PDFFont.of(ref, this, embedder);

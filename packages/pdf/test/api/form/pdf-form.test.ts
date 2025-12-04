@@ -146,7 +146,7 @@ describe("PDFForm", () => {
     const originalAps = flatten(widgets.map(getApRefs));
 
     // (1) Run appearance update
-    form.updateFieldAppearances();
+    await form.updateFieldAppearances();
 
     // (1) Make sure no new appearance streams were created
     expect(flatten(widgets.map(getApRefs))).toEqual(originalAps);
@@ -158,7 +158,7 @@ describe("PDFForm", () => {
     cb4.check();
 
     // (2) un appearance update
-    form.updateFieldAppearances();
+    await form.updateFieldAppearances();
 
     // (2) Make sure no new appearance streams were created
     expect(flatten(widgets.map(getApRefs))).toEqual(originalAps);
@@ -167,7 +167,7 @@ describe("PDFForm", () => {
     rg1.select("Alexander Hamilton 🇺🇸");
 
     // (3) Run appearance update
-    form.updateFieldAppearances();
+    await form.updateFieldAppearances();
 
     // (3) Make sure no new appearance streams were created
     expect(flatten(widgets.map(getApRefs))).toEqual(originalAps);
@@ -190,11 +190,11 @@ describe("PDFForm", () => {
     // value represented by each radio button is undefined.
     //   const rg = form.createRadioGroup('a.radiogroup.field');
 
-    btn.addToPage("foo", page);
-    cb.addToPage(page);
-    dd.addToPage(page);
-    ol.addToPage(page);
-    tf.addToPage(page);
+    await btn.addToPage("foo", page);
+    await cb.addToPage(page);
+    await dd.addToPage(page);
+    await ol.addToPage(page);
+    await tf.addToPage(page);
     // rg.addOptionToPage('bar', page);
 
     const widgets = getWidgets(pdfDoc);
@@ -209,7 +209,7 @@ describe("PDFForm", () => {
 
     expect(aps()).toBe(0);
 
-    form.updateFieldAppearances();
+    await form.updateFieldAppearances();
 
     expect(aps()).toBe(5);
   });
@@ -291,7 +291,7 @@ describe("PDFForm", () => {
 
     const form = pdfDoc.getForm();
 
-    expect(() => form.updateFieldAppearances()).not.toThrow();
+    await expect(form.updateFieldAppearances()).resolves.not.toThrow();
 
     await expect(pdfDoc.save({ updateFieldAppearances: true })).resolves.toBeInstanceOf(Uint8Array);
   });
@@ -338,7 +338,7 @@ describe("PDFForm", () => {
     const tf = form.createTextField("a.new.text.field");
 
     cb.addToPage(page);
-    tf.addToPage(page);
+    await tf.addToPage(page);
 
     const refs1 = getRefs(pdfDoc);
 

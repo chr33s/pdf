@@ -415,7 +415,7 @@ export default class PDFOptionList extends PDFField {
    * @param page The page to which this option list widget should be added.
    * @param options The options to be used when adding this option list widget.
    */
-  addToPage(page: PDFPage, options?: FieldAppearanceOptions) {
+  async addToPage(page: PDFPage, options?: FieldAppearanceOptions) {
     assertIs(page, "page", [[PDFPage, "PDFPage"]]);
     assertFieldAppearanceOptions(options);
 
@@ -446,7 +446,7 @@ export default class PDFOptionList extends PDFField {
     this.acroField.addWidget(widgetRef);
 
     // Set appearance streams for widget
-    const font = options.font ?? this.doc.getForm().getDefaultFont();
+    const font = options.font ?? (await this.doc.getForm().getDefaultFont());
     this.#updateWidgetAppearance(widget, font);
 
     // Add widget to the given page

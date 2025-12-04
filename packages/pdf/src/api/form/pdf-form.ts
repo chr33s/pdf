@@ -634,10 +634,10 @@ export default class PDFForm {
    *
    * @param font Optionally, the font to use when creating new appearances.
    */
-  updateFieldAppearances(font?: PDFFont) {
+  async updateFieldAppearances(font?: PDFFont) {
     assertOrUndefined(font, "font", [[PDFFont, "PDFFont"]]);
 
-    font = font ?? this.getDefaultFont();
+    font = font ?? (await this.getDefaultFont());
 
     const fields = this.getFields();
 
@@ -694,8 +694,8 @@ export default class PDFForm {
     return this.#dirtyFields.has(fieldRef);
   }
 
-  getDefaultFont() {
-    return this.#defaultFontCache.access();
+  async getDefaultFont(): Promise<PDFFont> {
+    return this.#defaultFontCache.accessAsync();
   }
 
   #findWidgetPage(widget: PDFWidgetAnnotation): PDFPage {
@@ -784,7 +784,7 @@ export default class PDFForm {
     return undefined;
   }
 
-  #embedDefaultFont = (): PDFFont => this.doc.embedStandardFont(StandardFonts.Helvetica);
+  #embedDefaultFont = (): Promise<PDFFont> => this.doc.embedStandardFont(StandardFonts.Helvetica);
 }
 
 const convertToPDFField = (

@@ -99,7 +99,7 @@ type SVGElement = HTMLElement & {
 };
 
 interface SVGElementToDrawMap {
-  [cmd: string]: (a: SVGElement) => void;
+  [cmd: string]: (a: SVGElement) => void | Promise<void>;
 }
 
 export const combineMatrix = (
@@ -222,7 +222,7 @@ const runnersToPage = (
   page: PDFPage,
   options: PDFPageDrawSVGElementOptions & { images?: PDFSvg["images"] },
 ): SVGElementToDrawMap => ({
-  text(element) {
+  async text(element) {
     const anchor = element.svgAttributes.textAnchor;
     const dominantBaseline = element.svgAttributes.dominantBaseline;
     const text = element.text.trim().replace(/\s/g, " ");
@@ -247,10 +247,11 @@ const runnersToPage = (
     };
 
     const font = options.fonts && getBestFont(element.svgAttributes, options.fonts);
-    const textWidth = (font || page.getFont()[0]).widthOfTextAtSize(text, fontSize);
+    const defaultFont = font || (await page.getFont())[0];
+    const textWidth = defaultFont.widthOfTextAtSize(text, fontSize);
 
-    const textHeight = (font || page.getFont()[0]).heightAtSize(fontSize);
-    const overLineHeight = (font || page.getFont()[0]).heightAtSize(fontSize, {
+    const textHeight = defaultFont.heightAtSize(fontSize);
+    const overLineHeight = defaultFont.heightAtSize(fontSize, {
       descender: false,
     });
     const offsetX = anchor === "middle" ? textWidth / 2 : anchor === "end" ? textWidth : 0;
@@ -902,7 +903,7 @@ const parse = (
   );
 };
 
-export const drawSvg = (
+export const drawSvg = async (
   page: PDFPage,
   svg: PDFSvg | string,
   options: PDFPageDrawSVGElementOptions,
@@ -947,7 +948,7 @@ export const drawSvg = (
   const elements = parse(svgNode.outerHTML, options, size, baseTransformation);
 
   const runners = runnersToPage(page, { ...options, images: pdfSvg.images });
-  elements.forEach((elt) => {
+  for (const elt of elements) {
     // uncomment these lines to draw the clipSpaces
     // elt.svgAttributes.clipSpaces.forEach(space => {
     //   page.drawLine({
@@ -978,6 +979,6 @@ export const drawSvg = (
     //     thickness: 1
     //   })
     // })
-    runners[elt.tagName]?.(elt);
-  });
+    await runners[elt.tagName]?.(elt);
+  }
 };

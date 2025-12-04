@@ -125,7 +125,7 @@ export default class PDFButton extends PDFField {
    * @param page The page to which this button widget should be added.
    * @param options The options to be used when adding this button widget.
    */
-  addToPage(
+  async addToPage(
     // TODO: This needs to be optional, e.g. for image buttons
     text: string,
     page: PDFPage,
@@ -156,7 +156,7 @@ export default class PDFButton extends PDFField {
     this.acroField.addWidget(widgetRef);
 
     // Set appearance streams for widget
-    const font = options?.font ?? this.doc.getForm().getDefaultFont();
+    const font = options?.font ?? (await this.doc.getForm().getDefaultFont());
     this.#updateWidgetAppearance(widget, font);
 
     // Add widget to the given page

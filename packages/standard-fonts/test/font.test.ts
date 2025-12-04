@@ -3,15 +3,15 @@ import { describe, expect, test } from "vitest";
 import { Font, FontNames } from "../src/index.js";
 
 describe("Font.load", () => {
-  test("returns memoized instances", () => {
-    const firstLoad = Font.load(FontNames.Courier);
-    const secondLoad = Font.load(FontNames.Courier);
+  test("returns memoized instances", async () => {
+    const firstLoad = await Font.load(FontNames.Courier);
+    const secondLoad = await Font.load(FontNames.Courier);
 
     expect(firstLoad).toBe(secondLoad);
   });
 
-  test("computes glyph widths and kerning lookups", () => {
-    const font = Font.load(FontNames.Helvetica);
+  test("computes glyph widths and kerning lookups", async () => {
+    const font = await Font.load(FontNames.Helvetica);
 
     const charMetrics = font.CharMetrics.find((metric) => metric.N === "A");
     expect(charMetrics).toBeDefined();
@@ -26,9 +26,9 @@ describe("Font.load", () => {
     }
   });
 
-  test("accepts canonical font name aliases", () => {
-    const fromAlias = Font.load(FontNames.HelveticaBold);
-    const fromLiteral = Font.load("Helvetica-Bold");
+  test("accepts canonical font name aliases", async () => {
+    const fromAlias = await Font.load(FontNames.HelveticaBold);
+    const fromLiteral = await Font.load("Helvetica-Bold");
 
     expect(fromAlias).toBe(fromLiteral);
   });

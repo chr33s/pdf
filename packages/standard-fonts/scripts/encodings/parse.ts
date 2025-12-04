@@ -1,8 +1,8 @@
+import { deflate } from "@chr33s/compression";
 import * as base64 from "base64-arraybuffer";
 import fs from "mz/fs.js";
 import { basename, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import pako from "pako";
 
 import type { EncodingMap } from "./parse-win1252.ts";
 import { parseWin1252 } from "./parse-win1252.ts";
@@ -10,13 +10,13 @@ import { parseZapfDingbatsOrSymbol } from "./parse-zapf-dingbats-or-symbol.ts";
 
 const textEncoder = new TextEncoder();
 
-const compressJson = (json: string) => {
+const compressJson = async (json: string) => {
   const jsonBytes = textEncoder.encode(json);
-  const compressed = pako.deflate(jsonBytes);
+  const compressed = await deflate(jsonBytes);
   const arrBuf = compressed.buffer.slice(
     compressed.byteOffset,
     compressed.byteOffset + compressed.byteLength,
-  );
+  ) as ArrayBuffer;
   const base64DeflatedJson = JSON.stringify(base64.encode(arrBuf));
   return base64DeflatedJson;
 };
@@ -57,7 +57,7 @@ const main = async () => {
   }
 
   const allJson = JSON.stringify(allEncodings);
-  const allCompressedJson = compressJson(allJson);
+  const allCompressedJson = await compressJson(allJson);
 
   const allJsonFile = `${parent}/encoding-metrics/all-encodings.json`;
   const allCompressedJsonFile = `${parent}/encoding-metrics/all-encodings.compressed.json`;
