@@ -524,9 +524,9 @@ export default class PDFForm {
    * form.flatten();
    * ```
    */
-  flatten(options: FlattenOptions = { updateFieldAppearances: true }) {
+  async flatten(options: FlattenOptions = { updateFieldAppearances: true }) {
     if (options.updateFieldAppearances) {
-      this.updateFieldAppearances();
+      await this.updateFieldAppearances();
     }
 
     const fields = this.getFields();

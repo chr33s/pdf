@@ -117,7 +117,7 @@ const secondPage = async (pdfDoc) => {
     borderColor: rgb(1, 0, 1),
     borderOpacity: 0.2,
   });
-  page.drawText("Semi-Transparent Text", {
+  await page.drawText("Semi-Transparent Text", {
     color: rgb(0, 1, 1),
     opacity: 0.5,
     x: inchToPt(1),
@@ -149,7 +149,7 @@ const thirdPage = async (pdfDoc, assets) => {
     blendMode: BlendMode.Normal,
   });
 
-  page.drawText("pdf Blend Mode Test", {
+  await page.drawText("pdf Blend Mode Test", {
     size: 24,
     x: 45,
     y: 735,
@@ -158,15 +158,15 @@ const thirdPage = async (pdfDoc, assets) => {
   });
 
   // List all blend modes available
-  modeNames.forEach((m, i) => {
-    page.drawText(`blendMode: ${m}`, {
+  for (const [i, m] of modeNames.entries()) {
+    await page.drawText(`blendMode: ${m}`, {
       size: 14,
       x: 40,
       y: 700 - i * 20,
       color: cmyk(0, 0, 0, 0.65),
       blendMode: m,
     });
-  });
+  }
 
   // quadratic bezier example
   page.drawSvgPath("M200,300 Q400,50 600,300 T1000,300", {
@@ -263,7 +263,7 @@ const thirdPage = async (pdfDoc, assets) => {
     blendMode: BlendMode.Normal,
   });
 
-  page.drawText("Embedded PDF document (blendMode: Multiply)", {
+  await page.drawText("Embedded PDF document (blendMode: Multiply)", {
     size: 9,
     x: px,
     y: py - 12,

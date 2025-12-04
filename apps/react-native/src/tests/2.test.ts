@@ -49,7 +49,7 @@ export default async () => {
   const hotPink = rgb(1, 0, 1);
   const red = rgb(1, 0, 0);
 
-  page0.drawText("This is the new first page!", {
+  await page0.drawText("This is the new first page!", {
     x: 5,
     y: 200,
     font: helveticaFont,
@@ -74,7 +74,7 @@ export default async () => {
   const page1Text = "pdf is awesome!";
   const page1TextWidth = helveticaFont.widthOfTextAtSize(page1Text, 70);
   page1.setFontSize(70);
-  page1.drawText(page1Text, {
+  await page1.drawText(page1Text, {
     x: page1.getWidth() / 2 - page1TextWidth / 2 + 45,
     y: page1.getHeight() / 2 + 45,
     color: red,
@@ -84,7 +84,7 @@ export default async () => {
   });
 
   page5.setFontSize(24);
-  page5.drawText("This is the last page!", {
+  await page5.drawText("This is the last page!", {
     x: 30,
     y: 215,
     font: helveticaFont,

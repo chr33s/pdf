@@ -47,7 +47,7 @@ const loadA = async (assets: Assets) => {
   // );
   // typeOfReturn.select('1');
 
-  form.flatten();
+  await form.flatten();
   return pdfDoc;
 };
 
@@ -68,7 +68,7 @@ const loadB = async (assets: Assets) => {
 
   form.getButton("CHARACTER IMAGE").setImage(marioImage);
 
-  form.flatten();
+  await form.flatten();
   return pdfDoc;
 };
 
@@ -101,7 +101,7 @@ const loadC = async (assets: Assets) => {
 
   form.getTextField("topmostSubform[0].Page1[0].ReadOrderControl[0].f1_07[0]").setText("987654321");
 
-  form.flatten();
+  await form.flatten();
   return pdfDoc;
 };
 
@@ -133,7 +133,7 @@ const loadD = async (assets: Assets) => {
   gundams.select("One Punch Man");
   gundams.updateAppearances(ubuntuFont);
 
-  form.flatten();
+  await form.flatten();
   return pdfDoc;
 };
 
@@ -145,30 +145,30 @@ const loadE = async (_assets: Assets) => {
 
   const form = pdfDoc.getForm();
 
-  page.drawText("Enter your favorite superhero:", { x: 50, y: 700, size: 20 });
+  await page.drawText("Enter your favorite superhero:", { x: 50, y: 700, size: 20 });
   const superheroField = form.createTextField("favorite.superhero");
   superheroField.setText("One Punch Man");
-  superheroField.addToPage(page, { x: 55, y: 640 });
+  await superheroField.addToPage(page, { x: 55, y: 640 });
 
-  page.drawText("Select your favorite rocket:", { x: 50, y: 600, size: 20 });
-  page.drawText("Falcon Heavy", { x: 120, y: 560, size: 18 });
+  await page.drawText("Select your favorite rocket:", { x: 50, y: 600, size: 20 });
+  await page.drawText("Falcon Heavy", { x: 120, y: 560, size: 18 });
   const rocketField = form.createRadioGroup("favorite.rocket");
-  rocketField.addOptionToPage("Saturn IV", page, { x: 55, y: 540 });
+  await rocketField.addOptionToPage("Saturn IV", page, { x: 55, y: 540 });
   rocketField.select("Saturn IV");
 
-  page.drawText("Select your favorite gundams:", { x: 50, y: 440, size: 20 });
-  page.drawText("Exia", { x: 120, y: 400, size: 18 });
+  await page.drawText("Select your favorite gundams:", { x: 50, y: 440, size: 20 });
+  await page.drawText("Exia", { x: 120, y: 400, size: 18 });
   const exiaField = form.createCheckBox("gundam.exia");
-  exiaField.addToPage(page, { x: 55, y: 380 });
+  await exiaField.addToPage(page, { x: 55, y: 380 });
   exiaField.check();
 
-  page.drawText("Select your favorite planet:", { x: 50, y: 280, size: 20 });
+  await page.drawText("Select your favorite planet:", { x: 50, y: 280, size: 20 });
   const planetsField = form.createDropdown("favorite.planet");
   planetsField.addOptions(["Venus", "Earth", "Mars", "Pluto"]);
   planetsField.select("Pluto");
-  planetsField.addToPage(page, { x: 55, y: 220 });
+  await planetsField.addToPage(page, { x: 55, y: 220 });
 
-  page.drawText("Select your favorite person:", { x: 50, y: 180, size: 18 });
+  await page.drawText("Select your favorite person:", { x: 50, y: 180, size: 18 });
   const personField = form.createOptionList("favorite.person");
   personField.addOptions([
     "Julius Caesar",
@@ -178,9 +178,9 @@ const loadE = async (_assets: Assets) => {
     "Mark Antony",
   ]);
   personField.select("Ada Lovelace");
-  personField.addToPage(page, { x: 55, y: 70 });
+  await personField.addToPage(page, { x: 55, y: 70 });
 
-  form.flatten();
+  await form.flatten();
 
   return pdfDoc;
 };
@@ -209,7 +209,7 @@ test("Test 17: Form flattening", async () => {
     throw new Error("Failed to remove field");
   }
 
-  form.flatten();
+  await form.flatten();
 
   // Copy pages from documents with flattened forms
   const formDocs = [

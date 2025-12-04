@@ -45,7 +45,7 @@ describe("PDFCheckBox", () => {
     const widgets = () => checkBox.acroField.getWidgets();
     expect(widgets().length).toBe(0);
 
-    checkBox.addToPage(page);
+    await checkBox.addToPage(page);
     expect(widgets().length).toBe(1);
     expect(widgets()[0].hasFlag(AnnotationFlags.Print)).toBe(true);
   });
@@ -61,7 +61,7 @@ describe("PDFCheckBox", () => {
     const widgets = () => checkBox.acroField.getWidgets();
     expect(widgets().length).toBe(0);
 
-    checkBox.addToPage(page);
+    await checkBox.addToPage(page);
     expect(widgets().length).toBe(1);
     expect(widgets()[0].P()).toBe(page.ref);
   });

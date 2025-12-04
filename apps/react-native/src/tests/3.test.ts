@@ -21,24 +21,24 @@ export default async () => {
   middlePage.setFontSize(fontSize);
   middlePage.moveTo(0, middlePage.getHeight());
 
-  Object.keys(StandardFonts).forEach((fontName, idx) => {
+  for (const [idx, fontName] of Object.keys(StandardFonts).entries()) {
     middlePage.moveDown(fontSize);
     const font = pdfDoc.embedStandardFont(StandardFonts[fontName]);
     middlePage.setFont(font);
 
     // prettier-ignore
     const text = (
-        fontName === StandardFonts.Symbol ? `${idx + 1}. Τηεσε αρε τηε 14 Στανδαρδ Φοντσ.`
-      : fontName === StandardFonts.ZapfDingbats ? '✑✔✎ ✴❈❅▲❅ ❁❒❅ ▼❈❅ ✑✔ ✳▼❁■❄❁❒❄ ✦❏■▼▲✎'
-      : `${idx + 1}. These are the 14 Standard Fonts.`
-    );
+          fontName === StandardFonts.Symbol ? `${idx + 1}. Τηεσε αρε τηε 14 Στανδαρδ Φοντσ.`
+        : fontName === StandardFonts.ZapfDingbats ? '✑✔✎ ✴❈❅▲❅ ❁❒❅ ▼❈❅ ✑✔ ✳▼❁■❄❁❒❄ ✦❏■▼▲✎'
+        : `${idx + 1}. These are the 14 Standard Fonts.`
+      );
 
-    middlePage.drawText(text, {
+    await middlePage.drawText(text, {
       rotate: radians(-Math.PI / 6),
       xSkew: radians(Math.PI / 10),
       ySkew: radians(Math.PI / 10),
     });
-  });
+  }
 
   middlePage.drawEllipse({
     x: 450,

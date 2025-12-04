@@ -136,7 +136,7 @@ export default async () => {
   page1.setFontSize(32);
   page1.setLineHeight(32);
   page1.moveTo(size / 2 + 5, size - 5 - 25);
-  page1.drawText([...ipsumLines, ...ipsumLines, ...ipsumLines, ...ipsumLines].join("\n"));
+  await page1.drawText([...ipsumLines, ...ipsumLines, ...ipsumLines, ...ipsumLines].join("\n"));
   page1.pushOperators(popGraphicsState());
 
   // Lower-left quadrant
@@ -247,7 +247,7 @@ export default async () => {
   ]);
 
   const ubuntuFont = await pdfDoc.embedFont(ubuntuBytes, { subset: true });
-  page2.drawText(ipsumLines.join("\n"), {
+  await page2.drawText(ipsumLines.join("\n"), {
     y: size - 20,
     size: 20,
     font: ubuntuFont,
@@ -255,7 +255,7 @@ export default async () => {
   });
 
   const fantasqueFont = await pdfDoc.embedFont(fantasqueBytes);
-  page2.drawText(ipsumLines.join("\n"), {
+  await page2.drawText(ipsumLines.join("\n"), {
     y: size - 105,
     size: 25,
     font: fantasqueFont,
@@ -265,7 +265,7 @@ export default async () => {
   const indieFlowerFont = await pdfDoc.embedFont(indieFlowerBytes, {
     subset: true,
   });
-  page2.drawText(ipsumLines.join("\n"), {
+  await page2.drawText(ipsumLines.join("\n"), {
     y: size - 200,
     size: 25,
     font: indieFlowerFont,
@@ -275,7 +275,7 @@ export default async () => {
   const greatVibesFont = await pdfDoc.embedFont(greatVibesBytes, {
     subset: true,
   });
-  page2.drawText(ipsumLines.join("\n"), {
+  await page2.drawText(ipsumLines.join("\n"), {
     y: size - 300,
     size: 30,
     font: greatVibesFont,
@@ -283,7 +283,7 @@ export default async () => {
   });
 
   const appleStormFont = await pdfDoc.embedFont(appleStormBytes);
-  page2.drawText(ipsumLines.join("\n"), {
+  await page2.drawText(ipsumLines.join("\n"), {
     y: size - 425,
     size: 25,
     font: appleStormFont,
@@ -293,7 +293,7 @@ export default async () => {
   const bioRhymeFont = await pdfDoc.embedFont(bioRhymeBytes, {
     subset: true,
   });
-  page2.drawText(ipsumLines.join("\n"), {
+  await page2.drawText(ipsumLines.join("\n"), {
     y: size - 500,
     size: 15,
     font: bioRhymeFont,
@@ -303,7 +303,7 @@ export default async () => {
   const pressStart2PFont = await pdfDoc.embedFont(pressStart2PBytes, {
     subset: true,
   });
-  page2.drawText(ipsumLines.join("\n"), {
+  await page2.drawText(ipsumLines.join("\n"), {
     y: size - 575,
     size: 15,
     font: pressStart2PFont,
@@ -311,7 +311,7 @@ export default async () => {
   });
 
   const hussar3DFont = await pdfDoc.embedFont(hussar3DBytes);
-  page2.drawText(ipsumLines.join("\n"), {
+  await page2.drawText(ipsumLines.join("\n"), {
     y: size - 650,
     size: 25,
     font: hussar3DFont,
@@ -459,15 +459,15 @@ export default async () => {
   const fMax = Math.max(fWidth, fHeight);
 
   // Text Fields
-  [
+  for (const [idx, { name, text, font }] of [
     { name: "moi.text.field[0]", text: "Foo", font: ubuntuFont },
     { name: "moi.text.field[1]", text: "Bar" },
     { name: "moi.text.field[2]", text: "Qux", font: ubuntuFont },
     { name: "moi.text.field[3]", text: "Baz" },
-  ].forEach(({ name, text, font }, idx) => {
+  ].entries()) {
     const textField = form.createTextField(name);
     textField.setText(text);
-    textField.addToPage(page5, {
+    await textField.addToPage(page5, {
       x: fPadding + fWidth,
       y: size - fMax - fPadding,
       width: fWidth,
@@ -480,17 +480,17 @@ export default async () => {
       font: ubuntuFont,
     });
     if (font) textField.updateAppearances(font);
-  });
+  }
 
   // Buttons
-  [
+  for (const [idx, { name, text, font }] of [
     { name: "moi.button.field[0]", text: "Earth", font: ubuntuFont },
     { name: "moi.button.field[1]", text: "Mars", font: timesRomanFont },
     { name: "moi.button.field[2]", text: "Venus", font: ubuntuFont },
     { name: "moi.button.field[3]", text: "Saturn", font: timesRomanFont },
-  ].forEach(({ name, text, font }, idx) => {
+  ].entries()) {
     const button = form.createButton(name);
-    button.addToPage(text, page5, {
+    await button.addToPage(text, page5, {
       x: fPadding * 2 + fWidth * 3,
       y: size - fMax - fPadding,
       width: fWidth,
@@ -502,19 +502,19 @@ export default async () => {
       textColor: pastels.greyishGreen,
       font,
     });
-  });
+  }
 
   // Dropdowns
-  [
+  for (const [idx, { name, choice, font }] of [
     { name: "moi.dropdown.field[0]", choice: "Exia", font: ubuntuFont },
     { name: "moi.dropdown.field[1]", choice: "Kyrios", font: timesRomanFont },
     { name: "moi.dropdown.field[2]", choice: "Dynames", font: ubuntuFont },
     { name: "moi.dropdown.field[3]", choice: "Virtue", font: timesRomanFont },
-  ].forEach(({ name, choice, font }, idx) => {
+  ].entries()) {
     const dropdown = form.createDropdown(name);
     dropdown.addOptions(["Exia", "Dynames", "Kyrios", "Virtue"]);
     dropdown.select(choice);
-    dropdown.addToPage(page5, {
+    await dropdown.addToPage(page5, {
       x: fPadding * 3 + fWidth * 5,
       y: size - fMax - fPadding,
       width: fWidth,
@@ -526,18 +526,18 @@ export default async () => {
       textColor: pastels.brownish,
       font,
     });
-  });
+  }
 
   // Check Boxes
-  [
+  for (const [idx, { name }] of [
     { name: "moi.checkBox.field[0]" },
     { name: "moi.checkBox.field[1]" },
     { name: "moi.checkBox.field[2]" },
     { name: "moi.checkBox.field[3]" },
-  ].forEach(({ name }, idx) => {
+  ].entries()) {
     const checkBox = form.createCheckBox(name);
     checkBox.check();
-    checkBox.addToPage(page5, {
+    await checkBox.addToPage(page5, {
       x: fPadding + fWidth,
       y: size - fMax * 3 - fPadding * 2,
       width: fHeight,
@@ -548,19 +548,19 @@ export default async () => {
       borderColor: pastels.greyishGreen,
       textColor: pastels.hotPink,
     });
-  });
+  }
 
   // Option Lists
-  [
+  for (const [idx, { name, choice, font }] of [
     { name: "moi.optionList.field[0]", choice: "TypeScript", font: ubuntuFont },
     { name: "moi.optionList.field[1]", choice: "Kotlin", font: timesRomanFont },
     { name: "moi.optionList.field[2]", choice: "Python", font: ubuntuFont },
     { name: "moi.optionList.field[3]", choice: "Swift", font: timesRomanFont },
-  ].forEach(({ name, choice, font }, idx) => {
+  ].entries()) {
     const optionList = form.createOptionList(name);
     optionList.addOptions(["TypeScript", "Kotlin", "Python", "Swift"]);
     optionList.select(choice);
-    optionList.addToPage(page5, {
+    await optionList.addToPage(page5, {
       x: fPadding * 2 + fWidth * 3,
       y: size - fMax * 3 - fPadding * 2,
       width: fWidth,
@@ -572,26 +572,29 @@ export default async () => {
       textColor: pastels.hotPink,
       font,
     });
-  });
+  }
 
   // Radio Group
   const radioGroup = form.createRadioGroup("moi.radioGroup.field[0]");
 
-  [{ option: "Bing" }, { option: "Boing" }, { option: "Bang" }, { option: "Bloop" }].forEach(
-    ({ option }, idx) => {
-      radioGroup.addOptionToPage(option, page5, {
-        x: fPadding * 3 + fWidth * 5,
-        y: size - fMax * 3 - fPadding * 2,
-        width: fHeight,
-        height: fHeight,
-        rotate: degrees(90 * idx),
-        borderWidth: 4,
-        backgroundColor: pastels.blue,
-        borderColor: pastels.pinkish,
-        textColor: pastels.yellow,
-      });
-    },
-  );
+  for (const [idx, { option }] of [
+    { option: "Bing" },
+    { option: "Boing" },
+    { option: "Bang" },
+    { option: "Bloop" },
+  ].entries()) {
+    await radioGroup.addOptionToPage(option, page5, {
+      x: fPadding * 3 + fWidth * 5,
+      y: size - fMax * 3 - fPadding * 2,
+      width: fHeight,
+      height: fHeight,
+      rotate: degrees(90 * idx),
+      borderWidth: 4,
+      backgroundColor: pastels.blue,
+      borderColor: pastels.pinkish,
+      textColor: pastels.yellow,
+    });
+  }
 
   radioGroup.select("Bing");
 
@@ -600,7 +603,7 @@ export default async () => {
   combedTf.setMaxLength(7);
   combedTf.enableCombing();
   combedTf.setText("ABC-123");
-  combedTf.addToPage(page5, {
+  await combedTf.addToPage(page5, {
     x: fPadding + fWidth / 2,
     y: size - fMax * 5 - fPadding * 3,
     width: fWidth * 2.5,
@@ -618,7 +621,7 @@ export default async () => {
   multilineTf.setText(
     'In the morning, when you can\'t get out of bed, tell yourself: "I\'m getting up to do the work only a man can do. How can I possibly hesitate or complain when I\'m about to accomplish the task for which I was born? Was I made for lying warm in bed under a pile of blankets?"\n\n"But I enjoy it here."\n\nWas it for enjoyment you were born? Are you designed to act or to be acted upon?\n\n\t\t\t\t\t\t\t\t\t\t - Marcus Aurelius',
   );
-  multilineTf.addToPage(page5, {
+  await multilineTf.addToPage(page5, {
     x: fPadding * 3 + fWidth / 2 + fWidth * 2.5,
     y: size - fMax * 5 - fPadding * 3 - fHeight * 3,
     width: fWidth * 2.5,
@@ -630,7 +633,7 @@ export default async () => {
     font: ubuntuFont,
   });
 
-  page5.drawText("There should be no remnant of a field\nbelow this text!!", {
+  await page5.drawText("There should be no remnant of a field\nbelow this text!!", {
     y: size - fMax * 5 - fHeight * 3,
     x: fPadding,
     size: 18,
@@ -639,7 +642,7 @@ export default async () => {
   });
   const textField = form.createTextField("a.new.text.field");
   textField.setText("This Should Not Be Visible");
-  textField.addToPage(page5, {
+  await textField.addToPage(page5, {
     x: fPadding,
     y: size - fMax * 5 - fPadding * 3.5 - fHeight * 3,
     width: fWidth * 2.5,

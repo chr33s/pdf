@@ -113,14 +113,14 @@ Deno.test("Test 13: Combed fields PDF", async () => {
   // Fill in remaining fields with random numeric values
   const fieldNameValues = values(fieldNames);
   const fields = form.getFields();
-  fields.forEach((field: PDFField) => {
-    if (!fieldNameValues.includes(field.getName())) {
-      if (field instanceof PDFTextField) {
-        const value = String(Math.floor(Math.random() * 1000000) / 100);
-        field.setText(value.substring(0, field.getMaxLength()));
+  for (const field of fields) {
+      if (!fieldNameValues.includes(field.getName())) {
+        if (field instanceof PDFTextField) {
+          const value = String(Math.floor(Math.random() * 1000000) / 100);
+          field.setText(value.substring(0, field.getMaxLength()));
+        }
       }
     }
-  });
 
   const pdfBytes = await pdfDoc.save();
   assert(pdfBytes instanceof Uint8Array);

@@ -97,7 +97,7 @@ const symbolString = String.fromCodePoint(...symbolCodePoints)
   .split("")
   .join(" ");
 
-const addPageWithFonts = (
+const addPageWithFonts = async (
   pdfDoc: PDFDocument,
   text: string,
   fontSize: number,
@@ -107,25 +107,25 @@ const addPageWithFonts = (
   const page = pdfDoc.addPage([650, 700]);
 
   page.moveTo(0, 675);
-  fontNames.forEach((fontName) => {
-    const font = pdfDoc.embedStandardFont(fontName);
-    const lines = breakTextIntoLines(text, fontSize, font, 600);
+  for (const fontName of fontNames) {
+      const font = pdfDoc.embedStandardFont(fontName);
+      const lines = breakTextIntoLines(text, fontSize, font, 600);
 
-    page.drawText(fontName, {
-      font,
-      size: fontSize,
-      x: 650 / 2 - font.widthOfTextAtSize(fontName, fontSize) / 2,
-    });
-    page.moveTo(0, page.getY() - font.heightAtSize(fontSize) - 10);
-    page.drawText(lines.join("\n"), {
-      font,
-      size: fontSize,
-      x: 25,
-      lineHeight: font.heightAtSize(fontSize) + 10,
-    });
+      await page.drawText(fontName, {
+            font,
+            size: fontSize,
+            x: 650 / 2 - font.widthOfTextAtSize(fontName, fontSize) / 2,
+          });
+      page.moveTo(0, page.getY() - font.heightAtSize(fontSize) - 10);
+      await page.drawText(lines.join("\n"), {
+            font,
+            size: fontSize,
+            x: 25,
+            lineHeight: font.heightAtSize(fontSize) + 10,
+          });
 
-    page.moveDown((font.heightAtSize(fontSize) + 10) * (lines.length - 1 + gapAmt));
-  });
+      page.moveDown((font.heightAtSize(fontSize) + 10) * (lines.length - 1 + gapAmt));
+    }
 };
 
 // Primitive line break algorithm
@@ -186,23 +186,23 @@ Deno.test("Test 9: Standard 14 fonts demo", async () => {
   const descriptionLines = breakTextIntoLines(description, 16, helveticaFont, 600);
 
   const titlePage = pdfDoc.addPage([650, 700]);
-  titlePage.drawText(title, {
-    font: helveticaBoldFont,
-    size: 35,
-    y: 700 - 100,
-    x: 650 / 2 - helveticaBoldFont.widthOfTextAtSize(title, 35) / 2,
-    lineHeight: 35,
-  });
-  titlePage.drawText(descriptionLines.join("\n"), {
-    font: helveticaFont,
-    size: 16,
-    y: 525,
-    x: 25,
-    lineHeight: 16,
-  });
+  await titlePage.drawText(title, {
+      font: helveticaBoldFont,
+      size: 35,
+      y: 700 - 100,
+      x: 650 / 2 - helveticaBoldFont.widthOfTextAtSize(title, 35) / 2,
+      lineHeight: 35,
+    });
+  await titlePage.drawText(descriptionLines.join("\n"), {
+      font: helveticaFont,
+      size: 16,
+      y: 525,
+      x: 25,
+      lineHeight: 16,
+    });
 
   // Times Roman
-  addPageWithFonts(pdfDoc, winAnsiString, 18, 0.25, [
+  await addPageWithFonts(pdfDoc, winAnsiString, 18, 0.25, [
     StandardFonts.TimesRoman,
     StandardFonts.TimesRomanBold,
     StandardFonts.TimesRomanItalic,
@@ -210,7 +210,7 @@ Deno.test("Test 9: Standard 14 fonts demo", async () => {
   ]);
 
   // Helvetica
-  addPageWithFonts(pdfDoc, winAnsiString, 16.75, 0.4, [
+  await addPageWithFonts(pdfDoc, winAnsiString, 16.75, 0.4, [
     StandardFonts.Helvetica,
     StandardFonts.HelveticaBold,
     StandardFonts.HelveticaOblique,
@@ -218,7 +218,7 @@ Deno.test("Test 9: Standard 14 fonts demo", async () => {
   ]);
 
   // Courier
-  addPageWithFonts(pdfDoc, winAnsiString, 14.25, 0.75, [
+  await addPageWithFonts(pdfDoc, winAnsiString, 14.25, 0.75, [
     StandardFonts.Courier,
     StandardFonts.CourierBold,
     StandardFonts.CourierOblique,
@@ -239,18 +239,18 @@ Deno.test("Test 9: Standard 14 fonts demo", async () => {
   page.moveTo(0, 700);
 
   page.moveDown(100);
-  page.drawText("ZapfDingbats", {
-    font: helveticaFont,
-    size: zapfDingbatsFontSize,
-    x: 650 / 2 - helveticaFont.widthOfTextAtSize("ZapfDingbats", zapfDingbatsFontSize) / 2,
-  });
+  await page.drawText("ZapfDingbats", {
+      font: helveticaFont,
+      size: zapfDingbatsFontSize,
+      x: 650 / 2 - helveticaFont.widthOfTextAtSize("ZapfDingbats", zapfDingbatsFontSize) / 2,
+    });
   page.moveDown(zapfDingbatsFont.heightAtSize(zapfDingbatsFontSize) + 10);
-  page.drawText(zapfDingbatsLines.join("\n"), {
-    font: zapfDingbatsFont,
-    size: zapfDingbatsFontSize,
-    x: 25,
-    lineHeight: zapfDingbatsFont.heightAtSize(zapfDingbatsFontSize) + 10,
-  });
+  await page.drawText(zapfDingbatsLines.join("\n"), {
+      font: zapfDingbatsFont,
+      size: zapfDingbatsFontSize,
+      x: 25,
+      lineHeight: zapfDingbatsFont.heightAtSize(zapfDingbatsFontSize) + 10,
+    });
 
   // Symbol
   const symbolFont = await pdfDoc.embedFont(StandardFonts.Symbol);
@@ -258,18 +258,18 @@ Deno.test("Test 9: Standard 14 fonts demo", async () => {
   const symbolLines = breakTextIntoLines(symbolString, symbolFontSize, symbolFont, 600);
 
   page.moveDown(275);
-  page.drawText("Symbol", {
-    font: helveticaFont,
-    size: symbolFontSize,
-    x: 650 / 2 - helveticaFont.widthOfTextAtSize("Symbol", symbolFontSize) / 2,
-  });
+  await page.drawText("Symbol", {
+      font: helveticaFont,
+      size: symbolFontSize,
+      x: 650 / 2 - helveticaFont.widthOfTextAtSize("Symbol", symbolFontSize) / 2,
+    });
   page.moveDown(symbolFont.heightAtSize(symbolFontSize) + 10);
-  page.drawText(symbolLines.join("\n"), {
-    font: symbolFont,
-    size: symbolFontSize,
-    x: 25,
-    lineHeight: symbolFont.heightAtSize(symbolFontSize) + 10,
-  });
+  await page.drawText(symbolLines.join("\n"), {
+      font: symbolFont,
+      size: symbolFontSize,
+      x: 25,
+      lineHeight: symbolFont.heightAtSize(symbolFontSize) + 10,
+    });
 
   const pdfBytes = await pdfDoc.save();
   assert(pdfBytes instanceof Uint8Array);

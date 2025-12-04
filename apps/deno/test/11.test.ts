@@ -122,13 +122,13 @@ const secondPage = async (pdfDoc: PDFDocument) => {
     borderColor: rgb(1, 0, 1),
     borderOpacity: 0.2,
   });
-  page.drawText("Semi-Transparent Text", {
-    color: rgb(0, 1, 1),
-    opacity: 0.5,
-    x: inchToPt(1),
-    y: inchToPt(2.5),
-    size: 50,
-  });
+  await page.drawText("Semi-Transparent Text", {
+      color: rgb(0, 1, 1),
+      opacity: 0.5,
+      x: inchToPt(1),
+      y: inchToPt(2.5),
+      size: 50,
+    });
 };
 
 const thirdPage = async (pdfDoc: PDFDocument, assets: Assets) => {
@@ -154,24 +154,24 @@ const thirdPage = async (pdfDoc: PDFDocument, assets: Assets) => {
     blendMode: BlendMode.Normal,
   });
 
-  page.drawText("pdf Blend Mode Test", {
-    size: 24,
-    x: 45,
-    y: 735,
-    color: cmyk(0.75, 0, 0, 0),
-    blendMode: BlendMode.Multiply,
-  });
+  await page.drawText("pdf Blend Mode Test", {
+      size: 24,
+      x: 45,
+      y: 735,
+      color: cmyk(0.75, 0, 0, 0),
+      blendMode: BlendMode.Multiply,
+    });
 
   // List all blend modes available
-  modeNames.forEach((m, i) => {
-    page.drawText(`blendMode: ${m}`, {
-      size: 14,
-      x: 40,
-      y: 700 - i * 20,
-      color: cmyk(0, 0, 0, 0.65),
-      blendMode: m as BlendMode,
-    });
-  });
+  for (const [i, m] of modeNames.entries()) {
+      await page.drawText(`blendMode: ${m}`, {
+            size: 14,
+            x: 40,
+            y: 700 - i * 20,
+            color: cmyk(0, 0, 0, 0.65),
+            blendMode: m as BlendMode,
+          });
+    }
 
   // quadratic bezier example
   page.drawSvgPath("M200,300 Q400,50 600,300 T1000,300", {
@@ -263,13 +263,13 @@ const thirdPage = async (pdfDoc: PDFDocument, assets: Assets) => {
     blendMode: BlendMode.Normal,
   });
 
-  page.drawText("Embedded PDF document (blendMode: Multiply)", {
-    size: 9,
-    x: px,
-    y: py - 12,
-    color: cmyk(0, 0, 0, 1),
-    blendMode: BlendMode.Multiply,
-  });
+  await page.drawText("Embedded PDF document (blendMode: Multiply)", {
+      size: 9,
+      x: px,
+      y: py - 12,
+      color: cmyk(0, 0, 0, 1),
+      blendMode: BlendMode.Multiply,
+    });
 };
 
 Deno.test("Test 11: SVG paths and blend modes", async () => {

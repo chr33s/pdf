@@ -24,15 +24,15 @@ Deno.test("Test 7: PDF with newline whitespace", async () => {
   firstPage.setFont(helveticaFont);
   firstPage.setFontSize(75);
   firstPage.setFontColor(rgb(1, 0, 0));
-  firstPage.drawText(text);
+  await firstPage.drawText(text);
 
-  pages.forEach((page: PDFPage, idx: number) => {
-    page.moveTo(10, 10);
-    page.setFont(helveticaFont);
-    page.setFontSize(17);
-    page.setFontColor(rgb(1, 0, 0));
-    page.drawText(`${idx + 1} / ${pages.length}`);
-  });
+  for (const [idx, page] of pages.entries()) {
+      page.moveTo(10, 10);
+      page.setFont(helveticaFont);
+      page.setFontSize(17);
+      page.setFontColor(rgb(1, 0, 0));
+      await page.drawText(`${idx + 1} / ${pages.length}`);
+    }
 
   const pdfBytes = await pdfDoc.save();
   assert(pdfBytes instanceof Uint8Array);

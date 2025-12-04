@@ -1,13 +1,13 @@
+import { rgb } from "../colors.js";
 import PDFDocument from "../pdf-document.js";
 import PDFPage from "../pdf-page.js";
-import { rgb } from "../colors.js";
 import { degrees } from "../rotations.js";
-import PDFField, { FieldAppearanceOptions, assertFieldAppearanceOptions } from "./pdf-field.js";
 import {
   AppearanceProviderFor,
   defaultRadioGroupAppearanceProvider,
   normalizeAppearance,
 } from "./appearances.js";
+import PDFField, { FieldAppearanceOptions, assertFieldAppearanceOptions } from "./pdf-field.js";
 
 import {
   AcroButtonFlags,
@@ -329,7 +329,11 @@ export default class PDFRadioGroup extends PDFField {
    * @param page The page to which the radio button widget should be added.
    * @param options The options to be used when adding the radio button widget.
    */
-  addOptionToPage(option: string, page: PDFPage, options?: FieldAppearanceOptions) {
+  async addOptionToPage(
+    option: string,
+    page: PDFPage,
+    options?: FieldAppearanceOptions,
+  ): Promise<void> {
     assertIs(option, "option", ["string"]);
     assertIs(page, "page", [[PDFPage, "PDFPage"]]);
     assertFieldAppearanceOptions(options);

@@ -71,64 +71,64 @@ Deno.test("Test 14: DOD character sheet", async () => {
   const singlelineCenteredTf = form.createTextField("singleline.centered.tf");
   singlelineCenteredTf.setAlignment(TextAlignment.Center);
   singlelineCenteredTf.setText("Sum centered text yo");
-  singlelineCenteredTf.addToPage(page2, {
-    y: height - 50,
-    width: 250,
-    height: 25,
-    borderWidth: 3,
-    borderColor: rgb(1, 0, 1),
-  });
+  await singlelineCenteredTf.addToPage(page2, {
+      y: height - 50,
+      width: 250,
+      height: 25,
+      borderWidth: 3,
+      borderColor: rgb(1, 0, 1),
+    });
 
   // Multiline, centered
   const multilineCenteredTf = form.createTextField("multiline.centered.tf");
   multilineCenteredTf.enableMultiline();
   multilineCenteredTf.setAlignment(TextAlignment.Center);
   multilineCenteredTf.setText("Sum\ncentered\rtext\nyo");
-  multilineCenteredTf.addToPage(page2, {
-    y: height - 50 - 150,
-    width: 250,
-    height: 100,
-    borderWidth: 3,
-    borderColor: rgb(1, 0, 1),
-  });
+  await multilineCenteredTf.addToPage(page2, {
+      y: height - 50 - 150,
+      width: 250,
+      height: 100,
+      borderWidth: 3,
+      borderColor: rgb(1, 0, 1),
+    });
 
   // Singleline, right justified
   const singlelineRightTf = form.createTextField("singleline.right.tf");
   singlelineRightTf.setAlignment(TextAlignment.Right);
   singlelineRightTf.setText("Sum right justified text yo");
-  singlelineRightTf.addToPage(page2, {
-    y: height - 50,
-    x: 300,
-    width: 250,
-    height: 25,
-    borderWidth: 3,
-    borderColor: rgb(1, 0, 1),
-  });
+  await singlelineRightTf.addToPage(page2, {
+      y: height - 50,
+      x: 300,
+      width: 250,
+      height: 25,
+      borderWidth: 3,
+      borderColor: rgb(1, 0, 1),
+    });
 
   // Multiline, right justified
   const multilineRightTf = form.createTextField("multiline.right.tf");
   multilineRightTf.enableMultiline();
   multilineRightTf.setAlignment(TextAlignment.Right);
   multilineRightTf.setText("Sum\nright justified\rtext\nyo");
-  multilineRightTf.addToPage(page2, {
-    y: height - 50 - 150,
-    x: 300,
-    width: 250,
-    height: 100,
-    borderWidth: 3,
-    borderColor: rgb(1, 0, 1),
-  });
+  await multilineRightTf.addToPage(page2, {
+      y: height - 50 - 150,
+      x: 300,
+      width: 250,
+      height: 100,
+      borderWidth: 3,
+      borderColor: rgb(1, 0, 1),
+    });
 
   // Multiselect Option List
   const optionList = form.createOptionList("option.list");
-  optionList.addToPage(page2, {
-    y: height - 50 - 150 - 250,
-    width: 250,
-    height: 200,
-    backgroundColor: rgb(1, 0.25, 0.25),
-    borderWidth: 5,
-    borderColor: rgb(1, 0, 1),
-  });
+  await optionList.addToPage(page2, {
+      y: height - 50 - 150 - 250,
+      width: 250,
+      height: 200,
+      backgroundColor: rgb(1, 0.25, 0.25),
+      borderWidth: 5,
+      borderColor: rgb(1, 0, 1),
+    });
   optionList.setOptions(["Sojourner", "Spirit", "Opportunity", "Curiosity", "Perseverance"]);
   optionList.enableMultiselect();
   optionList.select(["Sojourner", "Curiosity", "Perseverance"]);

@@ -1518,7 +1518,7 @@ export default class PDFDocument {
 
     if (updateFieldAppearances) {
       const form = this.#formCache.getValue();
-      if (form) form.updateFieldAppearances();
+      if (form) await form.updateFieldAppearances();
     }
 
     await this.flush();

@@ -11317,10 +11317,9 @@ declare namespace CloudflareWorkersModule {
     [Rpc.__RPC_TARGET_BRAND]: never;
   }
   // `protected` fields don't appear in `keyof`s, so can't be accessed over RPC
-  export abstract class WorkerEntrypoint<
-    Env = Cloudflare.Env,
-    Props = {},
-  > implements Rpc.WorkerEntrypointBranded {
+  export abstract class WorkerEntrypoint<Env = Cloudflare.Env, Props = {}>
+    implements Rpc.WorkerEntrypointBranded
+  {
     [Rpc.__WORKER_ENTRYPOINT_BRAND]: never;
     protected ctx: ExecutionContext<Props>;
     protected env: Env;
@@ -11336,10 +11335,9 @@ declare namespace CloudflareWorkersModule {
     test?(controller: TestController): void | Promise<void>;
     trace?(traces: TraceItem[]): void | Promise<void>;
   }
-  export abstract class DurableObject<
-    Env = Cloudflare.Env,
-    Props = {},
-  > implements Rpc.DurableObjectBranded {
+  export abstract class DurableObject<Env = Cloudflare.Env, Props = {}>
+    implements Rpc.DurableObjectBranded
+  {
     [Rpc.__DURABLE_OBJECT_BRAND]: never;
     protected ctx: DurableObjectState<Props>;
     protected env: Env;
@@ -11406,7 +11404,9 @@ declare namespace CloudflareWorkersModule {
   export abstract class WorkflowEntrypoint<
     Env = unknown,
     T extends Rpc.Serializable<T> | unknown = unknown,
-  > implements Rpc.WorkflowEntrypointBranded {
+  >
+    implements Rpc.WorkflowEntrypointBranded
+  {
     [Rpc.__WORKFLOW_ENTRYPOINT_BRAND]: never;
     protected ctx: ExecutionContext;
     protected env: Env;

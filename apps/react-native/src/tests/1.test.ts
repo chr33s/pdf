@@ -54,7 +54,7 @@ export default async () => {
 
   const textWidth = ubuntuFont.widthOfTextAtSize(lines[2], fontSize);
 
-  pdfDoc.getPages().forEach((page) => {
+  for (const page of pdfDoc.getPages()) {
     const { width, height } = page.getSize();
     const centerX = width / 2;
     const centerY = height / 2;
@@ -76,7 +76,7 @@ export default async () => {
     });
     page.setFont(ubuntuFont);
     page.setFontColor(solarizedGray);
-    page.drawText(lines.join("\n"), {
+    await page.drawText(lines.join("\n"), {
       x: centerX - textWidth / 2,
       y: centerY - 15,
     });
@@ -95,7 +95,7 @@ export default async () => {
       y: embeddedPageFigure.padding + 10,
       ...embeddedPageDims,
     });
-  });
+  }
 
   pdfDoc.removePage(1);
 

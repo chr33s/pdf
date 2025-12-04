@@ -66,10 +66,10 @@ describe("PDFRadioGroup", () => {
     const radioGroup = form.createRadioGroup("test.group");
     radioGroup.enableMutualExclusion();
 
-    radioGroup.addOptionToPage("foo", page);
-    radioGroup.addOptionToPage("bar", page);
-    radioGroup.addOptionToPage("foo", page);
-    radioGroup.addOptionToPage("qux", page);
+    await radioGroup.addOptionToPage("foo", page);
+    await radioGroup.addOptionToPage("bar", page);
+    await radioGroup.addOptionToPage("foo", page);
+    await radioGroup.addOptionToPage("qux", page);
 
     const getOnWidgets = () =>
       radioGroup.acroField
@@ -105,10 +105,10 @@ describe("PDFRadioGroup", () => {
     const radioGroup = form.createRadioGroup("test.group");
     radioGroup.disableMutualExclusion();
 
-    radioGroup.addOptionToPage("foo", page);
-    radioGroup.addOptionToPage("bar", page);
-    radioGroup.addOptionToPage("foo", page);
-    radioGroup.addOptionToPage("qux", page);
+    await radioGroup.addOptionToPage("foo", page);
+    await radioGroup.addOptionToPage("bar", page);
+    await radioGroup.addOptionToPage("foo", page);
+    await radioGroup.addOptionToPage("qux", page);
 
     const getOnWidgets = () =>
       radioGroup.acroField
@@ -147,7 +147,7 @@ describe("PDFRadioGroup", () => {
     const widgets = () => radioGroup.acroField.getWidgets();
     expect(widgets().length).toBe(0);
 
-    radioGroup.addOptionToPage("foo", page);
+    await radioGroup.addOptionToPage("foo", page);
     expect(widgets().length).toBe(1);
     expect(widgets()[0].hasFlag(AnnotationFlags.Print)).toBe(true);
   });
@@ -163,7 +163,7 @@ describe("PDFRadioGroup", () => {
     const widgets = () => radioGroup.acroField.getWidgets();
     expect(widgets().length).toBe(0);
 
-    radioGroup.addOptionToPage("foo", page);
+    await radioGroup.addOptionToPage("foo", page);
     expect(widgets().length).toBe(1);
     expect(widgets()[0].P()).toBe(page.ref);
   });

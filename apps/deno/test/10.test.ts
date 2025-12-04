@@ -70,18 +70,18 @@ Deno.test("Test 10: Embedded UTF-16 font demo", async () => {
   const descriptionLines = breakTextIntoLines(description, 16, helveticaFont, 600);
 
   const titlePage = pdfDoc.addPage([650, 700]);
-  titlePage.drawText(title, {
-    font: helveticaBoldFont,
-    size: 35,
-    y: 700 - 100,
-    x: 650 / 2 - helveticaBoldFont.widthOfTextAtSize(title, 35) / 2,
-  });
-  titlePage.drawText(descriptionLines.join("\n"), {
-    font: helveticaFont,
-    size: 16,
-    y: 525,
-    x: 25,
-  });
+  await titlePage.drawText(title, {
+      font: helveticaBoldFont,
+      size: 35,
+      y: 700 - 100,
+      x: 650 / 2 - helveticaBoldFont.widthOfTextAtSize(title, 35) / 2,
+    });
+  await titlePage.drawText(descriptionLines.join("\n"), {
+      font: helveticaFont,
+      size: 16,
+      y: 525,
+      x: 25,
+    });
 
   const sourceHanFont = await pdfDoc.embedFont(fonts.otf["source-hans-jp"]);
 
@@ -94,16 +94,16 @@ Deno.test("Test 10: Embedded UTF-16 font demo", async () => {
     675,
   );
 
-  sourceHanLineGroups.forEach((lines) => {
-    const page = pdfDoc.addPage([650, 700]);
-    page.drawText(lines.join("\n"), {
-      font: sourceHanFont,
-      size: sourceHanFontSize,
-      x: 25,
-      y: 700 - 25 - sourceHanFontSize,
-      lineHeight: sourceHanFont.heightAtSize(sourceHanFontSize) + 10,
-    });
-  });
+  for (const lines of sourceHanLineGroups) {
+      const page = pdfDoc.addPage([650, 700]);
+      await page.drawText(lines.join("\n"), {
+            font: sourceHanFont,
+            size: sourceHanFontSize,
+            x: 25,
+            y: 700 - 25 - sourceHanFontSize,
+            lineHeight: sourceHanFont.heightAtSize(sourceHanFontSize) + 10,
+          });
+    }
 
   const pdfBytes = await pdfDoc.save();
   assert(pdfBytes instanceof Uint8Array);

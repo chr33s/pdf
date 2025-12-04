@@ -138,7 +138,7 @@ Deno.test("Test 0: Create PDF with multiple features", async () => {
   page1.setFontSize(32);
   page1.setLineHeight(32);
   page1.moveTo(size / 2 + 5, size - 5 - 25);
-  page1.drawText([...ipsumLines, ...ipsumLines, ...ipsumLines, ...ipsumLines].join("\n"));
+  await page1.drawText([...ipsumLines, ...ipsumLines, ...ipsumLines, ...ipsumLines].join("\n"));
   page1.pushOperators(popGraphicsState());
 
   // Lower-left quadrant
@@ -233,76 +233,76 @@ Deno.test("Test 0: Create PDF with multiple features", async () => {
   const ubuntuFont = await pdfDoc.embedFont(fonts.ttf.ubuntu_r_base64, {
     subset: true,
   });
-  page2.drawText(ipsumLines.join("\n"), {
-    y: size - 20,
-    size: 20,
-    font: ubuntuFont,
-    lineHeight: 20,
-  });
+  await page2.drawText(ipsumLines.join("\n"), {
+      y: size - 20,
+      size: 20,
+      font: ubuntuFont,
+      lineHeight: 20,
+    });
 
   const fantasqueFont = await pdfDoc.embedFont(fonts.otf["fantasque-sans-mono_bi"]);
-  page2.drawText(ipsumLines.join("\n"), {
-    y: size - 105,
-    size: 25,
-    font: fantasqueFont,
-    lineHeight: 25,
-  });
+  await page2.drawText(ipsumLines.join("\n"), {
+      y: size - 105,
+      size: 25,
+      font: fantasqueFont,
+      lineHeight: 25,
+    });
 
   const indieFlowerFont = await pdfDoc.embedFont(fonts.ttf["indie-flower_r"], {
     subset: true,
   });
-  page2.drawText(ipsumLines.join("\n"), {
-    y: size - 200,
-    size: 25,
-    font: indieFlowerFont,
-    lineHeight: 25,
-  });
+  await page2.drawText(ipsumLines.join("\n"), {
+      y: size - 200,
+      size: 25,
+      font: indieFlowerFont,
+      lineHeight: 25,
+    });
 
   const greatVibesFont = await pdfDoc.embedFont(fonts.ttf["great-vibes_r"], {
     subset: true,
   });
-  page2.drawText(ipsumLines.join("\n"), {
-    y: size - 300,
-    size: 30,
-    font: greatVibesFont,
-    lineHeight: 30,
-  });
+  await page2.drawText(ipsumLines.join("\n"), {
+      y: size - 300,
+      size: 30,
+      font: greatVibesFont,
+      lineHeight: 30,
+    });
 
   const appleStormFont = await pdfDoc.embedFont(fonts.otf["apple-storm_r"]);
-  page2.drawText(ipsumLines.join("\n"), {
-    y: size - 425,
-    size: 25,
-    font: appleStormFont,
-    lineHeight: 25,
-  });
+  await page2.drawText(ipsumLines.join("\n"), {
+      y: size - 425,
+      size: 25,
+      font: appleStormFont,
+      lineHeight: 25,
+    });
 
   const bioRhymeFont = await pdfDoc.embedFont(fonts.ttf["bio-rhyme_r"], {
     subset: true,
   });
-  page2.drawText(ipsumLines.join("\n"), {
-    y: size - 500,
-    size: 15,
-    font: bioRhymeFont,
-    lineHeight: 15,
-  });
+  await page2.drawText(ipsumLines.join("\n"), {
+      y: size - 500,
+      size: 15,
+      font: bioRhymeFont,
+      lineHeight: 15,
+    });
 
   const pressStart2PFont = await pdfDoc.embedFont(fonts.ttf["press-start-2p_r"], {
     subset: true,
   });
-  page2.drawText(ipsumLines.join("\n"), {
-    y: size - 575,
-    size: 15,
-    font: pressStart2PFont,
-    lineHeight: 15,
-  });
+  await page2.drawText(ipsumLines.join("\n"), {
+      y: size - 575,
+      size: 15,
+      font: pressStart2PFont,
+      lineHeight: 15,
+    });
 
   const hussar3DFont = await pdfDoc.embedFont(fonts.otf["hussar-3d_r"]);
-  page2.drawText(ipsumLines.join("\n"), {
-    y: size - 650,
-    size: 25,
-    font: hussar3DFont,
-    lineHeight: 25,
-  });
+  await page2.drawText(ipsumLines.join("\n"), {
+      y: size - 650,
+      size: 25,
+      font: hussar3DFont,
+      lineHeight: 25,
+    });
 
   /********************** Page 3 **********************/
 
@@ -425,139 +425,137 @@ Deno.test("Test 0: Create PDF with multiple features", async () => {
   const fMax = Math.max(fWidth, fHeight);
 
   // Text Fields
-  [
-    { name: "moi.text.field[0]", text: "Foo", font: ubuntuFont },
-    { name: "moi.text.field[1]", text: "Bar" },
-    { name: "moi.text.field[2]", text: "Qux", font: ubuntuFont },
-    { name: "moi.text.field[3]", text: "Baz" },
-  ].forEach(({ name, text, font }, idx) => {
-    const textField = form.createTextField(name);
-    textField.setText(text);
-    textField.addToPage(page5, {
-      x: fPadding + fWidth,
-      y: size - fMax - fPadding,
-      width: fWidth,
-      height: fHeight,
-      rotate: degrees(90 * idx),
-      borderWidth: 4,
-      backgroundColor: pastels.pinkish,
-      borderColor: pastels.blue,
-      textColor: pastels.whiteish,
-      font: ubuntuFont,
-    });
-    if (font) textField.updateAppearances(font);
-  });
+  for (const [idx, { name, text, font }] of [
+      { name: "moi.text.field[0]", text: "Foo", font: ubuntuFont },
+      { name: "moi.text.field[1]", text: "Bar" },
+      { name: "moi.text.field[2]", text: "Qux", font: ubuntuFont },
+      { name: "moi.text.field[3]", text: "Baz" },
+    ].entries()) {
+      const textField = form.createTextField(name);
+      textField.setText(text);
+      await textField.addToPage(page5, {
+            x: fPadding + fWidth,
+            y: size - fMax - fPadding,
+            width: fWidth,
+            height: fHeight,
+            rotate: degrees(90 * idx),
+            borderWidth: 4,
+            backgroundColor: pastels.pinkish,
+            borderColor: pastels.blue,
+            textColor: pastels.whiteish,
+            font: ubuntuFont,
+          });
+      if (font) textField.updateAppearances(font);
+    }
 
   // Buttons
-  [
-    { name: "moi.button.field[0]", text: "Earth", font: ubuntuFont },
-    { name: "moi.button.field[1]", text: "Mars", font: timesRomanFont },
-    { name: "moi.button.field[2]", text: "Venus", font: ubuntuFont },
-    { name: "moi.button.field[3]", text: "Saturn", font: timesRomanFont },
-  ].forEach(({ name, text, font }, idx) => {
-    const button = form.createButton(name);
-    button.addToPage(text, page5, {
-      x: fPadding * 2 + fWidth * 3,
-      y: size - fMax - fPadding,
-      width: fWidth,
-      height: fHeight,
-      rotate: degrees(90 * idx),
-      borderWidth: 4,
-      backgroundColor: pastels.brownish,
-      borderColor: pastels.tan,
-      textColor: pastels.greyishGreen,
-      font,
-    });
-  });
+  for (const [idx, { name, text, font }] of [
+      { name: "moi.button.field[0]", text: "Earth", font: ubuntuFont },
+      { name: "moi.button.field[1]", text: "Mars", font: timesRomanFont },
+      { name: "moi.button.field[2]", text: "Venus", font: ubuntuFont },
+      { name: "moi.button.field[3]", text: "Saturn", font: timesRomanFont },
+    ].entries()) {
+      const button = form.createButton(name);
+      await button.addToPage(text, page5, {
+            x: fPadding * 2 + fWidth * 3,
+            y: size - fMax - fPadding,
+            width: fWidth,
+            height: fHeight,
+            rotate: degrees(90 * idx),
+            borderWidth: 4,
+            backgroundColor: pastels.brownish,
+            borderColor: pastels.tan,
+            textColor: pastels.greyishGreen,
+            font,
+          });
+    }
 
   // Dropdowns
-  [
-    { name: "moi.dropdown.field[0]", choice: "Exia", font: ubuntuFont },
-    { name: "moi.dropdown.field[1]", choice: "Kyrios", font: timesRomanFont },
-    { name: "moi.dropdown.field[2]", choice: "Dynames", font: ubuntuFont },
-    { name: "moi.dropdown.field[3]", choice: "Virtue", font: timesRomanFont },
-  ].forEach(({ name, choice, font }, idx) => {
-    const dropdown = form.createDropdown(name);
-    dropdown.addOptions(["Exia", "Dynames", "Kyrios", "Virtue"]);
-    dropdown.select(choice);
-    dropdown.addToPage(page5, {
-      x: fPadding * 3 + fWidth * 5,
-      y: size - fMax - fPadding,
-      width: fWidth,
-      height: fHeight,
-      rotate: degrees(90 * idx),
-      borderWidth: 4,
-      backgroundColor: pastels.greyishGreen,
-      borderColor: pastels.hotPink,
-      textColor: pastels.brownish,
-      font,
-    });
-  });
+  for (const [idx, { name, choice, font }] of [
+      { name: "moi.dropdown.field[0]", choice: "Exia", font: ubuntuFont },
+      { name: "moi.dropdown.field[1]", choice: "Kyrios", font: timesRomanFont },
+      { name: "moi.dropdown.field[2]", choice: "Dynames", font: ubuntuFont },
+      { name: "moi.dropdown.field[3]", choice: "Virtue", font: timesRomanFont },
+    ].entries()) {
+      const dropdown = form.createDropdown(name);
+      dropdown.addOptions(["Exia", "Dynames", "Kyrios", "Virtue"]);
+      dropdown.select(choice);
+      await dropdown.addToPage(page5, {
+            x: fPadding * 3 + fWidth * 5,
+            y: size - fMax - fPadding,
+            width: fWidth,
+            height: fHeight,
+            rotate: degrees(90 * idx),
+            borderWidth: 4,
+            backgroundColor: pastels.greyishGreen,
+            borderColor: pastels.hotPink,
+            textColor: pastels.brownish,
+            font,
+          });
+    }
 
   // Check Boxes
-  [
-    { name: "moi.checkBox.field[0]" },
-    { name: "moi.checkBox.field[1]" },
-    { name: "moi.checkBox.field[2]" },
-    { name: "moi.checkBox.field[3]" },
-  ].forEach(({ name }, idx) => {
-    const checkBox = form.createCheckBox(name);
-    checkBox.check();
-    checkBox.addToPage(page5, {
-      x: fPadding + fWidth,
-      y: size - fMax * 3 - fPadding * 2,
-      width: fHeight,
-      height: fHeight,
-      rotate: degrees(90 * idx),
-      borderWidth: 4,
-      backgroundColor: pastels.whiteish,
-      borderColor: pastels.greyishGreen,
-      textColor: pastels.hotPink,
-    });
-  });
+  for (const [idx, { name }] of [
+      { name: "moi.checkBox.field[0]" },
+      { name: "moi.checkBox.field[1]" },
+      { name: "moi.checkBox.field[2]" },
+      { name: "moi.checkBox.field[3]" },
+    ].entries()) {
+      const checkBox = form.createCheckBox(name);
+      checkBox.check();
+      await checkBox.addToPage(page5, {
+            x: fPadding + fWidth,
+            y: size - fMax * 3 - fPadding * 2,
+            width: fHeight,
+            height: fHeight,
+            rotate: degrees(90 * idx),
+            borderWidth: 4,
+            backgroundColor: pastels.whiteish,
+            borderColor: pastels.greyishGreen,
+            textColor: pastels.hotPink,
+          });
+    }
 
   // Option Lists
-  [
-    { name: "moi.optionList.field[0]", choice: "TypeScript", font: ubuntuFont },
-    { name: "moi.optionList.field[1]", choice: "Kotlin", font: timesRomanFont },
-    { name: "moi.optionList.field[2]", choice: "Python", font: ubuntuFont },
-    { name: "moi.optionList.field[3]", choice: "Swift", font: timesRomanFont },
-  ].forEach(({ name, choice, font }, idx) => {
-    const optionList = form.createOptionList(name);
-    optionList.addOptions(["TypeScript", "Kotlin", "Python", "Swift"]);
-    optionList.select(choice);
-    optionList.addToPage(page5, {
-      x: fPadding * 2 + fWidth * 3,
-      y: size - fMax * 3 - fPadding * 2,
-      width: fWidth,
-      height: fHeight,
-      rotate: degrees(90 * idx),
-      borderWidth: 4,
-      backgroundColor: pastels.tan,
-      borderColor: pastels.yellow,
-      textColor: pastels.hotPink,
-      font,
-    });
-  });
+  for (const [idx, { name, choice, font }] of [
+      { name: "moi.optionList.field[0]", choice: "TypeScript", font: ubuntuFont },
+      { name: "moi.optionList.field[1]", choice: "Kotlin", font: timesRomanFont },
+      { name: "moi.optionList.field[2]", choice: "Python", font: ubuntuFont },
+      { name: "moi.optionList.field[3]", choice: "Swift", font: timesRomanFont },
+    ].entries()) {
+      const optionList = form.createOptionList(name);
+      optionList.addOptions(["TypeScript", "Kotlin", "Python", "Swift"]);
+      optionList.select(choice);
+      await optionList.addToPage(page5, {
+            x: fPadding * 2 + fWidth * 3,
+            y: size - fMax * 3 - fPadding * 2,
+            width: fWidth,
+            height: fHeight,
+            rotate: degrees(90 * idx),
+            borderWidth: 4,
+            backgroundColor: pastels.tan,
+            borderColor: pastels.yellow,
+            textColor: pastels.hotPink,
+            font,
+          });
+    }
 
   // Radio Group
   const radioGroup = form.createRadioGroup("moi.radioGroup.field[0]");
 
-  [{ option: "Bing" }, { option: "Boing" }, { option: "Bang" }, { option: "Bloop" }].forEach(
-    ({ option }, idx) => {
-      radioGroup.addOptionToPage(option, page5, {
-        x: fPadding * 3 + fWidth * 5,
-        y: size - fMax * 3 - fPadding * 2,
-        width: fHeight,
-        height: fHeight,
-        rotate: degrees(90 * idx),
-        borderWidth: 4,
-        backgroundColor: pastels.blue,
-        borderColor: pastels.pinkish,
-        textColor: pastels.yellow,
-      });
-    },
-  );
+  for (const [idx, { option }] of [{ option: "Bing" }, { option: "Boing" }, { option: "Bang" }, { option: "Bloop" }].entries()) {
+        await radioGroup.addOptionToPage(option, page5, {
+              x: fPadding * 3 + fWidth * 5,
+              y: size - fMax * 3 - fPadding * 2,
+              width: fHeight,
+              height: fHeight,
+              rotate: degrees(90 * idx),
+              borderWidth: 4,
+              backgroundColor: pastels.blue,
+              borderColor: pastels.pinkish,
+              textColor: pastels.yellow,
+            });
+      }
 
   radioGroup.select("Bing");
 
@@ -566,17 +564,17 @@ Deno.test("Test 0: Create PDF with multiple features", async () => {
   combedTf.setMaxLength(7);
   combedTf.enableCombing();
   combedTf.setText("ABC-123");
-  combedTf.addToPage(page5, {
-    x: fPadding + fWidth / 2,
-    y: size - fMax * 5 - fPadding * 3,
-    width: fWidth * 2.5,
-    height: fHeight,
-    borderWidth: 4,
-    backgroundColor: pastels.yellow,
-    borderColor: pastels.brownish,
-    textColor: pastels.darkBlue,
-    font: ubuntuFont,
-  });
+  await combedTf.addToPage(page5, {
+      x: fPadding + fWidth / 2,
+      y: size - fMax * 5 - fPadding * 3,
+      width: fWidth * 2.5,
+      height: fHeight,
+      borderWidth: 4,
+      backgroundColor: pastels.yellow,
+      borderColor: pastels.brownish,
+      textColor: pastels.darkBlue,
+      font: ubuntuFont,
+    });
 
   // Multiline Text Field
   const multilineTf = form.createTextField("moi.multiline.text.field");
@@ -584,38 +582,38 @@ Deno.test("Test 0: Create PDF with multiple features", async () => {
   multilineTf.setText(
     'In the morning, when you can\'t get out of bed, tell yourself: "I\'m getting up to do the work only a man can do. How can I possibly hesitate or complain when I\'m about to accomplish the task for which I was born? Was I made for lying warm in bed under a pile of blankets?"\n\n"But I enjoy it here."\n\nWas it for enjoyment you were born? Are you designed to act or to be acted upon?\n\n\t\t\t\t\t\t\t\t\t\t - Marcus Aurelius',
   );
-  multilineTf.addToPage(page5, {
-    x: fPadding * 3 + fWidth / 2 + fWidth * 2.5,
-    y: size - fMax * 5 - fPadding * 3 - fHeight * 3,
-    width: fWidth * 2.5,
-    height: fHeight * 5,
-    borderWidth: 4,
-    backgroundColor: pastels.whiteish,
-    borderColor: pastels.brownish,
-    textColor: pastels.greyishGreen,
-    font: ubuntuFont,
-  });
+  await multilineTf.addToPage(page5, {
+      x: fPadding * 3 + fWidth / 2 + fWidth * 2.5,
+      y: size - fMax * 5 - fPadding * 3 - fHeight * 3,
+      width: fWidth * 2.5,
+      height: fHeight * 5,
+      borderWidth: 4,
+      backgroundColor: pastels.whiteish,
+      borderColor: pastels.brownish,
+      textColor: pastels.greyishGreen,
+      font: ubuntuFont,
+    });
 
-  page5.drawText("There should be no remnant of a field\nbelow this text!!", {
-    y: size - fMax * 5 - fHeight * 3,
-    x: fPadding,
-    size: 18,
-    font: indieFlowerFont,
-    lineHeight: 18,
-  });
+  await page5.drawText("There should be no remnant of a field\nbelow this text!!", {
+      y: size - fMax * 5 - fHeight * 3,
+      x: fPadding,
+      size: 18,
+      font: indieFlowerFont,
+      lineHeight: 18,
+    });
   const textField = form.createTextField("a.new.text.field");
   textField.setText("This Should Not Be Visible");
-  textField.addToPage(page5, {
-    x: fPadding,
-    y: size - fMax * 5 - fPadding * 3.5 - fHeight * 3,
-    width: fWidth * 2.5,
-    height: fHeight * 1,
-    borderWidth: 4,
-    backgroundColor: pastels.pinkish,
-    borderColor: pastels.blue,
-    textColor: pastels.darkBlue,
-    font: ubuntuFont,
-  });
+  await textField.addToPage(page5, {
+      x: fPadding,
+      y: size - fMax * 5 - fPadding * 3.5 - fHeight * 3,
+      width: fWidth * 2.5,
+      height: fHeight * 1,
+      borderWidth: 4,
+      backgroundColor: pastels.pinkish,
+      borderColor: pastels.blue,
+      textColor: pastels.darkBlue,
+      font: ubuntuFont,
+    });
 
   form.removeField(textField);
 

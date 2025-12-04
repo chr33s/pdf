@@ -963,7 +963,7 @@ export default class PDFPage {
    * @param text The text to be drawn.
    * @param options The options to be used when drawing the text.
    */
-  drawText(text: string, options: PDFPageDrawTextOptions = {}): void {
+  async drawText(text: string, options: PDFPageDrawTextOptions = {}): Promise<void> {
     assertIs(text, "text", ["string"]);
     assertOrUndefined(options.color, "options.color", [[Object, "Color"]]);
     assertRangeOrUndefined(options.opacity, "opacity.opacity", 0, 1);
@@ -982,7 +982,7 @@ export default class PDFPage {
     assertOrUndefined(options.strokeWidth, "options.strokeWidth", ["number"]);
     assertOrUndefined(options.renderMode, "options.renderMode", ["number"]);
 
-    const { oldFont, newFont, newFontKey } = this.#setOrEmbedFont(options.font);
+    const { oldFont, newFont, newFontKey } = await this.#setOrEmbedFont(options.font);
     const fontSize = options.size || this.#fontSize;
 
     const wordBreaks = options.wordBreaks || this.doc.defaultWordBreaks;
@@ -1506,12 +1506,12 @@ export default class PDFPage {
     this.drawEllipse({ ...options, xScale: size, yScale: size });
   }
 
-  #setOrEmbedFont(font?: PDFFont) {
+  async #setOrEmbedFont(font?: PDFFont) {
     const oldFont = this.#font;
     const oldFontKey = this.#fontKey;
 
     if (font) this.setFont(font);
-    else this.getFont();
+    else await this.getFont();
 
     const newFont = this.#font!;
     const newFontKey = this.#fontKey!;

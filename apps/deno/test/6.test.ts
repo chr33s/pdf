@@ -13,7 +13,7 @@ const createDonorPdf = async () => {
   page.moveTo(50, 225);
   page.setFont(helveticaFont);
   page.setFontSize(50);
-  page.drawText("I am upside down!");
+  await page.drawText("I am upside down!");
   page.setRotation(degrees(180));
 
   return pdfDoc;

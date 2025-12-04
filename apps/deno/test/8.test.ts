@@ -33,32 +33,32 @@ Deno.test("Test 8: PDF with comments", async () => {
 
   const textWidth = ubuntuFont.widthOfTextAtSize(lines[2], fontSize);
 
-  pages.forEach((page: PDFPage) => {
-    const { width, height } = page.getSize();
-    const centerX = width / 2;
-    const centerY = height / 2 - 250;
-    page.drawImage(smallMarioImage, {
-      ...smallMarioDims,
-      x: centerX - smallMarioDims.width / 2,
-      y: centerY + 15,
-    });
-    const boxHeight = (fontSize + 5) * lines.length;
-    page.drawRectangle({
-      x: centerX - textWidth / 2 - 5,
-      y: centerY - 15 - boxHeight + fontSize + 3,
-      width: textWidth + 10,
-      height: boxHeight,
-      color: solarizedWhite,
-      borderColor: solarizedGray,
-      borderWidth: 3,
-    });
-    page.setFont(ubuntuFont);
-    page.setFontColor(solarizedGray);
-    page.drawText(lines.join("\n"), {
-      x: centerX - textWidth / 2,
-      y: centerY - 15,
-    });
-  });
+  for (const page of pages) {
+      const { width, height } = page.getSize();
+      const centerX = width / 2;
+      const centerY = height / 2 - 250;
+      page.drawImage(smallMarioImage, {
+        ...smallMarioDims,
+        x: centerX - smallMarioDims.width / 2,
+        y: centerY + 15,
+      });
+      const boxHeight = (fontSize + 5) * lines.length;
+      page.drawRectangle({
+        x: centerX - textWidth / 2 - 5,
+        y: centerY - 15 - boxHeight + fontSize + 3,
+        width: textWidth + 10,
+        height: boxHeight,
+        color: solarizedWhite,
+        borderColor: solarizedGray,
+        borderWidth: 3,
+      });
+      page.setFont(ubuntuFont);
+      page.setFontColor(solarizedGray);
+      await page.drawText(lines.join("\n"), {
+            x: centerX - textWidth / 2,
+            y: centerY - 15,
+          });
+    }
 
   const pdfBytes = await pdfDoc.save();
   assert(pdfBytes instanceof Uint8Array);

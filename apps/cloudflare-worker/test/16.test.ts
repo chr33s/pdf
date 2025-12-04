@@ -95,19 +95,19 @@ test("Test 16: Fancy fields with custom appearances", async () => {
   let y = page.getHeight();
 
   y -= height + 25;
-  btn.addToPage("∑", page, { x, y, width, height, font: symbol });
+  await btn.addToPage("∑", page, { x, y, width, height, font: symbol });
   y -= height + 25;
-  cb.addToPage(page, { x, y, width, height });
+  await cb.addToPage(page, { x, y, width, height });
   y -= height + 25;
-  dd.addToPage(page, { x, y, width, height, font: symbol });
+  await dd.addToPage(page, { x, y, width, height, font: symbol });
   y -= height + 25;
-  ol.addToPage(page, { x, y, width, height, font: symbol });
+  await ol.addToPage(page, { x, y, width, height, font: symbol });
   y -= height + 25;
-  rg.addOptionToPage("bar", page, { x, y, width, height });
+  await rg.addOptionToPage("bar", page, { x, y, width, height });
   y -= height + 25;
-  tf.addToPage(page, { x, y, width, height, font: symbol });
+  await tf.addToPage(page, { x, y, width, height, font: symbol });
   y -= height * 4 + 25;
-  tfFontSize.addToPage(page, {
+  await tfFontSize.addToPage(page, {
     x: x - width * 2,
     y,
     width: width * 5,

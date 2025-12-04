@@ -208,22 +208,30 @@ test("Test 15: XFA fields PDF", async () => {
   const foreignPostalCode = form.getTextField(fieldNames.ForeignPostalCode);
   foreignPostalCode.setText("29381");
 
-  ["Caesar Augustus", "Marcus Aurelius", "Livia Augustus", "Claudia Octavia"].forEach(
-    (firstAndLast, idx) => {
-      const field = form.getTextField(fieldNames.Dependents.FirstAndLastName[idx]);
-      field.setText(firstAndLast);
-    },
-  );
+  for (const [idx, firstAndLast] of [
+    "Caesar Augustus",
+    "Marcus Aurelius",
+    "Livia Augustus",
+    "Claudia Octavia",
+  ].entries()) {
+    const field = form.getTextField(fieldNames.Dependents.FirstAndLastName[idx]);
+    field.setText(firstAndLast);
+  }
 
-  ["917073905", "671723254", "261182980", "629137689"].forEach((dependentSsn, idx) => {
+  for (const [idx, dependentSsn] of [
+    "917073905",
+    "671723254",
+    "261182980",
+    "629137689",
+  ].entries()) {
     const field = form.getTextField(fieldNames.Dependents.SSN[idx]);
     field.setText(dependentSsn);
-  });
+  }
 
-  ["Son", "Grandson", "Daughter", "Granddaughter"].forEach((relationship, idx) => {
+  for (const [idx, relationship] of ["Son", "Grandson", "Daughter", "Granddaughter"].entries()) {
     const field = form.getTextField(fieldNames.Dependents.Relationship[idx]);
     field.setText(relationship);
-  });
+  }
 
   const taxExemptInterest = form.getTextField(fieldNames.TaxExemptInterest);
   taxExemptInterest.setText("6359.25");
@@ -384,10 +392,10 @@ test("Test 15: XFA fields PDF", async () => {
   const preparerEIN = form.getTextField(fieldNames.PreparerEIN);
   preparerEIN.setText("218932783");
 
-  ["Son", "Grandson", "Daughter", "Granddaughter"].forEach((relationship, idx) => {
+  for (const [idx, relationship] of ["Son", "Grandson", "Daughter", "Granddaughter"].entries()) {
     const field = form.getTextField(fieldNames.Dependents.Relationship[idx]);
     field.setText(relationship);
-  });
+  }
 
   const ctc0 = form.getCheckBox(fieldNames.Dependents.ChildTaxCredit[0]);
   ctc0.check();

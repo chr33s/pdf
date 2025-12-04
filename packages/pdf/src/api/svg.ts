@@ -286,7 +286,7 @@ const runnersToPage = (
         offsetY = 0; // Default to alphabetic if not specified
         break;
     }
-    page.drawText(text, {
+    await page.drawText(text, {
       x: -offsetX,
       y: -offsetY,
       font,

@@ -22,7 +22,7 @@
   ],
   "devDependencies": {
     "knip": "^5.70.2",
-    "oxfmt": "^0.15.0",
+    "oxfmt": "^0.16.0",
     "oxlint": "^1.30.0",
     "oxlint-tsgolint": "^0.8.3",
     "typedoc": "^0.28.15",

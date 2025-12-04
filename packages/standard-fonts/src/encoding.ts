@@ -82,4 +82,4 @@ export const Encodings = {
 };
 
 // Initialize encodings asynchronously
-getEncodings().then((e) => Object.assign(Encodings, e));
+void getEncodings().then((e) => Object.assign(Encodings, e));

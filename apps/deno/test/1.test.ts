@@ -54,48 +54,48 @@ Deno.test("Test 1: Load and modify existing PDF", async () => {
 
   const textWidth = ubuntuFont.widthOfTextAtSize(lines[2], fontSize);
 
-  pdfDoc.getPages().forEach((page: PDFPage) => {
-    const { width, height } = page.getSize();
-    const centerX = width / 2;
-    const centerY = height / 2;
-    page.drawImage(smallMarioImage, {
-      ...smallMarioDims,
-      x: centerX - smallMarioDims.width / 2,
-      y: centerY + 15,
-    });
-    const boxHeight = (fontSize + 5) * lines.length;
-    page.drawRectangle({
-      x: centerX - textWidth / 2 - 5,
-      y: centerY - 15 - boxHeight + fontSize + 3,
-      width: textWidth + 10,
-      height: boxHeight,
-      color: solarizedWhite,
-      opacity: 0.85,
-      borderColor: solarizedGray,
-      borderWidth: 3,
-    });
-    page.setFont(ubuntuFont);
-    page.setFontColor(solarizedGray);
-    page.drawText(lines.join("\n"), {
-      x: centerX - textWidth / 2,
-      y: centerY - 15,
-    });
-    page.drawRectangle({
-      x: 10,
-      y: 10,
-      width: embeddedPageFigure.width / 2 + embeddedPageFigure.padding * 2,
-      height: embeddedPageFigure.height / 2 + embeddedPageFigure.padding * 2,
-      color: solarizedWhite,
-      opacity: 0.6,
-      borderColor: solarizedGray,
-      borderWidth: 2,
-    });
-    page.drawPage(embeddedPage, {
-      x: embeddedPageFigure.padding + 10,
-      y: embeddedPageFigure.padding + 10,
-      ...embeddedPageDims,
-    });
-  });
+  for (const page of pdfDoc.getPages()) {
+      const { width, height } = page.getSize();
+      const centerX = width / 2;
+      const centerY = height / 2;
+      page.drawImage(smallMarioImage, {
+        ...smallMarioDims,
+        x: centerX - smallMarioDims.width / 2,
+        y: centerY + 15,
+      });
+      const boxHeight = (fontSize + 5) * lines.length;
+      page.drawRectangle({
+        x: centerX - textWidth / 2 - 5,
+        y: centerY - 15 - boxHeight + fontSize + 3,
+        width: textWidth + 10,
+        height: boxHeight,
+        color: solarizedWhite,
+        opacity: 0.85,
+        borderColor: solarizedGray,
+        borderWidth: 3,
+      });
+      page.setFont(ubuntuFont);
+      page.setFontColor(solarizedGray);
+      await page.drawText(lines.join("\n"), {
+            x: centerX - textWidth / 2,
+            y: centerY - 15,
+          });
+      page.drawRectangle({
+        x: 10,
+        y: 10,
+        width: embeddedPageFigure.width / 2 + embeddedPageFigure.padding * 2,
+        height: embeddedPageFigure.height / 2 + embeddedPageFigure.padding * 2,
+        color: solarizedWhite,
+        opacity: 0.6,
+        borderColor: solarizedGray,
+        borderWidth: 2,
+      });
+      page.drawPage(embeddedPage, {
+        x: embeddedPageFigure.padding + 10,
+        y: embeddedPageFigure.padding + 10,
+        ...embeddedPageDims,
+      });
+    }
 
   pdfDoc.removePage(1);
 

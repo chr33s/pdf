@@ -79,28 +79,28 @@ Deno.test("Test 5: PDF with missing endstream EOL", async () => {
   });
   page1.setFont(nunitoLigaFont);
   page1.setFontColor(solarizedGray);
-  page1.drawText(text, {
-    x: centerX - boxWidth / 2 + 5,
-    y: centerY - 60,
-    rotate: degrees(10),
-    ySkew: degrees(15),
-    maxWidth: boxWidth + 5,
-  });
+  await page1.drawText(text, {
+      x: centerX - boxWidth / 2 + 5,
+      y: centerY - 60,
+      rotate: degrees(10),
+      ySkew: degrees(15),
+      maxWidth: boxWidth + 5,
+    });
 
   page1.setSize(page1.getWidth() + 100, page1.getHeight() + 100);
   page1.translateContent(100, 100);
 
   page1.setFont(nunitoLigaFont);
-  page1.drawText("This text is shifted - fi", {
-    color: rgb(1, 0, 0),
-    size: 50,
-  });
+  await page1.drawText("This text is shifted - fi", {
+      color: rgb(1, 0, 0),
+      size: 50,
+    });
   page1.resetPosition();
   page1.setFont(nunitoNoLigaFont);
-  page1.drawText("This text is not shifted - fi", {
-    color: rgb(0, 0, 1),
-    size: 50,
-  });
+  await page1.drawText("This text is not shifted - fi", {
+      color: rgb(0, 0, 1),
+      size: 50,
+    });
 
   // Add page with CropBox
   const pdfDocWithCropBox = await PDFDocument.load(pdfs.with_cropbox);

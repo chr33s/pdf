@@ -337,7 +337,7 @@ describe("PDFForm", () => {
     const cb = form.createCheckBox("a.new.check.box");
     const tf = form.createTextField("a.new.text.field");
 
-    cb.addToPage(page);
+    await cb.addToPage(page);
     await tf.addToPage(page);
 
     const refs1 = getRefs(pdfDoc);

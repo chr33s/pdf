@@ -108,7 +108,7 @@ test("Test 0: Create PDF with multiple features", async () => {
   page1.setFontSize(32);
   page1.setLineHeight(32);
   page1.moveTo(size / 2 + 5, size - 5 - 25);
-  page1.drawText([...ipsumLines, ...ipsumLines, ...ipsumLines, ...ipsumLines].join("\n"));
+  await page1.drawText([...ipsumLines, ...ipsumLines, ...ipsumLines, ...ipsumLines].join("\n"));
   page1.pushOperators(popGraphicsState());
 
   // Lower-left quadrant

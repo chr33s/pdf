@@ -766,6 +766,20 @@ describe("PDFDocument", () => {
       expect(attachments.length).toEqual(0);
     });
 
+    test("removes unsaved attachments", async () => {
+      const pdfDoc = await PDFDocument.load(hasAttachmentPdfBytes);
+      await pdfDoc.attach(examplePngImage, "example.png", {
+        mimeType: "image/png",
+        description: "An example image",
+      });
+      let attachments = pdfDoc.getAttachments();
+      expect(attachments.length).toEqual(3);
+      pdfDoc.detach("example.png");
+      attachments = pdfDoc.getAttachments();
+      expect(attachments.length).toEqual(2);
+      expect(attachments.map((a) => a.name)).not.toContain("example.png");
+    });
+
     test("removes the attachment after saving", async () => {
       const pdfDoc = await PDFDocument.load(hasAttachmentPdfBytes);
       await pdfDoc.attach(examplePngImage, "example.png", {

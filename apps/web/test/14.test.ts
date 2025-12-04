@@ -69,7 +69,7 @@ test("Test 14: DOD character sheet", async () => {
   const singlelineCenteredTf = form.createTextField("singleline.centered.tf");
   singlelineCenteredTf.setAlignment(TextAlignment.Center);
   singlelineCenteredTf.setText("Sum centered text yo");
-  singlelineCenteredTf.addToPage(page2, {
+  await singlelineCenteredTf.addToPage(page2, {
     y: height - 50,
     width: 250,
     height: 25,
@@ -82,7 +82,7 @@ test("Test 14: DOD character sheet", async () => {
   multilineCenteredTf.enableMultiline();
   multilineCenteredTf.setAlignment(TextAlignment.Center);
   multilineCenteredTf.setText("Sum\ncentered\rtext\nyo");
-  multilineCenteredTf.addToPage(page2, {
+  await multilineCenteredTf.addToPage(page2, {
     y: height - 50 - 150,
     width: 250,
     height: 100,
@@ -94,7 +94,7 @@ test("Test 14: DOD character sheet", async () => {
   const singlelineRightTf = form.createTextField("singleline.right.tf");
   singlelineRightTf.setAlignment(TextAlignment.Right);
   singlelineRightTf.setText("Sum right justified text yo");
-  singlelineRightTf.addToPage(page2, {
+  await singlelineRightTf.addToPage(page2, {
     y: height - 50,
     x: 300,
     width: 250,
@@ -108,7 +108,7 @@ test("Test 14: DOD character sheet", async () => {
   multilineRightTf.enableMultiline();
   multilineRightTf.setAlignment(TextAlignment.Right);
   multilineRightTf.setText("Sum\nright justified\rtext\nyo");
-  multilineRightTf.addToPage(page2, {
+  await multilineRightTf.addToPage(page2, {
     y: height - 50 - 150,
     x: 300,
     width: 250,
@@ -119,7 +119,7 @@ test("Test 14: DOD character sheet", async () => {
 
   // Multiselect Option List
   const optionList = form.createOptionList("option.list");
-  optionList.addToPage(page2, {
+  await optionList.addToPage(page2, {
     y: height - 50 - 150 - 250,
     width: 250,
     height: 200,

@@ -75,7 +75,7 @@ test("Test 5: PDF with missing endstream EOL", async () => {
   });
   page1.setFont(nunitoLigaFont);
   page1.setFontColor(solarizedGray);
-  page1.drawText(text, {
+  await page1.drawText(text, {
     x: centerX - boxWidth / 2 + 5,
     y: centerY - 60,
     rotate: degrees(10),
@@ -87,13 +87,13 @@ test("Test 5: PDF with missing endstream EOL", async () => {
   page1.translateContent(100, 100);
 
   page1.setFont(nunitoLigaFont);
-  page1.drawText("This text is shifted - fi", {
+  await page1.drawText("This text is shifted - fi", {
     color: rgb(1, 0, 0),
     size: 50,
   });
   page1.resetPosition();
   page1.setFont(nunitoNoLigaFont);
-  page1.drawText("This text is not shifted - fi", {
+  await page1.drawText("This text is not shifted - fi", {
     color: rgb(0, 0, 1),
     size: 50,
   });

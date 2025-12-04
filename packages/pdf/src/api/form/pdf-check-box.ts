@@ -138,7 +138,7 @@ export default class PDFCheckBox extends PDFField {
    * @param page The page to which this check box widget should be added.
    * @param options The options to be used when adding this check box widget.
    */
-  addToPage(page: PDFPage, options?: FieldAppearanceOptions) {
+  async addToPage(page: PDFPage, options?: FieldAppearanceOptions): Promise<void> {
     assertIs(page, "page", [[PDFPage, "PDFPage"]]);
     assertFieldAppearanceOptions(options);
 

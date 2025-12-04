@@ -22,15 +22,15 @@ test("Test 7: PDF with newline whitespace", async () => {
   firstPage.setFont(helveticaFont);
   firstPage.setFontSize(75);
   firstPage.setFontColor(rgb(1, 0, 0));
-  firstPage.drawText(text);
+  await firstPage.drawText(text);
 
-  pages.forEach((page, idx) => {
+  for (const [idx, page] of pages.entries()) {
     page.moveTo(10, 10);
     page.setFont(helveticaFont);
     page.setFontSize(17);
     page.setFontColor(rgb(1, 0, 0));
-    page.drawText(`${idx + 1} / ${pages.length}`);
-  });
+    await page.drawText(`${idx + 1} / ${pages.length}`);
+  }
 
   const pdfBytes = await pdfDoc.save();
   expect(pdfBytes).toBeInstanceOf(Uint8Array);
