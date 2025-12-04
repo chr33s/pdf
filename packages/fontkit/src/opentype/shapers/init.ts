@@ -1,8 +1,8 @@
+import * as base64 from "@chr33s/base64";
 import { inflate } from "@chr33s/compression";
 import { StateMachine, type StateMachineConfig } from "@chr33s/dfa";
 import createUnicodeProperties from "@chr33s/unicode-properties";
 import UnicodeTrie from "@chr33s/unicode-trie";
-import * as base64 from "base64-arraybuffer";
 
 // Base64 encoded trie data imports
 import base64DeflatedIndicMachine from "./indic-gen-data.js";

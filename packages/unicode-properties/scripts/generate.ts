@@ -1,7 +1,7 @@
+import * as base64 from "@chr33s/base64";
 import codePoints from "@chr33s/codepoints";
 import { deflate } from "@chr33s/compression";
 import { builder as UnicodeTrieBuilder } from "@chr33s/unicode-trie";
-import base64 from "base64-arraybuffer";
 import { writeFile } from "node:fs/promises";
 import path from "node:path";
 

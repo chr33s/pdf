@@ -41,7 +41,7 @@ jobs:
       id-token: write
     strategy:
       matrix:
-        package: [brotli, codepoints, crypto, dfa, restructure, compression, standard-fonts, unicode-trie, unicode-properties, upng, fontkit, pdf]
+        package: [base64, brotli, codepoints, crypto, dfa, restructure, compression, standard-fonts, unicode-trie, unicode-properties, upng, fontkit, pdf]
     steps:
       - uses: actions/download-artifact@v4
         with:

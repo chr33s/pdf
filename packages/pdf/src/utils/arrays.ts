@@ -1,4 +1,4 @@
-import { decodeFromBase64DataUri } from "./base64.js";
+import { decodeFromBase64DataUri } from "@chr33s/base64";
 import { charFromCode } from "./strings.js";
 
 export const last = <T>(array: T[]): T => array[array.length - 1];

@@ -1,6 +1,6 @@
+import * as base64 from "@chr33s/base64";
 import { inflate } from "@chr33s/compression";
 import UnicodeTrie from "@chr33s/unicode-trie";
-import * as base64 from "base64-arraybuffer";
 
 import base64DeflatedData from "./data.js";
 import base64DeflatedTrie from "./trie.js";

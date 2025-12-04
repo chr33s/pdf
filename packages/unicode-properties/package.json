@@ -18,9 +18,9 @@
     "typecheck": "tsc --project tsconfig.typecheck.json"
   },
   "dependencies": {
+    "@chr33s/base64": "file:../base64",
     "@chr33s/compression": "file:../compression",
-    "@chr33s/unicode-trie": "file:../unicode-trie",
-    "base64-arraybuffer": "^1.0.2"
+    "@chr33s/unicode-trie": "file:../unicode-trie"
   },
   "devDependencies": {
     "@chr33s/codepoints": "file:../codepoints",

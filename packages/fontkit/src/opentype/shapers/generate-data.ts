@@ -2,10 +2,10 @@
 // This script generates a UnicodeTrie containing shaping data derived
 // from Unicode properties (currently just for the Arabic shaper).
 //
+import * as base64 from "@chr33s/base64";
 import codepoints from "@chr33s/codepoints";
 import { deflate } from "@chr33s/compression";
 import { builder as UnicodeTrieBuilder } from "@chr33s/unicode-trie";
-import * as base64 from "base64-arraybuffer";
 import fs from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";

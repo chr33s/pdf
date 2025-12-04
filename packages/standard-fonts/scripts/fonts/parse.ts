@@ -1,5 +1,5 @@
+import * as base64 from "@chr33s/base64";
 import { deflate } from "@chr33s/compression";
-import * as base64 from "base64-arraybuffer";
 import fs from "node:fs/promises";
 import { basename, dirname } from "node:path";
 import { fileURLToPath } from "node:url";

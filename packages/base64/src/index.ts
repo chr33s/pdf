@@ -96,3 +96,19 @@ export const decodeFromBase64DataUri = (dataUri: string): Uint8Array => {
 
   return decodeFromBase64(data);
 };
+
+/**
+ * Encode an ArrayBuffer to a base64 string.
+ * Compatible with base64-arraybuffer's encode function.
+ */
+export const encode = (arrayBuffer: ArrayBuffer): string =>
+  encodeToBase64(new Uint8Array(arrayBuffer));
+
+/**
+ * Decode a base64 string to an ArrayBuffer.
+ * Compatible with base64-arraybuffer's decode function.
+ */
+export const decode = (base64: string): ArrayBuffer => {
+  const bytes = decodeFromBase64(base64);
+  return bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) as ArrayBuffer;
+};

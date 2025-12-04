@@ -20,13 +20,13 @@
     "typecheck": "tsc --project tsconfig.typecheck.json"
   },
   "dependencies": {
+    "@chr33s/base64": "file:../base64",
     "@chr33s/brotli": "file:../brotli",
     "@chr33s/compression": "file:../compression",
     "@chr33s/dfa": "file:../dfa",
     "@chr33s/restructure": "file:../restructure",
     "@chr33s/unicode-properties": "file:../unicode-properties",
     "@chr33s/unicode-trie": "file:../unicode-trie",
-    "base64-arraybuffer": "^1.0.2",
     "clone": "^2.1.2",
     "deep-equal": "^2.2.3"
   },

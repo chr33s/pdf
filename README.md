@@ -10,6 +10,7 @@ This monorepo contains `@chr33s/pdf` and all its dependencies as native ES modul
 |---------|-------------|
 | [@chr33s/pdf](./packages/pdf/) | Create and modify PDF documents |
 | [@chr33s/fontkit](./packages/fontkit/) | Advanced font engine for font embedding |
+| [@chr33s/base64](./packages/base64/) | Base64 encoder and decoder |
 | [@chr33s/brotli](./packages/brotli/) | Brotli decompression for WOFF2 fonts |
 | [@chr33s/codepoints](./packages/codepoints/) | Unicode database parser (build-time only) |
 | [@chr33s/compression](./packages/compression/) | Compression utilities (deflate, gzip, etc.) |

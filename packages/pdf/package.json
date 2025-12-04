@@ -56,6 +56,7 @@
     }
   },
   "dependencies": {
+    "@chr33s/base64": "file:../base64",
     "@chr33s/compression": "file:../compression",
     "@chr33s/crypto": "file:../crypto",
     "@chr33s/standard-fonts": "file:../standard-fonts",
