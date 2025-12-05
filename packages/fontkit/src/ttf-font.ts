@@ -1,6 +1,7 @@
 import type { DecodeStream } from "@chr33s/pdf-restructure";
 import * as r from "@chr33s/pdf-restructure";
 import fontkit from "./base.js";
+import { matchesTag } from "./binary.js";
 import CmapProcessor from "./cmap-processor.js";
 import { cache } from "./decorators.js";
 import BBox from "./glyph/b-box.js";
@@ -135,9 +136,12 @@ class TTFFontBase implements GlyphFontLike {
   protected _glyphs: GlyphCache;
   protected _metrics?: FontMetrics;
 
-  static probe(buffer: Buffer): boolean {
-    let format = buffer.toString("ascii", 0, 4);
-    return format === "true" || format === "OTTO" || format === String.fromCharCode(0, 1, 0, 0);
+  static probe(buffer: Uint8Array): boolean {
+    return (
+      matchesTag(buffer, "true") ||
+      matchesTag(buffer, "OTTO") ||
+      matchesTag(buffer, String.fromCharCode(0, 1, 0, 0))
+    );
   }
 
   constructor(stream: DecodeStream, variationCoords: VariationCoords | null = null) {

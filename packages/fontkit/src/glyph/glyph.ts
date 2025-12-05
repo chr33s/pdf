@@ -33,7 +33,7 @@ export type GlyphImage = {
   originX: number;
   originY: number;
   type: string;
-  data: Buffer;
+  data: Uint8Array;
 };
 
 type CmapProcessorLike = {

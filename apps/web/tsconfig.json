@@ -9,7 +9,14 @@
     "resolveJsonModule": true,
     "noEmit": true,
     "declaration": false,
-    "types": ["vitest/globals"]
+    "types": ["vitest/globals", "node", "@playwright/test"]
   },
-  "include": ["test/**/*.ts", "vitest.config.ts"]
+  "include": [
+    "test/**/*.ts",
+    "e2e/**/*.ts",
+    "vitest.config.ts",
+    "vite.config.ts",
+    "vite.shared-config.ts",
+    "playwright.config.ts"
+  ]
 }

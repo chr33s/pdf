@@ -1,5 +1,6 @@
 import { decompress } from "@chr33s/pdf-brotli";
 import * as r from "@chr33s/pdf-restructure";
+import { matchesTag, toUint8Array } from "./binary.js";
 import type { FontLike } from "./glyph/glyph.js";
 import TTFGlyph, { Point } from "./glyph/ttf-glyph.js";
 import WOFF2Glyph from "./glyph/woff2-glyph.js";
@@ -63,8 +64,8 @@ export default class WOFF2Font extends TTFFont {
   protected _decompressed = false;
   protected _transformedGlyphs: TransformedGlyph[] | null = null;
 
-  static probe(buffer: Buffer): boolean {
-    return buffer.toString("ascii", 0, 4) === "wOF2";
+  static probe(buffer: Uint8Array): boolean {
+    return matchesTag(buffer, "wOF2");
   }
 
   _decodeDirectory(): TTDirectoryData & WOFF2DirectoryData {
@@ -94,7 +95,7 @@ export default class WOFF2Font extends TTFFont {
         throw new Error("Error decoding compressed data in WOFF2");
       }
 
-      this.stream = new r.DecodeStream(Buffer.from(decompressed));
+      this.stream = new r.DecodeStream(toUint8Array(decompressed));
       this._decompressed = true;
     }
   }

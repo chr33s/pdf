@@ -1,5 +1,6 @@
 import type { DecodeStream } from "@chr33s/pdf-restructure";
 import * as r from "@chr33s/pdf-restructure";
+import { decodeUtf8, toUint8Array, type BinaryLike } from "./binary.js";
 import TTFFont from "./ttf-font.js";
 
 let DFontName = new r.String(r.uint8);
@@ -66,27 +67,13 @@ type DFontHeaderStruct = {
   mapLength: number;
 };
 
-type BufferLike = Buffer | ArrayBuffer | ArrayBufferView;
-
-function toBuffer(source: BufferLike): Buffer {
-  if (Buffer.isBuffer(source)) {
-    return source;
-  }
-
-  if (source instanceof ArrayBuffer) {
-    return Buffer.from(source);
-  }
-
-  return Buffer.from(source.buffer, source.byteOffset, source.byteLength);
-}
-
 export default class DFont {
   #stream: DecodeStream;
   #header: DFontHeaderStruct;
   #sfnt: DFontType | null;
 
-  static probe(buffer: BufferLike): boolean {
-    const stream = new r.DecodeStream(toBuffer(buffer));
+  static probe(buffer: BinaryLike): boolean {
+    const stream = new r.DecodeStream(toUint8Array(buffer));
     let header: DFontHeaderStruct;
 
     try {
@@ -113,8 +100,8 @@ export default class DFont {
       for (const ref of type.refList) {
         if (ref.nameOffset >= 0) {
           this.#stream.pos = ref.nameOffset + this.#header.map.nameListOffset;
-          const decodedName = DFontName.decode(this.#stream) as string | Buffer;
-          ref.name = typeof decodedName === "string" ? decodedName : decodedName.toString("utf8");
+          const decodedName = DFontName.decode(this.#stream) as string | Uint8Array;
+          ref.name = typeof decodedName === "string" ? decodedName : decodeUtf8(decodedName);
         } else {
           ref.name = null;
         }
@@ -133,8 +120,8 @@ export default class DFont {
 
     for (const ref of this.#sfnt.refList) {
       const pos = this.#header.dataOffset + ref.dataOffset + 4;
-      const baseBuffer = this.#stream.buffer as Buffer;
-      const slice = baseBuffer.slice(pos);
+      const baseBuffer = this.#stream.buffer;
+      const slice = baseBuffer.subarray(pos);
       const stream = new r.DecodeStream(slice);
       const font = new TTFFont(stream);
       if (font.postscriptName === name) {
@@ -150,11 +137,11 @@ export default class DFont {
       return [];
     }
 
-    const baseBuffer = this.#stream.buffer as Buffer;
+    const baseBuffer = this.#stream.buffer;
     const fonts: TTFFont[] = [];
     for (const ref of this.#sfnt.refList) {
       const pos = this.#header.dataOffset + ref.dataOffset + 4;
-      const stream = new r.DecodeStream(baseBuffer.slice(pos));
+      const stream = new r.DecodeStream(baseBuffer.subarray(pos));
       fonts.push(new TTFFont(stream));
     }
 

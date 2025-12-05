@@ -1,3 +1,4 @@
+import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { describe, expect, test } from "vitest";
 
@@ -42,6 +43,23 @@ describe("fontkit", function () {
   test("should open fonts lacking PostScript name", async () => {
     const font = await fontkit.open(__dirname + "/data/mada/mada-regular.subset1.ttf");
     expect(font.postscriptName).toBeNull();
+  });
+
+  test("create accepts ArrayBuffer and Uint8Array", async () => {
+    const fontPath = __dirname + "/data/open-sans/open-sans-regular.ttf";
+    const nodeBuffer = await readFile(fontPath);
+    const arrayBuffer = nodeBuffer.buffer.slice(
+      nodeBuffer.byteOffset,
+      nodeBuffer.byteOffset + nodeBuffer.byteLength,
+    );
+    const view = new Uint8Array(arrayBuffer);
+
+    const fontFromArrayBuffer = await fontkit.create(arrayBuffer);
+    const fontFromUint8 = await fontkit.create(view);
+
+    expect(fontFromArrayBuffer.constructor.name).toBe("TTFFont");
+    expect(fontFromUint8.constructor.name).toBe("TTFFont");
+    expect(fontFromArrayBuffer.postscriptName).toBe(fontFromUint8.postscriptName);
   });
 
   test("should error when opening an invalid font asynchronously", async () => {

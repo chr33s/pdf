@@ -2,13 +2,17 @@
   "name": "@chr33s/pdf-apps-web",
   "type": "module",
   "scripts": {
-    "test": "vitest run"
+    "start": "vite dev",
+    "test": "vitest run && playwright test",
+    "test:unit": "vitest run",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@chr33s/pdf-fontkit": "../../packages/fontkit/dist/index.min.js",
     "@chris/pdf": "../../packages/pdf/dist/index.min.js"
   },
   "devDependencies": {
+    "@playwright/test": "1.57.0",
     "@vitest/browser-playwright": "4.0.15",
     "playwright": "1.57.0",
     "vite-plugin-node-polyfills": "0.24.0",

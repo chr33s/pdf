@@ -1,4 +1,5 @@
 import * as r from "@chr33s/pdf-restructure";
+import { encodedLength } from "../binary.js";
 import { getEncoding, LANGUAGES } from "../encodings.js";
 
 let NameRecord = new r.Struct({
@@ -138,7 +139,7 @@ NameTable.preEncode = function () {
       encodingID: 1,
       languageID: 0x409,
       nameID: NAMES.indexOf(key),
-      length: Buffer.byteLength(val.en, "utf16le"),
+      length: encodedLength(val.en, "utf16le"),
       string: val.en,
     });
 

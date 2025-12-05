@@ -1,4 +1,5 @@
 import * as r from "@chr33s/pdf-restructure";
+import { toUint8Array } from "./binary.js";
 import type BBox from "./glyph/b-box.js";
 import type Glyph from "./glyph/glyph.js";
 import type GlyphRun from "./layout/glyph-run.js";
@@ -73,14 +74,14 @@ interface FontInstance {
 
 type FontConstructor = {
   new (stream: DecodeStream, ...args: any[]): FontInstance;
-  probe(buffer: Buffer): boolean;
+  probe(buffer: Uint8Array): boolean;
 };
 
 export interface FontkitRegistry {
   logErrors: boolean;
   registerFormat(format: FontConstructor): void;
   create(
-    data: Buffer | ArrayBuffer | Uint8Array,
+    data: ArrayBuffer | ArrayBufferView | Uint8Array,
     postscriptName?: VariationSettings | string,
   ): Promise<FontInstance>;
 }
@@ -140,11 +141,7 @@ const fontkit: FontkitRegistry & {
       await initFn();
     }
 
-    const normalizedData =
-      uint8ArrayFontData instanceof ArrayBuffer
-        ? new Uint8Array(uint8ArrayFontData)
-        : uint8ArrayFontData;
-    const buffer = Buffer.isBuffer(normalizedData) ? normalizedData : Buffer.from(normalizedData);
+    const buffer = toUint8Array(uint8ArrayFontData);
     for (let i = 0; i < formats.length; i++) {
       const format = formats[i];
       if (format.probe(buffer)) {

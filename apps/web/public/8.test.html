@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="
+        default-src 'self' 'unsafe-inline' blob: data:;
+        object-src 'self' blob: data:;
+        frame-src 'self' blob: data:;
+      "
+    />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" type="text/css" href="/index.css" />
+    <title>Test 9</title>
+    <script type="module" src="/index.js"></script>
+</head>
+
+  <body>
+    <div id="button-container">
+      <button onclick="window.location.href = '/7.test.html'">
+        Prev
+      </button>
+      <button onclick="test()">Run Test</button>
+      <button onclick="window.location.href = '/9.test.html'">
+        Next
+      </button>
+    </div>
+    <div id="animation-target"></div>
+    <iframe id="iframe"></iframe>
+  </body>
+
+  <script type="module">
+    startFpsTracker('animation-target');
+
+    const fetchAsset = (asset) =>
+      fetch(`/assets/${asset}`)
+        .then((res) => res.arrayBuffer())
+        .then((res) => new Uint8Array(res));
+
+    const renderInIframe = (pdfBytes) => {
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const blobUrl = URL.createObjectURL(blob);
+      document.getElementById('iframe').src = blobUrl;
+    };
+
+    async function test() {
+      const { PDFDocument, rgb } = PDFLib;
+
+      const [inputPdfBytes, ubuntuBytes, smallMarioBytes] = await Promise.all([
+        fetchAsset('pdfs/with-comments.pdf'),
+        fetchAsset('fonts/ubuntu/ubuntu-r.ttf'),
+        fetchAsset('images/small-mario.png'),
+      ]);
+
+      const pdfDoc = await PDFDocument.load(inputPdfBytes);
+
+      pdfDoc.registerFontkit(fontkit);
+
+      const ubuntuFont = await pdfDoc.embedFont(ubuntuBytes, { subset: true });
+      const smallMarioImage = await pdfDoc.embedPng(smallMarioBytes);
+      const smallMarioDims = smallMarioImage.scale(0.15);
+
+      const pages = pdfDoc.getPages();
+
+      const lines = [
+        'This is an image of Mario running.',
+        'This image and text was drawn on',
+        'top of an existing PDF using pdf!',
+      ];
+      const fontSize = 24;
+      const solarizedWhite = rgb(253 / 255, 246 / 255, 227 / 255);
+      const solarizedGray = rgb(101 / 255, 123 / 255, 131 / 255);
+
+      const textWidth = ubuntuFont.widthOfTextAtSize(lines[2], fontSize);
+
+      pages.forEach((page) => {
+        const { width, height } = page.getSize();
+        const centerX = width / 2;
+        const centerY = height / 2 - 250;
+        page.drawImage(smallMarioImage, {
+          ...smallMarioDims,
+          x: centerX - smallMarioDims.width / 2,
+          y: centerY + 15,
+        });
+        const boxHeight = (fontSize + 5) * lines.length;
+        page.drawRectangle({
+          x: centerX - textWidth / 2 - 5,
+          y: centerY - 15 - boxHeight + fontSize + 3,
+          width: textWidth + 10,
+          height: boxHeight,
+          color: solarizedWhite,
+          borderColor: solarizedGray,
+          borderWidth: 3,
+        });
+        page.setFont(ubuntuFont);
+        page.setFontColor(solarizedGray);
+        page.drawText(lines.join('\n'), {
+          x: centerX - textWidth / 2,
+          y: centerY - 15,
+        });
+      });
+
+      const pdfBytes = await pdfDoc.save();
+
+      renderInIframe(pdfBytes);
+    }
+    window.test = test;
+  </script>
+</html>

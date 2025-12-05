@@ -1,4 +1,5 @@
 import { DecodeStream, EncodeStream } from "@chr33s/pdf-restructure";
+import { toUint8Array, type BinaryLike } from "./binary.js";
 
 export function binarySearch<T>(arr: T[], cmp: (value: T) => number): number {
   let min = 0;
@@ -28,8 +29,8 @@ export function range(index: number, end: number): number[] {
 }
 
 export class Version16Dot16 {
-  fromBuffer(buffer: Buffer | Uint8Array): number {
-    let stream = new DecodeStream(buffer);
+  fromBuffer(buffer: BinaryLike): number {
+    let stream = new DecodeStream(toUint8Array(buffer));
     return this.decode(stream);
   }
 

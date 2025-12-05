@@ -106,7 +106,7 @@ const addPageWithFonts = async (
 
   page.moveTo(0, 675);
   for (const fontName of fontNames) {
-    const font = pdfDoc.embedStandardFont(fontName);
+    const font = await pdfDoc.embedStandardFont(fontName);
     const lines = breakTextIntoLines(text, fontSize, font, 600);
 
     await page.drawText(fontName, {

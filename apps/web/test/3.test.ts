@@ -1,4 +1,3 @@
-import { expect, test } from "vitest";
 import {
   degrees,
   ParseSpeeds,
@@ -8,6 +7,7 @@ import {
   rgb,
   StandardFonts,
 } from "@chr33s/pdf";
+import { expect, test } from "vitest";
 import { assets } from "./assets.js";
 
 test("Test 3: Standard fonts demo", async () => {
@@ -31,7 +31,7 @@ test("Test 3: Standard fonts demo", async () => {
 
     const fontName = fontNameStr as keyof typeof StandardFonts;
     const fontObj = StandardFonts[fontName];
-    const font = pdfDoc.embedStandardFont(fontObj);
+    const font = await pdfDoc.embedStandardFont(fontObj);
 
     middlePage.setFont(font);
 

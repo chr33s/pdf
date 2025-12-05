@@ -1,4 +1,5 @@
 import * as r from "@chr33s/pdf-restructure";
+import { matchesTag } from "./binary.js";
 import TTFFont from "./ttf-font.js";
 
 type DecodeStream = InstanceType<typeof r.DecodeStream>;
@@ -31,8 +32,8 @@ let TTCHeader = new r.VersionedStruct(r.uint32, {
 });
 
 export default class TrueTypeCollection {
-  static probe(buffer: Buffer): boolean {
-    return buffer.toString("ascii", 0, 4) === "ttcf";
+  static probe(buffer: Uint8Array): boolean {
+    return matchesTag(buffer, "ttcf");
   }
 
   private readonly stream: DecodeStream;

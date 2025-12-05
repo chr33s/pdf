@@ -1,5 +1,6 @@
 import { inflateRaw } from "@chr33s/pdf-compression";
 import * as r from "@chr33s/pdf-restructure";
+import { matchesTag } from "./binary.js";
 import WOFFDirectory from "./tables/woff-directory.js";
 import TTFFont from "./ttf-font.js";
 
@@ -20,11 +21,11 @@ type WOFFDirectoryData = {
 export default class WOFFFont extends TTFFont {
   declare directory: TTDirectoryData & WOFFDirectoryData;
   declare stream: DecodeStream;
-  private _decompressedTables: Map<string, Buffer> = new Map();
+  private _decompressedTables: Map<string, Uint8Array> = new Map();
   private _initPromise: Promise<void> | null = null;
 
-  static probe(buffer: Buffer): boolean {
-    return buffer.toString("ascii", 0, 4) === "wOFF";
+  static probe(buffer: Uint8Array): boolean {
+    return matchesTag(buffer, "wOFF");
   }
 
   _decodeDirectory(): TTDirectoryData & WOFFDirectoryData {
@@ -52,7 +53,7 @@ export default class WOFFFont extends TTFFont {
         this.stream.pos = table.offset + 2; // skip deflate header
         const compressedData = this.stream.readBuffer(table.compLength - 2);
         const decompressed = await inflateRaw(compressedData);
-        this._decompressedTables.set(table.tag, Buffer.from(decompressed));
+        this._decompressedTables.set(table.tag, decompressed);
       });
 
     await Promise.all(compressionTasks);

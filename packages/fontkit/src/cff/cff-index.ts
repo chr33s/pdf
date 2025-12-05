@@ -9,7 +9,7 @@ type IndexCodec<T = unknown> = {
 
 type IndexEntry<T> = T | { offset: number; length: number };
 
-export default class CFFIndex<T = Buffer> {
+export default class CFFIndex<T = Uint8Array> {
   #type?: IndexCodec<T>;
 
   constructor(type?: IndexCodec<T>) {
