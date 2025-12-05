@@ -1,4 +1,5 @@
 {
+  "name": "@chr33s/pdf-apps-web",
   "type": "module",
   "scripts": {
     "test": "vitest run"
@@ -8,9 +9,9 @@
     "@chris/pdf": "../../packages/pdf/dist/index.min.js"
   },
   "devDependencies": {
-    "@vitest/browser-playwright": "^4.0.14",
-    "playwright": "^1.49.0",
-    "vite-plugin-node-polyfills": "^0.24.0",
-    "vitest": "^4.0.14"
+    "@vitest/browser-playwright": "4.0.15",
+    "playwright": "1.57.0",
+    "vite-plugin-node-polyfills": "0.24.0",
+    "vitest": "4.0.15"
   }
 }

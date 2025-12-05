@@ -1,5 +1,5 @@
 {
-  "name": "pdf-tester",
+  "name": "@chr33s/pdf-apps-react-native",
   "version": "0.0.1",
   "private": true,
   "type": "module",
@@ -12,25 +12,25 @@
   "dependencies": {
     "@chr33s/fontkit": "file:../../packages/fontkit",
     "@chr33s/pdf": "file:./../../packages/pdf",
-    "react": "19.2.0",
+    "react": "19.2.1",
     "react-native": "0.82.1",
-    "react-native-blob-util": "^0.24.4",
-    "react-native-pdf": "^7.0.3"
+    "react-native-blob-util": "0.24.4",
+    "react-native-pdf": "7.0.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.25.2",
-    "@babel/preset-env": "^7.25.3",
+    "@babel/core": "7.28.5",
+    "@babel/preset-env": "7.28.5",
     "@react-native-community/cli": "20.0.2",
     "@react-native/babel-preset": "0.82.1",
     "@react-native/metro-config": "0.82.1",
     "@react-native/typescript-config": "0.82.1",
-    "@types/jest": "^30.0.0",
-    "@types/react": "^19.2.7",
-    "@types/react-test-renderer": "^19.1.0",
-    "jest": "^30.2.0",
-    "prettier": "^3.6.2",
-    "react-test-renderer": "19.2.0",
-    "typescript": "^5.8.3"
+    "@types/jest": "30.0.0",
+    "@types/react": "19.2.7",
+    "@types/react-test-renderer": "19.1.0",
+    "jest": "30.2.0",
+    "prettier": "3.7.4",
+    "react-test-renderer": "19.2.1",
+    "typescript": "5.9.3"
   },
   "jest": {
     "preset": "react-native",
@@ -45,17 +45,17 @@
       "/node_modules/(?!(@react-native|react-native|react-native-pdf|react-native-blob-util)/)"
     ],
     "moduleNameMapper": {
-      "^@chr33s/compression$": "<rootDir>/../../packages/compression/dist/index.js",
-      "^@chr33s/fontkit$": "<rootDir>/../../packages/fontkit/dist/index.js",
-      "^@chr33s/pdf$": "<rootDir>/../../packages/pdf/dist/index.js",
-      "^@chr33s/brotli$": "<rootDir>/../../packages/brotli/dist/index.js",
-      "^@chr33s/restructure$": "<rootDir>/../../packages/restructure/dist/index.js",
-      "^@chr33s/dfa$": "<rootDir>/../../packages/dfa/dist/index.js",
-      "^@chr33s/unicode-properties$": "<rootDir>/../../packages/unicode-properties/dist/index.js",
-      "^@chr33s/unicode-trie$": "<rootDir>/../../packages/unicode-trie/dist/index.js",
-      "^@chr33s/upng$": "<rootDir>/../../packages/upng/dist/index.js",
-      "^@chr33s/codepoints$": "<rootDir>/../../packages/codepoints/dist/index.js",
-      "^@chr33s/standard-fonts$": "<rootDir>/../../packages/standard-fonts/dist/index.js"
+      "@chr33s/compression$": "<rootDir>/../../packages/compression/dist/index.js",
+      "@chr33s/fontkit$": "<rootDir>/../../packages/fontkit/dist/index.js",
+      "@chr33s/pdf$": "<rootDir>/../../packages/pdf/dist/index.js",
+      "@chr33s/brotli$": "<rootDir>/../../packages/brotli/dist/index.js",
+      "@chr33s/restructure$": "<rootDir>/../../packages/restructure/dist/index.js",
+      "@chr33s/dfa$": "<rootDir>/../../packages/dfa/dist/index.js",
+      "@chr33s/unicode-properties$": "<rootDir>/../../packages/unicode-properties/dist/index.js",
+      "@chr33s/unicode-trie$": "<rootDir>/../../packages/unicode-trie/dist/index.js",
+      "@chr33s/upng$": "<rootDir>/../../packages/upng/dist/index.js",
+      "@chr33s/codepoints$": "<rootDir>/../../packages/codepoints/dist/index.js",
+      "@chr33s/standard-fonts$": "<rootDir>/../../packages/standard-fonts/dist/index.js"
     }
   }
 }

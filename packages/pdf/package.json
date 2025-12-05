@@ -61,16 +61,16 @@
     "@chr33s/crypto": "file:../crypto",
     "@chr33s/standard-fonts": "file:../standard-fonts",
     "@chr33s/upng": "file:../upng",
-    "color": "^5.0.3",
-    "node-html-better-parser": ">=1.5.8"
+    "color": "5.0.3",
+    "node-html-better-parser": "1.5.8"
   },
   "devDependencies": {
     "@chr33s/fontkit": "file:../fontkit",
-    "@vitest/coverage-v8": "^4.0.12",
-    "flamebearer": "^1.1.3",
-    "tsdown": "^0.16.7",
-    "typescript": "^5.9.3",
-    "vitest": "^4.0.12"
+    "@vitest/coverage-v8": "4.0.15",
+    "flamebearer": "1.1.3",
+    "tsdown": "0.17.0",
+    "typescript": "5.9.3",
+    "vitest": "4.0.15"
   },
   "license": "MIT",
   "private": false,

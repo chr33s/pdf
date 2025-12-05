@@ -27,18 +27,18 @@
     "@chr33s/restructure": "file:../restructure",
     "@chr33s/unicode-properties": "file:../unicode-properties",
     "@chr33s/unicode-trie": "file:../unicode-trie",
-    "clone": "^2.1.2",
-    "deep-equal": "^2.2.3"
+    "clone": "2.1.2",
+    "deep-equal": "2.2.3"
   },
   "devDependencies": {
     "@chr33s/codepoints": "file:../codepoints",
-    "@types/clone": "^2.1.4",
-    "@types/deep-equal": "^1.0.4",
-    "@types/node": "^24.10.1",
-    "@vitest/coverage-v8": "^4.0.14",
-    "tsdown": "^0.16.7",
-    "typescript": "^5.9.3",
-    "vitest": "^4.0.12"
+    "@types/clone": "2.1.4",
+    "@types/deep-equal": "1.0.4",
+    "@types/node": "24.10.1",
+    "@vitest/coverage-v8": "4.0.15",
+    "tsdown": "0.17.0",
+    "typescript": "5.9.3",
+    "vitest": "4.0.15"
   },
   "repository": {
     "type": "git",
