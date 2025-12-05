@@ -1,5 +1,5 @@
-import { decompress } from "@chr33s/brotli";
-import * as r from "@chr33s/restructure";
+import { decompress } from "@chr33s/pdf-brotli";
+import * as r from "@chr33s/pdf-restructure";
 import type { FontLike } from "./glyph/glyph.js";
 import TTFGlyph, { Point } from "./glyph/ttf-glyph.js";
 import WOFF2Glyph from "./glyph/woff2-glyph.js";

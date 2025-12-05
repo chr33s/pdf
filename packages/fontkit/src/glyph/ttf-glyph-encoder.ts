@@ -1,5 +1,5 @@
-import type { EncodeStream } from "@chr33s/restructure";
-import * as r from "@chr33s/restructure";
+import type { EncodeStream } from "@chr33s/pdf-restructure";
+import * as r from "@chr33s/pdf-restructure";
 import type Path from "./path.js";
 
 // Flags for simple glyphs

@@ -1,4 +1,4 @@
-import type { Fontkit } from "@chr33s/fontkit";
+import type { Fontkit } from "@chr33s/pdf-fontkit";
 import { HTMLElement, NodeType, parse as parseHtml } from "node-html-better-parser";
 import { CipherTransformFactory } from "../core/crypto.js";
 import FileEmbedder, { AFRelationship } from "../core/embedders/file-embedder.js";
@@ -275,7 +275,7 @@ export default class PDFDocument {
    * For example:
    * ```js
    * import { PDFDocument } from 'pdf'
-   * import fontkit from '@chr33s/fontkit'
+   * import fontkit from '@chr33s/pdf-fontkit'
    *
    * const pdfDoc = await PDFDocument.create()
    * pdfDoc.registerFontkit(fontkit)

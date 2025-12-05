@@ -1,5 +1,5 @@
-import type { DecodeStream, EncodeStream, NumberT } from "@chr33s/restructure";
-import * as r from "@chr33s/restructure";
+import type { DecodeStream, EncodeStream, NumberT } from "@chr33s/pdf-restructure";
+import * as r from "@chr33s/pdf-restructure";
 
 type IndexCodec<T = unknown> = {
   decode(stream: DecodeStream, parent?: Record<string, any>): T;

@@ -1,4 +1,4 @@
-import * as r from "@chr33s/restructure";
+import * as r from "@chr33s/pdf-restructure";
 
 let VmtxEntry = new r.Struct({
   advance: r.uint16, // The advance height of the glyph

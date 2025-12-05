@@ -1,4 +1,4 @@
-import * as r from "@chr33s/restructure";
+import * as r from "@chr33s/pdf-restructure";
 import type BBox from "./glyph/b-box.js";
 import type Glyph from "./glyph/glyph.js";
 import type GlyphRun from "./layout/glyph-run.js";

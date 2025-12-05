@@ -1,4 +1,4 @@
-import { DecodeStream, EncodeStream } from "@chr33s/restructure";
+import { DecodeStream, EncodeStream } from "@chr33s/pdf-restructure";
 
 export function binarySearch<T>(arr: T[], cmp: (value: T) => number): number {
   let min = 0;

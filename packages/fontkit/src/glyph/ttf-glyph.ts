@@ -1,5 +1,5 @@
-import type { DecodeStream } from "@chr33s/restructure";
-import * as r from "@chr33s/restructure";
+import type { DecodeStream } from "@chr33s/pdf-restructure";
+import * as r from "@chr33s/pdf-restructure";
 import BBox from "./b-box.js";
 import Glyph from "./glyph.js";
 import Path from "./path.js";

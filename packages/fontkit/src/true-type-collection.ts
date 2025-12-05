@@ -1,4 +1,4 @@
-import * as r from "@chr33s/restructure";
+import * as r from "@chr33s/pdf-restructure";
 import TTFFont from "./ttf-font.js";
 
 type DecodeStream = InstanceType<typeof r.DecodeStream>;

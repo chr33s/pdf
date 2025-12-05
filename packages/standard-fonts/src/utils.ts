@@ -1,5 +1,5 @@
-import { decodeFromBase64 } from "@chr33s/base64";
-import { inflate } from "@chr33s/compression";
+import { decodeFromBase64 } from "@chr33s/pdf-base64";
+import { inflate } from "@chr33s/pdf-compression";
 
 const arrayToString = (array: Uint8Array) => {
   let str = "";

@@ -1,4 +1,4 @@
-import { FontNames, type FontName } from "@chr33s/standard-fonts";
+import { FontNames, type FontName } from "@chr33s/pdf-standard-fonts";
 
 export const values = (obj: any) => Object.keys(obj).map((k) => obj[k]);
 

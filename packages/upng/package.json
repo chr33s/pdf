@@ -1,5 +1,5 @@
 {
-  "name": "@chr33s/upng",
+  "name": "@chr33s/pdf-upng",
   "license": "MIT",
   "version": "5.0.0",
   "description": "Small, fast and advanced PNG / APNG encoder and decoder",
@@ -37,7 +37,7 @@
     "conversion"
   ],
   "dependencies": {
-    "@chr33s/compression": "file:../compression"
+    "@chr33s/pdf-compression": "file:../compression"
   },
   "devDependencies": {
     "typescript": "5.9.3",

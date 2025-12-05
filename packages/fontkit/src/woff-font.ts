@@ -1,5 +1,5 @@
-import { inflateRaw } from "@chr33s/compression";
-import * as r from "@chr33s/restructure";
+import { inflateRaw } from "@chr33s/pdf-compression";
+import * as r from "@chr33s/pdf-restructure";
 import WOFFDirectory from "./tables/woff-directory.js";
 import TTFFont from "./ttf-font.js";
 

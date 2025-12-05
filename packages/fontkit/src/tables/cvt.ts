@@ -1,4 +1,4 @@
-import * as r from "@chr33s/restructure";
+import * as r from "@chr33s/pdf-restructure";
 
 // An array of predefined values accessible by instructions
 export default new r.Struct({

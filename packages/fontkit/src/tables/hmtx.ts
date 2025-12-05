@@ -1,4 +1,4 @@
-import * as r from "@chr33s/restructure";
+import * as r from "@chr33s/pdf-restructure";
 
 let HmtxEntry = new r.Struct({
   advance: r.uint16,

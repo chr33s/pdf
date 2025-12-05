@@ -1,4 +1,4 @@
-import { deflate } from "@chr33s/compression";
+import { deflate } from "@chr33s/pdf-compression";
 
 import { Bin } from "./bin.js";
 import { CRC } from "./crc.js";

@@ -1,4 +1,4 @@
-import { deflateRaw } from "@chr33s/compression";
+import { deflateRaw } from "@chr33s/pdf-compression";
 
 import UnicodeTrie from "./index.js";
 import { swap32LE } from "./swap.js";

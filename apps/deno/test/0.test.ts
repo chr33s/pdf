@@ -1,29 +1,29 @@
-import fontkit from "@chr33s/fontkit";
+import fontkit from "@chr33s/pdf-fontkit";
 import { assert } from "@std/assert";
 import { assets } from "../assets.ts";
 
 // @deno-types="../dummy.d.ts"
 import {
-  AFRelationship,
-  clip,
-  clipEvenOdd,
-  closePath,
-  cmyk,
-  degrees,
-  drawRectangle,
-  endPath,
-  grayscale,
-  LineCapStyle,
-  LineJoinStyle,
-  lineTo,
-  moveTo,
-  PDFDocument,
-  popGraphicsState,
-  pushGraphicsState,
-  rgb,
-  setLineJoin,
-  StandardFonts,
-  typedArrayFor,
+    AFRelationship,
+    clip,
+    clipEvenOdd,
+    closePath,
+    cmyk,
+    degrees,
+    drawRectangle,
+    endPath,
+    grayscale,
+    LineCapStyle,
+    LineJoinStyle,
+    lineTo,
+    moveTo,
+    PDFDocument,
+    popGraphicsState,
+    pushGraphicsState,
+    rgb,
+    setLineJoin,
+    StandardFonts,
+    typedArrayFor,
 } from "@chr33s/pdf";
 
 const ipsumLines = [

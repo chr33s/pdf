@@ -1,4 +1,4 @@
-import * as r from "@chr33s/restructure";
+import * as r from "@chr33s/pdf-restructure";
 
 let DeviceRecord = new r.Struct({
   pixelSize: r.uint8,

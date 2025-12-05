@@ -55,7 +55,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@chr33s/pdf": resolve(__dirname, "../../packages/pdf/dist/index.min.js"),
-      "@chr33s/fontkit": resolve(__dirname, "../../packages/fontkit/dist/index.min.js"),
+      "@chr33s/pdf-fontkit": resolve(__dirname, "../../packages/fontkit/dist/index.min.js"),
       "/packages/pdf/assets": resolve(__dirname, "../../packages/pdf/assets"),
     },
   },

@@ -4,7 +4,7 @@ import {
   Font,
   FontNames,
   getEncodings,
-} from "@chr33s/standard-fonts";
+} from "@chr33s/pdf-standard-fonts";
 
 import { toCodePoint, toHexString } from "../../utils/index.js";
 import PDFHexString from "../objects/pdf-hex-string.js";

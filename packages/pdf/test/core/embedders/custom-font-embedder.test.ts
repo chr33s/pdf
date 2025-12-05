@@ -1,8 +1,8 @@
-import fontkit from "@chr33s/fontkit";
+import fontkit from "@chr33s/pdf-fontkit";
 import { readFile } from "node:fs/promises";
 import { describe, expect, test } from "vitest";
 
-import type { Fontkit } from "@chr33s/fontkit";
+import type { Fontkit } from "@chr33s/pdf-fontkit";
 import {
   CustomFontEmbedder,
   PDFContext,

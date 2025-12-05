@@ -1,4 +1,4 @@
-import type { EncodeStream } from "@chr33s/restructure";
+import type { EncodeStream } from "@chr33s/pdf-restructure";
 import cloneDeep from "clone";
 import TTFGlyphEncoder from "../glyph/ttf-glyph-encoder.js";
 import type TTFGlyph from "../glyph/ttf-glyph.js";

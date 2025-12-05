@@ -1,9 +1,9 @@
-import fontkit from "@chr33s/fontkit";
-import { FontNames } from "@chr33s/standard-fonts";
+import fontkit from "@chr33s/pdf-fontkit";
+import { FontNames } from "@chr33s/pdf-standard-fonts";
 import { readFile } from "node:fs/promises";
 import { beforeAll, describe, expect, test } from "vitest";
 
-import type { Fontkit } from "@chr33s/fontkit";
+import type { Fontkit } from "@chr33s/pdf-fontkit";
 import { CustomFontEmbedder, StandardFontEmbedder } from "../../src/core/index.js";
 import { breakTextIntoLines } from "../../src/utils/index.js";
 

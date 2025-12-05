@@ -1,8 +1,8 @@
-# @chr33s/unicode-properties
+# @chr33s/pdf-unicode-properties
 
 > Fast lookup of Unicode character metadata packaged as modern ES modules.
 
-`@chr33s/unicode-properties` is part of the [`chr33s/pdf`](https://github.com/chr33s/pdf) monorepo and continues the
+`@chr33s/pdf-unicode-properties` is part of the [`chr33s/pdf`](https://github.com/chr33s/pdf) monorepo and continues the
 [Hopding/unicode-properties](https://github.com/Hopding/unicode-properties) fork of the original foliojs project. This
 edition is native ES modules only:
 
@@ -12,7 +12,7 @@ edition is native ES modules only:
 
 # unicode-properties
 
-Provides fast access to unicode character properties. Uses [@chr33s/unicode-trie](https://github.com/chr33s/pdf/tree/main/packages/unicode-trie) to compress the
+Provides fast access to unicode character properties. Uses [@chr33s/pdf-unicode-trie](https://github.com/chr33s/pdf/tree/main/packages/unicode-trie) to compress the
 properties for all code points into just 12KB.
 
 ## Usage
@@ -21,7 +21,7 @@ properties for all code points into just 12KB.
 import unicodeProperties, {
 	getCategory,
 	getNumericValue,
-} from "@chr33s/unicode-properties";
+} from "@chr33s/pdf-unicode-properties";
 
 getCategory("2".codePointAt(0) ?? 0); //=> 'Nd'
 getNumericValue("2".codePointAt(0) ?? 0); //=> 2
@@ -33,7 +33,7 @@ unicodeProperties.isDigit("9".codePointAt(0) ?? 0); //=> true
 ## Installation
 
 ```bash
-npm install @chr33s/unicode-properties
+npm install @chr33s/pdf-unicode-properties
 ```
 
 The package is distributed as native ES modules. Use Node.js 18+ or configure your bundler to resolve NodeNext-style imports.

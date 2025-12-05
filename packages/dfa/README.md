@@ -1,8 +1,8 @@
-# @chr33s/dfa
+# @chr33s/pdf-dfa
 
 > Deterministic finite automata compiler packaged as modern ES modules.
 
-`@chr33s/dfa` lives in the [`chr33s/pdf`](https://github.com/chr33s/pdf) monorepo and provides native ES modules with TypeScript declarations.
+`@chr33s/pdf-dfa` lives in the [`chr33s/pdf`](https://github.com/chr33s/pdf) monorepo and provides native ES modules with TypeScript declarations.
 
 ## Overview
 

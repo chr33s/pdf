@@ -1,19 +1,19 @@
-# @chr33s/brotli
+# @chr33s/pdf-brotli
 
 > Modern ESM build of the Brotli decompression utilities.
 
-`@chr33s/brotli` lives in the [`chr33s/pdf`](https://github.com/chr33s/pdf) monorepo and provides native ES modules with TypeScript declarations.
+`@chr33s/pdf-brotli` lives in the [`chr33s/pdf`](https://github.com/chr33s/pdf) monorepo and provides native ES modules with TypeScript declarations.
 
 ## Installation
 
 ```bash
-npm install @chr33s/brotli
+npm install @chr33s/pdf-brotli
 ```
 
 ## Usage
 
 ```ts
-import { decompress } from "@chr33s/brotli";
+import { decompress } from "@chr33s/pdf-brotli";
 
 const restored = decompress(compressed);
 ```

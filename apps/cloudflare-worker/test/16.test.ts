@@ -1,4 +1,3 @@
-import { expect, test } from "vitest";
 import {
   degrees,
   drawEllipse,
@@ -10,9 +9,10 @@ import {
   rgb,
   StandardFonts,
 } from "@chr33s/pdf";
+import { expect, test } from "vitest";
 import { assets } from "./assets.js";
 
-import fontkit from "@chr33s/fontkit";
+import fontkit from "@chr33s/pdf-fontkit";
 
 test("Test 16: Fancy fields with custom appearances", async () => {
   const pdfDoc = await PDFDocument.load(await assets.pdfs.fancyFields());

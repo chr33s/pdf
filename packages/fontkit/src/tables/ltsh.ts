@@ -1,4 +1,4 @@
-import * as r from "@chr33s/restructure";
+import * as r from "@chr33s/pdf-restructure";
 
 // Linear Threshold table
 // Records the ppem for each glyph at which the scaling becomes linear again,

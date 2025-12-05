@@ -1,4 +1,4 @@
-import fontkit from "@chr33s/fontkit";
+import fontkit from "@chr33s/pdf-fontkit";
 import { assert } from "@std/assert";
 import { assets, type Assets } from "../assets.ts";
 

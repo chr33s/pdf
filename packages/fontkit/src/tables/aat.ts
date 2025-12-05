@@ -1,6 +1,6 @@
 // @ts-nocheck
-import * as r from "@chr33s/restructure";
-import { uint16 } from "@chr33s/restructure";
+import * as r from "@chr33s/pdf-restructure";
+import { uint16 } from "@chr33s/pdf-restructure";
 
 class UnboundedArrayAccessor {
   constructor(type, stream, parent) {

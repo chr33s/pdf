@@ -1,4 +1,4 @@
-import { unicode } from "@chr33s/unicode-properties";
+import { unicode } from "@chr33s/pdf-unicode-properties";
 
 type UnicodeScriptValue = string | string[];
 type UnicodeScriptMap = Record<string, UnicodeScriptValue>;

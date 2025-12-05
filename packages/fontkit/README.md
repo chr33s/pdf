@@ -1,15 +1,15 @@
-# @chr33s/fontkit
+# @chr33s/pdf-fontkit
 
 > Advanced font engine for Node.js, browsers, and React Native with a modern ESM build.
 
-`@chr33s/fontkit` lives in the [`chr33s/pdf`](https://github.com/chr33s/pdf) monorepo and continues the work of the
+`@chr33s/pdf-fontkit` lives in the [`chr33s/pdf`](https://github.com/chr33s/pdf) monorepo and continues the work of the
 [Hopding/fontkit](https://github.com/Hopding/fontkit) fork of the original [`foliojs/fontkit`](https://github.com/foliojs/fontkit).
 This edition is focused on the needs of the modern `@chr33s/pdf` dependency graph and offers:
 
 - native ES modules with NodeNext resolution (Node.js 18+ or a current bundler required),
 - TypeScript source with published declaration files,
 - updated build and test tooling (Vitest-based), and
-- integration with sibling packages like `@chr33s/brotli`, `@chr33s/unicode-properties`, and `@chr33s/restructure`.
+- integration with sibling packages like `@chr33s/pdf-brotli`, `@chr33s/pdf-unicode-properties`, and `@chr33s/pdf-restructure`.
 
 # fontkit
 
@@ -31,7 +31,7 @@ Fontkit is an advanced font engine for Node and the browser, used by [PDFKit](ht
 ## Example
 
 ```js
-import fontkit from '@chr33s/fontkit';
+import fontkit from '@chr33s/pdf-fontkit';
 import fs from 'node:fs';
 
 // open a font synchronously
@@ -58,7 +58,7 @@ subset.encodeStream()
 ## Installation
 
 ```bash
-npm install @chr33s/fontkit
+npm install @chr33s/pdf-fontkit
 ```
 
 The published artifacts are native ES modules with generated type declarations. Use Node.js 18+ or a contemporary bundler (Vite, Rollup, webpack 5+, etc.) that understands `package.json` `exports` and the NodeNext resolution strategy.

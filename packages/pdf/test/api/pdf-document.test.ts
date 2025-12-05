@@ -1,4 +1,4 @@
-import fontkit, { type Fontkit } from "@chr33s/fontkit";
+import fontkit, { type Fontkit } from "@chr33s/pdf-fontkit";
 import { readFile } from "node:fs/promises";
 import { afterAll, beforeAll, beforeEach, describe, expect, test, vi } from "vitest";
 import { PDFAttachment } from "../../src/api/pdf-document.js";

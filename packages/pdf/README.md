@@ -606,9 +606,9 @@ const pdfBytes = await pdfDoc.save()
 
 ### Embed Font and Measure Text
 
-`pdf` relies on a sister module to support embedding custom fonts: [`@chr33s/fontkit`](https://www.npmjs.com/package/@chr33s/fontkit). You must add the `@chr33s/fontkit` module to your project and register it using `pdfDoc.registerFontkit(...)` before embedding custom fonts.
+`pdf` relies on a sister module to support embedding custom fonts: [`@chr33s/pdf-fontkit`](https://www.npmjs.com/package/@chr33s/pdf-fontkit). You must add the `@chr33s/pdf-fontkit` module to your project and register it using `pdfDoc.registerFontkit(...)` before embedding custom fonts.
 
-> **[See below for detailed installation instructions on installing `@chr33s/fontkit` as a NPM module.](#fontkit-installation)**
+> **[See below for detailed installation instructions on installing `@chr33s/pdf-fontkit` as a NPM module.](#fontkit-installation)**
 
 _This example produces [this PDF](assets/pdfs/examples/embed_font_and_measure_text.pdf)_ (when [this font](assets/fonts/ubuntu/Ubuntu-R.ttf) is used for the `fontBytes` variable).
 
@@ -617,7 +617,7 @@ _This example produces [this PDF](assets/pdfs/examples/embed_font_and_measure_te
 <!-- prettier-ignore -->
 ```js
 import { PDFDocument, rgb } from '@chr33s/pdf'
-import fontkit from '@chr33s/fontkit'
+import fontkit from '@chr33s/pdf-fontkit'
 
 // This should be a Uint8Array or ArrayBuffer
 // This data can be obtained in a number of different ways
@@ -1020,7 +1020,7 @@ const pdfBytes = await pdfDoc.save();
 
 ## Deno Usage
 
-`pdf` fully supports the exciting new [Deno](https://deno.land/) runtime! All of the [usage examples](#usage-examples) work in Deno. The only thing you need to do is change the imports for `pdf` and `@chr33s/fontkit` to use the [Skypack](https://www.skypack.dev/) CDN, because Deno requires all modules to be referenced via URLs.
+`pdf` fully supports the exciting new [Deno](https://deno.land/) runtime! All of the [usage examples](#usage-examples) work in Deno. The only thing you need to do is change the imports for `pdf` and `@chr33s/pdf-fontkit` to use the [Skypack](https://www.skypack.dev/) CDN, because Deno requires all modules to be referenced via URLs.
 
 > **See also [How to Create and Modify PDF Files in Deno With pdf](https://medium.com/swlh/how-to-create-and-modify-pdf-files-in-deno-ffaad7099b0?source=friends_link&sk=3da183bb776d059df428eaea52102f19)**
 
@@ -1073,7 +1073,7 @@ import {
   rgb,
   StandardFonts,
 } from 'jsr:@chr33s/pdf@?dts';
-import fontkit from 'jsr:@chr33s/fontkit@?dts';
+import fontkit from 'jsr:@chr33s/pdf-fontkit@?dts';
 
 const url = 'https://pdf.js.org/assets/ubuntu/Ubuntu-R.ttf';
 const fontBytes = await fetch(url).then((res) => res.arrayBuffer());
@@ -1145,14 +1145,14 @@ This assumes you're using [npm](https://www.npmjs.com/) as your package manager.
 
 ## Fontkit Installation
 
-`pdf` relies upon a sister module to support embedding custom fonts: [`@chr33s/fontkit`](https://www.npmjs.com/package/@chr33s/fontkit). You must add the `@chr33s/fontkit` module to your project and register it using `pdfDoc.registerFontkit(...)` before embedding custom fonts (see the [font embedding example](#embed-font-and-measure-text)). This module is not included by default because not all users need it, and it increases bundle size.
+`pdf` relies upon a sister module to support embedding custom fonts: [`@chr33s/pdf-fontkit`](https://www.npmjs.com/package/@chr33s/pdf-fontkit). You must add the `@chr33s/pdf-fontkit` module to your project and register it using `pdfDoc.registerFontkit(...)` before embedding custom fonts (see the [font embedding example](#embed-font-and-measure-text)). This module is not included by default because not all users need it, and it increases bundle size.
 
-Installing this module is easy. Just like `pdf` itself, `@chr33s/fontkit` can be installed with `npm`.
+Installing this module is easy. Just like `pdf` itself, `@chr33s/pdf-fontkit` can be installed with `npm`.
 
 ### Fontkit NPM Module
 
 ```bash
-npm install --save @chr33s/fontkit
+npm install --save @chr33s/pdf-fontkit
 ```
 
 To register the `fontkit` instance:
@@ -1160,7 +1160,7 @@ To register the `fontkit` instance:
 <!-- prettier-ignore -->
 ```js
 import { PDFDocument } from '@chr33s/pdf'
-import fontkit from '@chr33s/fontkit'
+import fontkit from '@chr33s/pdf-fontkit'
 
 const pdfDoc = await PDFDocument.create()
 pdfDoc.registerFontkit(fontkit)
@@ -1195,7 +1195,7 @@ When working with PDFs, you will frequently come across the terms "character enc
   <!-- prettier-ignore -->
   ```js
   import { PDFDocument } from '@chr33s/pdf'
-  import fontkit from '@chr33s/fontkit'
+  import fontkit from '@chr33s/pdf-fontkit'
 
   const url = 'https://pdf.js.org/assets/ubuntu/Ubuntu-R.ttf'
   const fontBytes = await fetch(url).then((res) => res.arrayBuffer())
@@ -1247,7 +1247,7 @@ You can use an embedded font when filling form fields as follows:
 
 ```js
 import { PDFDocument } from '@chr33s/pdf';
-import fontkit from '@chr33s/fontkit';
+import fontkit from '@chr33s/pdf-fontkit';
 
 // Fetch the PDF with form fields
 const formUrl = 'https://pdf.js.org/assets/dod_character.pdf';

@@ -1,4 +1,4 @@
-import { unicode } from "@chr33s/unicode-properties";
+import { unicode } from "@chr33s/pdf-unicode-properties";
 import type { FontLike } from "../../glyph/glyph.js";
 import * as Script from "../../layout/script.js";
 import GlyphInfo from "../glyph-info.js";

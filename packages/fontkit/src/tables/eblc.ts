@@ -1,4 +1,4 @@
-import * as r from "@chr33s/restructure";
+import * as r from "@chr33s/pdf-restructure";
 import { BigMetrics } from "./ebdt.js";
 
 let SBitLineMetrics = new r.Struct({

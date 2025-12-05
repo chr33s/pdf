@@ -1,4 +1,4 @@
-import { FontNames } from "@chr33s/standard-fonts";
+import { FontNames } from "@chr33s/pdf-standard-fonts";
 import { describe, expect, test } from "vitest";
 import {
   PDFContext,

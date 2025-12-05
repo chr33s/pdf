@@ -1,4 +1,4 @@
-import type { DecodeStream } from "@chr33s/restructure";
+import type { DecodeStream } from "@chr33s/pdf-restructure";
 import CFFDict from "./cff-dict.js";
 import CFFIndex from "./cff-index.js";
 import CFFPointer from "./cff-pointer.js";

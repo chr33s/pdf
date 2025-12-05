@@ -1,4 +1,4 @@
-# @chr33s/upng
+# @chr33s/pdf-upng
 
 > Small, fast, and modernized PNG/APNG encoder and decoder for the `@chr33s/pdf` ecosystem.
 
@@ -12,7 +12,7 @@ dependencies.
 
 ## Example of `UPNG.toRGBA8`
 ```ts
-import UPNG from "@chr33s/upng";
+import UPNG from "@chr33s/pdf-upng";
 
 const pngImage = UPNG.decode(/* Uint8Array containing bytes of PNG image */);
 
@@ -23,7 +23,7 @@ const pixels = UPNG.toRGBA8(pngImage)[0];
 ## Installation
 
 ```bash
-npm install @chr33s/upng
+npm install @chr33s/pdf-upng
 ```
 
 Package consumers should run on Node.js 18+ or enable NodeNext-compatible module resolution in their bundler configuration.
@@ -86,7 +86,7 @@ PNG files may have a various number of channels and a various color depth. The i
     let img  = UPNG.decode(buff);        // put ArrayBuffer of the PNG file into UPNG.decode
     let rgba = UPNG.toRGBA8(img)[0];     // UPNG.toRGBA8 returns array of frames, size: width * height * 4 bytes.
 
-PNG format uses the Inflate algorithm. Right now, UPNG.js calls [@chr33s/compression](https://github.com/chr33s/pdf/tree/main/packages/compression) for the Inflate and Deflate method.
+PNG format uses the Inflate algorithm. Right now, UPNG.js calls [@chr33s/pdf-compression](https://github.com/chr33s/pdf/tree/main/packages/compression) for the Inflate and Deflate method.
 
 ## Quantizer
 

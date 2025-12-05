@@ -1,5 +1,5 @@
-import type { DecodeStream } from "@chr33s/restructure";
-import * as r from "@chr33s/restructure";
+import type { DecodeStream } from "@chr33s/pdf-restructure";
+import * as r from "@chr33s/pdf-restructure";
 import fontkit from "./base.js";
 import CmapProcessor from "./cmap-processor.js";
 import { cache } from "./decorators.js";

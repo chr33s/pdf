@@ -6,7 +6,7 @@ const assetsPath = path.resolve(__dirname, "../../packages/pdf/assets");
 export default defineWorkersConfig({
   resolve: {
     alias: {
-      "@chr33s/fontkit": path.resolve(__dirname, "../../packages/fontkit/dist/index.js"),
+      "@chr33s/pdf-fontkit": path.resolve(__dirname, "../../packages/fontkit/dist/index.js"),
       "@chr33s/pdf": path.resolve(__dirname, "../../packages/pdf/dist/index.js"),
     },
   },

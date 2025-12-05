@@ -1,4 +1,4 @@
-import * as r from "@chr33s/restructure";
+import * as r from "@chr33s/pdf-restructure";
 import { Device } from "./opentype.js";
 import { ItemVariationStore } from "./variations.js";
 

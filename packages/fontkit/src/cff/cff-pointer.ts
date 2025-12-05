@@ -1,5 +1,5 @@
-import type { DecodeStream, EncodeStream, PointerOptions } from "@chr33s/restructure";
-import * as r from "@chr33s/restructure";
+import type { DecodeStream, EncodeStream, PointerOptions } from "@chr33s/pdf-restructure";
+import * as r from "@chr33s/pdf-restructure";
 import type { OperandValue } from "./cff-operand.js";
 export default class CFFPointer extends r.Pointer {
   constructor(type: unknown, options: PointerOptions = {}) {

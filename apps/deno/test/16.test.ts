@@ -1,17 +1,17 @@
-import fontkit from "@chr33s/fontkit";
+import fontkit from "@chr33s/pdf-fontkit";
 import { assets } from "../assets.ts";
 
 // @deno-types="../dummy.d.ts"
 import {
-  degrees,
-  drawEllipse,
-  drawRectangle,
-  drawText,
-  PDFDocument,
-  PDFFont,
-  PDFWidgetAnnotation,
-  rgb,
-  StandardFonts,
+    degrees,
+    drawEllipse,
+    drawRectangle,
+    drawText,
+    PDFDocument,
+    PDFFont,
+    PDFWidgetAnnotation,
+    rgb,
+    StandardFonts,
 } from "@chr33s/pdf";
 
 Deno.test("Test 16: Fancy fields with custom appearances", async () => {

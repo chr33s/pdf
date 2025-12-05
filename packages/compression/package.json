@@ -1,5 +1,5 @@
 {
-  "name": "@chr33s/compression",
+  "name": "@chr33s/pdf-compression",
   "version": "5.0.0",
   "description": "Compression utilities using web CompressionStream and DecompressionStream APIs",
   "type": "module",

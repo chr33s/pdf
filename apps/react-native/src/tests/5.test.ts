@@ -1,5 +1,5 @@
-import fontkit from "@chr33s/fontkit";
 import { degrees, PDFDocument, rgb } from "@chr33s/pdf";
+import fontkit from "@chr33s/pdf-fontkit";
 
 import { fetchAsset } from "./assets";
 

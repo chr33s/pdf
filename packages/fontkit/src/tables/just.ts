@@ -1,5 +1,5 @@
 // @ts-nocheck
-import * as r from "@chr33s/restructure";
+import * as r from "@chr33s/pdf-restructure";
 import { LookupTable, StateTable1 } from "./aat.js";
 
 let ClassTable = new r.Struct({

@@ -1,5 +1,5 @@
-import type { DecodeStream, EncodeStream } from "@chr33s/restructure";
-import { PropertyDescriptor } from "@chr33s/restructure";
+import type { DecodeStream, EncodeStream } from "@chr33s/pdf-restructure";
+import { PropertyDescriptor } from "@chr33s/pdf-restructure";
 import isEqual from "deep-equal";
 import CFFOperand, { type OperandValue } from "./cff-operand.js";
 

@@ -1,5 +1,5 @@
 /**
- * Compatibility tests comparing @chr33s/crypto output with node:crypto.
+ * Compatibility tests comparing @chr33s/pdf-crypto output with node:crypto.
  * These tests verify that our implementations produce the same results
  * as the native Node.js crypto module.
  */

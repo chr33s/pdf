@@ -1,4 +1,4 @@
-# @chr33s/standard-fonts
+# @chr33s/pdf-standard-fonts
 
 > Collection of metrics and encodings for the standard 14 PDF fonts
 
@@ -9,7 +9,7 @@ This project is a fork of [`afm`](https://github.com/chbrown/afm) and was create
 
 ## Usage
 ```js
-import { Font, FontNames, Encodings } from '@chr33s/standard-fonts';
+import { Font, FontNames, Encodings } from '@chr33s/pdf-standard-fonts';
 
 const codePoint = '∑'.charCodeAt(0);
 
@@ -25,12 +25,12 @@ width // => 713
 ### NPM Module
 To install the latest stable version:
 ```bash
-npm install --save @chr33s/standard-fonts
+npm install --save @chr33s/pdf-standard-fonts
 ```
 This assumes you're using [npm](https://www.npmjs.com/) as your package manager.
 
 ### ESM Build
-`@chr33s/standard-fonts` now ships only native ES modules compiled from the TypeScript sources. The published entry point is `dist/index.js`, which also ships bundled type declarations in `dist/index.d.ts`. Use Node 18+ or a modern bundler (Vite, Rollup, Webpack, etc.) to consume the package, and bundle it for browsers as needed.
+`@chr33s/pdf-standard-fonts` now ships only native ES modules compiled from the TypeScript sources. The published entry point is `dist/index.js`, which also ships bundled type declarations in `dist/index.d.ts`. Use Node 18+ or a modern bundler (Vite, Rollup, Webpack, etc.) to consume the package, and bundle it for browsers as needed.
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)

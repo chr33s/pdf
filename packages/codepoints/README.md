@@ -1,8 +1,8 @@
-# @chr33s/codepoints
+# @chr33s/pdf-codepoints
 
 > A parser for files in the Unicode database.
 
-`@chr33s/codepoints` lives in the [`chr33s/pdf`](https://github.com/chr33s/pdf) monorepo and provides native ES modules with TypeScript declarations.
+`@chr33s/pdf-codepoints` lives in the [`chr33s/pdf`](https://github.com/chr33s/pdf) monorepo and provides native ES modules with TypeScript declarations.
 
 ## Overview
 
@@ -15,13 +15,13 @@ as the parsers are not optimized for speed, the text files are huge, and the res
 huge amount of memory. To access this data in real world applications, use modules that have
 precompiled the data into a compressed form:
 
-* [@chr33s/unicode-properties](https://github.com/chr33s/pdf/tree/main/packages/unicode-properties)
+* [@chr33s/pdf-unicode-properties](https://github.com/chr33s/pdf/tree/main/packages/unicode-properties)
 
 ## Installation
 
 Install using npm:
 
-    npm install @chr33s/codepoints
+    npm install @chr33s/pdf-codepoints
 
 ## Usage
 

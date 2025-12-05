@@ -1,4 +1,4 @@
-import type { TypeFeatures } from "@chr33s/fontkit";
+import type { TypeFeatures } from "@chr33s/pdf-fontkit";
 import { EmbeddedFileOptions } from "../core/embedders/file-embedder.js";
 
 export type ParseSpeed = number;

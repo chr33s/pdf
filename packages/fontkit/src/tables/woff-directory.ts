@@ -1,4 +1,4 @@
-import * as r from "@chr33s/restructure";
+import * as r from "@chr33s/pdf-restructure";
 
 let WOFFDirectoryEntry = new r.Struct({
   tag: new r.String(4),

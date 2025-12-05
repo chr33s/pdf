@@ -1,4 +1,4 @@
-import type { DecodeStream, EncodeStream } from "@chr33s/restructure";
+import type { DecodeStream, EncodeStream } from "@chr33s/pdf-restructure";
 import CFFTop from "././cff-top.js";
 import standardStrings from "./cff-standard-strings.js";
 

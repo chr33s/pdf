@@ -1,4 +1,4 @@
-import * as r from "@chr33s/restructure";
+import * as r from "@chr33s/pdf-restructure";
 
 export let BigMetrics = new r.Struct({
   height: r.uint8,

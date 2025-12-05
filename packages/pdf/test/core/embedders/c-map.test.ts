@@ -1,8 +1,8 @@
-import fontkit from "@chr33s/fontkit";
+import fontkit from "@chr33s/pdf-fontkit";
 import { readFile } from "node:fs/promises";
 import { describe, expect, test } from "vitest";
 
-import type { Font, Glyph } from "@chr33s/fontkit";
+import type { Font, Glyph } from "@chr33s/pdf-fontkit";
 import { createCmap } from "../../../src/core/embedders/c-map.js";
 import { byAscendingId, sortedUniq } from "../../../src/utils/index.js";
 

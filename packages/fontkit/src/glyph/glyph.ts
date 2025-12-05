@@ -1,4 +1,4 @@
-import { unicode } from "@chr33s/unicode-properties";
+import { unicode } from "@chr33s/pdf-unicode-properties";
 import { cache } from "../decorators.js";
 import Path from "./path.js";
 import StandardNames from "./standard-names.js";

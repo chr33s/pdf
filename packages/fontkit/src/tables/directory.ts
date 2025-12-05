@@ -1,4 +1,4 @@
-import * as r from "@chr33s/restructure";
+import * as r from "@chr33s/pdf-restructure";
 import Tables from "./index.js";
 
 let TableEntry = new r.Struct({

@@ -1,5 +1,5 @@
 {
-  "name": "@chr33s/base64",
+  "name": "@chr33s/pdf-base64",
   "version": "5.0.0",
   "type": "module",
   "packageManager": "npm@10.9.3+",

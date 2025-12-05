@@ -1,5 +1,5 @@
 {
-  "name": "@chr33s/restructure",
+  "name": "@chr33s/pdf-restructure",
   "version": "5.0.0",
   "description": "Declaratively encode and decode binary data",
   "type": "module",

@@ -1,6 +1,6 @@
 // @ts-nocheck
-import * as r from "@chr33s/restructure";
-import { resolveLength } from "@chr33s/restructure";
+import * as r from "@chr33s/pdf-restructure";
+import { resolveLength } from "@chr33s/pdf-restructure";
 import { ItemVariationStore } from "./variations.js";
 
 // TODO: add this to restructure

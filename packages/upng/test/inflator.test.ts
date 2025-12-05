@@ -1,4 +1,4 @@
-import { deflateRaw } from "@chr33s/compression";
+import { deflateRaw } from "@chr33s/pdf-compression";
 import { describe, expect, test } from "vitest";
 import { Inflator } from "../src/inflator.js";
 

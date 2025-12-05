@@ -1,4 +1,4 @@
-import CryptoJS, { WordArray } from "@chr33s/crypto";
+import CryptoJS, { WordArray } from "@chr33s/pdf-crypto";
 import PDFContext from "../pdf-context.js";
 
 type RandomWordArrayGenerator = (bytes: number) => WordArray;

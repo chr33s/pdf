@@ -1,4 +1,4 @@
-import * as r from "@chr33s/restructure";
+import * as r from "@chr33s/pdf-restructure";
 import type { CanvasContextLike, GlyphImage } from "./glyph.js";
 import TTFGlyph from "./ttf-glyph.js";
 

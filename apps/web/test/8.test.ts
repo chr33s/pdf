@@ -1,6 +1,6 @@
-import fontkit from "@chr33s/fontkit";
-import { expect, test } from "vitest";
 import { ParseSpeeds, PDFDocument, rgb } from "@chr33s/pdf";
+import fontkit from "@chr33s/pdf-fontkit";
+import { expect, test } from "vitest";
 import { assets } from "./assets.js";
 
 test("Test 8: PDF with comments", async () => {

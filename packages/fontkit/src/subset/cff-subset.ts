@@ -1,4 +1,4 @@
-import { EncodeStream } from "@chr33s/restructure";
+import { EncodeStream } from "@chr33s/pdf-restructure";
 import cloneDeep from "clone";
 import CFFTop from "../cff/./cff-top.js";
 import type CFFFont from "../cff/cff-font.js";

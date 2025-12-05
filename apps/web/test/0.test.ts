@@ -1,5 +1,3 @@
-import fontkit from "@chr33s/fontkit";
-import { expect, test } from "vitest";
 import {
   AFRelationship,
   clip,
@@ -17,6 +15,8 @@ import {
   StandardFonts,
   typedArrayFor,
 } from "@chr33s/pdf";
+import fontkit from "@chr33s/pdf-fontkit";
+import { expect, test } from "vitest";
 import { assets } from "./assets.js";
 
 const ipsumLines = [

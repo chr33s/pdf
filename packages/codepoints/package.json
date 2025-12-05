@@ -1,5 +1,5 @@
 {
-  "name": "@chr33s/codepoints",
+  "name": "@chr33s/pdf-codepoints",
   "version": "5.0.0",
   "description": "A parser for files in the Unicode database",
   "type": "module",

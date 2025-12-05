@@ -2,7 +2,7 @@ import { PDFDocument } from "@chr33s/pdf";
 import { expect, test } from "vitest";
 import { type Assets, assets } from "../assets.js";
 
-import fontkit from "@chr33s/fontkit";
+import fontkit from "@chr33s/pdf-fontkit";
 
 // Based on test14.ts
 const loadA = async (assets: Assets) => {

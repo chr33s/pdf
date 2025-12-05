@@ -1,8 +1,8 @@
-# @chr33s/restructure
+# @chr33s/pdf-restructure
 
 > Declarative binary encoding and decoding primitives packaged as modern ES modules.
 
-`@chr33s/restructure` lives in the [`chr33s/pdf`](https://github.com/chr33s/pdf) monorepo and carries forward the
+`@chr33s/pdf-restructure` lives in the [`chr33s/pdf`](https://github.com/chr33s/pdf) monorepo and carries forward the
 [`Hopding/restructure`](https://github.com/Hopding/restructure) fork of Devon Govett’s original project. This edition provides:
 
 - native ES modules targeting NodeNext (Node.js 18+ or a modern bundler required),
@@ -12,7 +12,7 @@
 ## Installation
 
 ```bash
-npm install @chr33s/restructure
+npm install @chr33s/pdf-restructure
 ```
 
 Use Node.js 18+ or configure your bundler to resolve NodeNext-style ES modules.
@@ -40,7 +40,7 @@ import {
   Struct,
   String,
   uint8,
-} from "@chr33s/restructure";
+} from "@chr33s/pdf-restructure";
 
 const Person = new Struct({
   name: new String(uint8, "utf8"),

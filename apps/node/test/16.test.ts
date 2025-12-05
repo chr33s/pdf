@@ -12,7 +12,7 @@ import {
 import { expect, test } from "vitest";
 import { assets } from "../assets.js";
 
-import fontkit from "@chr33s/fontkit";
+import fontkit from "@chr33s/pdf-fontkit";
 
 test("Test 16: Fancy fields with custom appearances", async () => {
   const pdfDoc = await PDFDocument.load(assets.pdfs.fancy_fields);

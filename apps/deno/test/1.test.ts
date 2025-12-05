@@ -1,9 +1,9 @@
-import fontkit from "@chr33s/fontkit";
+import fontkit from "@chr33s/pdf-fontkit";
 import { assert } from "@std/assert";
 import { assets } from "../assets.ts";
 
 // @deno-types="../dummy.d.ts"
-import { ParseSpeeds, PDFDocument, PDFPage, rgb } from "@chr33s/pdf";
+import { ParseSpeeds, PDFDocument, rgb } from "@chr33s/pdf";
 
 // This test loads an existing PDF document with many pages.
 // It inserts data for every page (images, rectangles, texts, embedded PDFs).

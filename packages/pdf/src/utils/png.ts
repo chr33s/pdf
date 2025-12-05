@@ -1,4 +1,4 @@
-import UPNG from "@chr33s/upng";
+import UPNG from "@chr33s/pdf-upng";
 
 const getImageType = (ctype: number) => {
   if (ctype === 0) return PngType.Greyscale;

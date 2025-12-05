@@ -1,4 +1,4 @@
-import type { Font } from "@chr33s/fontkit";
+import type { Font } from "@chr33s/pdf-fontkit";
 
 interface FontFlagOptions {
   fixedPitch?: boolean;

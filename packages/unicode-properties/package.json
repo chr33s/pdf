@@ -1,5 +1,5 @@
 {
-  "name": "@chr33s/unicode-properties",
+  "name": "@chr33s/pdf-unicode-properties",
   "version": "5.0.0",
   "description": "Provides fast access to unicode character properties",
   "type": "module",
@@ -18,12 +18,12 @@
     "typecheck": "tsc --project tsconfig.typecheck.json"
   },
   "dependencies": {
-    "@chr33s/base64": "file:../base64",
-    "@chr33s/compression": "file:../compression",
-    "@chr33s/unicode-trie": "file:../unicode-trie"
+    "@chr33s/pdf-base64": "file:../base64",
+    "@chr33s/pdf-compression": "file:../compression",
+    "@chr33s/pdf-unicode-trie": "file:../unicode-trie"
   },
   "devDependencies": {
-    "@chr33s/codepoints": "file:../codepoints",
+    "@chr33s/pdf-codepoints": "file:../codepoints",
     "@types/node": "24.10.1",
     "@vitest/coverage-v8": "4.0.15",
     "typescript": "5.9.3",

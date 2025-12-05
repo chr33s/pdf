@@ -1,4 +1,4 @@
-import { unicode } from "@chr33s/unicode-properties";
+import { unicode } from "@chr33s/pdf-unicode-properties";
 import type GlyphInfo from "../glyph-info.js";
 import type ShapingPlan from "../shaping-plan.js";
 

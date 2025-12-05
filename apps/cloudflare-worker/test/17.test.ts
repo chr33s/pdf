@@ -1,8 +1,8 @@
-import { expect, test } from "vitest";
 import { PDFDocument } from "@chr33s/pdf";
+import { expect, test } from "vitest";
 import { assets } from "./assets.js";
 
-import fontkit from "@chr33s/fontkit";
+import fontkit from "@chr33s/pdf-fontkit";
 
 type Assets = typeof assets;
 

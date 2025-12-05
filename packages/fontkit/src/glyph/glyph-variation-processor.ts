@@ -1,4 +1,4 @@
-import type { DecodeStream } from "@chr33s/restructure";
+import type { DecodeStream } from "@chr33s/pdf-restructure";
 import type { VariationProcessor } from "./glyph.js";
 
 const TUPLES_SHARE_POINT_NUMBERS = 0x8000;

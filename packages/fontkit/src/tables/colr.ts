@@ -1,4 +1,4 @@
-import * as r from "@chr33s/restructure";
+import * as r from "@chr33s/pdf-restructure";
 
 let LayerRecord = new r.Struct({
   gid: r.uint16, // Glyph ID of layer glyph (must be in z-order from bottom to top).

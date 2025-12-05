@@ -1,7 +1,7 @@
 import { access } from "node:fs/promises";
 import { beforeAll, describe, expect, test } from "vitest";
 
-import * as r from "@chr33s/restructure";
+import * as r from "@chr33s/pdf-restructure";
 import CFFFont from "../src/cff/cff-font.js";
 import fontkit from "./add-test-helpers-to-fontkit.js";
 import { here } from "./utils/dir.js";

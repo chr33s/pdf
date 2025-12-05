@@ -10,7 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@chr33s/fontkit": "file:../../packages/fontkit",
+    "@chr33s/pdf-fontkit": "file:../../packages/fontkit",
     "@chr33s/pdf": "file:./../../packages/pdf",
     "react": "19.2.1",
     "react-native": "0.82.1",
@@ -45,17 +45,17 @@
       "/node_modules/(?!(@react-native|react-native|react-native-pdf|react-native-blob-util)/)"
     ],
     "moduleNameMapper": {
-      "@chr33s/compression$": "<rootDir>/../../packages/compression/dist/index.js",
-      "@chr33s/fontkit$": "<rootDir>/../../packages/fontkit/dist/index.js",
+      "@chr33s/pdf-compression$": "<rootDir>/../../packages/compression/dist/index.js",
+      "@chr33s/pdf-fontkit$": "<rootDir>/../../packages/fontkit/dist/index.js",
       "@chr33s/pdf$": "<rootDir>/../../packages/pdf/dist/index.js",
-      "@chr33s/brotli$": "<rootDir>/../../packages/brotli/dist/index.js",
-      "@chr33s/restructure$": "<rootDir>/../../packages/restructure/dist/index.js",
-      "@chr33s/dfa$": "<rootDir>/../../packages/dfa/dist/index.js",
-      "@chr33s/unicode-properties$": "<rootDir>/../../packages/unicode-properties/dist/index.js",
-      "@chr33s/unicode-trie$": "<rootDir>/../../packages/unicode-trie/dist/index.js",
-      "@chr33s/upng$": "<rootDir>/../../packages/upng/dist/index.js",
-      "@chr33s/codepoints$": "<rootDir>/../../packages/codepoints/dist/index.js",
-      "@chr33s/standard-fonts$": "<rootDir>/../../packages/standard-fonts/dist/index.js"
+      "@chr33s/pdf-brotli$": "<rootDir>/../../packages/brotli/dist/index.js",
+      "@chr33s/pdf-restructure$": "<rootDir>/../../packages/restructure/dist/index.js",
+      "@chr33s/pdf-dfa$": "<rootDir>/../../packages/dfa/dist/index.js",
+      "@chr33s/pdf-unicode-properties$": "<rootDir>/../../packages/unicode-properties/dist/index.js",
+      "@chr33s/pdf-unicode-trie$": "<rootDir>/../../packages/unicode-trie/dist/index.js",
+      "@chr33s/pdf-upng$": "<rootDir>/../../packages/upng/dist/index.js",
+      "@chr33s/pdf-codepoints$": "<rootDir>/../../packages/codepoints/dist/index.js",
+      "@chr33s/pdf-standard-fonts$": "<rootDir>/../../packages/standard-fonts/dist/index.js"
     }
   }
 }

@@ -1,5 +1,5 @@
-import type { DecodeStream } from "@chr33s/restructure";
-import * as r from "@chr33s/restructure";
+import type { DecodeStream } from "@chr33s/pdf-restructure";
+import * as r from "@chr33s/pdf-restructure";
 import TTFFont from "./ttf-font.js";
 
 let DFontName = new r.String(r.uint8);

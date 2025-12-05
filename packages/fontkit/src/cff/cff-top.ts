@@ -1,6 +1,6 @@
-import type { DecodeStream, EncodeStream } from "@chr33s/restructure";
-import * as r from "@chr33s/restructure";
-import { resolveLength } from "@chr33s/restructure";
+import type { DecodeStream, EncodeStream } from "@chr33s/pdf-restructure";
+import * as r from "@chr33s/pdf-restructure";
+import { resolveLength } from "@chr33s/pdf-restructure";
 import { ItemVariationStore } from "../tables/variations.js";
 import { ExpertCharset, ExpertSubsetCharset, ISOAdobeCharset } from "./cff-charsets.js";
 import CFFDict, { type DictContext } from "./cff-dict.js";

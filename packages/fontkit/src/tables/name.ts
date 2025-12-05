@@ -1,4 +1,4 @@
-import * as r from "@chr33s/restructure";
+import * as r from "@chr33s/pdf-restructure";
 import { getEncoding, LANGUAGES } from "../encodings.js";
 
 let NameRecord = new r.Struct({

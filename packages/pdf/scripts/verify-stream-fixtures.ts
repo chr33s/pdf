@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 import { inflate, inflateRaw } from "node:zlib";
 
-import fontkit from "@chr33s/fontkit";
+import fontkit from "@chr33s/pdf-fontkit";
 
 import { createCmap } from "../dist/core/embedders/c-map.js";
 import * as pdfLib from "../dist/index.js";

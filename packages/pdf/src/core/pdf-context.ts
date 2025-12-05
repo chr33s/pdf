@@ -1,4 +1,4 @@
-import { deflate } from "@chr33s/compression";
+import { deflate } from "@chr33s/pdf-compression";
 
 import { typedArrayFor } from "../utils/index.js";
 import { SimpleRNG } from "../utils/rng.js";

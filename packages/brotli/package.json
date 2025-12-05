@@ -1,5 +1,5 @@
 {
-  "name": "@chr33s/brotli",
+  "name": "@chr33s/pdf-brotli",
   "version": "5.0.0",
   "description": "Brotli compression algorithm as used in WOFF2",
   "type": "module",

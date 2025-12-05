@@ -1,6 +1,6 @@
-import fontkit from "@chr33s/fontkit";
-import { expect, test } from "vitest";
 import { degrees, ParseSpeeds, PDFDocument, rgb } from "@chr33s/pdf";
+import fontkit from "@chr33s/pdf-fontkit";
+import { expect, test } from "vitest";
 import { assets } from "./assets.js";
 
 test("Test 5: PDF with missing endstream EOL", async () => {

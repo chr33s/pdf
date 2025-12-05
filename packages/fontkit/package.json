@@ -1,5 +1,5 @@
 {
-  "name": "@chr33s/fontkit",
+  "name": "@chr33s/pdf-fontkit",
   "version": "5.0.0",
   "description": "An advanced font engine for Node and the browser",
   "type": "module",
@@ -20,18 +20,18 @@
     "typecheck": "tsc --project tsconfig.typecheck.json"
   },
   "dependencies": {
-    "@chr33s/base64": "file:../base64",
-    "@chr33s/brotli": "file:../brotli",
-    "@chr33s/compression": "file:../compression",
-    "@chr33s/dfa": "file:../dfa",
-    "@chr33s/restructure": "file:../restructure",
-    "@chr33s/unicode-properties": "file:../unicode-properties",
-    "@chr33s/unicode-trie": "file:../unicode-trie",
+    "@chr33s/pdf-base64": "file:../base64",
+    "@chr33s/pdf-brotli": "file:../brotli",
+    "@chr33s/pdf-compression": "file:../compression",
+    "@chr33s/pdf-dfa": "file:../dfa",
+    "@chr33s/pdf-restructure": "file:../restructure",
+    "@chr33s/pdf-unicode-properties": "file:../unicode-properties",
+    "@chr33s/pdf-unicode-trie": "file:../unicode-trie",
     "clone": "2.1.2",
     "deep-equal": "2.2.3"
   },
   "devDependencies": {
-    "@chr33s/codepoints": "file:../codepoints",
+    "@chr33s/pdf-codepoints": "file:../codepoints",
     "@types/clone": "2.1.4",
     "@types/deep-equal": "1.0.4",
     "@types/node": "24.10.1",

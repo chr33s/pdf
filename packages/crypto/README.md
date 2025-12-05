@@ -1,8 +1,8 @@
-# @chr33s/crypto
+# @chr33s/pdf-crypto
 
 > JavaScript library of crypto standards.
 
-`@chr33s/crypto` lives in the [`chr33s/pdf`](https://github.com/chr33s/pdf) monorepo and provides native ES modules with TypeScript declarations.
+`@chr33s/pdf-crypto` lives in the [`chr33s/pdf`](https://github.com/chr33s/pdf) monorepo and provides native ES modules with TypeScript declarations.
 
 ## Install
 
@@ -12,7 +12,7 @@ Requirements:
 - npm (Node.js package manager)
 
 ```bash
-npm install @chr33s/crypto
+npm install @chr33s/pdf-crypto
 ```
 
 ### Usage
@@ -20,7 +20,7 @@ npm install @chr33s/crypto
 ES6 import for typical API call signing use case:
 
 ```javascript
-import { Base64, hmacSHA512, sha256 } from '@chr33s/crypto/sha256';
+import { Base64, hmacSHA512, sha256 } from '@chr33s/pdf-crypto/sha256';
 
 const message, nonce, path, privateKey; // ...
 const hashDigest = sha256(nonce + message);
@@ -420,7 +420,7 @@ See: https://cryptojs.gitbook.io/docs/
 #### Plain text encryption
 
 ```javascript
-var CryptoJS = require("@chr33s/crypto");
+var CryptoJS = require("@chr33s/pdf-crypto");
 
 // Encrypt
 var ciphertext = CryptoJS.AES.encrypt('my message', 'secret key 123').toString();
@@ -435,7 +435,7 @@ console.log(originalText); // 'my message'
 #### Object encryption
 
 ```javascript
-var CryptoJS = require("@chr33s/crypto");
+var CryptoJS = require("@chr33s/pdf-crypto");
 
 var data = [{id: 1}, {id: 2}]
 
@@ -452,74 +452,74 @@ console.log(decryptedData); // [{id: 1}, {id: 2}]
 ### List of modules
 
 
-- ```@chr33s/crypto/core```
-- ```@chr33s/crypto/x64-core```
-- ```@chr33s/crypto/lib-typedarrays```
+- ```@chr33s/pdf-crypto/core```
+- ```@chr33s/pdf-crypto/x64-core```
+- ```@chr33s/pdf-crypto/lib-typedarrays```
 
 ---
 
-- ```@chr33s/crypto/md5```
-- ```@chr33s/crypto/sha1```
-- ```@chr33s/crypto/sha256```
-- ```@chr33s/crypto/sha224```
-- ```@chr33s/crypto/sha512```
-- ```@chr33s/crypto/sha384```
-- ```@chr33s/crypto/sha3```
-- ```@chr33s/crypto/ripemd160```
+- ```@chr33s/pdf-crypto/md5```
+- ```@chr33s/pdf-crypto/sha1```
+- ```@chr33s/pdf-crypto/sha256```
+- ```@chr33s/pdf-crypto/sha224```
+- ```@chr33s/pdf-crypto/sha512```
+- ```@chr33s/pdf-crypto/sha384```
+- ```@chr33s/pdf-crypto/sha3```
+- ```@chr33s/pdf-crypto/ripemd160```
 
 ---
 
-- ```@chr33s/crypto/hmac-md5```
-- ```@chr33s/crypto/hmac-sha1```
-- ```@chr33s/crypto/hmac-sha256```
-- ```@chr33s/crypto/hmac-sha224```
-- ```@chr33s/crypto/hmac-sha512```
-- ```@chr33s/crypto/hmac-sha384```
-- ```@chr33s/crypto/hmac-sha3```
-- ```@chr33s/crypto/hmac-ripemd160```
+- ```@chr33s/pdf-crypto/hmac-md5```
+- ```@chr33s/pdf-crypto/hmac-sha1```
+- ```@chr33s/pdf-crypto/hmac-sha256```
+- ```@chr33s/pdf-crypto/hmac-sha224```
+- ```@chr33s/pdf-crypto/hmac-sha512```
+- ```@chr33s/pdf-crypto/hmac-sha384```
+- ```@chr33s/pdf-crypto/hmac-sha3```
+- ```@chr33s/pdf-crypto/hmac-ripemd160```
 
 ---
 
-- ```@chr33s/crypto/pbkdf2```
+- ```@chr33s/pdf-crypto/pbkdf2```
 
 ---
 
-- ```@chr33s/crypto/aes```
-- ```@chr33s/crypto/tripledes```
-- ```@chr33s/crypto/rc4```
-- ```@chr33s/crypto/rabbit```
-- ```@chr33s/crypto/rabbit-legacy```
-- ```@chr33s/crypto/evpkdf```
+- ```@chr33s/pdf-crypto/aes```
+- ```@chr33s/pdf-crypto/tripledes```
+- ```@chr33s/pdf-crypto/rc4```
+- ```@chr33s/pdf-crypto/rabbit```
+- ```@chr33s/pdf-crypto/rabbit-legacy```
+- ```@chr33s/pdf-crypto/evpkdf```
 
 ---
 
-- ```@chr33s/crypto/format-openssl```
-- ```@chr33s/crypto/format-hex```
+- ```@chr33s/pdf-crypto/format-openssl```
+- ```@chr33s/pdf-crypto/format-hex```
 
 ---
 
-- ```@chr33s/crypto/enc-latin1```
-- ```@chr33s/crypto/enc-utf8```
-- ```@chr33s/crypto/enc-hex```
-- ```@chr33s/crypto/enc-utf16```
-- ```@chr33s/crypto/enc-base64```
+- ```@chr33s/pdf-crypto/enc-latin1```
+- ```@chr33s/pdf-crypto/enc-utf8```
+- ```@chr33s/pdf-crypto/enc-hex```
+- ```@chr33s/pdf-crypto/enc-utf16```
+- ```@chr33s/pdf-crypto/enc-base64```
 
 ---
 
-- ```@chr33s/crypto/mode-cfb```
-- ```@chr33s/crypto/mode-ctr```
-- ```@chr33s/crypto/mode-ctr-gladman```
-- ```@chr33s/crypto/mode-ofb```
-- ```@chr33s/crypto/mode-ecb```
+- ```@chr33s/pdf-crypto/mode-cfb```
+- ```@chr33s/pdf-crypto/mode-ctr```
+- ```@chr33s/pdf-crypto/mode-ctr-gladman```
+- ```@chr33s/pdf-crypto/mode-ofb```
+- ```@chr33s/pdf-crypto/mode-ecb```
 
 ---
 
-- ```@chr33s/crypto/pad-pkcs7```
-- ```@chr33s/crypto/pad-ansix923```
-- ```@chr33s/crypto/pad-iso10126```
-- ```@chr33s/crypto/pad-iso97971```
-- ```@chr33s/crypto/pad-zeropadding```
-- ```@chr33s/crypto/pad-nopadding```
+- ```@chr33s/pdf-crypto/pad-pkcs7```
+- ```@chr33s/pdf-crypto/pad-ansix923```
+- ```@chr33s/pdf-crypto/pad-iso10126```
+- ```@chr33s/pdf-crypto/pad-iso97971```
+- ```@chr33s/pdf-crypto/pad-zeropadding```
+- ```@chr33s/pdf-crypto/pad-nopadding```
 
 
 ## Release notes

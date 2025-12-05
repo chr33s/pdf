@@ -1,4 +1,4 @@
-import type { DecodeStream, EncodeStream } from "@chr33s/restructure";
+import type { DecodeStream, EncodeStream } from "@chr33s/pdf-restructure";
 
 const FLOAT_EOF = 0xf;
 const FLOAT_LOOKUP = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "E", "E-", null, "-"];

@@ -1,8 +1,8 @@
-# @chr33s/unicode-trie
+# @chr33s/pdf-unicode-trie
 
 > A data structure for fast Unicode character metadata lookup, ported from ICU.
 
-`@chr33s/unicode-trie` lives in the [`chr33s/pdf`](https://github.com/chr33s/pdf) monorepo and provides native ES modules with TypeScript declarations.
+`@chr33s/pdf-unicode-trie` lives in the [`chr33s/pdf`](https://github.com/chr33s/pdf) monorepo and provides native ES modules with TypeScript declarations.
 
 ## Background
 
@@ -24,7 +24,7 @@ than binary search, with not too much additional memory required.
 
 ## Installation
 
-    npm install @chr33s/unicode-trie
+    npm install @chr33s/pdf-unicode-trie
 
 ## Building a Trie
 
@@ -34,7 +34,7 @@ for faster runtime performance.  To build a Unicode Trie, use the
 
 ```js
 import { writeFileSync } from "node:fs";
-import { builder as UnicodeTrieBuilder } from "@chr33s/unicode-trie";
+import { builder as UnicodeTrieBuilder } from "@chr33s/pdf-unicode-trie";
 
 // create a trie
 let builder = new UnicodeTrieBuilder();
@@ -65,7 +65,7 @@ trie.  From there, you can lookup values.
 
 ```js
 import { readFileSync } from "node:fs";
-import UnicodeTrie from "@chr33s/unicode-trie";
+import UnicodeTrie from "@chr33s/pdf-unicode-trie";
 
 // load serialized trie from binary file
 const data = readFileSync("data.trie");

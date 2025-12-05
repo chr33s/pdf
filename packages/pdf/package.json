@@ -56,16 +56,16 @@
     }
   },
   "dependencies": {
-    "@chr33s/base64": "file:../base64",
-    "@chr33s/compression": "file:../compression",
-    "@chr33s/crypto": "file:../crypto",
-    "@chr33s/standard-fonts": "file:../standard-fonts",
-    "@chr33s/upng": "file:../upng",
+    "@chr33s/pdf-base64": "file:../base64",
+    "@chr33s/pdf-compression": "file:../compression",
+    "@chr33s/pdf-crypto": "file:../crypto",
+    "@chr33s/pdf-standard-fonts": "file:../standard-fonts",
+    "@chr33s/pdf-upng": "file:../upng",
     "color": "5.0.3",
     "node-html-better-parser": "1.5.8"
   },
   "devDependencies": {
-    "@chr33s/fontkit": "file:../fontkit",
+    "@chr33s/pdf-fontkit": "file:../fontkit",
     "@vitest/coverage-v8": "4.0.15",
     "flamebearer": "1.1.3",
     "tsdown": "0.17.0",
