@@ -1,4 +1,4 @@
-import { AES, MD5, mode, padding, RC4, SHA256, WordArray } from "@chr33s/pdf-crypto";
+import { AES, MD5, mode, padding, RC4, SHA256, WordArray } from "@chr33s/pdf-common";
 import PDFContext from "../pdf-context.js";
 
 type RandomWordArrayGenerator = (bytes: number) => WordArray;

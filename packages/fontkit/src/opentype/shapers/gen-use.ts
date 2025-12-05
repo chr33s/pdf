@@ -1,6 +1,5 @@
-import * as base64 from "@chr33s/pdf-base64";
 import codepoints from "@chr33s/pdf-codepoints";
-import { deflate } from "@chr33s/pdf-compression";
+import { base64, deflate } from "@chr33s/pdf-common";
 import { compile as compileModule } from "@chr33s/pdf-dfa";
 import { builder as UnicodeTrieBuilder } from "@chr33s/pdf-unicode-trie";
 import fs from "node:fs/promises";

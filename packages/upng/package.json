@@ -37,7 +37,7 @@
     "conversion"
   ],
   "dependencies": {
-    "@chr33s/pdf-compression": "file:../compression"
+    "@chr33s/pdf-common": "file:../common"
   },
   "devDependencies": {
     "typescript": "5.9.3",

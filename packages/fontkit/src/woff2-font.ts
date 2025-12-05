@@ -1,11 +1,13 @@
-import { decompress } from "@chr33s/pdf-brotli";
 import * as r from "@chr33s/pdf-restructure";
+import { brotliDecompressSync } from "node:zlib";
 import { matchesTag, toUint8Array } from "./binary.js";
 import type { FontLike } from "./glyph/glyph.js";
 import TTFGlyph, { Point } from "./glyph/ttf-glyph.js";
 import WOFF2Glyph from "./glyph/woff2-glyph.js";
 import WOFF2Directory from "./tables/woff2-directory.js";
 import TTFFont from "./ttf-font.js";
+
+const decompress = (data: Uint8Array): Uint8Array => new Uint8Array(brotliDecompressSync(data));
 
 type DecodeStream = InstanceType<typeof r.DecodeStream>;
 type RestructureBuffer = InstanceType<typeof r.Buffer>;

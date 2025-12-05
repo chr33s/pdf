@@ -1,4 +1,4 @@
-import { deflate } from "@chr33s/pdf-compression";
+import { deflate } from "@chr33s/pdf-common";
 import { describe, expect, test } from "vitest";
 
 import {

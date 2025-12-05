@@ -1,4 +1,3 @@
-export * from "@chr33s/pdf-base64";
 export * from "./arrays.js";
 export * from "./async.js";
 export { default as Cache } from "./cache.js";

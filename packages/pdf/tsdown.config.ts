@@ -1,4 +1,7 @@
 import { defineConfig } from "tsdown";
+import { defineEnv } from "unenv";
+
+const { env } = defineEnv({ nodeCompat: true });
 
 export default defineConfig({
   entry: { "index.min": "src/index.ts" },
@@ -8,6 +11,6 @@ export default defineConfig({
   dts: false,
   clean: false,
   noExternal: [/.*/],
-  // Target browser: eliminate Node.js-specific code paths
   platform: "browser",
+  alias: env.alias,
 });

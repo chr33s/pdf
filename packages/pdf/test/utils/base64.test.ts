@@ -1,6 +1,6 @@
+import { decodeFromBase64DataUri } from "@chr33s/pdf-common";
 import { readFile } from "node:fs/promises";
 import { describe, expect, test } from "vitest";
-import { decodeFromBase64DataUri } from "../../src/utils/index.js";
 
 const pdfBytes = await readFile(new URL("./data/simple.pdf", import.meta.url));
 const pdfBase64Bytes = await readFile(new URL("./data/simple.pdf.base64", import.meta.url));

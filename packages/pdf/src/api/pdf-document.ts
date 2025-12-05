@@ -1,3 +1,4 @@
+import { encodeToBase64 } from "@chr33s/pdf-common";
 import type { Fontkit } from "@chr33s/pdf-fontkit";
 import { HTMLElement, NodeType, parse as parseHtml } from "node-html-better-parser";
 import { CipherTransformFactory } from "../core/crypto.js";
@@ -41,7 +42,6 @@ import {
   assertRange,
   Cache,
   canBeConvertedToUint8Array,
-  encodeToBase64,
   isStandardFont,
   pluckIndices,
   range,

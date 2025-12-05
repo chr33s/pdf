@@ -1,4 +1,4 @@
-import { inflateRaw } from "@chr33s/pdf-compression";
+import { inflateRaw } from "@chr33s/pdf-common";
 import { swap32LE } from "./swap.js";
 
 export type UnicodeTrieJSON = {

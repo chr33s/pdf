@@ -1,5 +1,4 @@
-import * as base64 from "@chr33s/pdf-base64";
-import { inflate } from "@chr33s/pdf-compression";
+import { base64, inflate } from "@chr33s/pdf-common";
 import { StateMachine, type StateMachineConfig } from "@chr33s/pdf-dfa";
 import createUnicodeProperties from "@chr33s/pdf-unicode-properties";
 import UnicodeTrie from "@chr33s/pdf-unicode-trie";

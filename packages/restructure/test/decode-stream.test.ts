@@ -1,3 +1,4 @@
+import { Buffer } from "node:buffer";
 import { describe, expect, test } from "vitest";
 import { DecodeStream } from "../src/index.js";
 

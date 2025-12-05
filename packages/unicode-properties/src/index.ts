@@ -1,5 +1,4 @@
-import * as base64 from "@chr33s/pdf-base64";
-import { inflate } from "@chr33s/pdf-compression";
+import { base64, inflate } from "@chr33s/pdf-common";
 import UnicodeTrie from "@chr33s/pdf-unicode-trie";
 
 import base64DeflatedData from "./data.js";

@@ -9,7 +9,7 @@ This edition is focused on the needs of the modern `@chr33s/pdf` dependency grap
 - native ES modules with NodeNext resolution (Node.js 18+ or a current bundler required),
 - TypeScript source with published declaration files,
 - updated build and test tooling (Vitest-based), and
-- integration with sibling packages like `@chr33s/pdf-brotli`, `@chr33s/pdf-unicode-properties`, and `@chr33s/pdf-restructure`.
+- integration with sibling packages like `@chr33s/pdf-unicode-properties` and `@chr33s/pdf-restructure`.
 
 # fontkit
 

@@ -1,4 +1,4 @@
-import { deflate } from "@chr33s/pdf-compression";
+import { deflate } from "@chr33s/pdf-common";
 
 import { MethodNotImplementedError } from "../errors.js";
 import PDFDict from "../objects/pdf-dict.js";

@@ -1,5 +1,4 @@
-import * as base64 from "@chr33s/pdf-base64";
-import { deflate } from "@chr33s/pdf-compression";
+import { base64, deflate } from "@chr33s/pdf-common";
 import fs from "node:fs/promises";
 import { basename, dirname } from "node:path";
 import { fileURLToPath } from "node:url";

@@ -2,7 +2,6 @@ import { readFileSync } from "node:fs";
 import { dirname, extname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { PluginOption, ResolveOptions, ServerOptions } from "vite";
-import { nodePolyfills } from "vite-plugin-node-polyfills";
 
 const currentDir = dirname(fileURLToPath(import.meta.url));
 export const repoRoot = resolve(currentDir, "../..");
@@ -81,17 +80,7 @@ const servePackageFiles = (): PluginOption => ({
   },
 });
 
-export const sharedPlugins: PluginOption[] = [
-  nodePolyfills({
-    globals: {
-      Buffer: true,
-      global: true,
-      process: true,
-    },
-    protocolImports: true,
-  }),
-  servePackageFiles(),
-];
+export const sharedPlugins: PluginOption[] = [servePackageFiles()];
 
 export const sharedServer: ServerOptions = {
   fs: {
@@ -103,8 +92,6 @@ export const sharedServer: ServerOptions = {
 
 export const sharedResolve: ResolveOptions = {
   alias: {
-    "@chr33s/pdf": resolve(repoRoot, "packages/pdf/dist/index.min.js"),
-    "@chr33s/pdf-fontkit": resolve(repoRoot, "packages/fontkit/dist/index.min.js"),
     "/packages/pdf/assets": resolve(repoRoot, "packages/pdf/assets"),
   },
 };

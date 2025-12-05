@@ -1,4 +1,4 @@
-import { inflateRaw } from "@chr33s/pdf-compression";
+import { inflateRaw } from "@chr33s/pdf-common";
 import * as r from "@chr33s/pdf-restructure";
 import { matchesTag } from "./binary.js";
 import WOFFDirectory from "./tables/woff-directory.js";

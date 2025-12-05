@@ -1,7 +1,7 @@
 {
-  "name": "@chr33s/pdf-unicode-trie",
+  "name": "@chr33s/pdf-common",
   "version": "5.0.0",
-  "description": "Unicode Trie data structure for fast character metadata lookup, ported from ICU",
+  "description": "Common pdf utilities and types",
   "type": "module",
   "sideEffects": false,
   "exports": {
@@ -11,27 +11,27 @@
     }
   },
   "scripts": {
-    "build": "npm run clean && tsc",
+    "build": "tsc",
     "clean": "rm -rf dist",
-    "test": "vitest run",
-    "typecheck": "tsc --project tsconfig.typecheck.json"
+    "typecheck": "tsc --project tsconfig.typecheck.json",
+    "test": "vitest run"
   },
+  "author": "chr33s",
   "repository": {
     "type": "git",
     "url": "https://github.com/chr33s/pdf.git"
   },
-  "author": "Devon Govett <devongovett@gmail.com>",
   "bugs": {
     "url": "https://github.com/chr33s/pdf/issues"
   },
   "license": "MIT",
   "homepage": "https://github.com/chr33s/pdf",
-  "dependencies": {
-    "@chr33s/pdf-common": "file:../common"
-  },
   "devDependencies": {
     "@types/node": "24.10.1",
     "typescript": "5.9.3",
     "vitest": "4.0.15"
+  },
+  "dependencies": {
+    "fflate": "0.8.2"
   }
 }

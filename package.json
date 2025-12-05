@@ -9,7 +9,7 @@
     "docs": "typedoc",
     "fix": "oxfmt && oxlint --type-aware --fix",
     "test": "docker buildx build --tag pdf . --load",
-    "workspace": "run () { for pkg in base64 brotli codepoints crypto dfa restructure compression standard-fonts unicode-trie unicode-properties upng fontkit pdf; do npm --workspace=packages/$pkg run \"$@\" --if-present || return $?; done; }; run \"$@\""
+    "workspace": "run () { for pkg in common codepoints dfa restructure standard-fonts unicode-trie unicode-properties upng fontkit pdf; do npm --workspace=packages/$pkg run \"$@\" --if-present || return $?; done; }; run \"$@\""
   },
   "packageManager": "npm@10.0.0+",
   "engines": {

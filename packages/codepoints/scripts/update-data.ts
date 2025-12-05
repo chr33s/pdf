@@ -1,3 +1,4 @@
+import { Buffer } from "node:buffer";
 import { mkdir, readdir, stat, writeFile } from "node:fs/promises";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";

@@ -45,10 +45,9 @@
       "/node_modules/(?!(@react-native|react-native|react-native-pdf|react-native-blob-util)/)"
     ],
     "moduleNameMapper": {
-      "@chr33s/pdf-compression$": "<rootDir>/../../packages/compression/dist/index.js",
+      "@chr33s/pdf-common$": "<rootDir>/../../packages/common/dist/index.js",
       "@chr33s/pdf-fontkit$": "<rootDir>/../../packages/fontkit/dist/index.js",
       "@chr33s/pdf$": "<rootDir>/../../packages/pdf/dist/index.js",
-      "@chr33s/pdf-brotli$": "<rootDir>/../../packages/brotli/dist/index.js",
       "@chr33s/pdf-restructure$": "<rootDir>/../../packages/restructure/dist/index.js",
       "@chr33s/pdf-dfa$": "<rootDir>/../../packages/dfa/dist/index.js",
       "@chr33s/pdf-unicode-properties$": "<rootDir>/../../packages/unicode-properties/dist/index.js",

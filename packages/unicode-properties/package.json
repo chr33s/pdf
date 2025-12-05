@@ -18,8 +18,7 @@
     "typecheck": "tsc --project tsconfig.typecheck.json"
   },
   "dependencies": {
-    "@chr33s/pdf-base64": "file:../base64",
-    "@chr33s/pdf-compression": "file:../compression",
+    "@chr33s/pdf-common": "file:../common",
     "@chr33s/pdf-unicode-trie": "file:../unicode-trie"
   },
   "devDependencies": {
