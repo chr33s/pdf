@@ -1,6 +1,7 @@
 {
 	"$schema": "./node_modules/knip/schema.json",
 	"ignoreBinaries": ["open"],
+	"ignoreFiles": ["./apps/deno/test/*"],
 	"workspaces": {
 		"apps/*": {
 			"entry": ["**/*.ts"],

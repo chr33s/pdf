@@ -1,8 +1,7 @@
 import { beforeAll, describe, expect, test } from "vitest";
 
 import BBox from "../src/glyph/b-box.js";
-import fontkit from "./add-test-helpers-to-fontkit.js";
-import { here } from "./utils/dir.js";
+import fontkit, { here } from "./helpers.js";
 
 const __dirname = here(import.meta.url);
 

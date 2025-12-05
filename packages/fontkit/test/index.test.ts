@@ -2,8 +2,7 @@ import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { describe, expect, test } from "vitest";
 
-import fontkit from "./add-test-helpers-to-fontkit.js";
-import { here } from "./utils/dir.js";
+import fontkit, { here } from "./helpers.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = here(import.meta.url);

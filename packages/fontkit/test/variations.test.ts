@@ -1,7 +1,6 @@
 import { access } from "node:fs/promises";
 import { beforeAll, describe, expect, test } from "vitest";
-import fontkit from "./add-test-helpers-to-fontkit.js";
-import { here } from "./utils/dir.decompress-jsons.js";
+import fontkit, { here } from "./helpers.js";
 
 const __dirname = here(import.meta.url);
 

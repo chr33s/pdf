@@ -3,8 +3,7 @@ import { beforeAll, describe, expect, test } from "vitest";
 
 import * as r from "@chr33s/pdf-restructure";
 import CFFFont from "../src/cff/cff-font.js";
-import fontkit from "./add-test-helpers-to-fontkit.js";
-import { here } from "./utils/dir.js";
+import fontkit, { here } from "./helpers.js";
 
 const __dirname = here(import.meta.url);
 const SKIA_FONT_PATH = "/Library/Fonts/Skia.ttf";

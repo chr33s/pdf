@@ -1,4 +1,7 @@
 import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
 import fontkit from "../src/index.js";
 
 fontkit.logErrors = true;
@@ -26,3 +29,5 @@ fontkitWithHelpers.open = async (filename, postscriptName) => {
 };
 
 export default fontkitWithHelpers;
+
+export const here = (metaUrl: string) => path.dirname(fileURLToPath(metaUrl));

@@ -1,7 +1,6 @@
 import { afterAll, afterEach, beforeEach, describe, expect, test } from "vitest";
 
-import fontkit, { type FontInstance } from "./add-test-helpers-to-fontkit.js";
-import { here } from "./utils/dir.js";
+import fontkit, { here, type FontInstance } from "./helpers.js";
 
 const __dirname = here(import.meta.url);
 
