@@ -1,4 +1,4 @@
-import CryptoJS, { WordArray } from "@chr33s/pdf-crypto";
+import { AES, MD5, mode, padding, RC4, SHA256, WordArray } from "@chr33s/pdf-crypto";
 import PDFContext from "../pdf-context.js";
 
 type RandomWordArrayGenerator = (bytes: number) => WordArray;
@@ -239,7 +239,7 @@ class PDFSecurity {
 
     const processedUserPassword = processPasswordR5(options.userPassword);
     const userPasswordEntry = getUserPasswordR5(processedUserPassword, generateRandomWordArray);
-    const userKeySalt = CryptoJS.lib.WordArray.create(userPasswordEntry.words.slice(10, 12), 8);
+    const userKeySalt = WordArray.create(userPasswordEntry.words.slice(10, 12), 8);
     const userEncryptionKeyEntry = getUserEncryptionKeyR5(
       processedUserPassword,
       userKeySalt,
@@ -254,7 +254,7 @@ class PDFSecurity {
       userPasswordEntry,
       generateRandomWordArray,
     );
-    const ownerKeySalt = CryptoJS.lib.WordArray.create(ownerPasswordEntry.words.slice(10, 12), 8);
+    const ownerKeySalt = WordArray.create(ownerPasswordEntry.words.slice(10, 12), 8);
     const ownerEncryptionKeyEntry = getOwnerEncryptionKeyR5(
       processedOwnerPassword,
       ownerKeySalt,
@@ -302,7 +302,7 @@ class PDFSecurity {
       digest = this.#encryptionKey
         .clone()
         .concat(
-          CryptoJS.lib.WordArray.create(
+          WordArray.create(
             [
               ((obj & 0xff) << 24) | ((obj & 0xff00) << 8) | ((obj >> 8) & 0xff00) | (gen & 0xff),
               (gen & 0xff00) << 16,
@@ -312,17 +312,16 @@ class PDFSecurity {
         );
 
       if (v === 1 || v === 2) {
-        key = CryptoJS.MD5(digest);
+        key = MD5(digest);
         key.sigBytes = Math.min(16, this.#keyBits / 8 + 5);
         return (buffer: Uint8Array) =>
           wordArrayToBuffer(
-            CryptoJS.RC4.encrypt(CryptoJS.lib.WordArray.create(buffer as unknown as number[]), key)
-              .ciphertext!,
+            RC4.encrypt(WordArray.create(buffer as unknown as number[]), key).ciphertext!,
           );
       }
 
       if (v === 4) {
-        key = CryptoJS.MD5(digest.concat(CryptoJS.lib.WordArray.create([0x73416c54], 4)));
+        key = MD5(digest.concat(WordArray.create([0x73416c54], 4)));
       }
     } else if (v === 5) {
       key = this.#encryptionKey;
@@ -332,8 +331,8 @@ class PDFSecurity {
 
     const iv = generateRandomWordArray(16);
     const options = {
-      mode: CryptoJS.mode.CBC,
-      padding: CryptoJS.pad.Pkcs7,
+      mode: mode.CBC,
+      padding: padding.Pkcs7,
       iv,
     };
 
@@ -342,11 +341,7 @@ class PDFSecurity {
         iv
           .clone()
           .concat(
-            CryptoJS.AES.encrypt(
-              CryptoJS.lib.WordArray.create(buffer as unknown as number[]),
-              key,
-              options,
-            ).ciphertext!,
+            AES.encrypt(WordArray.create(buffer as unknown as number[]), key, options).ciphertext!,
           ),
       );
   }
@@ -369,9 +364,9 @@ class PDFSecurity {
  *
  * @returns Uint8Array
  */
-const generateFileID = (): Uint8Array => wordArrayToBuffer(CryptoJS.MD5(Date.now().toString()));
+const generateFileID = (): Uint8Array => wordArrayToBuffer(MD5(Date.now().toString()));
 
-const generateRandomWordArray = (bytes: number): WordArray => CryptoJS.lib.WordArray.random(bytes);
+const generateRandomWordArray = (bytes: number): WordArray => WordArray.random(bytes);
 
 /**
  * Get Permission Flag for use Encryption Dictionary (Key: P)
@@ -438,23 +433,21 @@ const getPermissionsR3 = (permissions: UserPermissions = {}) => {
 };
 
 const getUserPasswordR2 = (encryptionKey: WordArray) =>
-  CryptoJS.RC4.encrypt(processPasswordR2R3R4(), encryptionKey).ciphertext!;
+  RC4.encrypt(processPasswordR2R3R4(), encryptionKey).ciphertext!;
 
 const getUserPasswordR3R4 = (documentId: Uint8Array, encryptionKey: WordArray) => {
   const key = encryptionKey.clone();
-  let cipher = CryptoJS.MD5(
-    processPasswordR2R3R4().concat(
-      CryptoJS.lib.WordArray.create(documentId as unknown as number[]),
-    ),
+  let cipher = MD5(
+    processPasswordR2R3R4().concat(WordArray.create(documentId as unknown as number[])),
   );
   for (let i = 0; i < 20; i++) {
     const xorRound = Math.ceil(key.sigBytes / 4);
     for (let j = 0; j < xorRound; j++) {
       key.words[j] = encryptionKey.words[j] ^ (i | (i << 8) | (i << 16) | (i << 24));
     }
-    cipher = CryptoJS.RC4.encrypt(cipher, key).ciphertext!;
+    cipher = RC4.encrypt(cipher, key).ciphertext!;
   }
-  return cipher.concat(CryptoJS.lib.WordArray.create(null as unknown as undefined, 16));
+  return cipher.concat(WordArray.create(null as unknown as undefined, 16));
 };
 
 const getOwnerPasswordR2R3R4 = (
@@ -466,7 +459,7 @@ const getOwnerPasswordR2R3R4 = (
   let digest = paddedOwnerPassword;
   let round = r >= 3 ? 51 : 1;
   for (let i = 0; i < round; i++) {
-    digest = CryptoJS.MD5(digest);
+    digest = MD5(digest);
   }
 
   const key = digest.clone();
@@ -478,7 +471,7 @@ const getOwnerPasswordR2R3R4 = (
     for (let j = 0; j < xorRound; j++) {
       key.words[j] = digest.words[j] ^ (i | (i << 8) | (i << 16) | (i << 24));
     }
-    cipher = CryptoJS.RC4.encrypt(cipher, key).ciphertext!;
+    cipher = RC4.encrypt(cipher, key).ciphertext!;
   }
   return cipher;
 };
@@ -494,11 +487,11 @@ const getEncryptionKeyR2R3R4 = (
   let key = paddedUserPassword
     .clone()
     .concat(ownerPasswordEntry)
-    .concat(CryptoJS.lib.WordArray.create([lsbFirstWord(permissions)], 4))
-    .concat(CryptoJS.lib.WordArray.create(documentId as unknown as number[]));
+    .concat(WordArray.create([lsbFirstWord(permissions)], 4))
+    .concat(WordArray.create(documentId as unknown as number[]));
   const round = r >= 3 ? 51 : 1;
   for (let i = 0; i < round; i++) {
-    key = CryptoJS.MD5(key);
+    key = MD5(key);
     key.sigBytes = keyBits / 8;
   }
   return key;
@@ -510,7 +503,7 @@ const getUserPasswordR5 = (
 ) => {
   const validationSalt = randomWordArrayGenerator(8);
   const keySalt = randomWordArrayGenerator(8);
-  return CryptoJS.SHA256(processedUserPassword.clone().concat(validationSalt))
+  return SHA256(processedUserPassword.clone().concat(validationSalt))
     .concat(validationSalt)
     .concat(keySalt);
 };
@@ -520,13 +513,13 @@ const getUserEncryptionKeyR5 = (
   userKeySalt: WordArray,
   encryptionKey: WordArray,
 ) => {
-  const key = CryptoJS.SHA256(processedUserPassword.clone().concat(userKeySalt));
+  const key = SHA256(processedUserPassword.clone().concat(userKeySalt));
   const options = {
-    mode: CryptoJS.mode.CBC,
-    padding: CryptoJS.pad.NoPadding,
-    iv: CryptoJS.lib.WordArray.create(null as unknown as undefined, 16),
+    mode: mode.CBC,
+    padding: padding.NoPadding,
+    iv: WordArray.create(null as unknown as undefined, 16),
   };
-  return CryptoJS.AES.encrypt(encryptionKey, key, options).ciphertext!;
+  return AES.encrypt(encryptionKey, key, options).ciphertext!;
 };
 
 const getOwnerPasswordR5 = (
@@ -536,9 +529,7 @@ const getOwnerPasswordR5 = (
 ) => {
   const validationSalt = randomWordArrayGenerator(8);
   const keySalt = randomWordArrayGenerator(8);
-  return CryptoJS.SHA256(
-    processedOwnerPassword.clone().concat(validationSalt).concat(userPasswordEntry),
-  )
+  return SHA256(processedOwnerPassword.clone().concat(validationSalt).concat(userPasswordEntry))
     .concat(validationSalt)
     .concat(keySalt);
 };
@@ -549,15 +540,13 @@ const getOwnerEncryptionKeyR5 = (
   userPasswordEntry: WordArray,
   encryptionKey: WordArray,
 ) => {
-  const key = CryptoJS.SHA256(
-    processedOwnerPassword.clone().concat(ownerKeySalt).concat(userPasswordEntry),
-  );
+  const key = SHA256(processedOwnerPassword.clone().concat(ownerKeySalt).concat(userPasswordEntry));
   const options = {
-    mode: CryptoJS.mode.CBC,
-    padding: CryptoJS.pad.NoPadding,
-    iv: CryptoJS.lib.WordArray.create(null as unknown as undefined, 16),
+    mode: mode.CBC,
+    padding: padding.NoPadding,
+    iv: WordArray.create(null as unknown as undefined, 16),
   };
-  return CryptoJS.AES.encrypt(encryptionKey, key, options).ciphertext!;
+  return AES.encrypt(encryptionKey, key, options).ciphertext!;
 };
 
 const getEncryptionKeyR5 = (randomWordArrayGenerator: RandomWordArrayGenerator) =>
@@ -568,15 +557,14 @@ const getEncryptedPermissionsR5 = (
   encryptionKey: WordArray,
   randomWordArrayGenerator: RandomWordArrayGenerator,
 ) => {
-  const cipher = CryptoJS.lib.WordArray.create(
-    [lsbFirstWord(permissions), 0xffffffff, 0x54616462],
-    12,
-  ).concat(randomWordArrayGenerator(4));
+  const cipher = WordArray.create([lsbFirstWord(permissions), 0xffffffff, 0x54616462], 12).concat(
+    randomWordArrayGenerator(4),
+  );
   const options = {
-    mode: CryptoJS.mode.ECB,
-    padding: CryptoJS.pad.NoPadding,
+    mode: mode.ECB,
+    padding: padding.NoPadding,
   };
-  return CryptoJS.AES.encrypt(cipher, encryptionKey, options).ciphertext!;
+  return AES.encrypt(cipher, encryptionKey, options).ciphertext!;
 };
 
 const processPasswordR2R3R4 = (password = "") => {
@@ -595,7 +583,7 @@ const processPasswordR2R3R4 = (password = "") => {
     out[index] = PASSWORD_PADDING[index - length];
     index++;
   }
-  return CryptoJS.lib.WordArray.create(out as unknown as number[]);
+  return WordArray.create(out as unknown as number[]);
 };
 
 const processPasswordR5 = (password = "") => {
@@ -610,7 +598,7 @@ const processPasswordR5 = (password = "") => {
     out[i] = password.charCodeAt(i);
   }
 
-  return CryptoJS.lib.WordArray.create(out as unknown as number[]);
+  return WordArray.create(out as unknown as number[]);
 };
 
 const lsbFirstWord = (data: number): number =>

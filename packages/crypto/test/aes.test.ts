@@ -1,5 +1,9 @@
 import { describe, expect, test } from "vitest";
-import { AES, AESHelper, CipherParams, ECB, Hex, NoPadding } from "../src/index.js";
+import { AES, default as AESHelper } from "../src/aes.js";
+import { CipherParams } from "../src/cipher-core.js";
+import { Hex } from "../src/core.js";
+import { ECB } from "../src/mode.js";
+import { NoPadding } from "../src/padding.js";
 
 describe("AES", () => {
   describe("encrypt", () => {

@@ -1,5 +1,7 @@
 import { describe, expect, test } from "vitest";
-import { Hex, HmacMD5, md5, MD5, WordArray } from "../src/index.js";
+import { default as md5, MD5 } from "../src/md5.js";
+
+import { WordArray } from "../src/core.js";
 
 describe("MD5", () => {
   describe("hash vectors", () => {
@@ -74,14 +76,5 @@ describe("MD5", () => {
     test("should produce same result as class", () => {
       expect(new MD5().finalize("").toString()).toBe(md5("").toString());
     });
-  });
-});
-
-describe("HmacMD5", () => {
-  test("should calculate HMAC correctly", () => {
-    const key = Hex.parse("0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b");
-    const expected = HmacMD5("Hi There", key).toString();
-
-    expect(expected).toBeTruthy();
   });
 });

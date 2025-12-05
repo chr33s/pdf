@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
-import { Base64, WordArray } from "../src/index.js";
+import { Base64 } from "../src/base64.js";
+import { WordArray } from "../src/core.js";
 
 describe("Base64 encoder", () => {
   describe("stringify", () => {

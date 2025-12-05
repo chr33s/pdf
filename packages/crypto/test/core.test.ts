@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { Hex, Latin1, Utf8, WordArray } from "../src/index.js";
+import { Hex, Latin1, Utf8, WordArray } from "../src/core.js";
 
 describe("WordArray", () => {
   describe("create", () => {

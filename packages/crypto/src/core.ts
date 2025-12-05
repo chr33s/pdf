@@ -1,46 +1,12 @@
-/**
- * CryptoJS core components.
- * Converted to TypeScript ES6 ESM with private class fields.
- */
-
-// Native crypto module
-const cryptoModule = globalThis.crypto;
-
-/**
- * Cryptographically secure pseudorandom number generator
- */
-function cryptoSecureRandomInt(): number {
-  if (cryptoModule) {
-    // Use getRandomValues method (Browser)
-    if (typeof cryptoModule.getRandomValues === "function") {
-      try {
-        return cryptoModule.getRandomValues(new Uint32Array(1))[0];
-      } catch {
-        // Fall through
-      }
-    }
-  }
-  throw new Error("Native crypto module could not be used to get secure random number.");
-}
-
-/**
- * Encoder interface
- */
 export interface Encoder {
   stringify(wordArray: WordArray): string;
   parse(str: string): WordArray;
 }
 
-/**
- * Configuration object type
- */
 export interface ConfigObject {
   [key: string]: unknown;
 }
 
-/**
- * An array of 32-bit words.
- */
 export class WordArray {
   words: number[];
   sigBytes: number;
@@ -137,16 +103,13 @@ export class WordArray {
     const words: number[] = [];
 
     for (let i = 0; i < nBytes; i += 4) {
-      words.push(cryptoSecureRandomInt());
+      words.push(crypto.getRandomValues(new Uint32Array(1))[0]);
     }
 
     return new WordArray(words, nBytes);
   }
 }
 
-/**
- * Hex encoding strategy.
- */
 export const Hex: Encoder = {
   /**
    * Converts a word array to a hex string.
@@ -186,9 +149,6 @@ export const Hex: Encoder = {
   },
 };
 
-/**
- * Latin1 encoding strategy.
- */
 export const Latin1: Encoder = {
   /**
    * Converts a word array to a Latin1 string.
@@ -227,9 +187,6 @@ export const Latin1: Encoder = {
   },
 };
 
-/**
- * UTF-8 encoding strategy.
- */
 export const Utf8: Encoder = {
   /**
    * Converts a word array to a UTF-8 string.
@@ -256,9 +213,6 @@ export const Utf8: Encoder = {
   },
 };
 
-/**
- * Abstract buffered block algorithm template.
- */
 export abstract class BufferedBlockAlgorithm {
   protected _data: WordArray = new WordArray();
   protected _nDataBytes: number = 0;
@@ -358,16 +312,10 @@ export abstract class BufferedBlockAlgorithm {
   protected abstract _doProcessBlock(words: number[], offset: number): void;
 }
 
-/**
- * Hasher configuration
- */
 export interface HasherConfig extends ConfigObject {
   // Hasher-specific configuration options
 }
 
-/**
- * Abstract hasher template.
- */
 export abstract class Hasher extends BufferedBlockAlgorithm {
   cfg: HasherConfig;
 
@@ -431,42 +379,3 @@ export abstract class Hasher extends BufferedBlockAlgorithm {
    */
   protected abstract _doFinalize(): WordArray;
 }
-
-/**
- * Creates a shortcut function to a hasher's object interface.
- *
- * @param HasherClass The hasher class to create a helper for.
- * @returns The shortcut function.
- */
-export function createHasherHelper<T extends Hasher>(
-  HasherClass: new (cfg?: HasherConfig) => T,
-): (message: WordArray | string, cfg?: HasherConfig) => WordArray {
-  return (message: WordArray | string, cfg?: HasherConfig): WordArray => {
-    return new HasherClass(cfg).finalize(message);
-  };
-}
-
-// Re-export for compatibility
-export { Hex as enc_Hex, Latin1 as enc_Latin1, Utf8 as enc_Utf8 };
-
-// Export CryptoJS-like namespace for backward compatibility
-export const lib = {
-  WordArray,
-  BufferedBlockAlgorithm,
-  Hasher,
-};
-
-export const enc = {
-  Hex,
-  Latin1,
-  Utf8,
-};
-
-export default {
-  lib,
-  enc,
-  WordArray,
-  Hex,
-  Latin1,
-  Utf8,
-};

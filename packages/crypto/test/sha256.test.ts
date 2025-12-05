@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
-import { Hex, HmacSHA256, sha256, SHA256, WordArray } from "../src/index.js";
+import { WordArray } from "../src/core.js";
+import { default as sha256, SHA256 } from "../src/sha256.js";
 
 describe("SHA256", () => {
   describe("hash vectors", () => {
@@ -78,14 +79,5 @@ describe("SHA256", () => {
     test("should produce same result as class", () => {
       expect(new SHA256().finalize("").toString()).toBe(sha256("").toString());
     });
-  });
-});
-
-describe("HmacSHA256", () => {
-  test("should calculate HMAC correctly", () => {
-    const key = Hex.parse("0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b");
-    const expected = HmacSHA256("Hi There", key).toString();
-
-    expect(expected).toBe("b0344c61d8db38535ca8afceaf0bf12b881dc200c9833da726e9376c2e32cff7");
   });
 });

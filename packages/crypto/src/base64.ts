@@ -1,7 +1,3 @@
-/**
- * Base64 encoding strategy.
- */
-
 import { WordArray, type Encoder } from "./core.js";
 
 const BASE64_MAP = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
@@ -21,9 +17,6 @@ function parseLoop(base64Str: string, base64StrLength: number, reverseMap: numbe
   return new WordArray(words, nBytes);
 }
 
-/**
- * Base64 encoding strategy.
- */
 export const Base64: Encoder & { _map: string; _reverseMap?: number[] } = {
   /**
    * Converts a word array to a Base64 string.
@@ -97,5 +90,3 @@ export const Base64: Encoder & { _map: string; _reverseMap?: number[] } = {
 
   _map: BASE64_MAP,
 };
-
-export default Base64;

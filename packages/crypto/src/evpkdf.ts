@@ -1,24 +1,12 @@
-/**
- * EVP key derivation function.
- * This key derivation function is meant to conform with EVP_BytesToKey.
- * www.openssl.org/docs/crypto/EVP_BytesToKey.html
- */
-
 import { Hasher, WordArray, type HasherConfig } from "./core.js";
 import { MD5 } from "./md5.js";
 
-/**
- * EvpKDF configuration
- */
 export interface EvpKDFConfig {
   keySize?: number;
   hasher?: typeof Hasher;
   iterations?: number;
 }
 
-/**
- * EVP key derivation function implementation.
- */
 export class EvpKDF {
   #cfg: Required<EvpKDFConfig>;
 
@@ -94,20 +82,10 @@ export class EvpKDF {
   }
 }
 
-/**
- * Derives a key from a password.
- *
- * @param password The password.
- * @param salt A salt.
- * @param cfg Configuration options.
- * @returns The derived key.
- */
-export function evpKDF(
+export default function evpKDF(
   password: WordArray | string,
   salt: WordArray | string,
   cfg?: EvpKDFConfig,
 ): WordArray {
   return new EvpKDF(cfg).compute(password, salt);
 }
-
-export default EvpKDF;

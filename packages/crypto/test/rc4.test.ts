@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
-import { Hex, RC4, RC4DropHelper, RC4Helper } from "../src/index.js";
+import { Hex } from "../src/core.js";
+import { RC4, default as RC4Helper } from "../src/rc4.js";
 
 describe("RC4", () => {
   describe("encryption vectors", () => {
@@ -16,23 +17,6 @@ describe("RC4", () => {
       expect(
         RC4Helper.encrypt(Hex.parse("dcee4cf92c"), Hex.parse("618a63d2fb")).ciphertext!.toString(),
       ).toBe("f13829c9de");
-    });
-  });
-
-  describe("RC4Drop", () => {
-    test("should drop bytes correctly", () => {
-      const fullEncryption = RC4Helper.encrypt(
-        Hex.parse("00000000000000000000000000000000"),
-        Hex.parse("0123456789abcdef"),
-      ).ciphertext!.toString();
-
-      const dropEncryption = RC4DropHelper.encrypt(
-        Hex.parse("0000000000000000"),
-        Hex.parse("0123456789abcdef"),
-        { drop: 2 },
-      ).ciphertext!.toString();
-
-      expect(dropEncryption).toBe(fullEncryption.substr(16));
     });
   });
 

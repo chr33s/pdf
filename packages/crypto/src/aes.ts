@@ -1,7 +1,3 @@
-/**
- * AES block cipher algorithm.
- */
-
 import { BlockCipher, createCipherHelper, type CipherConfig } from "./cipher-core.js";
 import { WordArray } from "./core.js";
 
@@ -284,9 +280,4 @@ export class AES extends BlockCipher {
   }
 }
 
-/**
- * Shortcut functions to the cipher's object interface.
- */
-export const AESHelper = createCipherHelper(AES);
-
-export default AES;
+export default createCipherHelper(AES);

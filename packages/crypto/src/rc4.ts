@@ -1,12 +1,6 @@
-/**
- * RC4 stream cipher algorithm.
- */
 import { createCipherHelper, StreamCipher, type CipherConfig } from "./cipher-core.js";
 import { WordArray } from "./core.js";
 
-/**
- * RC4 stream cipher algorithm.
- */
 export class RC4 extends StreamCipher {
   static override keySize = 256 / 32;
   static override ivSize = 0;
@@ -83,49 +77,4 @@ export class RC4 extends StreamCipher {
   }
 }
 
-/**
- * Configuration options for RC4Drop cipher.
- */
-export interface RC4DropConfig extends CipherConfig {
-  /**
-   * The number of keystream words to drop. Default 192
-   */
-  drop?: number;
-}
-
-/**
- * Modified RC4 stream cipher algorithm.
- * This version drops initial keystream bytes to avoid known weaknesses.
- */
-export class RC4Drop extends RC4 {
-  declare cfg: RC4DropConfig;
-
-  constructor(xformMode: number, key: WordArray, cfg: RC4DropConfig = {}) {
-    super(xformMode, key, {
-      drop: 192,
-      ...cfg,
-    });
-  }
-
-  protected override _doReset(): void {
-    super._doReset();
-
-    // Drop initial keystream
-    const drop = (this.cfg as RC4DropConfig).drop ?? 192;
-    for (let i = drop; i > 0; i--) {
-      // Call processBlock with a dummy array to consume keystream
-      const dummy = [0];
-      this._doProcessBlock(dummy, 0);
-    }
-  }
-}
-
-/**
- * Shortcut functions to RC4 cipher's object interface.
- */
-export const RC4Helper = createCipherHelper(RC4);
-
-/**
- * Shortcut functions to RC4Drop cipher's object interface.
- */
-export const RC4DropHelper = createCipherHelper(RC4Drop);
+export default createCipherHelper(RC4);

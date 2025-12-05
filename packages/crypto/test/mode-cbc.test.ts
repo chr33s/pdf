@@ -1,5 +1,8 @@
 import { beforeEach, describe, expect, test } from "vitest";
-import { AES, AESHelper, CBC, NoPadding, WordArray } from "../src/index.js";
+import { AES, default as AESHelper } from "../src/aes.js";
+import { WordArray } from "../src/core.js";
+import { CBC } from "../src/mode.js";
+import { NoPadding } from "../src/padding.js";
 
 describe("CBC Mode", () => {
   let message: WordArray;

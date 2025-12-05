@@ -2,14 +2,14 @@
  * Cipher core components.
  */
 
-import { BufferedBlockAlgorithm, Utf8, WordArray, type ConfigObject } from "./core.js";
-import { Base64 } from "./enc-base64.js";
+import { Base64 } from "./base64.js";
+import { BufferedBlockAlgorithm, Hasher, Utf8, WordArray, type ConfigObject } from "./core.js";
 import { EvpKDF, type EvpKDFConfig } from "./evpkdf.js";
 
 /**
  * Block cipher mode factory interface
  */
-export interface BlockCipherModeFactory {
+interface BlockCipherModeFactory {
   Encryptor: new () => BlockCipherMode;
   Decryptor: new () => BlockCipherMode;
   createEncryptor(cipher: BlockCipher, iv?: number[]): BlockCipherMode;
@@ -40,7 +40,7 @@ export interface Padding {
 /**
  * Cipher format interface
  */
-export interface CipherFormat {
+interface CipherFormat {
   stringify(cipherParams: CipherParams): string;
   parse(str: string): CipherParams;
 }
@@ -48,7 +48,7 @@ export interface CipherFormat {
 /**
  * KDF interface
  */
-export interface KDF {
+interface KDF {
   execute(
     password: string,
     keySize: number,
@@ -156,7 +156,7 @@ export abstract class StreamCipher extends Cipher {
 /**
  * Block cipher mode interface
  */
-export interface BlockCipherModeProcessor {
+interface BlockCipherModeProcessor {
   processBlock(words: number[], offset: number): void;
   init?(cipher: BlockCipher, iv?: number[]): void;
 }
@@ -404,7 +404,7 @@ export class CipherParams {
 /**
  * OpenSSL formatting strategy.
  */
-export const OpenSSLFormatter: CipherFormat = {
+const OpenSSLFormatter: CipherFormat = {
   /**
    * Converts a cipher params object to an OpenSSL-compatible string.
    */
@@ -445,7 +445,7 @@ export const OpenSSLFormatter: CipherFormat = {
 /**
  * A cipher wrapper that returns ciphertext as a serializable cipher params object.
  */
-export const SerializableCipher = {
+const SerializableCipher = {
   cfg: {
     format: OpenSSLFormatter,
   } as { format: CipherFormat },
@@ -514,7 +514,7 @@ export const SerializableCipher = {
 /**
  * OpenSSL key derivation function.
  */
-export const OpenSSLKdf: KDF = {
+const OpenSSLKdf: KDF = {
   /**
    * Derives a key and IV from a password.
    */
@@ -536,7 +536,7 @@ export const OpenSSLKdf: KDF = {
 
     const cfg: EvpKDFConfig = { keySize: keySize + ivSize };
     if (hasher) {
-      cfg.hasher = hasher as typeof import("./core.js").Hasher;
+      cfg.hasher = hasher as typeof Hasher;
     }
 
     const key = new EvpKDF(cfg).compute(password, actualSalt);
@@ -551,7 +551,7 @@ export const OpenSSLKdf: KDF = {
 /**
  * A serializable cipher wrapper that derives the key from a password.
  */
-export const PasswordBasedCipher = {
+const PasswordBasedCipher = {
   cfg: {
     ...SerializableCipher.cfg,
     kdf: OpenSSLKdf,
@@ -647,18 +647,3 @@ export function createCipherHelper(CipherClass: typeof BlockCipher | typeof Stre
     },
   };
 }
-
-export default {
-  Cipher,
-  StreamCipher,
-  BlockCipher,
-  BlockCipherMode,
-  CBC,
-  Pkcs7,
-  CipherParams,
-  OpenSSLFormatter,
-  SerializableCipher,
-  OpenSSLKdf,
-  PasswordBasedCipher,
-  createCipherHelper,
-};

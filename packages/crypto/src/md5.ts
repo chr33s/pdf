@@ -1,9 +1,4 @@
-/**
- * MD5 hash algorithm.
- */
-
 import { Hasher, WordArray, type HasherConfig } from "./core.js";
-import { createHmacHelper } from "./hmac.js";
 
 // Constants table
 const T: number[] = [];
@@ -207,23 +202,6 @@ export class MD5 extends Hasher {
   }
 }
 
-/**
- * Shortcut function to the hasher's object interface.
- *
- * @param message The message to hash.
- * @returns The hash.
- */
-export function md5(message: WordArray | string): WordArray {
+export default function md5(message: WordArray | string): WordArray {
   return new MD5().finalize(message);
 }
-
-/**
- * Shortcut function to the HMAC's object interface.
- *
- * @param message The message to hash.
- * @param key The secret key.
- * @returns The HMAC.
- */
-export const HmacMD5 = createHmacHelper(MD5);
-
-export default MD5;

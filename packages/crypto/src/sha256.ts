@@ -1,9 +1,4 @@
-/**
- * SHA-256 hash algorithm.
- */
-
 import { Hasher, WordArray, type HasherConfig } from "./core.js";
-import { createHmacHelper } from "./hmac.js";
 
 // Initialization and round constants tables
 const H_INIT: number[] = [];
@@ -42,9 +37,6 @@ const K: number[] = [];
 // Reusable object
 const W: number[] = [];
 
-/**
- * SHA-256 hash algorithm.
- */
 export class SHA256 extends Hasher {
   /** Initial hash values - can be overridden by subclasses */
   protected _getInitialHash(): number[] {
@@ -146,16 +138,6 @@ export class SHA256 extends Hasher {
   }
 }
 
-/**
- * Shortcut function to the hasher's object interface.
- */
-export function sha256(message: WordArray | string): WordArray {
+export default function sha256(message: WordArray | string): WordArray {
   return new SHA256().finalize(message);
 }
-
-/**
- * Shortcut function to the HMAC's object interface.
- */
-export const HmacSHA256 = createHmacHelper(SHA256);
-
-export default SHA256;

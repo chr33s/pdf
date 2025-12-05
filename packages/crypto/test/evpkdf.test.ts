@@ -1,5 +1,7 @@
 import { describe, expect, test } from "vitest";
-import { EvpKDF, evpKDF, WordArray } from "../src/index.js";
+
+import { WordArray } from "../src/core.js";
+import { EvpKDF, default as evpKDF } from "../src/evpkdf.js";
 
 describe("EvpKDF", () => {
   describe("key derivation", () => {
