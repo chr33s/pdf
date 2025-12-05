@@ -8,8 +8,8 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
-    "@chr33s/pdf-fontkit": "../../packages/fontkit/dist/index.min.js",
-    "@chris/pdf": "../../packages/pdf/dist/index.min.js"
+    "@chr33s/pdf": "../../packages/pdf/dist/index.min.js",
+    "@chr33s/pdf-fontkit": "../../packages/fontkit/dist/index.min.js"
   },
   "devDependencies": {
     "@playwright/test": "1.57.0",
