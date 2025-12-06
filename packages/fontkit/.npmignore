@@ -2,7 +2,7 @@ node_modules/
 scripts/
 test/
 .gitignore
-esdoc.json
-index.html
-tsconfig.json
+.npmignore
+tsconfig*.json
+tsdown.config.ts
 vitest.config.ts

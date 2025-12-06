@@ -3,4 +3,5 @@ font-metrics/
 scripts/
 .gitignore
 .npmignore
-tsconfig.json
+tsconfig*.json
+vitest.config.ts

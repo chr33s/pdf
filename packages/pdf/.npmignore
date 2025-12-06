@@ -1,10 +1,11 @@
-apps/
 assets/
-docs/
 node_modules/
 scratchpad/
+scripts/
 test/
 .gitignore
-tsconfig.json
-vitest.config.ts
+.npmignore
 pdf_specification.pdf
+tsconfig*.json
+tsdown.config.ts
+vitest.config.ts

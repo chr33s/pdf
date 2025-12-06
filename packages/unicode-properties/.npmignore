@@ -2,5 +2,6 @@ node_modules/
 scripts/
 test/
 .gitignore
-tsconfig.json
+.npmignore
+tsconfig*.json
 vitest.config.ts

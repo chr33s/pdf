@@ -1,6 +1,6 @@
 {
   "name": "@chr33s/pdf-unicode-trie",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "Unicode Trie data structure for fast character metadata lookup, ported from ICU",
   "type": "module",
   "sideEffects": false,
