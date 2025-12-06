@@ -41,7 +41,6 @@
   },
   "license": "MIT",
   "homepage": "https://github.com/chr33s/pdf",
-  "private": false,
   "directories": {
     "test": "test"
   }

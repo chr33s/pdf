@@ -1,10 +1,8 @@
 {
   "$schema": "https://typedoc.org/schema.json",
   "entryPoints": [
-    "packages/brotli",
     "packages/codepoints",
-    "packages/compression",
-    "packages/crypto",
+    "packages/common",
     "packages/dfa",
     "packages/fontkit",
     "packages/pdf",
@@ -17,15 +15,16 @@
   "entryPointStrategy": "packages",
   "out": "docs",
   "plugin": ["typedoc-plugin-markdown", "typedoc-github-wiki-theme"],
+  "logLevel": "Error",
   "readme": "none",
   "name": "@chr33s/pdf",
-  "includeVersion": true,
   "excludePrivate": true,
   "excludeProtected": true,
   "excludeInternal": true,
   "excludeExternals": true,
   "hideGenerator": true,
-  "githubPages": false,
+  "githubPages": true,
+  "gitRemote": "github",
   "gitRevision": "main",
   "sourceLinkTemplate": "https://github.com/chr33s/pdf/blob/{gitRevision}/{path}#L{line}",
   "categoryOrder": ["Classes", "Interfaces", "Type Aliases", "Functions", "Variables", "Enums"],
@@ -54,10 +53,5 @@
     "IndexSignature",
     "GetSignature",
     "SetSignature"
-  ],
-  "validation": {
-    "notExported": true,
-    "invalidLink": true,
-    "notDocumented": false
-  }
+  ]
 }

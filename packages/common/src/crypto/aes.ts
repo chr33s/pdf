@@ -27,9 +27,6 @@ function getAlgorithm(keyBytes: Uint8Array, mode: Mode): string {
   return `aes-${keyBits}-${modeName}`;
 }
 
-/**
- * AES encryption using node:crypto
- */
 function encrypt(message: WordArray, key: WordArray, options: AESOptions = {}): CipherResult {
   const mode = options.mode || CBC;
   const padding = options.padding || Pkcs7;

@@ -8,7 +8,7 @@ type RandomWordArrayGenerator = (bytes: number) => WordArray;
  *
  * @interface UserPermissions
  */
-interface UserPermissions {
+export interface UserPermissions {
   /**
    * Printing Permission
    * For Security handlers of revision <= 2 : Boolean
@@ -58,9 +58,7 @@ export interface SecurityOptions {
    */
   userPassword?: string;
 
-  /** Object representing type of user permission enforced on the document
-   * @link {@link UserPermissions}
-   */
+  /** Object representing user permissions enforced on the document. See {@link UserPermissions}. */
   permissions?: UserPermissions;
 }
 

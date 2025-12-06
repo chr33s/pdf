@@ -1412,7 +1412,7 @@ export default class PDFDocument {
    * const embeddedPages = await pdfDoc.embedPages([page1, page2, page3])
    * ```
    *
-   * @param page
+   * @param pages
    * The pages to be embedded (they must all share the same context).
    * @param boundingBoxes
    * Optionally, an array of clipping boundaries - one for each page

@@ -40,7 +40,7 @@ Designed to work in any modern JavaScript runtime. Tested in Node, Browser, Deno
 - [Limitations](#limitations)
 - [Help and Discussion](#help-and-discussion)
 - [Encryption Handling](#encryption-handling)
-- [Migrating to v1.0.0](docs/MIGRATION.md)
+- [Migrating to v1.0.0](#migrating-to-v100)
 - [Contributing](#contributing)
 - [Maintainership](#maintainership)
 - [Tutorials and Cool Stuff](#tutorials-and-cool-stuff)
@@ -88,7 +88,7 @@ There are [other](#prior-art) good open source JavaScript PDF libraries availabl
 
 ### Create Document
 
-_This example produces [this PDF](assets/pdfs/examples/create_document.pdf)._
+_This example produces [this PDF](assets/pdfs/examples/create-document.pdf)._ 
 
 [Try the JSFiddle demo](https://jsfiddle.net/Hopding/rxwsc8f5/13/)
 
@@ -129,7 +129,7 @@ const pdfBytes = await pdfDoc.save()
 
 ### Modify Document
 
-_This example produces [this PDF](assets/pdfs/examples/modify_document.pdf)_ (when [this PDF](assets/pdfs/with_update_sections.pdf) is used for the `existingPdfBytes` variable).
+_This example produces [this PDF](assets/pdfs/examples/modify-document.pdf)_ (when [this PDF](assets/pdfs/with-update-sections.pdf) is used for the `existingPdfBytes` variable).
 
 [Try the JSFiddle demo](https://jsfiddle.net/Hopding/64zajhge/1/)
 
@@ -178,7 +178,7 @@ const pdfBytes = await pdfDoc.save()
 
 ### Create Form
 
-_This example produces [this PDF](assets/pdfs/examples/create_form.pdf)._
+_This example produces [this PDF](assets/pdfs/examples/create-form.pdf)._ 
 
 [Try the JSFiddle demo](https://jsfiddle.net/Hopding/bct7vngL/4/)
 
@@ -276,7 +276,7 @@ const pdfBytes = await pdfDoc.save()
 
 ### Fill Form
 
-_This example produces [this PDF](assets/pdfs/examples/fill_form.pdf)_ (when [this PDF](assets/pdfs/dod_character.pdf) is used for the `formPdfBytes` variable, [this image](assets/images/small_mario.png) is used for the `marioImageBytes` variable, and [this image](assets/images/mario_emblem.png) is used for the `emblemImageBytes` variable).
+_This example produces [this PDF](assets/pdfs/examples/fill-form.pdf)_ (when [this PDF](assets/pdfs/dod-character.pdf) is used for the `formPdfBytes` variable, [this image](assets/images/small-mario.png) is used for the `marioImageBytes` variable, and [this image](assets/images/mario-emblem.png) is used for the `emblemImageBytes` variable).
 
 [Try the JSFiddle demo](https://jsfiddle.net/Hopding/0mwfqkv6/3/)
 
@@ -387,7 +387,7 @@ const pdfBytes = await pdfDoc.save()
 
 ### Flatten Form
 
-_This example produces [this PDF](assets/pdfs/examples/flatten_form.pdf)_ (when [this PDF](assets/pdfs/form_to_flatten.pdf) is used for the `formPdfBytes` variable).
+_This example produces [this PDF](assets/pdfs/examples/flatten-form.pdf)_ (when [this PDF](assets/pdfs/form-to-flatten.pdf) is used for the `formPdfBytes` variable).
 
 [Try the JSFiddle demo](https://jsfiddle.net/Hopding/skevywdz/2/)
 
@@ -435,7 +435,7 @@ const pdfBytes = await pdfDoc.save()
 
 ### Copy Pages
 
-_This example produces [this PDF](assets/pdfs/examples/copy_pages.pdf)_ (when [this PDF](assets/pdfs/with_update_sections.pdf) is used for the `firstDonorPdfBytes` variable and [this PDF](assets/pdfs/with_large_page_count.pdf) is used for the `secondDonorPdfBytes` variable).
+_This example produces [this PDF](assets/pdfs/examples/copy-pages.pdf)_ (when [this PDF](assets/pdfs/with-update-sections.pdf) is used for the `firstDonorPdfBytes` variable and [this PDF](assets/pdfs/with-large-page-count.pdf) is used for the `secondDonorPdfBytes` variable).
 
 [Try the JSFiddle demo](https://jsfiddle.net/Hopding/ybank8s9/2/)
 
@@ -480,7 +480,7 @@ const pdfBytes = await pdfDoc.save()
 
 ### Embed PNG and JPEG Images
 
-_This example produces [this PDF](assets/pdfs/examples/embed_png_and_jpeg_images.pdf)_ (when [this image](assets/images/cat_riding_unicorn.jpg) is used for the `jpgImageBytes` variable and [this image](assets/images/minions_banana_alpha.png) is used for the `pngImageBytes` variable).
+_This example produces [this PDF](assets/pdfs/examples/embed-png-and-jpeg-images.pdf)_ (when [this image](assets/images/cat-riding-unicorn.jpg) is used for the `jpgImageBytes` variable and [this image](assets/images/minions-banana-alpha.png) is used for the `pngImageBytes` variable).
 
 [Try the JSFiddle demo](https://jsfiddle.net/Hopding/bcya43ju/5/)
 
@@ -538,7 +538,7 @@ const pdfBytes = await pdfDoc.save()
 
 ### Embed PDF Pages
 
-_This example produces [this PDF](assets/pdfs/examples/embed_pdf_pages.pdf)_ (when [this PDF](assets/pdfs/american_flag.pdf) is used for the `americanFlagPdfBytes` variable and [this PDF](assets/pdfs/us_constitution.pdf) is used for the `usConstitutionPdfBytes` variable).
+_This example produces [this PDF](assets/pdfs/examples/embed-pdf-pages.pdf)_ (when [this PDF](assets/pdfs/american-flag.pdf) is used for the `americanFlagPdfBytes` variable and [this PDF](assets/pdfs/us-constitution.pdf) is used for the `usConstitutionPdfBytes` variable).
 
 [Try the JSFiddle demo](https://jsfiddle.net/Hopding/Lyb16ocj/13/)
 
@@ -610,7 +610,7 @@ const pdfBytes = await pdfDoc.save()
 
 > **[See below for detailed installation instructions on installing `@chr33s/pdf-fontkit` as a NPM module.](#fontkit-installation)**
 
-_This example produces [this PDF](assets/pdfs/examples/embed_font_and_measure_text.pdf)_ (when [this font](assets/fonts/ubuntu/Ubuntu-R.ttf) is used for the `fontBytes` variable).
+_This example produces [this PDF](assets/pdfs/examples/embed-font-and-measure-text.pdf)_ (when [this font](assets/fonts/ubuntu/Ubuntu-R.ttf) is used for the `fontBytes` variable).
 
 [Try the JSFiddle demo](https://jsfiddle.net/Hopding/rgu6ca59/2/)
 
@@ -673,7 +673,7 @@ const pdfBytes = await pdfDoc.save()
 
 ### Add Attachments
 
-_This example produces [this PDF](assets/pdfs/examples/add_attachments.pdf)_ (when [this image](assets/images/cat_riding_unicorn.jpg) is used for the `jpgAttachmentBytes` variable and [this PDF](assets/pdfs/us_constitution.pdf) is used for the `pdfAttachmentBytes` variable).
+_This example produces [this PDF](assets/pdfs/examples/add-attachments.pdf)_ (when [this image](assets/images/cat-riding-unicorn.jpg) is used for the `jpgAttachmentBytes` variable and [this PDF](assets/pdfs/us-constitution.pdf) is used for the `pdfAttachmentBytes` variable).
 
 [Try the JSFiddle demo](https://jsfiddle.net/Hopding/9snL63wj/5/)
 
@@ -740,7 +740,7 @@ await writeFile(csv.name, csv.data)
 
 ### Set Document Metadata
 
-_This example produces [this PDF](assets/pdfs/examples/set_document_metadata.pdf)_.
+_This example produces [this PDF](assets/pdfs/examples/set-document-metadata.pdf)_.
 
 [Try the JSFiddle demo](https://jsfiddle.net/Hopding/vcwmfnbe/2/)
 
@@ -810,7 +810,7 @@ console.log('Creation Date:', pdfDoc.getCreationDate())
 console.log('Modification Date:', pdfDoc.getModificationDate())
 ```
 
-This script outputs the following (_when [this PDF](assets/pdfs/with_cropbox.pdf) is used for the `existingPdfBytes` variable_):
+This script outputs the following (_when [this PDF](assets/pdfs/with-cropbox.pdf) is used for the `existingPdfBytes` variable_):
 
 ```
 Title: Microsoft Word - Basic Curriculum Vitae example.doc
@@ -922,7 +922,7 @@ console.log('PrintPageRange:', viewerPrefs.getPrintPageRange())
 console.log('NumCopies:', viewerPrefs.getNumCopies())
 ```
 
-This script outputs the following (_when [this PDF](assets/pdfs/with_viewer_prefs.pdf) is used for the `existingPdfBytes` variable_):
+This script outputs the following (_when [this PDF](assets/pdfs/with-viewer-prefs.pdf) is used for the `existingPdfBytes` variable_):
 
 ```
 HideToolbar: true
@@ -942,7 +942,7 @@ NumCopies: 2
 
 ### Draw SVG Paths
 
-_This example produces [this PDF](assets/pdfs/examples/draw_svg_paths.pdf)_.
+_This example produces [this PDF](assets/pdfs/examples/draw-svg-paths.pdf)_.
 
 [Try the JSFiddle demo](https://jsfiddle.net/Hopding/bwaomr9h/2/)
 
@@ -1060,7 +1060,7 @@ If you save this script as `create-document.ts`, you can execute it using Deno w
 deno run --allow-write create-document.ts
 ```
 
-The resulting `out.pdf` file will look like [this PDF](assets/pdfs/examples/create_document.pdf).
+The resulting `out.pdf` file will look like [this PDF](assets/pdfs/examples/create-document.pdf).
 
 ### Embedding a Font with Deno
 
@@ -1117,18 +1117,18 @@ If you save this script as `custom-font.ts`, you can execute it with the followi
 deno run --allow-write --allow-net custom-font.ts
 ```
 
-The resulting `out.pdf` file will look like [this PDF](assets/pdfs/examples/embed_font_and_measure_text.pdf).
+The resulting `out.pdf` file will look like [this PDF](assets/pdfs/examples/embed-font-and-measure-text.pdf).
 
 ## Complete Examples
 
-The [usage examples](#usage-examples) provide code that is brief and to the point, demonstrating the different features of `pdf`. You can find complete working examples in the [`apps/`](apps/) directory. These apps are used to do manual testing of `pdf` before every release (in addition to the [automated tests](tests/)).
+The [usage examples](#usage-examples) provide code that is brief and to the point, demonstrating the different features of `pdf`. You can find complete working examples in the [`apps/`](https://github.com/chr33s/pdf/tree/main/apps) directory. These apps are used to do manual testing of `pdf` before every release (in addition to the [automated tests](test/)).
 
 There are currently four apps:
 
-- [**`node`**](apps/node/) - contains [tests](apps/node/tests/) for `pdf` in Node environments. These tests are a handy reference when trying to save/load PDFs, fonts, or images with `pdf` from the filesystem. They also allow you to quickly open your PDFs in different viewers (Acrobat, Preview, Foxit, Chrome, Firefox, etc...) to ensure compatibility.
-- [**`web`**](apps/web/) - contains [tests](apps/web/) for `pdf` in browser environments. These tests are a handy reference when trying to save/load PDFs, fonts, or images with `pdf` in a browser environment.
-- [**`rn`**](apps/rn) - contains [tests](apps/rn/src/tests/) for `pdf` in React Native environments. These tests are a handy reference when trying to save/load PDFs, fonts, or images with `pdf` in a React Native environment.
-- [**`deno`**](apps/deno) - contains [tests](apps/deno/tests/) for `pdf` in Deno environments. These tests are a handy reference when trying to save/load PDFs, fonts, or images with `pdf` from the filesystem.
+- [**`node`**](https://github.com/chr33s/pdf/tree/main/apps/node) - contains [tests](https://github.com/chr33s/pdf/tree/main/apps/node/test) for `pdf` in Node environments. These tests are a handy reference when trying to save/load PDFs, fonts, or images with `pdf` from the filesystem. They also allow you to quickly open your PDFs in different viewers (Acrobat, Preview, Foxit, Chrome, Firefox, etc...) to ensure compatibility.
+- [**`web`**](https://github.com/chr33s/pdf/tree/main/apps/web) - contains [tests](https://github.com/chr33s/pdf/tree/main/apps/web/test) for `pdf` in browser environments. These tests are a handy reference when trying to save/load PDFs, fonts, or images with `pdf` in a browser environment.
+- [**`react-native`**](https://github.com/chr33s/pdf/tree/main/apps/react-native) - contains [tests](https://github.com/chr33s/pdf/tree/main/apps/react-native/test) for `pdf` in React Native environments. These tests are a handy reference when trying to save/load PDFs, fonts, or images with `pdf` in a React Native environment.
+- [**`deno`**](https://github.com/chr33s/pdf/tree/main/apps/deno) - contains [tests](https://github.com/chr33s/pdf/tree/main/apps/deno/test) for `pdf` in Deno environments. These tests are a handy reference when trying to save/load PDFs, fonts, or images with `pdf` from the filesystem.
 
 ## Installation
 
@@ -1190,7 +1190,7 @@ When working with PDFs, you will frequently come across the terms "character enc
     font: courierFont,
   })
   ```
-- **The standard fonts do not support all characters** available in Unicode. The Times Roman, Helvetica, and Courier fonts use WinAnsi encoding (aka [Windows-1252](https://en.wikipedia.org/wiki/Windows-1252)). The WinAnsi character set only supports 218 characters in the Latin alphabet. For this reason, many users will find the standard fonts insufficient for their use case. This is unfortunate, but there's nothing that PDF libraries can do to change this. This is a result of the PDF specification and its age. Note that the [ZapfDingbats](https://en.wikipedia.org/wiki/Zapf_Dingbats) and [Symbol](<https://en.wikipedia.org/wiki/Symbol_(typeface)>) fonts use their own specialized encodings that support 203 and 194 characters, respectively. However, the characters they support are not useful for most use cases. See [here](assets/pdfs/standard_fonts_demo.pdf) for an example of all 14 standard fonts.
+- **The standard fonts do not support all characters** available in Unicode. The Times Roman, Helvetica, and Courier fonts use WinAnsi encoding (aka [Windows-1252](https://en.wikipedia.org/wiki/Windows-1252)). The WinAnsi character set only supports 218 characters in the Latin alphabet. For this reason, many users will find the standard fonts insufficient for their use case. This is unfortunate, but there's nothing that PDF libraries can do to change this. This is a result of the PDF specification and its age. Note that the [ZapfDingbats](https://en.wikipedia.org/wiki/Zapf_Dingbats) and [Symbol](<https://en.wikipedia.org/wiki/Symbol_(typeface)>) fonts use their own specialized encodings that support 203 and 194 characters, respectively. However, the characters they support are not useful for most use cases. See [here](assets/pdfs/standard-fonts-demo.pdf) for an example of all 14 standard fonts.
 - **You can use characters outside the Latin alphabet** by embedding your own fonts. Embedding your own font requires to you load the font data (from a file or via a network request, for example) and pass it to the `embedFont` method. When you embed your own font, you can use any Unicode characters that it supports. This capability frees you from the limitations imposed by the standard fonts. Most PDF files use embedded fonts. You can embed and use a custom font like so ([see also](#embed-font-and-measure-text)):
   <!-- prettier-ignore -->
   ```js
@@ -1250,7 +1250,7 @@ import { PDFDocument } from '@chr33s/pdf';
 import fontkit from '@chr33s/pdf-fontkit';
 
 // Fetch the PDF with form fields
-const formUrl = 'https://pdf.js.org/assets/dod_character.pdf';
+const formUrl = 'https://pdf.js.org/assets/dod-character.pdf';
 const formBytes = await fetch(formUrl).then((res) => res.arrayBuffer());
 
 // Fetch the Ubuntu font
@@ -1359,7 +1359,7 @@ Below are some of the most commonly used methods for reading and filling the afo
 
 [Discussions](https://github.com/chr33s/pdf/discussions) is the best place to chat with us, ask questions, and learn more about pdf!
 
-See also [MAINTAINERSHIP.md#communication](docs/MAINTAINERSHIP.md#communication) and [MAINTAINERSHIP.md#discord](docs/MAINTAINERSHIP.md#discord).
+See also the [maintainership notes](#maintainership).
 
 ## Encryption Handling
 
@@ -1383,13 +1383,17 @@ const password = 'The password';
 const doc = PDFDocument.load(content, { ignoreEncryption: true, password });
 ```
 
+## Migrating to v1.0.0
+
+For guidance on upgrading from earlier releases, see the upstream migration guide: https://github.com/Hopding/pdf-lib/blob/main/docs/MIGRATION.md. This fork keeps API differences documented in the monorepo changelog.
+
 ## Contributing
 
-We welcome contributions from the open source community! If you are interested in contributing to `pdf`, please take a look at the [CONTRIBUTING.md](docs/CONTRIBUTING.md) file. It contains information to help you get `pdf` setup and running on your machine. (We try to make this as simple and fast as possible! :rocket:)
+We welcome contributions from the open source community! If you are interested in contributing to `pdf`, please start a thread in [Discussions](https://github.com/chr33s/pdf/discussions) or [open an issue](https://github.com/chr33s/pdf/issues). (We try to make this as simple and fast as possible! :rocket:)
 
 ## Maintainership
 
-Check out [MAINTAINERSHIP.md](docs/MAINTAINERSHIP.md) for details on how this repo is maintained and how we use [issues](docs/MAINTAINERSHIP.md#issues), [PRs](docs/MAINTAINERSHIP.md#pull-requests), and [discussions](docs/MAINTAINERSHIP.md#discussions).
+We track work through [issues](https://github.com/chr33s/pdf/issues), [pull requests](https://github.com/chr33s/pdf/pulls), and [discussions](https://github.com/chr33s/pdf/discussions). Formal maintainership notes will live alongside this README as they are written.
 
 ## Tutorials and Cool Stuff
 
@@ -1404,7 +1408,7 @@ Check out [MAINTAINERSHIP.md](docs/MAINTAINERSHIP.md) for details on how this re
 
 ## Prior Art
 
-- [`pdfkit`](https://github.com/devongovett/pdfkit) is a PDF generation library for Node and the Browser. This library was immensely helpful as a reference and existence proof when creating `pdf`. `pdfkit`'s code for [font embedding](src/core/embedders/CustomFontEmbedder.ts#L17-L21), [PNG embedding](src/core/embedders/PngEmbedder.ts#L7-L11), and [JPG embedding](src/core/embedders/JpegEmbedder.ts#L25-L29) was especially useful.
+- [`pdfkit`](https://github.com/devongovett/pdfkit) is a PDF generation library for Node and the Browser. This library was immensely helpful as a reference and existence proof when creating `pdf`. `pdfkit`'s code for [font embedding](src/core/embedders/custom-font-embedder.ts#L17-L21), [PNG embedding](src/core/embedders/png-embedder.ts#L7-L11), and [JPG embedding](src/core/embedders/jpeg-embedder.ts#L25-L29) was especially useful.
 - [`pdf.js`](https://github.com/mozilla/pdf.js) is a PDF rendering library for the Browser. This library was helpful as a reference when writing `pdf`'s parser. Some of the code for stream decoding was [ported directly to TypeScript](src/core/streams) for use in `pdf`.
 - [`pdfbox`](https://pdfbox.apache.org/) is a PDF generation and modification library written in Java. This library was an invaluable reference when implementing form creation and filling APIs for `pdf`.
 - [`jspdf`](https://github.com/MrRio/jsPDF) is a PDF generation library for the browser.

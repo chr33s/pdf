@@ -41,7 +41,7 @@ export default class PDFOptionList extends PDFField {
    * Create an instance of [[PDFOptionList]] from an existing acroListBox and
    * ref
    *
-   * @param acroComboBox The underlying `PDFAcroListBox` for this option list.
+   * @param acroListBox The underlying `PDFAcroListBox` for this option list.
    * @param ref The unique reference for this option list.
    * @param doc The document to which this option list will belong.
    */
