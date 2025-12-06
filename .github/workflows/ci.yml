@@ -8,6 +8,13 @@ on:
   push:
     branches: [main]
     tags: [v*]
+  workflow_dispatch:
+    inputs:
+      package:
+        type: choice
+        description: 'Select the package to publish'
+        options: [common, codepoints, dfa, restructure, standard-fonts, unicode-trie, unicode-properties, upng, fontkit, pdf]
+        required: true
 
 jobs:
   build:
@@ -61,12 +68,14 @@ jobs:
     name: Publish
     runs-on: ubuntu-latest
     needs: [build]
-    if: ${{ github.ref_type == 'tag' }}
+    if: ${{ github.ref_type == 'tag' || github.event_name == 'workflow_dispatch' }}
     permissions:
       id-token: write
     strategy:
-      matrix:
-        package: [common, codepoints, dfa, restructure, standard-fonts, unicode-trie, unicode-properties, upng, fontkit, pdf]
+          matrix:
+            package: ${{ github.event_name == 'workflow_dispatch' && inputs.package != ''
+              && fromJson(format('["{0}"]', inputs.package))
+              || fromJson('["common","codepoints","dfa","restructure","standard-fonts","unicode-trie","unicode-properties","upng","fontkit","pdf"]') }}
     steps:
       - uses: actions/download-artifact@v4
         with:
@@ -79,6 +88,23 @@ jobs:
       - run: npm publish --workspace packages/${{ matrix.package }} --access public --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    if: ${{ github.ref_type == 'tag' }}
+    needs: [publish]
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: build
+      - uses: actions/setup-node@v5
+        with:
+          cache: "npm"
+          node-version-file: "package.json"
       - uses: actions/github-script@v7
         with:
           script: |
@@ -105,4 +131,3 @@ jobs:
               repo,
               tag_name,
             });
-
