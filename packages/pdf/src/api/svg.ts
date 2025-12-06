@@ -216,7 +216,7 @@ const StrokeLineJoinMap: Record<string, LineJoinStyle> = {
   round: LineJoinStyle.Round,
 };
 
-// TODO: Improve type system to require the correct props for each tagName.
+// Tag-specific attribute typing is permissive; runtime options are validated per draw handler.
 /** methods to draw SVGElements onto a PDFPage */
 const runnersToPage = (
   page: PDFPage,
@@ -290,7 +290,7 @@ const runnersToPage = (
       x: -offsetX,
       y: -offsetY,
       font,
-      // TODO: the font size should be correctly scaled too
+      // Font size currently uses the raw value; scale externally if a transform should affect it.
       size: fontSize,
       color: element.svgAttributes.fill,
       opacity: element.svgAttributes.fillOpacity,

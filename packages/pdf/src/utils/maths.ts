@@ -51,7 +51,6 @@ export const vector = (A: Point, B: Point): Coordinates => minus(B.toCoords(), A
 /**
  * Returns the angle between the vector and the horizontal axis (Ox).
  * The return value is between -PI and PI.
- * @returns {number} angle in radian between -Pi and Pi
  */
 export const orientation = ({ x, y }: Coordinates): number => {
   const alpha = Math.acos(x / Math.sqrt(x * x + y * y));
@@ -78,7 +77,6 @@ export const angle = (u: Coordinates, v: Coordinates, previousAngle = 0) => {
 };
 
 /** Returns the angle between the lines (BA) and (BC) in radian
- * @returns {number} the angle in radian, between -Pi and Pi
  */
 export const angleABC = (A: Point, B: Point, C: Point, previousAngle = 0): number =>
   angle(vector(B, A), vector(B, C), previousAngle);

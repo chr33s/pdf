@@ -2,6 +2,8 @@
 
 > A parser for files in the Unicode database.
 
+Distributed as native ES modules with NodeNext resolution (use Node.js 18+ or a modern bundler).
+
 `@chr33s/pdf-codepoints` lives in the [`chr33s/pdf`](https://github.com/chr33s/pdf) monorepo and provides native ES modules with TypeScript declarations.
 
 ## Overview
@@ -28,17 +30,17 @@ Install using npm:
 Basic usage:
 
 ```js
-import codepoints from 'codepoints';
+import codepoints from "@chr33s/pdf-codepoints";
 ```
 
 The parser generates data by reading the text files contained in the
 [Unicode Character Database](http://unicode.org/ucd/). By default, it will use the database
-bundled with this package. To use a custom version of UCD, use `codepoints/parser` instead,
-which accepts an optional path to a directory containing the uncompressed UCD data:
+bundled with this package. To use a custom version of UCD, use `@chr33s/pdf-codepoints/parser`
+instead, which accepts an optional path to a directory containing the uncompressed UCD data:
 
 ```js
-import { parser } from 'codepoints';
-codepoints = parser('/path/to/UCD');
+import { parser } from "@chr33s/pdf-codepoints";
+codepoints = parser("/path/to/UCD");
 ```
 
 ## Codepoint data

@@ -361,8 +361,6 @@ class PDFSecurity {
  * A file ID is required if Encrypt entry is present in Trailer
  * Doesn't really matter what it is as long as it is consistently
  * used.
- *
- * @returns Uint8Array
  */
 const generateFileID = (): Uint8Array => wordArrayToBuffer(MD5(Date.now().toString()));
 
@@ -374,8 +372,6 @@ const generateRandomWordArray = (bytes: number): WordArray => WordArray.random(b
  *
  * Only bit position 3,4,5,6,9,10,11 and 12 is meaningful
  * Refer Table 22 - User access permission
- * @param  {permissions} {@link UserPermissions}
- * @returns number - Representing unsigned 32-bit integer
  */
 const getPermissionsR2 = (permissions: UserPermissions = {}) => {
   let flags = 0xffffffc0 >> 0;
@@ -400,8 +396,6 @@ const getPermissionsR2 = (permissions: UserPermissions = {}) => {
  *
  * Only bit position 3,4,5,6,9,10,11 and 12 is meaningful
  * Refer Table 22 - User access permission
- * @param  {permissions} {@link UserPermissions}
- * @returns number - Representing unsigned 32-bit integer
  */
 const getPermissionsR3 = (permissions: UserPermissions = {}) => {
   let flags = 0xfffff0c0 >> 0;

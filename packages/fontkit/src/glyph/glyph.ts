@@ -105,18 +105,8 @@ export default class Glyph {
   isLigature: boolean;
 
   constructor(id: number, codePoints: number[], font: FontLike) {
-    /**
-     * The glyph id in the font
-     * @type {number}
-     */
     this.id = id;
 
-    /**
-     * An array of unicode code points that are represented by this glyph.
-     * There can be multiple code points in the case of ligatures and other glyphs
-     * that represent multiple visual characters.
-     * @type {number[]}
-     */
     this.codePoints = codePoints;
     this._font = font;
     this._metrics = null;
@@ -218,8 +208,6 @@ export default class Glyph {
    * `cbox` does not. Thus, cbox is less accurate, but faster to compute.
    * See [here](http://www.freetype.org/freetype2/docs/glyphs/glyphs-6.html#section-2)
    * for a more detailed description.
-   *
-   * @type {BBox}
    */
   getCBox(): Promise<BBox> {
     return this._getCBox();
@@ -228,7 +216,6 @@ export default class Glyph {
   /**
    * The glyph's bounding box, i.e. the rectangle that encloses the
    * glyph outline as tightly as possible.
-   * @type {BBox}
    */
   getBBox(): Promise<BBox> {
     return this._getBBox();
@@ -236,7 +223,6 @@ export default class Glyph {
 
   /**
    * A vector Path object representing the glyph outline.
-   * @type {Path}
    */
   async getPath(): Promise<Path> {
     // Cache the path so we only decode it once
@@ -246,8 +232,6 @@ export default class Glyph {
 
   /**
    * Returns a path scaled to the given font size.
-   * @param {number} size
-   * @return {Path}
    */
   async getScaledPath(size: number): Promise<Path> {
     let scale = (1 / this._font.unitsPerEm) * size;
@@ -259,7 +243,6 @@ export default class Glyph {
    * The glyph's advance width computed synchronously from font tables.
    * This does not include variation adjustments which may require async operations.
    * For variation-aware advance width, use getAdvanceWidth() instead.
-   * @type {number}
    */
   @cache
   get advanceWidth(): number {
@@ -272,7 +255,6 @@ export default class Glyph {
 
   /**
    * The glyph's advance width.
-   * @type {number}
    */
   async getAdvanceWidth(): Promise<number> {
     return (await this._getMetrics()).advanceWidth;
@@ -280,7 +262,6 @@ export default class Glyph {
 
   /**
    * The glyph's width.
-   * @type {number}
    */
   async getWidth(): Promise<number> {
     return (await this._getMetrics()).width;
@@ -288,7 +269,6 @@ export default class Glyph {
 
   /**
    * The glyph's height.
-   * @type {number}
    */
   async getHeight(): Promise<number> {
     return (await this._getMetrics()).height;
@@ -296,7 +276,6 @@ export default class Glyph {
 
   /**
    * The glyph's advance height.
-   * @type {number}
    */
   async getAdvanceHeight(): Promise<number> {
     return (await this._getMetrics()).advanceHeight;
@@ -304,7 +283,6 @@ export default class Glyph {
 
   /**
    * The glyph's left side bearing.
-   * @type {number}
    */
   async getLeftBearing(): Promise<number> {
     return (await this._getMetrics()).leftBearing;
@@ -312,7 +290,6 @@ export default class Glyph {
 
   /**
    * The glyph's top side bearing.
-   * @type {number}
    */
   async getTopBearing(): Promise<number> {
     return (await this._getMetrics()).topBearing;
@@ -320,7 +297,6 @@ export default class Glyph {
 
   /**
    * The glyph's right side bearing.
-   * @type {number}
    */
   async getRightBearing(): Promise<number> {
     return (await this._getMetrics()).rightBearing;
@@ -328,7 +304,6 @@ export default class Glyph {
 
   /**
    * The glyph's bottom side bearing.
-   * @type {number}
    */
   async getBottomBearing(): Promise<number> {
     return (await this._getMetrics()).bottomBearing;
@@ -374,7 +349,6 @@ export default class Glyph {
 
   /**
    * The glyph's name
-   * @type {string}
    */
   @cache
   get name() {
@@ -383,8 +357,6 @@ export default class Glyph {
 
   /**
    * Renders the glyph to the given graphics context, at the specified font size.
-   * @param {CanvasRenderingContext2d} ctx
-   * @param {number} size
    */
   async render(ctx: CanvasContextLike, size: number): Promise<void> {
     ctx.save();

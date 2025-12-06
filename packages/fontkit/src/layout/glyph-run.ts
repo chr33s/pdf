@@ -22,44 +22,17 @@ export default class GlyphRun {
     language: string | null,
     direction: string | null,
   ) {
-    /**
-     * An array of Glyph objects in the run
-     * @type {Glyph[]}
-     */
     this.glyphs = glyphs;
 
-    /**
-     * An array of GlyphPosition objects for each glyph in the run
-     * @type {GlyphPosition[]}
-     */
     this.positions = null;
 
-    /**
-     * The script that was requested for shaping. This was either passed in or detected automatically.
-     * @type {string|string[]}
-     */
     this.script = script;
 
-    /**
-     * The language requested for shaping, as passed in. If `null`, the default language for the
-     * script was used.
-     * @type {string}
-     */
     this.language = language || null;
 
-    /**
-     * The direction requested for shaping, as passed in (either ltr or rtl).
-     * If `null`, the default direction of the script is used.
-     * @type {string}
-     */
     const scriptTag = Array.isArray(script) ? (script[0] ?? "DFLT") : script;
     this.direction = direction || Script.direction(scriptTag);
 
-    /**
-     * The features requested during shaping. This is a combination of user
-     * specified features and features chosen by the shaper.
-     * @type {object}
-     */
     this.features = {};
 
     // Convert features to an object
@@ -74,7 +47,6 @@ export default class GlyphRun {
 
   /**
    * The total advance width of the run.
-   * @type {number}
    */
   get advanceWidth() {
     if (!this.positions) {
@@ -91,7 +63,6 @@ export default class GlyphRun {
 
   /**
    * The total advance height of the run.
-   * @type {number}
    */
   get advanceHeight() {
     if (!this.positions) {
@@ -108,7 +79,6 @@ export default class GlyphRun {
 
   /**
    * The bounding box containing all glyphs in the run.
-   * @type {BBox}
    */
   async getBBox(): Promise<BBox> {
     if (!this.positions) {

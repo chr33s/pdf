@@ -21,7 +21,6 @@ import {
 
 const intersections = (A: GraphicElement, B: GraphicElement): Coordinates[] => {
   if (A instanceof Point || B instanceof Point) return [];
-  // TODO: calculate the coords of the intersection: https://www.emathzone.com/tutorials/geometry/intersection-of-line-and-ellipse.html
   else if (A instanceof Line) return intersectionsLine(A, B);
   else if (A instanceof Segment) {
     return intersectionsLine(A.getLine(), B).filter((P) => A.includes(new Point(P)));
@@ -52,11 +51,8 @@ const intersectionsEllipse = (A: Ellipse, B: Exclude<GraphicElement, Point>): Co
   else if (B instanceof Segment) {
     return intersectionsEllipse(A, B.getLine()).filter((P) => B.includes(new Point(P)));
   }
-  // TODO:
-  // else if (B instanceof Circle) return intersectionEllipseCircle(B, A)
+  // Ellipse-circle and ellipse-ellipse intersections are not implemented yet; return no hits.
   else if (B instanceof Circle) return [];
-  // TODO:
-  // else if (B instanceof Ellipse) return intersectionEllipseEllipse(B, A)
   else if (B instanceof Ellipse) return [];
   else if (B instanceof Arc) {
     return intersectionsEllipse(A, B.getCircle()).filter((P) => B.includes(new Point(P)));

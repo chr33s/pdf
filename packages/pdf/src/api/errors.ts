@@ -1,34 +1,31 @@
-// TODO: Include link to documentation with example
 export class EncryptedPDFError extends Error {
   constructor() {
     const msg =
-      "Input document to `PDFDocument.load` is encrypted. You can use `PDFDocument.load(..., { ignoreEncryption: true })` if you wish to load the document anyways.";
+      "Input document to `PDFDocument.load` is encrypted. You can use `PDFDocument.load(..., { ignoreEncryption: true })` if you wish to load the document anyways. See https://github.com/chr33s/pdf/tree/main/packages/pdf#encryption-handling for details.";
     super(msg);
   }
 }
 
-// TODO: Include link to documentation with example
 export class FontkitNotRegisteredError extends Error {
   constructor() {
     const msg =
-      "Input to `PDFDocument.embedFont` was a custom font, but no `fontkit` instance was found. You must register a `fontkit` instance with `PDFDocument.registerFontkit(...)` before embedding custom fonts.";
+      "Input to `PDFDocument.embedFont` was a custom font, but no `fontkit` instance was found. You must register a `fontkit` instance with `PDFDocument.registerFontkit(...)` before embedding custom fonts. See https://github.com/chr33s/pdf/tree/main/packages/pdf#embed-font-and-measure-text for usage.";
     super(msg);
   }
 }
 
-// TODO: Include link to documentation with example
 export class ForeignPageError extends Error {
   constructor() {
     const msg =
-      "A `page` passed to `PDFDocument.addPage` or `PDFDocument.insertPage` was from a different (foreign) PDF document. If you want to copy pages from one PDFDocument to another, you must use `PDFDocument.copyPages(...)` to copy the pages before adding or inserting them.";
+      "A `page` passed to `PDFDocument.addPage` or `PDFDocument.insertPage` was from a different (foreign) PDF document. If you want to copy pages from one PDFDocument to another, you must use `PDFDocument.copyPages(...)` to copy the pages before adding or inserting them. See https://github.com/chr33s/pdf/tree/main/packages/pdf#copy-pages.";
     super(msg);
   }
 }
 
-// TODO: Include link to documentation with example
 export class RemovePageFromEmptyDocumentError extends Error {
   constructor() {
-    const msg = "PDFDocument has no pages so `PDFDocument.removePage` cannot be called";
+    const msg =
+      "PDFDocument has no pages so `PDFDocument.removePage` cannot be called. Add a page first or guard with PDFDocument.getPageCount().";
     super(msg);
   }
 }

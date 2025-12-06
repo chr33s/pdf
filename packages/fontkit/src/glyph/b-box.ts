@@ -8,34 +8,17 @@ export default class BBox {
   maxY: number;
 
   constructor(minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity) {
-    /**
-     * The minimum X position in the bounding box
-     * @type {number}
-     */
     this.minX = minX;
 
-    /**
-     * The minimum Y position in the bounding box
-     * @type {number}
-     */
     this.minY = minY;
 
-    /**
-     * The maxmimum X position in the bounding box
-     * @type {number}
-     */
     this.maxX = maxX;
 
-    /**
-     * The maxmimum Y position in the bounding box
-     * @type {number}
-     */
     this.maxY = maxY;
   }
 
   /**
    * The width of the bounding box
-   * @type {number}
    */
   get width(): number {
     return this.maxX - this.minX;
@@ -43,7 +26,6 @@ export default class BBox {
 
   /**
    * The height of the bounding box
-   * @type {number}
    */
   get height(): number {
     return this.maxY - this.minY;

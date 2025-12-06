@@ -2,6 +2,8 @@
 
 > Deterministic finite automata compiler packaged as modern ES modules.
 
+Distributed as native ES modules with NodeNext resolution (use Node.js 18+ or a modern bundler).
+
 `@chr33s/pdf-dfa` lives in the [`chr33s/pdf`](https://github.com/chr33s/pdf) monorepo and provides native ES modules with TypeScript declarations.
 
 ## Overview
@@ -41,8 +43,8 @@ Visualized, the machine looks like this (double circles are accepting states):
 Compiling and using the machine:
 
 ```javascript
-import { compile } from 'dfa';
-import fs from 'fs';
+import { compile } from "@chr33s/pdf-dfa";
+import fs from "node:fs";
 
 let stateMachine = compile(fs.readFileSync('hangul.machine', 'utf8'));
 

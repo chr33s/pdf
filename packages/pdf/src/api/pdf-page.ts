@@ -1055,7 +1055,7 @@ export default class PDFPage {
    * @param options The options to be used when drawing the image.
    */
   drawImage(image: PDFImage, options: PDFPageDrawImageOptions = {}): void {
-    // TODO: Reuse image XObject name if we've already added this image to Resources.XObjects
+    // Each call registers a fresh XObject name; deduplication of identical images is not yet implemented.
     assertIs(image, "image", [[PDFImage, "PDFImage"]]);
     assertOrUndefined(options.x, "options.x", ["number"]);
     assertOrUndefined(options.y, "options.y", ["number"]);
@@ -1124,7 +1124,7 @@ export default class PDFPage {
    * @param options The options to be used when drawing the embedded page.
    */
   drawPage(embeddedPage: PDFEmbeddedPage, options: PDFPageDrawPageOptions = {}): void {
-    // TODO: Reuse embeddedPage XObject name if we've already added this embeddedPage to Resources.XObjects
+    // Each embedded page gets a fresh XObject name; cross-call deduplication is not yet implemented.
     assertIs(embeddedPage, "embeddedPage", [[PDFEmbeddedPage, "PDFEmbeddedPage"]]);
     assertOrUndefined(options.x, "options.x", ["number"]);
     assertOrUndefined(options.y, "options.y", ["number"]);

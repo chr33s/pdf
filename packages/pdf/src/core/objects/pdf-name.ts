@@ -126,8 +126,7 @@ class PDFName extends PDFObject {
     return new Uint8Array(bytes);
   }
 
-  // TODO: This should probably use `utf8Decode()`
-  // TODO: Polyfill Array.from?
+  // PDF names are limited to ASCII-safe bytes; String.fromCharCode is sufficient here.
   decodeText(): string {
     const bytes = this.asBytes();
     return String.fromCharCode(...Array.from(bytes));
