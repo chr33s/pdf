@@ -986,15 +986,15 @@ export default class PDFPage {
     const fontSize = options.size || this.#fontSize;
 
     const wordBreaks = options.wordBreaks || this.doc.defaultWordBreaks;
-    const textWidth = (t: string) => newFont.widthOfTextAtSize(t, fontSize);
+    const textWidth = async (t: string) => newFont.widthOfTextAtSize(t, fontSize);
     const lines =
       options.maxWidth === undefined
         ? lineSplit(cleanText(text))
-        : breakTextIntoLines(text, wordBreaks, options.maxWidth, textWidth);
+        : await breakTextIntoLines(text, wordBreaks, options.maxWidth, textWidth);
 
     const encodedLines = Array.from({ length: lines.length }) as PDFHexString[];
     for (let idx = 0, len = lines.length; idx < len; idx++) {
-      encodedLines[idx] = newFont.encodeText(lines[idx]);
+      encodedLines[idx] = await newFont.encodeText(lines[idx]);
     }
 
     const graphicsStateKey = this.#maybeEmbedGraphicsState({

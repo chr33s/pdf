@@ -110,7 +110,7 @@ export default class GlyphRun {
    * The bounding box containing all glyphs in the run.
    * @type {BBox}
    */
-  get bbox() {
+  async getBBox(): Promise<BBox> {
     if (!this.positions) {
       return new BBox();
     }
@@ -122,7 +122,7 @@ export default class GlyphRun {
     for (let index = 0; index < this.glyphs.length; index++) {
       let glyph = this.glyphs[index];
       let p = this.positions[index];
-      let b = glyph.bbox;
+      let b = await glyph.getBBox();
 
       bbox.addPoint(b.minX + x + p.xOffset, b.minY + y + p.yOffset);
       bbox.addPoint(b.maxX + x + p.xOffset, b.maxY + y + p.yOffset);

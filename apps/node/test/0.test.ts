@@ -445,7 +445,7 @@ test("Test 0: Create PDF with multiple features", async () => {
       textColor: pastels.whiteish,
       font: ubuntuFont,
     });
-    if (font) textField.updateAppearances(font);
+    if (font) await textField.updateAppearances(font);
   }
 
   // Buttons

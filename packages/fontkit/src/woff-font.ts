@@ -1,4 +1,4 @@
-import { inflateRaw } from "@chr33s/pdf-common";
+import { inflate } from "@chr33s/pdf-common";
 import * as r from "@chr33s/pdf-restructure";
 import { matchesTag } from "./binary.js";
 import WOFFDirectory from "./tables/woff-directory.js";
@@ -52,7 +52,7 @@ export default class WOFFFont extends TTFFont {
       .map(async (table) => {
         this.stream.pos = table.offset + 2; // skip deflate header
         const compressedData = this.stream.readBuffer(table.compLength - 2);
-        const decompressed = await inflateRaw(compressedData);
+        const decompressed = await inflate(compressedData, "deflate-raw");
         this._decompressedTables.set(table.tag, decompressed);
       });
 

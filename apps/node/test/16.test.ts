@@ -24,16 +24,16 @@ test("Test 16: Fancy fields with custom appearances", async () => {
 
   // Text Fields
   const prefix = form.getTextField("Prefix ⚽️");
-  prefix.updateAppearances(ubuntuFont);
+  await prefix.updateAppearances(ubuntuFont);
 
   const firstName = form.getTextField("First Name 🚀");
-  firstName.updateAppearances(ubuntuFont);
+  await firstName.updateAppearances(ubuntuFont);
 
   const middleInitial = form.getTextField("MiddleInitial 🎳");
-  middleInitial.updateAppearances(ubuntuFont);
+  await middleInitial.updateAppearances(ubuntuFont);
 
   const lastName = form.getTextField("LastName 🛩");
-  lastName.updateAppearances(ubuntuFont);
+  await lastName.updateAppearances(ubuntuFont);
 
   // Check Boxes
   const isAFairy = form.getCheckBox("Are You A Fairy? 🌿");
@@ -50,16 +50,16 @@ test("Test 16: Fancy fields with custom appearances", async () => {
 
   // Buttons
   const eject = form.getButton("Eject 📼");
-  eject.updateAppearances(ubuntuFont);
+  await eject.updateAppearances(ubuntuFont);
 
   const submit = form.getButton("Submit 📝");
-  submit.updateAppearances(ubuntuFont);
+  await submit.updateAppearances(ubuntuFont);
 
   const play = form.getButton("Play ▶️");
-  play.updateAppearances(ubuntuFont);
+  await play.updateAppearances(ubuntuFont);
 
   const launch = form.getButton("Launch 🚀");
-  launch.updateAppearances(ubuntuFont);
+  await launch.updateAppearances(ubuntuFont);
 
   // Radio Group
   const historicalFigures = form.getRadioGroup("Historical Figures 🐺");
@@ -67,12 +67,12 @@ test("Test 16: Fancy fields with custom appearances", async () => {
 
   // Option List
   const planets = form.getOptionList("Which Are Planets? 🌎");
-  planets.updateAppearances(ubuntuFont);
+  await planets.updateAppearances(ubuntuFont);
 
   // Dropdown
   const gundams = form.getDropdown("Choose A Gundam 🤖");
   gundams.select("One Punch Man");
-  gundams.updateAppearances(ubuntuFont);
+  await gundams.updateAppearances(ubuntuFont);
 
   // ===================== Custom Appearance Providers ========================
   const page = pdfDoc.addPage();
@@ -161,7 +161,7 @@ test("Test 16: Fancy fields with custom appearances", async () => {
     if (!condition) throw new Error(msg || "Assertion failed");
   };
 
-  btn.updateAppearances(symbol, (field, widget, font) => {
+  await btn.updateAppearances(symbol, (field, widget, font) => {
     assert(field === btn);
     assert(widget instanceof PDFWidgetAnnotation);
     return [...rectangle, ...symbolText(font)];
@@ -171,12 +171,12 @@ test("Test 16: Fancy fields with custom appearances", async () => {
     assert(widget instanceof PDFWidgetAnnotation);
     return { on: [...rectangle, ...circle], off: [...rectangle, ...circle] };
   });
-  dd.updateAppearances(symbol, (field, widget, font) => {
+  await dd.updateAppearances(symbol, (field, widget, font) => {
     assert(field === dd);
     assert(widget instanceof PDFWidgetAnnotation);
     return [...rectangle, ...symbolText(font)];
   });
-  ol.updateAppearances(symbol, (field, widget, font) => {
+  await ol.updateAppearances(symbol, (field, widget, font) => {
     assert(field === ol);
     assert(widget instanceof PDFWidgetAnnotation);
     return [...rectangle, ...symbolText(font)];
@@ -186,7 +186,7 @@ test("Test 16: Fancy fields with custom appearances", async () => {
     assert(widget instanceof PDFWidgetAnnotation);
     return { on: [...rectangle, ...circle], off: [...rectangle, ...circle] };
   });
-  tf.updateAppearances(symbol, (field, widget, font) => {
+  await tf.updateAppearances(symbol, (field, widget, font) => {
     assert(field === tf);
     assert(widget instanceof PDFWidgetAnnotation);
     return [...rectangle, ...symbolText(font)];

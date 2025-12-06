@@ -35,11 +35,12 @@ class COLRLayer {
  * of which  is another vector glyph.
  */
 export default class COLRGlyph extends Glyph {
-  _getBBox(): BBox {
+  async _getBBox(): Promise<BBox> {
     let bbox = new BBox();
-    for (let i = 0; i < this.layers.length; i++) {
-      let layer = this.layers[i];
-      let b = layer.glyph.bbox;
+    const layers = await this.getLayers();
+    for (let i = 0; i < layers.length; i++) {
+      let layer = layers[i];
+      let b = await layer.glyph.getBBox();
       bbox.addPoint(b.minX, b.minY);
       bbox.addPoint(b.maxX, b.maxY);
     }
@@ -52,7 +53,7 @@ export default class COLRGlyph extends Glyph {
    * each layer in the composite color glyph.
    * @type {object[]}
    */
-  get layers(): COLRLayer[] {
+  async getLayers(): Promise<COLRLayer[]> {
     const cpal = this._font.CPAL as { colorRecords: RGBAColor[] };
     const colr = this._font.COLR as {
       baseGlyphRecord: BaseGlyphRecord[];
@@ -79,7 +80,7 @@ export default class COLRGlyph extends Glyph {
     // if base glyph not found in COLR table,
     // default to normal glyph from glyf or CFF
     if (baseLayer == null) {
-      const g = this._font._getBaseGlyph(this.id) as Glyph;
+      const g = (await this._font._getBaseGlyph(this.id)) as Glyph;
       const color: RGBAColor = {
         red: 0,
         green: 0,
@@ -99,22 +100,23 @@ export default class COLRGlyph extends Glyph {
     ) {
       const rec = colr.layerRecords[i];
       const color = cpal.colorRecords[rec.paletteIndex];
-      const g = this._font._getBaseGlyph(rec.gid) as Glyph;
+      const g = (await this._font._getBaseGlyph(rec.gid)) as Glyph;
       layers.push(new COLRLayer(g, color));
     }
 
     return layers;
   }
 
-  render(
+  async render(
     ctx: CanvasContextLike & {
       fillColor(color: number[], alpha: number): void;
     },
     size: number,
-  ): void {
-    for (let { glyph, color } of this.layers) {
+  ): Promise<void> {
+    const layers = await this.getLayers();
+    for (let { glyph, color } of layers) {
       ctx.fillColor([color.red, color.green, color.blue], (color.alpha / 255) * 100);
-      glyph.render(ctx, size);
+      await glyph.render(ctx, size);
     }
 
     return;

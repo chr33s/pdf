@@ -118,7 +118,7 @@ export default class AATMorxProcessor {
 
   // Processes an array of glyphs and applies the specified features
   // Features should be in the form of {featureType:{featureSetting:boolean}}
-  process(glyphs: Glyph[], features: FeatureSelectionMap = {} as FeatureSelectionMap) {
+  async process(glyphs: Glyph[], features: FeatureSelectionMap = {} as FeatureSelectionMap) {
     for (const chain of this.#morx.chains) {
       let flags = chain.defaultFlags;
 
@@ -138,7 +138,7 @@ export default class AATMorxProcessor {
 
       for (const subtable of chain.subtables) {
         if (subtable.subFeatureFlags & flags) {
-          this.processSubtable(subtable, glyphs);
+          await this.processSubtable(subtable, glyphs);
         }
       }
     }
@@ -156,7 +156,7 @@ export default class AATMorxProcessor {
     return glyphs;
   }
 
-  processSubtable(subtable: MorxSubtable, glyphs: Glyph[]) {
+  async processSubtable(subtable: MorxSubtable, glyphs: Glyph[]) {
     this.#subtable = subtable;
     this.#glyphs = glyphs;
     if (subtable.type === 4) {
@@ -174,7 +174,7 @@ export default class AATMorxProcessor {
     const process = this.getProcessor();
 
     const reverse = !!(subtable.coverage & REVERSE_DIRECTION);
-    return stateMachine.process(this.#glyphs, reverse, process);
+    return await stateMachine.process(this.#glyphs, reverse, process);
   }
 
   @cache
@@ -372,15 +372,15 @@ export default class AATMorxProcessor {
     return features;
   }
 
-  generateInputs(gid: number) {
+  async generateInputs(gid: number) {
     if (!this.#inputCache) {
-      this.generateInputCache();
+      await this.generateInputCache();
     }
 
     return (this.#inputCache && this.#inputCache[gid]) || [];
   }
 
-  generateInputCache() {
+  async generateInputCache() {
     this.#inputCache = {};
 
     for (const chain of this.#morx.chains) {
@@ -388,13 +388,13 @@ export default class AATMorxProcessor {
 
       for (const subtable of chain.subtables) {
         if (subtable.subFeatureFlags & flags) {
-          this.generateInputsForSubtable(subtable);
+          await this.generateInputsForSubtable(subtable);
         }
       }
     }
   }
 
-  generateInputsForSubtable(subtable: MorxSubtable) {
+  async generateInputsForSubtable(subtable: MorxSubtable) {
     // Currently, only supporting ligature subtables.
     if (subtable.type !== 2) {
       return;
@@ -415,8 +415,8 @@ export default class AATMorxProcessor {
     const stack: Array<{ glyphs: Glyph[]; ligatureStack: number[] }> = [];
     this.#glyphs = [];
 
-    stateMachine.traverse({
-      enter: (glyph: number, entry: StateTableEntry) => {
+    await stateMachine.traverse({
+      enter: async (glyph: number, entry: StateTableEntry) => {
         const glyphs = this.#glyphs;
         stack.push({
           glyphs: glyphs.slice(),

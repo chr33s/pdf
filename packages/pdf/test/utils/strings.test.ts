@@ -20,35 +20,35 @@ beforeAll(async () => {
 });
 
 describe("breakTextIntoLines", () => {
-  test("handles empty wordBreaks arrays", () => {
+  test("handles empty wordBreaks arrays", async () => {
     const input = "foobar-quxbaz";
     const expected = ["foobar-quxbaz"];
-    const actual = breakTextIntoLines(input, [], 21, computeTextWidth);
+    const actual = await breakTextIntoLines(input, [], 21, computeTextWidth);
     expect(actual).toEqual(expected);
   });
 
-  test("handles trailing newlines", () => {
+  test("handles trailing newlines", async () => {
     const input = "foo\n";
     const expected = ["foo"];
-    const actual = breakTextIntoLines(input, [], 21, computeTextWidth);
+    const actual = await breakTextIntoLines(input, [], 21, computeTextWidth);
     expect(actual).toEqual(expected);
   });
 
-  test("handles trailing carriage returns", () => {
+  test("handles trailing carriage returns", async () => {
     const input = "foo\r";
     const expected = ["foo"];
-    const actual = breakTextIntoLines(input, [], 21, computeTextWidth);
+    const actual = await breakTextIntoLines(input, [], 21, computeTextWidth);
     expect(actual).toEqual(expected);
   });
 
-  test("always breaks lines when EOLs are encountered", () => {
+  test("always breaks lines when EOLs are encountered", async () => {
     const input = "foo\nbar-qux\rbaz\n";
     const expected = ["foo", "bar-qux", "baz"];
-    const actual = breakTextIntoLines(input, [], 90000, computeTextWidth);
+    const actual = await breakTextIntoLines(input, [], 90000, computeTextWidth);
     expect(actual).toEqual(expected);
   });
 
-  test("breaks at the last possible 'wordBreak' before exceeding 'maxWidth' (1)", () => {
+  test("breaks at the last possible 'wordBreak' before exceeding 'maxWidth' (1)", async () => {
     const input = "Lorem Test ipsum dolor sit amet, consectetur adipiscing\nelit";
     const expected = [
       "Lorem T",
@@ -60,14 +60,14 @@ describe("breakTextIntoLines", () => {
       "cing",
       "elit",
     ];
-    const actual = breakTextIntoLines(input, ["", "Test"], 100, computeTextWidth);
+    const actual = await breakTextIntoLines(input, ["", "Test"], 100, computeTextWidth);
     expect(actual).toEqual(expected);
   });
 
-  test("breaks at the last possible 'wordBreak' before exceeding 'maxWidth' (2)", () => {
+  test("breaks at the last possible 'wordBreak' before exceeding 'maxWidth' (2)", async () => {
     const input = "Foo%bar%baz";
     const expected = ["Foo%", "bar%baz"];
-    const actual = breakTextIntoLines(input, ["%"], 100, computeTextWidth);
+    const actual = await breakTextIntoLines(input, ["%"], 100, computeTextWidth);
     expect(actual).toEqual(expected);
   });
 
@@ -87,7 +87,7 @@ describe("breakTextIntoLines", () => {
       "回込町者訟",
       "窃。",
     ];
-    const actual = breakTextIntoLines(input, [""], 125, (text: string) =>
+    const actual = await breakTextIntoLines(input, [""], 125, (text: string) =>
       sourceHansFont.widthOfTextAtSize(text, 24),
     );
     expect(actual).toEqual(expected);

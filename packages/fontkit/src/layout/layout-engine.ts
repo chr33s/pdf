@@ -14,13 +14,13 @@ type LayoutFeatures = string[] | Record<string, boolean> | undefined;
 type ScriptValue = string | string[] | null;
 
 type AdvancedLayoutEngine = {
-  substitute(glyphRun: GlyphRun): void;
+  substitute(glyphRun: GlyphRun): void | Promise<void>;
   position?(glyphRun: GlyphRun): { kern?: boolean } | null;
-  setup?(glyphRun: GlyphRun): void;
+  setup?(glyphRun: GlyphRun): void | Promise<void>;
   cleanup?(): void;
   fallbackPosition?: boolean;
   getAvailableFeatures(script?: string | null, language?: string | null): string[];
-  stringsForGlyph?(gid: number): Iterable<string> | string[];
+  stringsForGlyph?(gid: number): Iterable<string> | string[] | Promise<Iterable<string> | string[]>;
 };
 
 export default class LayoutEngine {
@@ -44,13 +44,13 @@ export default class LayoutEngine {
     }
   }
 
-  layout(
+  async layout(
     input: string | Glyph[],
     features?: string[] | Record<string, boolean> | string,
     script?: string | null,
     language?: string | null,
     direction?: string | null,
-  ): GlyphRun {
+  ): Promise<GlyphRun> {
     let resolvedScript: ScriptValue = script ?? null;
     let resolvedLanguage = language ?? null;
     let resolvedDirection = direction ?? null;
@@ -102,12 +102,12 @@ export default class LayoutEngine {
 
     // Setup the advanced layout engine
     if (this.engine && this.engine.setup) {
-      this.engine.setup(glyphRun);
+      await this.engine.setup(glyphRun);
     }
 
     // Substitute and position the glyphs
-    this.substitute(glyphRun);
-    this.position(glyphRun);
+    await this.substitute(glyphRun);
+    await this.position(glyphRun);
 
     if (!glyphRun.positions) {
       glyphRun.positions = [];
@@ -123,15 +123,15 @@ export default class LayoutEngine {
     return glyphRun;
   }
 
-  substitute(glyphRun: GlyphRun): void {
+  async substitute(glyphRun: GlyphRun): Promise<void> {
     // Call the advanced layout engine to make substitutions
     if (this.engine && this.engine.substitute) {
-      this.engine.substitute(glyphRun);
+      await this.engine.substitute(glyphRun);
     }
   }
 
-  position(glyphRun: GlyphRun): void {
-    // Get initial glyph positions
+  async position(glyphRun: GlyphRun): Promise<void> {
+    // Get initial glyph positions using synchronous advanceWidth property
     glyphRun.positions = glyphRun.glyphs.map((glyph) => new GlyphPosition(glyph.advanceWidth));
     let positioned: { kern?: boolean } | null = null;
 
@@ -146,7 +146,7 @@ export default class LayoutEngine {
         this.unicodeLayoutEngine = new UnicodeLayoutEngine(this.font);
       }
 
-      this.unicodeLayoutEngine.positionGlyphs(glyphRun.glyphs, glyphRun.positions);
+      await this.unicodeLayoutEngine.positionGlyphs(glyphRun.glyphs, glyphRun.positions);
     }
 
     // if kerning is not supported by GPOS, do kerning with the TrueType/AAT kern table
@@ -237,7 +237,7 @@ export default class LayoutEngine {
     return features;
   }
 
-  stringsForGlyph(gid: number): string[] {
+  async stringsForGlyph(gid: number): Promise<string[]> {
     let result = new Set<string>();
 
     let codePoints = this.font._cmapProcessor.codePointsForGlyph(gid);
@@ -246,7 +246,7 @@ export default class LayoutEngine {
     }
 
     if (this.engine && this.engine.stringsForGlyph) {
-      for (let string of this.engine.stringsForGlyph(gid) ?? []) {
+      for (let string of (await this.engine.stringsForGlyph(gid)) ?? []) {
         result.add(string);
       }
     }

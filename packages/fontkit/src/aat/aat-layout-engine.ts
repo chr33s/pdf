@@ -45,7 +45,7 @@ export default class AATLayoutEngine {
     this.#fallbackPosition = value;
   }
 
-  substitute(glyphRun: GlyphRunLike): void {
+  async substitute(glyphRun: GlyphRunLike): Promise<void> {
     // AAT expects the glyphs to be in visual order prior to morx processing,
     // so reverse the glyphs if the script is right-to-left.
     if (glyphRun.direction === "rtl") {
@@ -54,7 +54,7 @@ export default class AATLayoutEngine {
 
     const features: FeatureSelectionMap = AATFeatureMap.mapOTToAAT(glyphRun.features);
 
-    this.#morxProcessor.process(glyphRun.glyphs, features);
+    await this.#morxProcessor.process(glyphRun.glyphs, features);
   }
 
   getAvailableFeatures(_script: string, _language: string): string[] {
@@ -62,8 +62,8 @@ export default class AATLayoutEngine {
     return AATFeatureMap.mapAATToOT(supportedFeatures);
   }
 
-  stringsForGlyph(gid: number): Set<string> {
-    const glyphStrings = this.#morxProcessor.generateInputs(gid);
+  async stringsForGlyph(gid: number): Promise<Set<string>> {
+    const glyphStrings = await this.#morxProcessor.generateInputs(gid);
     const result = new Set<string>();
 
     for (const glyphs of glyphStrings) {

@@ -61,7 +61,7 @@ export default class PDFFont implements Embeddable {
    * @param text The text to be encoded.
    * @returns The encoded text as a hex string.
    */
-  encodeText(text: string): PDFHexString {
+  async encodeText(text: string): Promise<PDFHexString> {
     assertIs(text, "text", ["string"]);
     this.#modified = true;
     return this.#embedder.encodeText(text);
@@ -78,7 +78,7 @@ export default class PDFFont implements Embeddable {
    * @returns The width of the string of text when drawn in this font at the
    *          given size.
    */
-  widthOfTextAtSize(text: string, size: number): number {
+  async widthOfTextAtSize(text: string, size: number): Promise<number> {
     assertIs(text, "text", ["string"]);
     assertIs(size, "size", ["number"]);
     return this.#embedder.widthOfTextAtSize(text, size);

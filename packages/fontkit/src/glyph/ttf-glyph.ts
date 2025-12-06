@@ -1,7 +1,7 @@
 import type { DecodeStream } from "@chr33s/pdf-restructure";
 import * as r from "@chr33s/pdf-restructure";
 import BBox from "./b-box.js";
-import Glyph from "./glyph.js";
+import Glyph, { type GlyphMetrics } from "./glyph.js";
 import Path from "./path.js";
 
 // The header for both simple and composite glyphs
@@ -80,11 +80,12 @@ class Component {
  */
 export default class TTFGlyph extends Glyph {
   // Parses just the glyph header and returns the bounding box
-  _getCBox(internal?: boolean) {
+  async _getCBox(internal?: boolean): Promise<BBox> {
     // We need to decode the glyph if variation processing is requested,
     // so it's easier just to recompute the path's cbox after decoding.
     if (this._font._variationProcessor && !internal) {
-      return this.path.cbox;
+      const path = await this.getPath();
+      return path.cbox;
     }
 
     let glyfPos = this._font.loca.offsets[this.id];
@@ -123,7 +124,7 @@ export default class TTFGlyph extends Glyph {
 
   // Decodes the glyph data into points for simple glyphs,
   // or components for composite glyphs
-  _decode() {
+  async _decode() {
     let glyfPos = this._font.loca.offsets[this.id];
     let nextPos = this._font.loca.offsets[this.id + 1];
 
@@ -139,15 +140,15 @@ export default class TTFGlyph extends Glyph {
     let glyph = GlyfHeader.decode(stream);
 
     if (glyph.numberOfContours > 0) {
-      this._decodeSimple(glyph, stream);
+      await this._decodeSimple(glyph, stream);
     } else if (glyph.numberOfContours < 0) {
-      this._decodeComposite(glyph, stream, startPos);
+      await this._decodeComposite(glyph, stream, startPos);
     }
 
     return glyph;
   }
 
-  _decodeSimple(glyph: any, stream: DecodeStream) {
+  async _decodeSimple(glyph: any, stream: DecodeStream) {
     // this is a simple glyph
     glyph.points = [];
 
@@ -200,7 +201,7 @@ export default class TTFGlyph extends Glyph {
 
     if (this._font._variationProcessor) {
       let points = glyph.points.slice();
-      points.push(...this._getPhantomPoints(glyph));
+      points.push(...(await this._getPhantomPoints(glyph)));
 
       this._font._variationProcessor.transformPoints(this.id, points);
       glyph.phantomPoints = points.slice(-4);
@@ -209,7 +210,7 @@ export default class TTFGlyph extends Glyph {
     return;
   }
 
-  _decodeComposite(glyph: any, stream: DecodeStream, offset = 0) {
+  async _decodeComposite(glyph: any, stream: DecodeStream, offset = 0) {
     // this is a composite glyph
     glyph.components = [];
     let haveInstructions = false;
@@ -260,7 +261,7 @@ export default class TTFGlyph extends Glyph {
         points.push(new Point(true, true, component.dx, component.dy));
       }
 
-      points.push(...this._getPhantomPoints(glyph));
+      points.push(...(await this._getPhantomPoints(glyph)));
 
       this._font._variationProcessor.transformPoints(this.id, points);
       glyph.phantomPoints = points.splice(-4, 4);
@@ -275,10 +276,10 @@ export default class TTFGlyph extends Glyph {
     return haveInstructions;
   }
 
-  _getPhantomPoints(glyph: any) {
-    let cbox = this._getCBox(true);
+  async _getPhantomPoints(glyph: any) {
+    let cbox = await this._getCBox(true);
     if (this._metrics == null) {
-      this._metrics = Glyph.prototype._getMetrics.call(this, cbox);
+      this._metrics = await Glyph.prototype._getMetrics.call(this, cbox);
     }
 
     let { advanceWidth, advanceHeight, leftBearing, topBearing } = this._metrics;
@@ -292,8 +293,8 @@ export default class TTFGlyph extends Glyph {
   }
 
   // Decodes font data, resolves composite glyphs, and returns an array of contours
-  _getContours(): Point[][] {
-    let glyph = this._decode();
+  async _getContours(): Promise<Point[][]> {
+    let glyph = await this._decode();
     if (!glyph) {
       return [];
     }
@@ -308,7 +309,7 @@ export default class TTFGlyph extends Glyph {
           continue;
         }
 
-        let contours = baseGlyph._getContours();
+        let contours = await baseGlyph._getContours();
         for (let i = 0; i < contours.length; i++) {
           let contour = contours[i];
           for (let j = 0; j < contour.length; j++) {
@@ -325,8 +326,8 @@ export default class TTFGlyph extends Glyph {
 
     // Recompute and cache metrics if we performed variation processing, and don't have an HVAR table
     if (!this._metrics) {
-      const cbox = this._getCBox(true);
-      this._metrics = Glyph.prototype._getMetrics.call(this, cbox);
+      const cbox = await this._getCBox(true);
+      this._metrics = await Glyph.prototype._getMetrics.call(this, cbox);
     }
 
     if (glyph.phantomPoints && !this._font.directory.tables.HVAR && this._metrics) {
@@ -351,25 +352,25 @@ export default class TTFGlyph extends Glyph {
     return contours;
   }
 
-  override _getMetrics(cbox?: { maxY: number } | null): ReturnType<Glyph["_getMetrics"]> {
+  override async _getMetrics(cbox?: { maxY: number } | null): Promise<GlyphMetrics> {
     if (this._metrics) {
       return this._metrics;
     }
 
-    const localCbox = this._getCBox(true);
-    super._getMetrics(localCbox);
+    const localCbox = await this._getCBox(true);
+    await super._getMetrics(localCbox);
 
     if (this._font._variationProcessor && !this._font.HVAR) {
       // No HVAR table, decode the glyph. This triggers recomputation of metrics.
-      void this.path;
+      await this.getPath();
     }
 
     return this._metrics!;
   }
 
   // Converts contours to a Path object that can be rendered
-  _getPath() {
-    let contours = this._getContours();
+  async _getPath(): Promise<Path> {
+    let contours = await this._getContours();
     let path = new Path();
 
     for (let i = 0; i < contours.length; i++) {

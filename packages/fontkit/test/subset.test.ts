@@ -30,10 +30,12 @@ describe("font subsetting", function () {
         subset.includeGlyph(glyph);
       }
 
-      const buf = subset.encodeBuffer();
+      const buf = await subset.encodeBuffer();
       let f = await fontkit.create(buf);
       expect(f.numGlyphs).toBe(5);
-      expect(f.getGlyph(1).path.toSVG()).toBe(font.glyphsForString("h")[0].path.toSVG());
+      expect((await f.getGlyph(1).getPath()).toSVG()).toBe(
+        (await font.glyphsForString("h")[0].getPath()).toSVG(),
+      );
     });
 
     test.runIf(hasSkiaFont)("should re-encode variation glyphs", async function () {
@@ -43,19 +45,23 @@ describe("font subsetting", function () {
         subset.includeGlyph(glyph);
       }
 
-      const buf = subset.encodeBuffer();
+      const buf = await subset.encodeBuffer();
       let f = await fontkit.create(buf);
-      expect(f.getGlyph(1).path.toSVG()).toBe(font.glyphsForString("e")[0].path.toSVG());
+      expect((await f.getGlyph(1).getPath()).toSVG()).toBe(
+        (await font.glyphsForString("e")[0].getPath()).toSVG(),
+      );
     });
 
     test("should handle composite glyphs", async function () {
       let subset = font.createSubset();
       subset.includeGlyph(font.glyphsForString("é")[0]);
 
-      const buf = subset.encodeBuffer();
+      const buf = await subset.encodeBuffer();
       let f = await fontkit.create(buf);
       expect(f.numGlyphs).toBe(4);
-      expect(f.getGlyph(1).path.toSVG()).toBe(font.glyphsForString("é")[0].path.toSVG());
+      expect((await f.getGlyph(1).getPath()).toSVG()).toBe(
+        (await font.glyphsForString("é")[0].getPath()).toSVG(),
+      );
     });
 
     test("should produce a subset including font table OS/2", async function () {
@@ -65,7 +71,7 @@ describe("font subsetting", function () {
       }
       subset.includeTable("OS/2");
 
-      const buf = subset.encodeBuffer();
+      const buf = await subset.encodeBuffer();
       let f = await fontkit.create(buf);
       expect("OS/2" in f).toBe(true);
     });
@@ -91,21 +97,23 @@ describe("font subsetting", function () {
         subset.includeGlyph(glyph);
       }
 
-      const buf = subset.encodeBuffer();
+      const buf = await subset.encodeBuffer();
       let subsetFont = await fontkit.create(buf);
-      expect(subsetFont.getGlyph(1).path.toSVG()).toBe(font.glyphsForString("h")[0].path.toSVG());
+      expect((await subsetFont.getGlyph(1).getPath()).toSVG()).toBe(
+        (await font.glyphsForString("h")[0].getPath()).toSVG(),
+      );
     });
 
     test("should handle CID fonts", async function () {
       let f = await fontkit.open(__dirname + "/data/noto-sans-cjk/noto-sans-cj-kkr-regular.otf");
       let subset = f.createSubset();
-      let iterable = f.glyphsForString("갈휸");
+      let iterable = f.glyphsForString("갈휴");
       for (let i = 0; i < iterable.length; i++) {
         let glyph = iterable[i];
         subset.includeGlyph(glyph);
       }
 
-      const buf = subset.encodeBuffer();
+      const buf = await subset.encodeBuffer();
       let subsetFont = await fontkit.create(buf);
       let cffEntry = subsetFont.directory.tables["CFF "];
       if (!cffEntry) {
@@ -115,7 +123,9 @@ describe("font subsetting", function () {
       let cffBuffer = buf.subarray(cffEntry.offset, cffEntry.offset + cffEntry.length);
 
       let cff = new CFFFont(new r.DecodeStream(cffBuffer));
-      expect(subsetFont.getGlyph(1).path.toSVG()).toBe(f.glyphsForString("갈")[0].path.toSVG());
+      expect((await subsetFont.getGlyph(1).getPath()).toSVG()).toBe(
+        (await f.glyphsForString("갈")[0].getPath()).toSVG(),
+      );
       expect(cff.topDict.FDArray.length).toBe(2);
       expect(cff.topDict.FDSelect.fds).toEqual([0, 1, 1]);
     });

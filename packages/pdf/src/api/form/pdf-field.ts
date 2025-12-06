@@ -242,7 +242,7 @@ export default class PDFField {
   }
 
   /** @ignore */
-  defaultUpdateAppearances(_font: PDFFont) {
+  defaultUpdateAppearances(_font: PDFFont): void | Promise<void> {
     throw new MethodNotImplementedError(this.constructor.name, "defaultUpdateAppearances");
   }
 

@@ -1,5 +1,5 @@
+import { brotli } from "@chr33s/pdf-common";
 import * as r from "@chr33s/pdf-restructure";
-import { brotliDecompressSync } from "node:zlib";
 import { matchesTag, toUint8Array } from "./binary.js";
 import type { FontLike } from "./glyph/glyph.js";
 import TTFGlyph, { Point } from "./glyph/ttf-glyph.js";
@@ -7,7 +7,7 @@ import WOFF2Glyph from "./glyph/woff2-glyph.js";
 import WOFF2Directory from "./tables/woff2-directory.js";
 import TTFFont from "./ttf-font.js";
 
-const decompress = (data: Uint8Array): Uint8Array => new Uint8Array(brotliDecompressSync(data));
+const decompress = async (data: Uint8Array) => new Uint8Array(brotli.decode(data));
 
 type DecodeStream = InstanceType<typeof r.DecodeStream>;
 type RestructureBuffer = InstanceType<typeof r.Buffer>;
@@ -79,7 +79,20 @@ export default class WOFF2Font extends TTFFont {
     return this.directory;
   }
 
-  _decompress(): void {
+  /**
+   * Initialize the WOFF2 font by decompressing all data.
+   * This is called automatically by fontkit.create().
+   */
+  async init(): Promise<void> {
+    await this._decompress();
+    // Pre-process transformed glyf table if present
+    const glyfTable = this.directory.tables.glyf;
+    if (glyfTable && glyfTable.transformed) {
+      await this._transformGlyfTable();
+    }
+  }
+
+  async _decompress(): Promise<void> {
     // decompress data and setup table offsets if we haven't already
     if (!this._decompressed) {
       this.stream.pos = this._dataPos;
@@ -92,7 +105,7 @@ export default class WOFF2Font extends TTFFont {
         decompressedSize += entry.transformLength != null ? entry.transformLength : entry.length;
       }
 
-      const decompressed = decompress(buffer);
+      const decompressed = await decompress(buffer);
       if (!decompressed) {
         throw new Error("Error decoding compressed data in WOFF2");
       }
@@ -103,7 +116,10 @@ export default class WOFF2Font extends TTFFont {
   }
 
   _decodeTable(table: WOFF2DirectoryEntry): unknown {
-    this._decompress();
+    // _decompress() has already been called by init(), so data is ready
+    if (!this._decompressed) {
+      throw new Error("WOFF2 font not initialized. Call init() first or use fontkit.create().");
+    }
     return super._decodeTable(table);
   }
 
@@ -114,7 +130,7 @@ export default class WOFF2Font extends TTFFont {
       const glyfTable = this.directory.tables.glyf;
       if (glyfTable && glyfTable.transformed) {
         if (!this._transformedGlyphs) {
-          this._transformGlyfTable();
+          throw new Error("WOFF2 font not initialized. Call init() first or use fontkit.create().");
         }
 
         const fontRef = this as unknown as FontLike;
@@ -132,8 +148,8 @@ export default class WOFF2Font extends TTFFont {
     return glyphInstance;
   }
 
-  _transformGlyfTable(): void {
-    this._decompress();
+  async _transformGlyfTable(): Promise<void> {
+    await this._decompress();
     const glyfTable = this.directory.tables.glyf;
     if (!glyfTable || typeof glyfTable.offset !== "number") {
       throw new Error("Invalid glyf table offset");
@@ -170,7 +186,7 @@ export default class WOFF2Font extends TTFFont {
         read255UInt16(table.glyphs);
       } else if (nContours < 0) {
         // composite glyph
-        const haveInstructions = TTFGlyph.prototype._decodeComposite.call(
+        const haveInstructions = await TTFGlyph.prototype._decodeComposite.call(
           { _font: this },
           glyph,
           table.composites,

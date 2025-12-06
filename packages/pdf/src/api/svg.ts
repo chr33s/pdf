@@ -248,7 +248,7 @@ const runnersToPage = (
 
     const font = options.fonts && getBestFont(element.svgAttributes, options.fonts);
     const defaultFont = font || (await page.getFont())[0];
-    const textWidth = defaultFont.widthOfTextAtSize(text, fontSize);
+    const textWidth = await defaultFont.widthOfTextAtSize(text, fontSize);
 
     const textHeight = defaultFont.heightAtSize(fontSize);
     const overLineHeight = defaultFont.heightAtSize(fontSize, {

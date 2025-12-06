@@ -106,12 +106,12 @@ const buildWordBreakRegex = (wordBreaks: string[]) => {
   return new RegExp(`(${newlineCharUnion})|((.*?)(${breakRules}))`, "gm");
 };
 
-export const breakTextIntoLines = (
+export const breakTextIntoLines = async (
   text: string,
   wordBreaks: string[],
   maxWidth: number,
-  computeWidthOfText: (t: string) => number,
-): string[] => {
+  computeWidthOfText: (t: string) => number | Promise<number>,
+): Promise<string[]> => {
   const regex = buildWordBreakRegex(wordBreaks);
 
   const words = cleanText(text).match(regex)!;
@@ -131,7 +131,7 @@ export const breakTextIntoLines = (
     if (isNewlineChar(word)) {
       pushCurrLine();
     } else {
-      const width = computeWidthOfText(word);
+      const width = await computeWidthOfText(word);
       if (currWidth + width > maxWidth) pushCurrLine();
       currLine += word;
       currWidth += width;

@@ -1,15 +1,6 @@
 import { PDFOperator, PDFWidgetAnnotation } from "../../core/index.js";
 import { findLastMatch } from "../../utils/index.js";
-import PDFFont from "../pdf-font.js";
 import { cmyk, Color, componentsToColor, grayscale, rgb, setFillingColor } from "../colors.js";
-import PDFButton from "./pdf-button.js";
-import PDFCheckBox from "./pdf-check-box.js";
-import PDFDropdown from "./pdf-dropdown.js";
-import PDFField from "./pdf-field.js";
-import PDFOptionList from "./pdf-option-list.js";
-import PDFRadioGroup from "./pdf-radio-group.js";
-import PDFSignature from "./pdf-signature.js";
-import PDFTextField from "./pdf-text-field.js";
 import {
   drawButton,
   drawCheckBox,
@@ -19,6 +10,7 @@ import {
   rotateInPlace,
 } from "../operations.js";
 import { setFontAndSize } from "../operators.js";
+import PDFFont from "../pdf-font.js";
 import { adjustDimsForRotation, reduceRotation } from "../rotations.js";
 import { TextAlignment } from "../text/alignment.js";
 import {
@@ -27,6 +19,14 @@ import {
   layoutSinglelineText,
   TextPosition,
 } from "../text/layout.js";
+import PDFButton from "./pdf-button.js";
+import PDFCheckBox from "./pdf-check-box.js";
+import PDFDropdown from "./pdf-dropdown.js";
+import PDFField from "./pdf-field.js";
+import PDFOptionList from "./pdf-option-list.js";
+import PDFRadioGroup from "./pdf-radio-group.js";
+import PDFSignature from "./pdf-signature.js";
+import PDFTextField from "./pdf-text-field.js";
 
 /*********************** Appearance Provider Types ****************************/
 
@@ -50,31 +50,31 @@ type ButtonAppearanceProvider = (
   button: PDFButton,
   widget: PDFWidgetAnnotation,
   font: PDFFont,
-) => AppearanceOrMapping<PDFOperator[]>;
+) => AppearanceOrMapping<PDFOperator[]> | Promise<AppearanceOrMapping<PDFOperator[]>>;
 
 type DropdownAppearanceProvider = (
   dropdown: PDFDropdown,
   widget: PDFWidgetAnnotation,
   font: PDFFont,
-) => AppearanceOrMapping<PDFOperator[]>;
+) => AppearanceOrMapping<PDFOperator[]> | Promise<AppearanceOrMapping<PDFOperator[]>>;
 
 type OptionListAppearanceProvider = (
   optionList: PDFOptionList,
   widget: PDFWidgetAnnotation,
   font: PDFFont,
-) => AppearanceOrMapping<PDFOperator[]>;
+) => AppearanceOrMapping<PDFOperator[]> | Promise<AppearanceOrMapping<PDFOperator[]>>;
 
 type TextFieldAppearanceProvider = (
   textField: PDFTextField,
   widget: PDFWidgetAnnotation,
   font: PDFFont,
-) => AppearanceOrMapping<PDFOperator[]>;
+) => AppearanceOrMapping<PDFOperator[]> | Promise<AppearanceOrMapping<PDFOperator[]>>;
 
 type SignatureAppearanceProvider = (
   signature: PDFSignature,
   widget: PDFWidgetAnnotation,
   font: PDFFont,
-) => AppearanceOrMapping<PDFOperator[]>;
+) => AppearanceOrMapping<PDFOperator[]> | Promise<AppearanceOrMapping<PDFOperator[]>>;
 
 /******************* Appearance Provider Utility Types ************************/
 
@@ -321,7 +321,7 @@ export const defaultRadioGroupAppearanceProvider: AppearanceProviderFor<PDFRadio
   };
 };
 
-export const defaultButtonAppearanceProvider: AppearanceProviderFor<PDFButton> = (
+export const defaultButtonAppearanceProvider: AppearanceProviderFor<PDFButton> = async (
   button,
   widget,
   font,
@@ -357,13 +357,13 @@ export const defaultButtonAppearanceProvider: AppearanceProviderFor<PDFButton> =
     width: width - borderWidth * 2,
     height: height - borderWidth * 2,
   };
-  const normalLayout = layoutSinglelineText(normalText, {
+  const normalLayout = await layoutSinglelineText(normalText, {
     alignment: TextAlignment.Center,
     fontSize: widgetFontSize ?? fieldFontSize,
     font,
     bounds,
   });
-  const downLayout = layoutSinglelineText(downText, {
+  const downLayout = await layoutSinglelineText(downText, {
     alignment: TextAlignment.Center,
     fontSize: widgetFontSize ?? fieldFontSize,
     font,
@@ -411,7 +411,7 @@ export const defaultButtonAppearanceProvider: AppearanceProviderFor<PDFButton> =
   };
 };
 
-export const defaultTextFieldAppearanceProvider: AppearanceProviderFor<PDFTextField> = (
+export const defaultTextFieldAppearanceProvider: AppearanceProviderFor<PDFTextField> = async (
   textField,
   widget,
   font,
@@ -449,7 +449,7 @@ export const defaultTextFieldAppearanceProvider: AppearanceProviderFor<PDFTextFi
     height: height - (borderWidth + padding) * 2,
   };
   if (textField.isMultiline()) {
-    const layout = layoutMultilineText(text, {
+    const layout = await layoutMultilineText(text, {
       alignment: textField.getAlignment(),
       fontSize: widgetFontSize ?? fieldFontSize,
       font,
@@ -458,7 +458,7 @@ export const defaultTextFieldAppearanceProvider: AppearanceProviderFor<PDFTextFi
     textLines = layout.lines;
     fontSize = layout.fontSize;
   } else if (textField.isCombed()) {
-    const layout = layoutCombedText(text, {
+    const layout = await layoutCombedText(text, {
       fontSize: widgetFontSize ?? fieldFontSize,
       font,
       bounds,
@@ -467,7 +467,7 @@ export const defaultTextFieldAppearanceProvider: AppearanceProviderFor<PDFTextFi
     textLines = layout.cells;
     fontSize = layout.fontSize;
   } else {
-    const layout = layoutSinglelineText(text, {
+    const layout = await layoutSinglelineText(text, {
       alignment: textField.getAlignment(),
       fontSize: widgetFontSize ?? fieldFontSize,
       font,
@@ -503,7 +503,7 @@ export const defaultTextFieldAppearanceProvider: AppearanceProviderFor<PDFTextFi
   return [...rotate, ...drawTextField(options)];
 };
 
-export const defaultDropdownAppearanceProvider: AppearanceProviderFor<PDFDropdown> = (
+export const defaultDropdownAppearanceProvider: AppearanceProviderFor<PDFDropdown> = async (
   dropdown,
   widget,
   font,
@@ -537,7 +537,7 @@ export const defaultDropdownAppearanceProvider: AppearanceProviderFor<PDFDropdow
     width: width - (borderWidth + padding) * 2,
     height: height - (borderWidth + padding) * 2,
   };
-  const { line, fontSize } = layoutSinglelineText(text, {
+  const { line, fontSize } = await layoutSinglelineText(text, {
     alignment: TextAlignment.Left,
     fontSize: widgetFontSize ?? fieldFontSize,
     font,
@@ -570,7 +570,7 @@ export const defaultDropdownAppearanceProvider: AppearanceProviderFor<PDFDropdow
   return [...rotate, ...drawTextField(options)];
 };
 
-export const defaultOptionListAppearanceProvider: AppearanceProviderFor<PDFOptionList> = (
+export const defaultOptionListAppearanceProvider: AppearanceProviderFor<PDFOptionList> = async (
   optionList,
   widget,
   font,
@@ -614,7 +614,7 @@ export const defaultOptionListAppearanceProvider: AppearanceProviderFor<PDFOptio
     width: width - (borderWidth + padding) * 2,
     height: height - (borderWidth + padding) * 2,
   };
-  const { lines, fontSize, lineHeight } = layoutMultilineText(text, {
+  const { lines, fontSize, lineHeight } = await layoutMultilineText(text, {
     alignment: TextAlignment.Left,
     fontSize: widgetFontSize ?? fieldFontSize,
     font,

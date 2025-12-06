@@ -16,10 +16,5 @@
     "allowJs": false,
     "forceConsistentCasingInFileNames": true,
   },
-  "exclude": [
-     "**/dist",
-     "**/vendor",
-     "apps/web",
-     "packages/dfa"
-  ]
+  "exclude": ["**/dist", "**/node_modules" ]
 }

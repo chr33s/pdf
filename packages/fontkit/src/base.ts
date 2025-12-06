@@ -54,7 +54,7 @@ interface FontInstance {
   glyphForCodePoint(codePoint: number): Glyph;
   glyphsForString(text: string): Glyph[];
   getGlyph(glyphId: number, codePoints?: number[]): Glyph;
-  stringsForGlyph(glyphId: number): string[];
+  stringsForGlyph(glyphId: number): Promise<string[]>;
   availableFeatures: string[];
   getAvailableFeatures(script?: string | null, language?: string | null): string[];
   layout(
@@ -63,8 +63,8 @@ interface FontInstance {
     script?: string | null,
     language?: string | null,
     direction?: string | null,
-  ): GlyphRun;
-  widthOfGlyph(glyphId: number): number;
+  ): Promise<GlyphRun>;
+  widthOfGlyph(glyphId: number): Promise<number>;
   createSubset(): Subset;
   getVariation(settings: VariationSettings | string): FontInstance;
   getName(key: string, lang?: string): string | null;

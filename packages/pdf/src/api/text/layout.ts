@@ -1,5 +1,5 @@
-import PDFFont from "../pdf-font.js";
 import { CombedTextLayoutError } from "../errors.js";
+import PDFFont from "../pdf-font.js";
 import { TextAlignment } from "./alignment.js";
 
 import { PDFHexString } from "../../core/index.js";
@@ -24,12 +24,12 @@ export interface LayoutBounds {
 const MIN_FONT_SIZE = 4;
 const MAX_FONT_SIZE = 500;
 
-const computeFontSize = (
+const computeFontSize = async (
   lines: string[],
   font: PDFFont,
   bounds: LayoutBounds,
   multiline: boolean = false,
-) => {
+): Promise<number> => {
   let fontSize = MIN_FONT_SIZE;
 
   while (fontSize < MAX_FONT_SIZE) {
@@ -47,7 +47,7 @@ const computeFontSize = (
       for (let idx = 0, len = words.length; idx < len; idx++) {
         const isLastWord = idx === len - 1;
         const word = isLastWord ? words[idx] : words[idx] + " ";
-        const widthOfWord = font.widthOfTextAtSize(word, fontSize);
+        const widthOfWord = await font.widthOfTextAtSize(word, fontSize);
         spaceInLineRemaining -= widthOfWord;
         if (spaceInLineRemaining <= 0) {
           linesUsed += 1;
@@ -72,12 +72,12 @@ const computeFontSize = (
   return fontSize;
 };
 
-const computeCombedFontSize = (
+const computeCombedFontSize = async (
   line: string,
   font: PDFFont,
   bounds: LayoutBounds,
   cellCount: number,
-) => {
+): Promise<number> => {
   const cellWidth = bounds.width / cellCount;
   const cellHeight = bounds.height;
 
@@ -87,7 +87,7 @@ const computeCombedFontSize = (
   while (fontSize < MAX_FONT_SIZE) {
     for (let idx = 0, len = chars.length; idx < len; idx++) {
       const c = chars[idx];
-      const tooLong = font.widthOfTextAtSize(c, fontSize) > cellWidth * 0.75;
+      const tooLong = (await font.widthOfTextAtSize(c, fontSize)) > cellWidth * 0.75;
       if (tooLong) return fontSize - 1;
     }
 
@@ -121,12 +121,22 @@ const lastIndexOfWhitespace = (line: string) => {
   return undefined;
 };
 
-const splitOutLines = (input: string, maxWidth: number, font: PDFFont, fontSize: number) => {
+const splitOutLines = async (
+  input: string,
+  maxWidth: number,
+  font: PDFFont,
+  fontSize: number,
+): Promise<{
+  line: string;
+  encoded: PDFHexString;
+  width: number;
+  remainder: string | undefined;
+}> => {
   let lastWhitespaceIdx = input.length;
   while (lastWhitespaceIdx > 0) {
     const line = input.substring(0, lastWhitespaceIdx);
-    const encoded = font.encodeText(line);
-    const width = font.widthOfTextAtSize(line, fontSize);
+    const encoded = await font.encodeText(line);
+    const width = await font.widthOfTextAtSize(line, fontSize);
     if (width < maxWidth) {
       const remainder = input.substring(lastWhitespaceIdx) || undefined;
       return { line, encoded, width, remainder };
@@ -138,20 +148,20 @@ const splitOutLines = (input: string, maxWidth: number, font: PDFFont, fontSize:
   // within the specified `maxWidth` so we'll just return everything
   return {
     line: input,
-    encoded: font.encodeText(input),
-    width: font.widthOfTextAtSize(input, fontSize),
+    encoded: await font.encodeText(input),
+    width: await font.widthOfTextAtSize(input, fontSize),
     remainder: undefined,
   };
 };
 
-export const layoutMultilineText = (
+export const layoutMultilineText = async (
   text: string,
   { alignment, fontSize, font, bounds }: LayoutTextOptions,
-): MultilineTextLayout => {
+): Promise<MultilineTextLayout> => {
   const lines = lineSplit(cleanText(text));
 
   if (fontSize === undefined || fontSize === 0) {
-    fontSize = computeFontSize(lines, font, bounds, true);
+    fontSize = await computeFontSize(lines, font, bounds, true);
   }
   const height = font.heightAtSize(fontSize);
   const lineHeight = height + height * 0.2;
@@ -167,7 +177,7 @@ export const layoutMultilineText = (
   for (let idx = 0, len = lines.length; idx < len; idx++) {
     let prevRemainder: string | undefined = lines[idx];
     while (prevRemainder !== undefined) {
-      const { line, encoded, width, remainder } = splitOutLines(
+      const { line, encoded, width, remainder } = await splitOutLines(
         prevRemainder,
         bounds.width,
         font,
@@ -223,10 +233,10 @@ export interface CombedTextLayout {
   fontSize: number;
 }
 
-export const layoutCombedText = (
+export const layoutCombedText = async (
   text: string,
   { fontSize, font, bounds, cellCount }: LayoutCombedTextOptions,
-): CombedTextLayout => {
+): Promise<CombedTextLayout> => {
   const line = mergeLines(cleanText(text));
 
   if (line.length > cellCount) {
@@ -234,7 +244,7 @@ export const layoutCombedText = (
   }
 
   if (fontSize === undefined || fontSize === 0) {
-    fontSize = computeCombedFontSize(line, font, bounds, cellCount);
+    fontSize = await computeCombedFontSize(line, font, bounds, cellCount);
   }
 
   const cellWidth = bounds.width / cellCount;
@@ -254,8 +264,8 @@ export const layoutCombedText = (
   while (cellOffset < cellCount) {
     const [char, charLength] = charAtIndex(line, charOffset);
 
-    const encoded = font.encodeText(char);
-    const width = font.widthOfTextAtSize(char, fontSize);
+    const encoded = await font.encodeText(char);
+    const width = await font.widthOfTextAtSize(char, fontSize);
 
     const cellCenter = bounds.x + (cellWidth * cellOffset + cellWidth / 2);
     const x = cellCenter - width / 2;
@@ -296,18 +306,18 @@ export interface SinglelineTextLayout {
   fontSize: number;
 }
 
-export const layoutSinglelineText = (
+export const layoutSinglelineText = async (
   text: string,
   { alignment, fontSize, font, bounds }: LayoutSinglelineTextOptions,
-): SinglelineTextLayout => {
+): Promise<SinglelineTextLayout> => {
   const line = mergeLines(cleanText(text));
 
   if (fontSize === undefined || fontSize === 0) {
-    fontSize = computeFontSize([line], font, bounds);
+    fontSize = await computeFontSize([line], font, bounds);
   }
 
-  const encoded = font.encodeText(line);
-  const width = font.widthOfTextAtSize(line, fontSize);
+  const encoded = await font.encodeText(line);
+  const width = await font.widthOfTextAtSize(line, fontSize);
   const height = font.heightAtSize(fontSize, { descender: false });
 
   // prettier-ignore

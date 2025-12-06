@@ -55,7 +55,7 @@ export default class CFFGlyph extends Glyph {
     }
   }
 
-  _getPath(): Path {
+  async _getPath(): Promise<Path> {
     const { stream } = this._font;
 
     const cff = this._font.CFF2 || this._font["CFF "];
@@ -99,7 +99,7 @@ export default class CFFGlyph extends Glyph {
       }
     };
 
-    function glyphForName(name: string) {
+    async function glyphForName(name: string) {
       if (!encodingVector) {
         encodingVector = cff.topDict.charset.glyphs.map((g: number) => CFFStandardStrings[g]);
       }
@@ -125,12 +125,12 @@ export default class CFFGlyph extends Glyph {
       open = true;
     };
 
-    const runSubroutine = (
+    const runSubroutine = async (
       rawIndex: number,
       bias: number,
       subroutineList: SubroutineRecord[] | undefined,
       usage: UsedSubroutineMap,
-    ): void => {
+    ): Promise<void> => {
       const list = subroutineList || [];
       const index = rawIndex + bias;
       const record = list[index];
@@ -143,12 +143,12 @@ export default class CFFGlyph extends Glyph {
       const savedEnd = end;
       stream.pos = record.offset;
       end = record.offset + record.length;
-      parse();
+      await parse();
       stream.pos = savedPos;
       end = savedEnd;
     };
 
-    const parse = (): void => {
+    const parse = async (): Promise<void> => {
       while (stream.pos < end) {
         let op = stream.readUInt8();
         if (op < 32) {
@@ -214,7 +214,7 @@ export default class CFFGlyph extends Glyph {
 
             case 10: {
               // callsubr
-              runSubroutine(stack.pop(), subrsBias, subrs, usedSubrs);
+              await runSubroutine(stack.pop(), subrsBias, subrs, usedSubrs);
               break;
             }
 
@@ -240,11 +240,22 @@ export default class CFFGlyph extends Glyph {
                 const adx = stack.pop();
                 // const asb = stack.pop(); // ignored for Type 2
 
-                const achar = glyphForName(acharName);
-                const bchar = glyphForName(bcharName);
+                const achar = await glyphForName(acharName);
+                const bchar = await glyphForName(bcharName);
 
-                const aPathShifted = achar.path.translate(adx, ady);
-                path.commands = [...bchar.path.commands, ...aPathShifted.commands];
+                // Save stream position before recursive getPath calls
+                const savedPos = stream.pos;
+                const savedEnd = end;
+
+                const acharPath = await achar.getPath();
+                const bcharPath = await bchar.getPath();
+
+                // Restore stream position after recursive calls
+                stream.pos = savedPos;
+                end = savedEnd;
+
+                const aPathShifted = acharPath.translate(adx, ady);
+                path.commands = [...bcharPath.commands, ...aPathShifted.commands];
 
                 open = false;
               } else if (stack.length > 0) {
@@ -406,7 +417,7 @@ export default class CFFGlyph extends Glyph {
 
             case 29: {
               // callgsubr
-              runSubroutine(stack.pop(), gsubrsBias, gsubrs, usedGsubrs);
+              await runSubroutine(stack.pop(), gsubrsBias, gsubrs, usedGsubrs);
               break;
             }
 
@@ -735,7 +746,7 @@ export default class CFFGlyph extends Glyph {
       }
     };
 
-    parse();
+    await parse();
 
     if (open) {
       path.closePath();

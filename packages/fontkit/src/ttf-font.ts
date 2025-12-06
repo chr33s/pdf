@@ -522,8 +522,8 @@ class TTFFontBase implements GlyphFontLike {
     return glyphs;
   }
 
-  widthOfGlyph(glyphId: number): number {
-    return this.getGlyph(glyphId).advanceWidth;
+  async widthOfGlyph(glyphId: number): Promise<number> {
+    return await this.getGlyph(glyphId).getAdvanceWidth();
   }
 
   @cache
@@ -541,13 +541,13 @@ class TTFFontBase implements GlyphFontLike {
    * @param {string} [direction]
    * @return {GlyphRun}
    */
-  layout(
+  async layout(
     string: string,
     userFeatures?: string[] | Record<string, boolean> | string,
     script?: string | null,
     language?: string | null,
     direction?: string | null,
-  ): GlyphRun {
+  ): Promise<GlyphRun> {
     let featuresArg: string[] | Record<string, boolean> | undefined;
     let scriptArg = script;
     let languageArg = language;
@@ -569,7 +569,7 @@ class TTFFontBase implements GlyphFontLike {
    * Returns an array of strings that map to the given glyph id.
    * @param {number} gid - glyph id
    */
-  stringsForGlyph(gid: number): string[] {
+  async stringsForGlyph(gid: number): Promise<string[]> {
     return this._layoutEngine.stringsForGlyph(gid);
   }
 

@@ -1,11 +1,10 @@
 #!/usr/bin/env node
+import { inflate } from "@chr33s/pdf-common";
 import { Buffer } from "node:buffer";
 import { constants as fsConstants } from "node:fs";
 import { access, readFile, readdir } from "node:fs/promises";
 import { dirname, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
-import { promisify } from "node:util";
-import { inflate, inflateRaw } from "node:zlib";
 
 import fontkit from "@chr33s/pdf-fontkit";
 
@@ -37,9 +36,6 @@ const testRoot = join(__dirname, "..", "test");
 
 const ok: string[] = [];
 const skipped: string[] = [];
-
-const inflateRawAsync = promisify(inflateRaw);
-const inflateAsync = promisify(inflate);
 
 const pathExists = async (target: string) => {
   try {
@@ -197,10 +193,10 @@ function decodeRunLength(data: Uint8Array) {
 
 async function decodeFlate(data: Uint8Array) {
   try {
-    return new Uint8Array(await inflateRawAsync(data));
+    return new Uint8Array(await inflate(data, "deflate-raw"));
   } catch (rawErr) {
     try {
-      return new Uint8Array(await inflateAsync(data));
+      return new Uint8Array(await inflate(data));
     } catch (err) {
       const rawMsg = rawErr instanceof Error ? rawErr.message : String(rawErr);
       const errMsg = err instanceof Error ? err.message : String(err);

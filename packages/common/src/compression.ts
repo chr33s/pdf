@@ -1,65 +1,35 @@
-import type { FlateError } from "fflate";
-import {
-  deflateSync as fflateDeflateSync,
-  gunzip as fflateGunzip,
-  gzip as fflateGzip,
-  inflateSync as fflateInflateSync,
-  unzlibSync as fflateUnzlibSync,
-  zlibSync as fflateZlibSync,
-} from "fflate";
-
 export type CompressionFormat = "deflate" | "deflate-raw" | "gzip";
 
-export const deflate = async (
-  data: Uint8Array,
-  format: CompressionFormat = "deflate",
-): Promise<Uint8Array> => {
-  switch (format) {
-    case "deflate":
-      return fflateZlibSync(data);
-    case "deflate-raw":
-      return fflateDeflateSync(data);
-    case "gzip":
-      return new Promise((resolve, reject) => {
-        fflateGzip(data, (err: FlateError | null, result: Uint8Array) =>
-          err ? reject(err) : resolve(result),
-        );
-      });
+function concatUint8Arrays(arrays: Uint8Array[]) {
+  const totalLength = arrays.reduce((sum, arr) => sum + arr.length, 0);
+  const result = new Uint8Array(totalLength);
+  let offset = 0;
+  for (const arr of arrays) {
+    result.set(arr, offset);
+    offset += arr.length;
   }
-};
+  return result;
+}
 
-export const inflate = async (
-  data: Uint8Array,
-  format: CompressionFormat = "deflate",
-): Promise<Uint8Array> => {
-  switch (format) {
-    case "deflate":
-      return fflateUnzlibSync(data);
-    case "deflate-raw":
-      return fflateInflateSync(data);
-    case "gzip":
-      return new Promise((resolve, reject) => {
-        fflateGunzip(data, (err: FlateError | null, result: Uint8Array) =>
-          err ? reject(err) : resolve(result),
-        );
-      });
+async function readAllChunks(stream: ReadableStream<Uint8Array>) {
+  const reader = stream.getReader();
+  const chunks: Uint8Array[] = [];
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    if (value) chunks.push(value);
   }
-};
 
-export const deflateRaw = async (data: Uint8Array): Promise<Uint8Array> => fflateDeflateSync(data);
+  return concatUint8Arrays(chunks);
+}
 
-export const inflateRaw = async (data: Uint8Array): Promise<Uint8Array> => fflateInflateSync(data);
+export async function deflate(data: Uint8Array, format: CompressionFormat = "deflate") {
+  const stream = new Blob([data]).stream().pipeThrough(new CompressionStream(format));
+  return readAllChunks(stream);
+}
 
-export const gzip = async (data: Uint8Array): Promise<Uint8Array> =>
-  new Promise((resolve, reject) => {
-    fflateGzip(data, (err: FlateError | null, result: Uint8Array) =>
-      err ? reject(err) : resolve(result),
-    );
-  });
-
-export const gunzip = async (data: Uint8Array): Promise<Uint8Array> =>
-  new Promise((resolve, reject) => {
-    fflateGunzip(data, (err: FlateError | null, result: Uint8Array) =>
-      err ? reject(err) : resolve(result),
-    );
-  });
+export async function inflate(data: Uint8Array, format: CompressionFormat = "deflate") {
+  const stream = new Blob([data]).stream().pipeThrough(new DecompressionStream(format));
+  return readAllChunks(stream);
+}

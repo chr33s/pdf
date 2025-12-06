@@ -22,9 +22,9 @@ export default class TTFSubset extends Subset<TTFFont> {
     this.glyphEncoder = new TTFGlyphEncoder();
   }
 
-  private _addGlyph(gid: number): number {
+  private async _addGlyph(gid: number): Promise<number> {
     let glyph = this.font.getGlyph(gid) as TTFGlyph;
-    let glyf = glyph._decode();
+    let glyf = await glyph._decode();
 
     // get the offset to the glyph from the loca table
     let curOffset = this.font.loca.offsets[gid];
@@ -49,22 +49,23 @@ export default class TTFSubset extends Subset<TTFFont> {
       }
     } else if (glyf && this.font._variationProcessor) {
       // If this is a TrueType variation glyph, re-encode the path
-      buffer = this.glyphEncoder.encodeSimple(glyph.path, glyf.instructions);
+      const path = await glyph.getPath();
+      buffer = this.glyphEncoder.encodeSimple(path, glyf.instructions);
     }
 
     this.glyf.push(buffer);
     this.loca.offsets.push(this.offset);
 
     this.hmtx.metrics.push({
-      advance: glyph.advanceWidth,
-      bearing: glyph._getMetrics().leftBearing,
+      advance: await glyph.getAdvanceWidth(),
+      bearing: (await glyph._getMetrics()).leftBearing,
     });
 
     this.offset += buffer.length;
     return this.glyf.length - 1;
   }
 
-  protected override encode(stream: EncodeStream): void {
+  protected override async encode(stream: EncodeStream): Promise<void> {
     // tables required by PDF spec:
     //   head, hhea, loca, maxp, cvt , prep, glyf, hmtx, fpgm
     //
@@ -88,7 +89,7 @@ export default class TTFSubset extends Subset<TTFFont> {
     // glyphs to the array as we go, and CoffeeScript caches the length.
     let i = 0;
     while (i < this.glyphs.length) {
-      this._addGlyph(this.glyphs[i++]);
+      await this._addGlyph(this.glyphs[i++]);
     }
 
     let maxp = cloneDeep(this.font.maxp);

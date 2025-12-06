@@ -43,7 +43,7 @@ test.describe("public example pages", () => {
         if (global.PDFLibLoadError) {
           return {
             status: "error",
-            message: String(global.PDFLibLoadError?.message ?? global.PDFLibLoadError),
+            message: global.PDFLibLoadError?.message ?? global.PDFLibLoadError,
           };
         }
         return null;

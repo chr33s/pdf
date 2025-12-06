@@ -34,7 +34,7 @@ export default class OTLayoutEngine {
     }
   }
 
-  setup(glyphRun: GlyphRun): void {
+  async setup(glyphRun: GlyphRun): Promise<void> {
     // Map glyphs to GlyphInfo objects so data can be passed between
     // GSUB and GPOS without mutating the real (shared) Glyph objects.
     this.glyphInfos = glyphRun.glyphs.map(
@@ -64,7 +64,7 @@ export default class OTLayoutEngine {
     const shaper = chooseShaper(script);
     this.shaper = shaper;
     this.plan = new ShapingPlan(this.font, script, glyphRun.direction);
-    shaper.plan(this.plan, this.glyphInfos, glyphRun.features);
+    await shaper.plan(this.plan, this.glyphInfos, glyphRun.features);
 
     // Assign chosen features to output glyph run
     for (let key in this.plan.allFeatures) {
@@ -72,13 +72,13 @@ export default class OTLayoutEngine {
     }
   }
 
-  substitute(glyphRun: GlyphRun): void {
+  async substitute(glyphRun: GlyphRun): Promise<void> {
     if (this.GSUBProcessor && this.plan && this.glyphInfos) {
       this.plan.process(this.GSUBProcessor, this.glyphInfos);
 
       // Map glyph infos back to normal Glyph objects
-      glyphRun.glyphs = this.glyphInfos.map((glyphInfo) =>
-        this.font.getGlyph(glyphInfo.id, glyphInfo.codePoints),
+      glyphRun.glyphs = await Promise.all(
+        this.glyphInfos.map((glyphInfo) => this.font.getGlyph(glyphInfo.id, glyphInfo.codePoints)),
       );
     }
   }

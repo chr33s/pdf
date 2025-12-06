@@ -28,15 +28,16 @@ describe("CustomFontSubsetEmbedder", () => {
     const hexCodes = "00010002000300040005000600070008000500020009000A0007000B000C000D";
     const embedder = await CustomFontSubsetEmbedder.for(fk, ubuntuFont);
 
-    expect(embedder.encodeText(text)).toBeInstanceOf(PDFHexString);
-    expect(String(embedder.encodeText(text))).toBe(String(PDFHexString.of(hexCodes)));
+    expect(await embedder.encodeText(text)).toBeInstanceOf(PDFHexString);
+    const encoded = await embedder.encodeText(text);
+    expect(encoded.asString()).toBe(PDFHexString.of(hexCodes).asString());
   });
 
   test("can measure the width of text strings at the given font size", async () => {
     const text = "Stuff and thingz!";
     const embedder = await CustomFontSubsetEmbedder.for(fk, ubuntuFont);
-    expect(embedder.widthOfTextAtSize(text, 12)).toBe(90.672);
-    expect(embedder.widthOfTextAtSize(text, 24)).toBe(181.344);
+    expect(await embedder.widthOfTextAtSize(text, 12)).toBe(90.672);
+    expect(await embedder.widthOfTextAtSize(text, 24)).toBe(181.344);
   });
 
   test("can measure the height of the font at the given size", async () => {

@@ -18,7 +18,7 @@ export default class UnicodeLayoutEngine {
     this.font = font;
   }
 
-  positionGlyphs(glyphs: Glyph[], positions: GlyphPosition[]): GlyphPosition[] {
+  async positionGlyphs(glyphs: Glyph[], positions: GlyphPosition[]): Promise<GlyphPosition[]> {
     // find each base + mark cluster, and position the marks relative to the base
     let clusterStart = 0;
     let clusterEnd = 0;
@@ -29,7 +29,7 @@ export default class UnicodeLayoutEngine {
         clusterEnd = index;
       } else {
         if (clusterStart !== clusterEnd) {
-          this.positionCluster(glyphs, positions, clusterStart, clusterEnd);
+          await this.positionCluster(glyphs, positions, clusterStart, clusterEnd);
         }
 
         clusterStart = clusterEnd = index;
@@ -37,20 +37,20 @@ export default class UnicodeLayoutEngine {
     }
 
     if (clusterStart !== clusterEnd) {
-      this.positionCluster(glyphs, positions, clusterStart, clusterEnd);
+      await this.positionCluster(glyphs, positions, clusterStart, clusterEnd);
     }
 
     return positions;
   }
 
-  positionCluster(
+  async positionCluster(
     glyphs: Glyph[],
     positions: GlyphPosition[],
     clusterStart: number,
     clusterEnd: number,
-  ): void {
+  ): Promise<void> {
     let base = glyphs[clusterStart];
-    let baseBox = base.cbox.copy();
+    let baseBox = (await base.getCBox()).copy();
 
     // adjust bounding box for ligature glyphs
     if (base.codePoints.length > 1) {
@@ -65,7 +65,7 @@ export default class UnicodeLayoutEngine {
     // position each of the mark glyphs relative to the base glyph
     for (let index = clusterStart + 1; index <= clusterEnd; index++) {
       let mark = glyphs[index];
-      let markBox = mark.cbox;
+      let markBox = await mark.getCBox();
       let position = positions[index];
 
       let combiningClass = this.getCombiningClass(mark.codePoints[0]);

@@ -38,8 +38,8 @@ class CustomFontSubsetEmbedder extends CustomFontEmbedder {
     this.#glyphIdMap = new Map();
   }
 
-  encodeText(text: string): PDFHexString {
-    const { glyphs } = this.font.layout(text, this.fontFeatures);
+  async encodeText(text: string): Promise<PDFHexString> {
+    const { glyphs } = await this.font.layout(text, this.fontFeatures);
     const hexCodes: string[] = Array.from({ length: glyphs.length });
 
     for (let idx = 0, len = glyphs.length; idx < len; idx++) {

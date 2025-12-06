@@ -479,7 +479,7 @@ export default async () => {
       textColor: pastels.whiteish,
       font: ubuntuFont,
     });
-    if (font) textField.updateAppearances(font);
+    if (font) await textField.updateAppearances(font);
   }
 
   // Buttons

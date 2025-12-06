@@ -1,4 +1,4 @@
-import { deflateRaw } from "@chr33s/pdf-common";
+import { deflate } from "@chr33s/pdf-common";
 import { describe, expect, test } from "vitest";
 import { Inflator } from "../src/inflator.js";
 
@@ -180,8 +180,7 @@ describe("Inflator.inflateRaw", () => {
     const encoder = new TextEncoder();
     const data = encoder.encode(text);
 
-    // deflateRaw uses raw deflate (no zlib wrapper)
-    const compressed = await deflateRaw(data);
+    const compressed = await deflate(data, "deflate-raw");
     const ours = Inflator.inflateRaw(compressed);
 
     expect(new TextDecoder().decode(ours)).toBe(text);
@@ -193,7 +192,7 @@ describe("Inflator.inflateRaw", () => {
     const data = encoder.encode(text);
 
     // deflateRaw uses dynamic Huffman by default
-    const compressed = await deflateRaw(data); // contains dynamic blocks
+    const compressed = await deflate(data, "deflate-raw"); // contains dynamic blocks
     const ours = Inflator.inflateRaw(compressed);
 
     expect(new TextDecoder().decode(ours)).toBe(text);
@@ -204,7 +203,7 @@ describe("Inflator.inflateRaw", () => {
     const encoder = new TextEncoder();
     const data = encoder.encode(text);
 
-    const compressed = await deflateRaw(data);
+    const compressed = await deflate(data, "deflate-raw");
 
     // Preallocate a buffer with exactly the required size
     const out = new Uint8Array(text.length);
@@ -219,7 +218,7 @@ describe("Inflator.inflateRaw", () => {
     const text = "X".repeat(100000); // big to force resizing via H()
     const encoder = new TextEncoder();
     const data = encoder.encode(text);
-    const compressed = await deflateRaw(data);
+    const compressed = await deflate(data, "deflate-raw");
 
     const result = Inflator.inflateRaw(compressed);
     expect(result.length).toBe(text.length);

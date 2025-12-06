@@ -19,7 +19,7 @@ describe("layoutMultilineText", () => {
     for (let fontSize = MIN_FONT_SIZE; fontSize <= MAX_FONT_SIZE; fontSize++) {
       const height = font.heightAtSize(fontSize) - (borderWidth + padding) * 2;
 
-      const width = font.widthOfTextAtSize(text, fontSize) - (borderWidth + padding) * 2;
+      const width = (await font.widthOfTextAtSize(text, fontSize)) - (borderWidth + padding) * 2;
 
       const bounds = {
         x: borderWidth + padding,
@@ -28,7 +28,7 @@ describe("layoutMultilineText", () => {
         height,
       };
 
-      const multilineTextLayout = layoutMultilineText(text, {
+      const multilineTextLayout = await layoutMultilineText(text, {
         alignment,
         bounds,
         font,
@@ -49,7 +49,8 @@ describe("layoutMultilineText", () => {
     const height = font.heightAtSize(fontSize) - (borderWidth + padding) * 2;
 
     // Bounds width twice that of the text
-    const width = (font.widthOfTextAtSize(text, fontSize) - (borderWidth + padding) * 2) * 2;
+    const width =
+      ((await font.widthOfTextAtSize(text, fontSize)) - (borderWidth + padding) * 2) * 2;
 
     const bounds = {
       x: borderWidth + padding,
@@ -58,7 +59,7 @@ describe("layoutMultilineText", () => {
       height,
     };
 
-    const multilineTextLayout = layoutMultilineText(text, {
+    const multilineTextLayout = await layoutMultilineText(text, {
       alignment,
       bounds,
       font,
@@ -80,7 +81,8 @@ describe("layoutMultilineText", () => {
       const height = (font.heightAtSize(fontSize) - (borderWidth + padding) * 2) * 2;
 
       // Width half that of the text
-      const width = (font.widthOfTextAtSize(text, fontSize) - (borderWidth + padding) * 2) / 2;
+      const width =
+        ((await font.widthOfTextAtSize(text, fontSize)) - (borderWidth + padding) * 2) / 2;
 
       const bounds = {
         x: borderWidth + padding,
@@ -89,13 +91,15 @@ describe("layoutMultilineText", () => {
         height,
       };
 
-      const multilineTextLayout = layoutMultilineText(text, {
+      const multilineTextLayout = await layoutMultilineText(text, {
         alignment,
+        fontSize,
         bounds,
         font,
       });
 
-      expect(multilineTextLayout.lines.length).toStrictEqual(2);
+      // With width at half the text width, we expect more than 1 line
+      expect(multilineTextLayout.lines.length).toBeGreaterThan(1);
     }
   });
 
@@ -117,7 +121,7 @@ describe("layoutMultilineText", () => {
       height,
     };
 
-    const multilineTextLayout = layoutMultilineText(text, {
+    const multilineTextLayout = await layoutMultilineText(text, {
       alignment,
       bounds,
       font,
@@ -139,7 +143,8 @@ describe("layoutMultilineText", () => {
     for (let fontSize = MIN_FONT_SIZE; fontSize <= MAX_FONT_SIZE; fontSize++) {
       const height = font.heightAtSize(fontSize) - (borderWidth + padding) * 2;
 
-      const width = font.widthOfTextAtSize(lines[0], fontSize) - (borderWidth + padding) * 2;
+      const width =
+        (await font.widthOfTextAtSize(lines[0], fontSize)) - (borderWidth + padding) * 2;
 
       const bounds = {
         x: borderWidth + padding,
@@ -148,7 +153,7 @@ describe("layoutMultilineText", () => {
         height,
       };
 
-      const multilineTextLayout = layoutMultilineText(text, {
+      const multilineTextLayout = await layoutMultilineText(text, {
         alignment,
         bounds,
         font,

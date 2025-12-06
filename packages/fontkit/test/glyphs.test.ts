@@ -15,69 +15,69 @@ describe("glyphs", function () {
       mada = await fontkit.open(__dirname + "/data/mada/mada-vf.ttf");
     });
 
-    test("should get a TTFGlyph", function () {
+    test("should get a TTFGlyph", async function () {
       let glyph = font.getGlyph(39); // D
-      return expect(glyph.constructor.name).toBe("TTFGlyph");
+      expect(glyph.constructor.name).toBe("TTFGlyph");
     });
 
-    test("should get a path for the glyph", function () {
+    test("should get a path for the glyph", async function () {
       let glyph = font.getGlyph(39);
-      return expect(glyph.path.toSVG()).toBe(
+      expect((await glyph.getPath()).toSVG()).toBe(
         "M1368 745Q1368 383 1171.5 191.5Q975 0 606 0L201 0L201 1462L649 1462Q990 1462 1179 1273Q1368 1084 1368 745ZM1188 739Q1188 1025 1044.5 1170Q901 1315 618 1315L371 1315L371 147L578 147Q882 147 1035 296.5Q1188 446 1188 739Z",
       );
     });
 
-    test("should get a composite glyph", function () {
+    test("should get a composite glyph", async function () {
       let glyph = font.getGlyph(171); // é
-      return expect(glyph.path.toSVG()).toBe(
+      expect((await glyph.getPath()).toSVG()).toBe(
         "M639 -20Q396 -20 255.5 128Q115 276 115 539Q115 804 245.5 960Q376 1116 596 1116Q802 1116 922 980.5Q1042 845 1042 623L1042 518L287 518Q292 325 384.5 225Q477 125 645 125Q822 125 995 199L995 51Q907 13 828.5 -3.5Q750 -20 639 -20ZM594 977Q462 977 383.5 891Q305 805 291 653L864 653Q864 810 794 893.5Q724 977 594 977ZM471 1266Q519 1328 574.5 1416Q630 1504 662 1569L864 1569L864 1548Q820 1483 733 1388Q646 1293 582 1241L471 1241Z",
       );
     });
 
-    test("should resolve composite glyphs recursively", function () {
-      let r = mada.layout("ي");
-      expect(r.glyphs[0].path.toSVG()).toBe(
+    test("should resolve composite glyphs recursively", async function () {
+      let r = await mada.layout("ي");
+      expect((await r.glyphs[0].getPath()).toSVG()).toBe(
         "M-140 0Q-140 -22 -125 -37Q-110 -52 -88 -52Q-66 -52 -51 -37Q-36 -22 -36 0Q-36 22 -51 37Q-66 52 -88 52Q-110 52 -125 37Q-140 22 -140 0ZM36 0Q36 -22 51 -37Q66 -52 88 -52Q110 -52 125 -37Q140 -22 140 0Q140 22 125 37Q110 52 88 52Q66 52 51 37Q36 22 36 0Z",
       );
     });
 
-    test("should transform points of a composite glyph", function () {
-      let r = mada.layout("فا");
-      expect(r.glyphs[0].path.toSVG()).toBe(
+    test("should transform points of a composite glyph", async function () {
+      let r = await mada.layout("فا");
+      expect((await r.glyphs[0].getPath()).toSVG()).toBe(
         "M155 624L155 84Q150 90 145.5 94.5Q141 99 136 105L292 105L292 0L156 0Q128 0 103.5 13.5Q79 27 64.5 50.5Q50 74 50 104L50 624ZM282 105L312 105L312 0L282 0Z",
       );
     });
 
-    test("should be able to get a scaled path at a given font size", function () {
+    test("should be able to get a scaled path at a given font size", async function () {
       let glyph = font.getGlyph(39);
-      expect(glyph.getScaledPath(1000).toSVG()).toBe(
+      expect((await glyph.getScaledPath(1000)).toSVG()).toBe(
         "M667.97 363.77Q667.97 187.01 572.02 93.51Q476.07 0 295.9 0L98.14 0L98.14 713.87L316.89 713.87Q483.4 713.87 575.68 621.58Q667.97 529.3 667.97 363.77ZM580.08 360.84Q580.08 500.49 510.01 571.29Q439.94 642.09 301.76 642.09L181.15 642.09L181.15 71.78L282.23 71.78Q430.66 71.78 505.37 144.78Q580.08 217.77 580.08 360.84Z",
       );
     });
 
-    test("should get the glyph cbox", function () {
+    test("should get the glyph cbox", async function () {
       let glyph = font.getGlyph(39);
-      return expect(glyph.cbox).toEqual(new BBox(201, 0, 1368, 1462));
+      expect(await glyph.getCBox()).toEqual(new BBox(201, 0, 1368, 1462));
     });
 
-    test("should get the glyph bbox", function () {
+    test("should get the glyph bbox", async function () {
       let glyph = font.getGlyph(39);
-      return expect(glyph.bbox).toEqual(new BBox(201, 0, 1368, 1462));
+      expect(await glyph.getBBox()).toEqual(new BBox(201, 0, 1368, 1462));
     });
 
-    test("should get correct bbox for runs containing blanks", function () {
-      let r = font.layout("abc ef");
-      return expect(r.bbox).toEqual(new BBox(94, -20, 5832, 1567));
+    test("should get correct bbox for runs containing blanks", async function () {
+      let r = await font.layout("abc ef");
+      expect(await r.getBBox()).toEqual(new BBox(94, -20, 5832, 1567));
     });
 
-    test("should get the advance width", function () {
+    test("should get the advance width", async function () {
       let glyph = font.getGlyph(39);
-      return expect(glyph.advanceWidth | 0).toBe(1493);
+      expect((await glyph.getAdvanceWidth()) | 0).toBe(1493);
     });
 
-    test("should get the glyph name", function () {
+    test("should get the glyph name", async function () {
       let glyph = font.getGlyph(171);
-      return expect(glyph.name).toBe("eacute");
+      expect(glyph.name).toBe("eacute");
     });
   });
 
@@ -88,39 +88,39 @@ describe("glyphs", function () {
       font = await fontkit.open(__dirname + "/data/source-sans-pro/source-sans-pro-regular.otf");
     });
 
-    test("should get a CFFGlyph", function () {
+    test("should get a CFFGlyph", async function () {
       let glyph = font.getGlyph(5); // D
-      return expect(glyph.constructor.name).toBe("CFFGlyph");
+      expect(glyph.constructor.name).toBe("CFFGlyph");
     });
 
-    test("should get a path for the glyph", function () {
+    test("should get a path for the glyph", async function () {
       let glyph = font.getGlyph(5);
-      return expect(glyph.path.toSVG()).toBe(
+      expect((await glyph.getPath()).toSVG()).toBe(
         "M90 0L258 0C456 0 564 122 564 331C564 539 456 656 254 656L90 656ZM173 68L173 588L248 588C401 588 478 496 478 331C478 165 401 68 248 68Z",
       );
     });
 
-    test("should get the glyph cbox", function () {
+    test("should get the glyph cbox", async function () {
       let glyph = font.getGlyph(5);
-      return expect(glyph.cbox).toEqual(new BBox(90, 0, 564, 656));
+      expect(await glyph.getCBox()).toEqual(new BBox(90, 0, 564, 656));
     });
 
-    test("should get the glyph bbox", function () {
+    test("should get the glyph bbox", async function () {
       let glyph = font.getGlyph(5);
-      return expect(glyph.bbox).toEqual(new BBox(90, 0, 564, 656));
+      expect(await glyph.getBBox()).toEqual(new BBox(90, 0, 564, 656));
     });
 
-    test("should get the glyph name", function () {
+    test("should get the glyph name", async function () {
       let glyph = font.getGlyph(5);
-      return expect(glyph.name).toBe("D");
+      expect(glyph.name).toBe("D");
     });
 
     test("should handle seac-like endchar operators", async function () {
       let font2 = await fontkit.open(__dirname + "/data/unicode/test-cff-three.otf");
-      expect(font2.getGlyph(3).path.toSVG()).toBe(
+      expect((await font2.getGlyph(3).getPath()).toSVG()).toBe(
         "M203 367C227 440 248 512 268 588L272 588C293 512 314 440 338 367L369 267L172 267ZM3 0L88 0L151 200L390 200L452 0L541 0L319 656L225 656ZM300 653L342 694L201 861L143 806Z",
       );
-      expect(font2.getGlyph(4).path.toSVG()).toBe(
+      expect((await font2.getGlyph(4).getPath()).toSVG()).toBe(
         "M323 -12C457 -12 558 60 558 271L558 656L478 656L478 269C478 111 410 61 323 61C237 61 170 111 170 269L170 656L87 656L87 271C87 60 189 -12 323 -12ZM220 727C248 727 269 749 269 777C269 805 248 827 220 827C191 827 170 805 170 777C170 749 191 727 220 727ZM412 727C441 727 462 749 462 777C462 805 441 827 412 827C384 827 363 805 363 777C363 749 384 727 412 727Z",
       );
     });
@@ -133,23 +133,23 @@ describe("glyphs", function () {
       font = await fontkit.open(__dirname + "/data/ss-emoji/ss-emoji-apple.ttf");
     });
 
-    test("should get an SBIXGlyph", function () {
+    test("should get an SBIXGlyph", async function () {
       let glyph = font.glyphsForString("😜")[0];
-      return expect(glyph.constructor.name).toBe("SBIXGlyph");
+      expect(glyph.constructor.name).toBe("SBIXGlyph");
     });
 
-    test("should have an empty path", function () {
+    test("should have an empty path", async function () {
       let glyph = font.glyphsForString("😜")[0];
-      return expect(glyph.path.toSVG()).toBe("M0 2048ZM2055 -7Z");
+      expect((await glyph.getPath()).toSVG()).toBe("M0 2048ZM2055 -7Z");
     });
 
-    test("should get an image", function () {
+    test("should get an image", async function () {
       let glyph = font.glyphsForString("😜")[0];
       let image = glyph.getImageForSize(32);
       if (!image) {
         throw new Error("Expected bitmap glyph image");
       }
-      return expect(image).toEqual({
+      expect(image).toEqual({
         originX: 0,
         originY: 0,
         type: "png ",
@@ -157,9 +157,9 @@ describe("glyphs", function () {
       });
     });
 
-    test("should get the glyph name", function () {
+    test("should get the glyph name", async function () {
       let glyph = font.glyphsForString("😜")[0];
-      return expect(glyph.name).toBe("stuckouttonguewinkingeye");
+      expect(glyph.name).toBe("stuckouttonguewinkingeye");
     });
   });
 
@@ -170,14 +170,16 @@ describe("glyphs", function () {
       font = await fontkit.open(__dirname + "/data/ss-emoji/ss-emoji-microsoft.ttf");
     });
 
-    test("should get an SBIXGlyph", function () {
+    test("should get an SBIXGlyph", async function () {
       let glyph = font.glyphsForString("😜")[0];
-      return expect(glyph.constructor.name).toBe("COLRGlyph");
+      expect(glyph.constructor.name).toBe("COLRGlyph");
     });
 
-    test("should get layers", function () {
-      let glyph = font.glyphsForString("😜")[0];
-      return expect(glyph.layers).toEqual([
+    test("should get layers", async function () {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let glyph = font.glyphsForString("😜")[0] as any;
+      let layers = await glyph.getLayers();
+      expect(layers).toEqual([
         {
           glyph: font.getGlyph(247),
           color: { red: 252, green: 194, blue: 0, alpha: 255 },
@@ -193,19 +195,19 @@ describe("glyphs", function () {
       ]);
     });
 
-    test("should get empty path", function () {
+    test("should get empty path", async function () {
       let glyph = font.glyphsForString("😜")[0];
-      return expect(glyph.path.toSVG()).toBe("");
+      expect((await glyph.getPath()).toSVG()).toBe("");
     });
 
-    test("should get bbox", function () {
+    test("should get bbox", async function () {
       let glyph = font.glyphsForString("😜")[0];
-      return expect(glyph.bbox).toEqual(new BBox(0, 0, 2048, 2048));
+      expect(await glyph.getBBox()).toEqual(new BBox(0, 0, 2048, 2048));
     });
 
-    test("should get the glyph name", function () {
+    test("should get the glyph name", async function () {
       let glyph = font.glyphsForString("😜")[0];
-      return expect(glyph.name).toBe("stuckouttonguewinkingeye");
+      expect(glyph.name).toBe("stuckouttonguewinkingeye");
     });
   });
 
@@ -216,21 +218,21 @@ describe("glyphs", function () {
       font = await fontkit.open(__dirname + "/data/source-sans-pro/source-sans-pro-regular.woff");
     });
 
-    test("should get a TTFGlyph", function () {
+    test("should get a TTFGlyph", async function () {
       let glyph = font.glyphsForString("T")[0];
-      return expect(glyph.constructor.name).toBe("TTFGlyph");
+      expect(glyph.constructor.name).toBe("TTFGlyph");
     });
 
-    test("should get a path for the glyph", function () {
+    test("should get a path for the glyph", async function () {
       let glyph = font.glyphsForString("T")[0];
-      return expect(glyph.path.toSVG()).toBe(
+      expect((await glyph.getPath()).toSVG()).toBe(
         "M226 586L28 586L28 656L508 656L508 586L310 586L310 0L226 0Z",
       );
     });
 
-    test("should get the glyph name", function () {
+    test("should get the glyph name", async function () {
       let glyph = font.glyphsForString("T")[0];
-      return expect(glyph.name).toBe("T");
+      expect(glyph.name).toBe("T");
     });
   });
 
@@ -241,38 +243,38 @@ describe("glyphs", function () {
       font = await fontkit.open(__dirname + "/data/source-sans-pro/source-sans-pro-regular.woff2");
     });
 
-    test("should get a WOFF2Glyph", function () {
+    test("should get a WOFF2Glyph", async function () {
       let glyph = font.glyphsForString("T")[0];
-      return expect(glyph.constructor.name).toBe("WOFF2Glyph");
+      expect(glyph.constructor.name).toBe("WOFF2Glyph");
     });
 
-    test("should get a path for the glyph", function () {
+    test("should get a path for the glyph", async function () {
       let glyph = font.glyphsForString("T")[0];
-      return expect(glyph.path.toSVG()).toBe(
+      expect((await glyph.getPath()).toSVG()).toBe(
         "M226 586L28 586L28 656L508 656L508 586L310 586L310 0L226 0Z",
       );
     });
 
-    test("should get a correct path for all contours", function () {
+    test("should get a correct path for all contours", async function () {
       let glyph = font.glyphsForString("o")[0];
-      return expect(glyph.path.toSVG()).toBe(
+      expect((await glyph.getPath()).toSVG()).toBe(
         "M271 -12Q226 -12 185.5 5Q145 22 114 54.5Q83 87 64.5 134.5Q46 182 46 242Q46 303 64.5 350.5Q83 398 114 431Q145 464 185.5 481Q226 498 271 498Q316 498 356.5 481Q397 464 428 431Q459 398 477.5 350.5Q496 303 496 242Q496 182 477.5 134.5Q459 87 428 54.5Q397 22 356.5 5Q316 -12 271 -12ZM271 56Q302 56 328 69.5Q354 83 372.5 107.5Q391 132 401 166Q411 200 411 242Q411 284 401 318.5Q391 353 372.5 378Q354 403 328 416.5Q302 430 271 430Q240 430 214 416.5Q188 403 169.5 378Q151 353 141 318.5Q131 284 131 242Q131 200 141 166Q151 132 169.5 107.5Q188 83 214 69.5Q240 56 271 56Z",
       );
     });
 
-    test("should get the glyph cbox", function () {
+    test("should get the glyph cbox", async function () {
       let glyph = font.glyphsForString("T")[0];
-      return expect(glyph.cbox).toEqual(new BBox(28, 0, 508, 656));
+      expect(await glyph.getCBox()).toEqual(new BBox(28, 0, 508, 656));
     });
 
-    test("should get the glyph bbox", function () {
+    test("should get the glyph bbox", async function () {
       let glyph = font.glyphsForString("T")[0];
-      return expect(glyph.bbox).toEqual(new BBox(28, 0, 508, 656));
+      expect(await glyph.getBBox()).toEqual(new BBox(28, 0, 508, 656));
     });
 
-    test("should get the glyph name", function () {
+    test("should get the glyph name", async function () {
       let glyph = font.glyphsForString("T")[0];
-      return expect(glyph.name).toBe("T");
+      expect(glyph.name).toBe("T");
     });
   });
 });

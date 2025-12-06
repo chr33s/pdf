@@ -243,7 +243,10 @@ export interface Font {
   glyphForCodePoint(codePoint: number): Glyph;
   hasGlyphForCodePoint(codePoint: number): boolean;
   glyphsForString(string: string): Glyph[];
-  layout(string: string, features?: TypeFeatures | string[] | Record<string, boolean>): GlyphRun;
+  layout(
+    string: string,
+    features?: TypeFeatures | string[] | Record<string, boolean>,
+  ): Promise<GlyphRun>;
   getGlyph(glyphId: number, codePoints?: number[]): Glyph;
   createSubset(): Subset;
 }

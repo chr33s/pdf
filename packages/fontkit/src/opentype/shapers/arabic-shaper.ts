@@ -121,7 +121,7 @@ export default class ArabicShaper extends DefaultShaper {
     plan.addStage("mset");
   }
 
-  static assignFeatures(plan: ShapingPlan, glyphs: GlyphInfo[]): void {
+  static override assignFeatures(plan: ShapingPlan, glyphs: GlyphInfo[]): void {
     super.assignFeatures(plan, glyphs);
 
     let prev = -1;

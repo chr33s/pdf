@@ -732,7 +732,7 @@ export default class PDFTextField extends PDFField {
 
     // Set appearance streams for widget
     const font = options.font ?? (await this.doc.getForm().getDefaultFont());
-    this.#updateWidgetAppearance(widget, font);
+    await this.#updateWidgetAppearance(widget, font);
 
     // Add widget to the given page
     page.node.addAnnot(widgetRef);
@@ -772,7 +772,7 @@ export default class PDFTextField extends PDFField {
    */
   defaultUpdateAppearances(font: PDFFont) {
     assertIs(font, "font", [[PDFFont, "PDFFont"]]);
-    this.updateAppearances(font);
+    return this.updateAppearances(font);
   }
 
   /**
@@ -791,25 +791,25 @@ export default class PDFTextField extends PDFField {
    * @param provider Optionally, the appearance provider to be used for
    *                 generating the contents of the appearance streams.
    */
-  updateAppearances(font: PDFFont, provider?: AppearanceProviderFor<PDFTextField>) {
+  async updateAppearances(font: PDFFont, provider?: AppearanceProviderFor<PDFTextField>) {
     assertIs(font, "font", [[PDFFont, "PDFFont"]]);
     assertOrUndefined(provider, "provider", [Function]);
 
     const widgets = this.acroField.getWidgets();
     for (let idx = 0, len = widgets.length; idx < len; idx++) {
       const widget = widgets[idx];
-      this.#updateWidgetAppearance(widget, font, provider);
+      await this.#updateWidgetAppearance(widget, font, provider);
     }
     this.markAsClean();
   }
 
-  #updateWidgetAppearance(
+  async #updateWidgetAppearance(
     widget: PDFWidgetAnnotation,
     font: PDFFont,
     provider?: AppearanceProviderFor<PDFTextField>,
   ) {
     const apProvider = provider ?? defaultTextFieldAppearanceProvider;
-    const appearances = normalizeAppearance(apProvider(this, widget, font));
+    const appearances = normalizeAppearance(await apProvider(this, widget, font));
     this.updateWidgetAppearanceWithFont(widget, font, appearances);
   }
 }

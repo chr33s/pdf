@@ -1,4 +1,4 @@
-import { deflateRaw } from "@chr33s/pdf-common";
+import { deflate } from "@chr33s/pdf-common";
 import { Buffer } from "node:buffer";
 
 import UnicodeTrie from "./index.js";
@@ -993,8 +993,8 @@ class UnicodeTrieBuilder {
     // swap bytes to little-endian
     swap32LE(data);
 
-    let compressed = await deflateRaw(data);
-    compressed = await deflateRaw(compressed);
+    let compressed = await deflate(data, "deflate-raw");
+    compressed = await deflate(compressed, "deflate-raw"); // NOTE: double deflate ??
 
     const buf = Buffer.alloc(compressed.length + 12);
     buf.writeUInt32LE(trie.highStart, 0);

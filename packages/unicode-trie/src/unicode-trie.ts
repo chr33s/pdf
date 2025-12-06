@@ -1,4 +1,4 @@
-import { inflateRaw } from "@chr33s/pdf-common";
+import { inflate } from "@chr33s/pdf-common";
 import { swap32LE } from "./swap.js";
 
 export type UnicodeTrieJSON = {
@@ -94,8 +94,8 @@ class UnicodeTrie {
     // uncompressedLength at offset 8 is not needed for async inflate
 
     let payload = bytes.subarray(12);
-    payload = await inflateRaw(payload);
-    payload = await inflateRaw(payload);
+    payload = await inflate(payload, "deflate-raw");
+    payload = await inflate(payload, "deflate-raw");
     swap32LE(payload);
 
     const data = new Uint32Array(

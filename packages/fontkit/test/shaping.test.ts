@@ -12,7 +12,7 @@ describe("shaping", function () {
     test(description, async function () {
       let f =
         fontCache[font] || (fontCache[font] = await fontkit.open(__dirname + "/data/" + font));
-      let { glyphs, positions } = f.layout(text);
+      let { glyphs, positions } = await f.layout(text);
       if (!positions) {
         throw new Error("Expected layout positions to be available");
       }
@@ -43,13 +43,13 @@ describe("shaping", function () {
       font = await fontkit.open(__dirname + "/data/amiri/amiri-regular.ttf");
     });
 
-    test("should use correct script and language when features are not specified", function () {
-      let { glyphs } = font.layout("۴", "arab", "URD");
+    test("should use correct script and language when features are not specified", async function () {
+      let { glyphs } = await font.layout("۴", "arab", "URD");
       return expect(glyphIds(glyphs)).toEqual([1940]);
     });
 
-    test("should use specified left-to-right direction", function () {
-      let { glyphs } = font.layout("١٢٣", "arab", "ARA ", "ltr");
+    test("should use specified left-to-right direction", async function () {
+      let { glyphs } = await font.layout("١٢٣", "arab", "ARA ", "ltr");
       return expect(glyphIds(glyphs)).toEqual([446, 447, 448]);
     });
   });
@@ -123,8 +123,8 @@ describe("shaping", function () {
       font = await fontkit.open(__dirname + "/data/noto-sans-cjk/noto-sans-cj-kkr-regular.otf");
     });
 
-    test("should use composed versions if supported by the font", function () {
-      let { glyphs } = font.layout(
+    test("should use composed versions if supported by the font", async function () {
+      let { glyphs } = await font.layout(
         "\uD734\uAC00\u0020\uAC00\u002D\u002D\u0020\u0028\uC624\u002D\u002D\u0029",
       );
       return expect(glyphIds(glyphs)).toEqual([
@@ -132,8 +132,8 @@ describe("shaping", function () {
       ]);
     });
 
-    test("should compose decomposed syllables if supported", function () {
-      let { glyphs } = font.layout(
+    test("should compose decomposed syllables if supported", async function () {
+      let { glyphs } = await font.layout(
         "\u1112\u1172\u1100\u1161\u0020\u1100\u1161\u002D\u002D\u0020\u0028\u110B\u1169\u002D\u002D\u0029",
       );
       return expect(glyphIds(glyphs)).toEqual([
@@ -141,40 +141,40 @@ describe("shaping", function () {
       ]);
     });
 
-    test("should use OT features for non-combining <L,V,T>", function () {
-      let { glyphs } = font.layout("\ua960\ud7b0\ud7cb");
+    test("should use OT features for non-combining <L,V,T>", async function () {
+      let { glyphs } = await font.layout("\ua960\ud7b0\ud7cb");
       return expect(glyphIds(glyphs)).toEqual([64003, 64479, 64822]);
     });
 
-    test("should decompose <LV,T> to <L,V,T> if <LVT> is not supported", function () {
+    test("should decompose <LV,T> to <L,V,T> if <LVT> is not supported", async function () {
       // <L,V> combine at first, but the T is non-combining, so this
       // tests that the <LV> gets decomposed again in this case.
-      let { glyphs } = font.layout("\u1100\u1161\ud7cb");
+      let { glyphs } = await font.layout("\u1100\u1161\ud7cb");
       return expect(glyphIds(glyphs)).toEqual([63657, 64408, 64685]);
     });
 
-    test("should reorder tone marks to the beginning of <L,V> syllables", function () {
-      let { glyphs } = font.layout("\ua960\ud7b0\u302f");
+    test("should reorder tone marks to the beginning of <L,V> syllables", async function () {
+      let { glyphs } = await font.layout("\ua960\ud7b0\u302f");
       return expect(glyphIds(glyphs)).toEqual([1436, 64378, 64574]);
     });
 
-    test("should reorder tone marks to the beginning of <L,V,T> syllables", function () {
-      let { glyphs } = font.layout("\ua960\ud7b0\ud7cb\u302f");
+    test("should reorder tone marks to the beginning of <L,V,T> syllables", async function () {
+      let { glyphs } = await font.layout("\ua960\ud7b0\ud7cb\u302f");
       return expect(glyphIds(glyphs)).toEqual([1436, 64003, 64479, 64822]);
     });
 
-    test("should reorder tone marks to the beginning of <LV> syllables", function () {
-      let { glyphs } = font.layout("\uac00\u302f");
+    test("should reorder tone marks to the beginning of <LV> syllables", async function () {
+      let { glyphs } = await font.layout("\uac00\u302f");
       return expect(glyphIds(glyphs)).toEqual([1436, 47566]);
     });
 
-    test("should reorder tone marks to the beginning of <LVT> syllables", function () {
-      let { glyphs } = font.layout("\uac01\u302f");
+    test("should reorder tone marks to the beginning of <LVT> syllables", async function () {
+      let { glyphs } = await font.layout("\uac01\u302f");
       return expect(glyphIds(glyphs)).toEqual([1436, 47567]);
     });
 
-    test("should insert a dotted circle for invalid tone marks", function () {
-      let { glyphs } = font.layout("\u1100\u302f\u1161");
+    test("should insert a dotted circle for invalid tone marks", async function () {
+      let { glyphs } = await font.layout("\u1100\u302f\u1161");
       return expect(glyphIds(glyphs)).toEqual([365, 1436, 1256, 462]);
     });
   });

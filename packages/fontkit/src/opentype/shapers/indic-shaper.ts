@@ -73,7 +73,7 @@ export default class IndicShaper extends DefaultShaper {
     // TODO: turn off kern (Khmer) and liga features.
   }
 
-  static assignFeatures(plan: IndicPlan, glyphs: GlyphInfo[]): void {
+  static override assignFeatures(plan: IndicPlan, glyphs: GlyphInfo[]): void {
     // Decompose split matras
     // TODO: do this in a more general unicode normalizer
     const { indicDecompositions } = getShaperData();

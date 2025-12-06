@@ -10,9 +10,10 @@ export default class WOFF2Glyph extends TTFGlyph {
     return this._font._transformedGlyphs[this.id];
   }
 
-  _getCBox(internal?: boolean) {
+  async _getCBox(internal?: boolean): Promise<BBox> {
     if (this._font._variationProcessor && !internal) {
-      return this.path.cbox;
+      const path = await this.getPath();
+      return path.cbox;
     }
 
     const glyph = this._decode();
@@ -28,7 +29,7 @@ export default class WOFF2Glyph extends TTFGlyph {
     } else if (glyph.numberOfContours < 0 && glyph.components) {
       for (const component of glyph.components) {
         const baseGlyph = this._font.getGlyph(component.glyphID);
-        const componentBox = baseGlyph.cbox;
+        const componentBox = await baseGlyph.getCBox();
         const corners = [
           [componentBox.minX, componentBox.minY],
           [componentBox.minX, componentBox.maxY],

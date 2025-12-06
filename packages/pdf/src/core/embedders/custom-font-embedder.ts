@@ -55,19 +55,21 @@ class CustomFontEmbedder {
    * Encode the JavaScript string into this font. (JavaScript encodes strings in
    * Unicode, but embedded fonts use their own custom encodings)
    */
-  encodeText(text: string): PDFHexString {
-    const { glyphs } = this.font.layout(text, this.fontFeatures);
+  async encodeText(text: string): Promise<PDFHexString> {
+    const { glyphs } = await this.font.layout(text, this.fontFeatures);
     const hexCodes = glyphs.map((glyph) => toHexStringOfMinLength(glyph.id, 4));
     return PDFHexString.of(hexCodes.join(""));
   }
 
   // The advanceWidth takes into account kerning automatically, so we don't
   // have to do that manually like we do for the standard fonts.
-  widthOfTextAtSize(text: string, size: number): number {
-    const { glyphs } = this.font.layout(text, this.fontFeatures);
+  async widthOfTextAtSize(text: string, size: number): Promise<number> {
+    const { positions } = await this.font.layout(text, this.fontFeatures);
     let totalWidth = 0;
-    for (let idx = 0, len = glyphs.length; idx < len; idx++) {
-      totalWidth += glyphs[idx].advanceWidth * this.scale;
+    if (positions) {
+      for (let idx = 0, len = positions.length; idx < len; idx++) {
+        totalWidth += positions[idx].xAdvance * this.scale;
+      }
     }
     const scale = size / 1000;
     return totalWidth * scale;

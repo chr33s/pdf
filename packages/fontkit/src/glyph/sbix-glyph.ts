@@ -44,24 +44,25 @@ export default class SBIXGlyph extends TTFGlyph {
     }) as GlyphImage;
   }
 
-  render(
+  async render(
     ctx: CanvasContextLike & {
       image: (data: Uint8Array, options: { height: number; x: number; y: number }) => void;
     },
     size: number,
-  ): void {
+  ): Promise<void> {
     let img = this.getImageForSize(size);
     if (img != null) {
       let scale = size / this._font.unitsPerEm;
+      let bbox = await this.getBBox();
       ctx.image(img.data, {
         height: size,
         x: img.originX,
-        y: (this.bbox.minY - img.originY) * scale,
+        y: (bbox.minY - img.originY) * scale,
       });
     }
 
     if (this._font.sbix.flags.renderOutlines) {
-      super.render(ctx, size);
+      await super.render(ctx, size);
     }
   }
 }

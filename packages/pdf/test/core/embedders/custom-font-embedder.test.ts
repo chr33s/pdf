@@ -58,15 +58,15 @@ describe("CustomFontEmbedder", () => {
     const hexCodes = "00360057005801AA000300440051004700030057004B004C0051004A005D0004";
     const embedder = await CustomFontEmbedder.for(fk, ubuntuFont);
 
-    expect(embedder.encodeText(text)).toBeInstanceOf(PDFHexString);
-    expect(String(embedder.encodeText(text))).toBe(String(PDFHexString.of(hexCodes)));
+    expect(await embedder.encodeText(text)).toBeInstanceOf(PDFHexString);
+    expect(String(await embedder.encodeText(text))).toBe(String(PDFHexString.of(hexCodes)));
   });
 
   test("can measure the width of text strings at the given font size", async () => {
     const text = "Stuff and thingz!";
     const embedder = await CustomFontEmbedder.for(fk, ubuntuFont);
-    expect(embedder.widthOfTextAtSize(text, 12)).toBe(90.672);
-    expect(embedder.widthOfTextAtSize(text, 24)).toBe(181.344);
+    expect(await embedder.widthOfTextAtSize(text, 12)).toBe(90.672);
+    expect(await embedder.widthOfTextAtSize(text, 24)).toBe(181.344);
   });
 
   test("can measure the height of the font at the given size", async () => {

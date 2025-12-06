@@ -32,7 +32,7 @@ export default class HangulShaper extends DefaultShaper {
     plan.add(["ljmo", "vjmo", "tjmo"], false);
   }
 
-  static assignFeatures(plan: ShapingPlan, glyphs: GlyphInfo[]): void {
+  static override assignFeatures(plan: ShapingPlan, glyphs: GlyphInfo[]): void {
     let state = 0;
     let i = 0;
     while (i < glyphs.length) {

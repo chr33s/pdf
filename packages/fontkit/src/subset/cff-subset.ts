@@ -29,7 +29,7 @@ export default class CFFSubset extends Subset {
     this.cff = cff;
   }
 
-  subsetCharstrings(): void {
+  async subsetCharstrings(): Promise<void> {
     this.charstrings = [];
     const gsubrs: UsageMap = {};
 
@@ -37,7 +37,7 @@ export default class CFFSubset extends Subset {
       this.charstrings.push(this.cff.getCharString(gid));
 
       let glyph = this.font.getGlyph(gid) as CFFGlyph;
-      void glyph.path; // triggers glyph parsing
+      await glyph.getPath(); // triggers glyph parsing
 
       for (let subr in glyph._usedGsubrs) {
         gsubrs[Number(subr)] = true;
@@ -62,7 +62,7 @@ export default class CFFSubset extends Subset {
     return res;
   }
 
-  subsetFontdict(topDict: Record<string, any>): void {
+  async subsetFontdict(topDict: Record<string, any>): Promise<void> {
     topDict.FDArray = [];
     topDict.FDSelect = {
       version: 0,
@@ -87,7 +87,7 @@ export default class CFFSubset extends Subset {
       topDict.FDSelect.fds.push(mappedIndex);
 
       let glyph = this.font.getGlyph(gid) as CFFGlyph;
-      void glyph.path; // triggers glyph parsing
+      await glyph.getPath(); // triggers glyph parsing
       for (let subr in glyph._usedSubrs) {
         usedSubrs[mappedIndex][Number(subr)] = true;
       }
@@ -103,11 +103,11 @@ export default class CFFSubset extends Subset {
     }
   }
 
-  createCIDFontdict(topDict: Record<string, any>) {
+  async createCIDFontdict(topDict: Record<string, any>): Promise<ReturnType<typeof Object.assign>> {
     let used_subrs: UsageMap = {};
     for (let gid of this.glyphs) {
       let glyph = this.font.getGlyph(gid) as CFFGlyph;
-      void glyph.path; // triggers glyph parsing
+      await glyph.getPath(); // triggers glyph parsing
 
       for (let subr in glyph._usedSubrs) {
         used_subrs[Number(subr)] = true;
@@ -141,13 +141,13 @@ export default class CFFSubset extends Subset {
     return standardStrings.length + this.strings.length - 1;
   }
 
-  protected override encode(stream: EncodeStream): void {
-    this.subsetCharstrings();
+  protected override async encode(stream: EncodeStream): Promise<void> {
+    await this.subsetCharstrings();
 
     let glyphMetrics = [] as { advance: number; bearing: number }[];
     for (let gid of this.glyphs) {
       let glyph = this.font.getGlyph(gid) as CFFGlyph;
-      let metrics = glyph._getMetrics();
+      let metrics = await glyph._getMetrics();
       glyphMetrics.push({
         advance: metrics.advanceWidth,
         bearing: metrics.leftBearing,
@@ -169,7 +169,7 @@ export default class CFFSubset extends Subset {
     hhea.numberOfMetrics = hmtx.metrics.length;
 
     const charset = this.buildCharset();
-    const topDict = this.buildTopDict(charset);
+    const topDict = await this.buildTopDict(charset);
     const cffTable = this.buildCFFBuffer(topDict);
 
     Directory.encode(stream, {
@@ -198,7 +198,7 @@ export default class CFFSubset extends Subset {
     };
   }
 
-  private buildTopDict(charset: Record<string, unknown>) {
+  private async buildTopDict(charset: Record<string, unknown>): Promise<Record<string, unknown>> {
     let topDict = Object.assign({}, this.cff.topDict);
     topDict.Private = null;
     topDict.charset = charset;
@@ -223,9 +223,9 @@ export default class CFFSubset extends Subset {
     topDict.CIDCount = this.charstrings.length;
 
     if (this.cff.isCIDFont) {
-      this.subsetFontdict(topDict);
+      await this.subsetFontdict(topDict);
     } else {
-      this.createCIDFontdict(topDict);
+      await this.createCIDFontdict(topDict);
     }
 
     return topDict;

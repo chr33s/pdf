@@ -25,13 +25,13 @@ describe("character to glyph mapping", function () {
       return expect(font.hasGlyphForCodePoint(0)).toBe(false);
     });
 
-    test("should get a glyph for a character code", function () {
+    test("should get a glyph for a character code", async function () {
       let glyph = font.glyphForCodePoint("a".charCodeAt(0));
       expect(glyph.id).toBe(68);
       return expect(glyph.codePoints).toEqual([97]);
     });
 
-    test("should map a string to glyphs", function () {
+    test("should map a string to glyphs", async function () {
       let glyphs = font.glyphsForString("hello");
       expect(Array.isArray(glyphs)).toBe(true);
       expect(glyphs.length).toBe(5);
@@ -89,22 +89,22 @@ describe("character to glyph mapping", function () {
         "size",
       ]));
 
-    test("should apply opentype GSUB features", function () {
-      let { glyphs } = font.layout("ffi", ["dlig"]);
+    test("should apply opentype GSUB features", async function () {
+      let { glyphs } = await font.layout("ffi", ["dlig"]);
       expect(glyphs.length).toBe(2);
       expect(glyphIds(glyphs)).toEqual([514, 36]);
       return expect(glyphCodePoints(glyphs)).toEqual([[102, 102], [105]]);
     });
 
-    test("should enable fractions when using fraction slash", function () {
-      let { glyphs } = font.layout("123 1⁄16 123");
+    test("should enable fractions when using fraction slash", async function () {
+      let { glyphs } = await font.layout("123 1⁄16 123");
       return expect(glyphIds(glyphs)).toEqual([
         1088, 1089, 1090, 1, 1617, 1724, 1603, 1608, 1, 1088, 1089, 1090,
       ]);
     });
 
-    test("should not break if can’t enable fractions when using fraction slash", function () {
-      let { glyphs } = font.layout("a⁄b ⁄ 1⁄ ⁄2");
+    test("should not break if can't enable fractions when using fraction slash", async function () {
+      let { glyphs } = await font.layout("a⁄b ⁄ 1⁄ ⁄2");
       return expect(glyphIds(glyphs)).toEqual([
         28, 1724, 29, 1, 1724, 1, 1617, 1724, 1, 1724, 1604,
       ]);
@@ -130,22 +130,22 @@ describe("character to glyph mapping", function () {
         "kern",
       ]));
 
-    test("should apply default AAT morx features", function () {
-      let { glyphs } = font.layout("ffi 1⁄2");
+    test("should apply default AAT morx features", async function () {
+      let { glyphs } = await font.layout("ffi 1⁄2");
       expect(glyphs.length).toBe(5);
       expect(glyphIds(glyphs)).toEqual([767, 3, 20, 645, 21]);
       return expect(glyphCodePoints(glyphs)).toEqual([[102, 102, 105], [32], [49], [8260], [50]]);
     });
 
-    test("should apply user specified features", function () {
-      let { glyphs } = font.layout("ffi 1⁄2", ["numr"]);
+    test("should apply user specified features", async function () {
+      let { glyphs } = await font.layout("ffi 1⁄2", ["numr"]);
       expect(glyphs.length).toBe(3);
       expect(glyphIds(glyphs)).toEqual([767, 3, 126]);
       return expect(glyphCodePoints(glyphs)).toEqual([[102, 102, 105], [32], [49, 8260, 50]]);
     });
 
-    test("should handle rtl direction", function () {
-      let { glyphs } = font.layout("ffi", [], null, null, "rtl");
+    test("should handle rtl direction", async function () {
+      let { glyphs } = await font.layout("ffi", [], null, null, "rtl");
       expect(glyphs.length).toBe(3);
       expect(glyphIds(glyphs)).toEqual([76, 73, 73]);
       return expect(glyphCodePoints(glyphs)).toEqual([[105], [102], [102]]);
@@ -153,7 +153,7 @@ describe("character to glyph mapping", function () {
 
     test("should apply indic reordering features", async function () {
       let f = await fontkit.open(__dirname + "/data/khmer/khmer.ttf");
-      let { glyphs } = f.layout("ខ្ញុំអាចញ៉ាំកញ្ចក់បាន ដោយគ្មានបញ្ហា");
+      let { glyphs } = await f.layout("ខ្ញុំអាចញ៉ាំកញ្ចក់បាន ដោយគ្មានបញ្ហា");
       expect(glyphIds(glyphs)).toEqual([
         45, 153, 177, 112, 248, 188, 49, 296, 44, 187, 149, 44, 117, 236, 188, 63, 3, 107, 226, 188,
         69, 218, 169, 188, 63, 64, 255, 175, 188,
@@ -196,13 +196,13 @@ describe("character to glyph mapping", function () {
   describe("glyph id to strings", function () {
     test("should return strings from cmap that map to a given glyph", async function () {
       let font = await fontkit.open(__dirname + "/data/open-sans/open-sans-regular.ttf");
-      let strings = font.stringsForGlyph(68);
+      let strings = await font.stringsForGlyph(68);
       expect(strings).toEqual(["a"]);
     });
 
     test("should return strings from AAT morx table that map to the given glyph", async function () {
       let font = await fontkit.open(__dirname + "/data/play/play-regular.ttf");
-      let strings = font.stringsForGlyph(767);
+      let strings = await font.stringsForGlyph(767);
       expect(strings).toEqual(["ffi"]);
     });
   });

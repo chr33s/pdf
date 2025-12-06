@@ -39,11 +39,15 @@ export type StateTable = {
 
 type GlyphLike = Glyph;
 
-type ProcessEntryFn = (glyph: GlyphLike, entry: StateTableEntry, index: number) => void;
+type ProcessEntryFn = (
+  glyph: GlyphLike,
+  entry: StateTableEntry,
+  index: number,
+) => void | Promise<void>;
 
 type TraverseOptions = {
-  enter?: (glyph: number, entry: StateTableEntry) => void;
-  exit?: (glyph: number, entry: StateTableEntry) => void;
+  enter?: (glyph: number, entry: StateTableEntry) => void | Promise<void>;
+  exit?: (glyph: number, entry: StateTableEntry) => void | Promise<void>;
 };
 
 export default class AATStateMachine {
@@ -55,7 +59,7 @@ export default class AATStateMachine {
     this.#lookupTable = new AATLookupTable(stateTable.classTable);
   }
 
-  process(glyphs: GlyphLike[], reverse: boolean, processEntry: ProcessEntryFn) {
+  async process(glyphs: GlyphLike[], reverse: boolean, processEntry: ProcessEntryFn) {
     let currentState = START_OF_TEXT_STATE; // START_OF_LINE_STATE is used for kashida glyph insertions sometimes I think?
     let index = reverse ? glyphs.length - 1 : 0;
     let dir = reverse ? -1 : 1;
@@ -83,7 +87,7 @@ export default class AATStateMachine {
       const entry = this.#stateTable.entryTable.getItem(entryIndex);
 
       if (classCode !== END_OF_TEXT_CLASS && classCode !== DELETED_GLYPH_CLASS && glyph) {
-        processEntry(glyph, entry, index);
+        await processEntry(glyph, entry, index);
         shouldAdvance = !(entry.flags & DONT_ADVANCE);
       }
 
@@ -100,7 +104,7 @@ export default class AATStateMachine {
    * Performs a depth-first traversal of the glyph strings
    * represented by the state machine.
    */
-  traverse(opts: TraverseOptions, state = 0, visited: Set<number> = new Set()) {
+  async traverse(opts: TraverseOptions, state = 0, visited: Set<number> = new Set()) {
     if (visited.has(state)) {
       return;
     }
@@ -118,15 +122,15 @@ export default class AATStateMachine {
       // Try all glyphs in the class
       for (const glyph of this.#lookupTable.glyphsForValue(classCode)) {
         if (opts.enter) {
-          opts.enter(glyph, entry);
+          await opts.enter(glyph, entry);
         }
 
         if (entry.newState !== 0) {
-          this.traverse(opts, entry.newState, visited);
+          await this.traverse(opts, entry.newState, visited);
         }
 
         if (opts.exit) {
-          opts.exit(glyph, entry);
+          await opts.exit(glyph, entry);
         }
       }
     }

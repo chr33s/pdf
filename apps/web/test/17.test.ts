@@ -116,24 +116,24 @@ const loadD = async (assets: Assets) => {
 
   const form = pdfDoc.getForm();
 
-  form.getTextField("Prefix ⚽️").updateAppearances(ubuntuFont);
-  form.getTextField("First Name 🚀").updateAppearances(ubuntuFont);
-  form.getTextField("MiddleInitial 🎳").updateAppearances(ubuntuFont);
-  form.getTextField("LastName 🛩").updateAppearances(ubuntuFont);
+  await form.getTextField("Prefix ⚽️").updateAppearances(ubuntuFont);
+  await form.getTextField("First Name 🚀").updateAppearances(ubuntuFont);
+  await form.getTextField("MiddleInitial 🎳").updateAppearances(ubuntuFont);
+  await form.getTextField("LastName 🛩").updateAppearances(ubuntuFont);
   form.getCheckBox("Are You A Fairy? 🌿").updateAppearances();
   form.getCheckBox("Is Your Power Level Over 9000? 💪").updateAppearances();
   form.getCheckBox("Can You Defeat Enemies In One Punch? 👊").updateAppearances();
   form.getCheckBox("Will You Ever Let Me Down? ☕️").updateAppearances();
-  form.getButton("Eject 📼").updateAppearances(ubuntuFont);
-  form.getButton("Submit 📝").updateAppearances(ubuntuFont);
-  form.getButton("Play ▶️").updateAppearances(ubuntuFont);
-  form.getButton("Launch 🚀").updateAppearances(ubuntuFont);
+  await form.getButton("Eject 📼").updateAppearances(ubuntuFont);
+  await form.getButton("Submit 📝").updateAppearances(ubuntuFont);
+  await form.getButton("Play ▶️").updateAppearances(ubuntuFont);
+  await form.getButton("Launch 🚀").updateAppearances(ubuntuFont);
   form.getRadioGroup("Historical Figures 🐺").updateAppearances();
-  form.getOptionList("Which Are Planets? 🌎").updateAppearances(ubuntuFont);
+  await form.getOptionList("Which Are Planets? 🌎").updateAppearances(ubuntuFont);
 
   const gundams = form.getDropdown("Choose A Gundam 🤖");
   gundams.select("One Punch Man");
-  gundams.updateAppearances(ubuntuFont);
+  await gundams.updateAppearances(ubuntuFont);
 
   await form.flatten();
   return pdfDoc;

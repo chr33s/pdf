@@ -1,5 +1,6 @@
 import { unicode } from "@chr33s/pdf-unicode-properties";
 import { cache } from "../decorators.js";
+import BBox from "./b-box.js";
 import Path from "./path.js";
 import StandardNames from "./standard-names.js";
 
@@ -67,7 +68,7 @@ export type FontLike = {
   [key: string]: any;
 };
 
-type GlyphMetrics = {
+export type GlyphMetrics = {
   advanceWidth: number;
   advanceHeight: number;
   leftBearing: number;
@@ -125,16 +126,18 @@ export default class Glyph {
     this.isLigature = this.codePoints.length > 1;
   }
 
-  _getPath(): Path {
+  async _getPath(): Promise<Path> {
     return new Path();
   }
 
-  _getCBox() {
-    return this.path.cbox;
+  async _getCBox(): Promise<BBox> {
+    const path = await this.getPath();
+    return path.cbox;
   }
 
-  _getBBox() {
-    return this.path.bbox;
+  async _getBBox(): Promise<BBox> {
+    const path = await this.getPath();
+    return path.bbox;
   }
 
   _getTableMetrics(table: MetricTable): MetricRecord {
@@ -156,12 +159,14 @@ export default class Glyph {
     return res;
   }
 
-  _getMetrics(cbox?: { maxY: number; width: number; height: number } | null): GlyphMetrics {
+  async _getMetrics(
+    cbox?: { maxY: number; width: number; height: number } | null,
+  ): Promise<GlyphMetrics> {
     if (this._metrics) {
       return this._metrics;
     }
     if (typeof cbox === "undefined" || cbox === null) {
-      ({ cbox } = this);
+      cbox = await this.getCBox();
     }
 
     const { advance: advanceWidthRaw, bearing: leftBearing } = this._getTableMetrics(
@@ -177,7 +182,7 @@ export default class Glyph {
       ({ advance: advanceHeight, bearing: topBearing } = this._getTableMetrics(this._font.vmtx));
     } else {
       if (typeof cbox === "undefined" || cbox === null) {
-        ({ cbox } = this);
+        cbox = await this.getCBox();
       }
 
       advanceHeight = Math.abs(this._font.ascent - this._font.descent);
@@ -206,7 +211,7 @@ export default class Glyph {
   }
 
   /**
-   * The glyph’s control box.
+   * The glyph's control box.
    * This is often the same as the bounding box, but is faster to compute.
    * Because of the way bezier curves are defined, some of the control points
    * can be outside of the bounding box. Where `bbox` takes this into account,
@@ -216,18 +221,16 @@ export default class Glyph {
    *
    * @type {BBox}
    */
-  @cache
-  get cbox() {
+  getCBox(): Promise<BBox> {
     return this._getCBox();
   }
 
   /**
-   * The glyph’s bounding box, i.e. the rectangle that encloses the
+   * The glyph's bounding box, i.e. the rectangle that encloses the
    * glyph outline as tightly as possible.
    * @type {BBox}
    */
-  @cache
-  get bbox() {
+  getBBox(): Promise<BBox> {
     return this._getBBox();
   }
 
@@ -235,8 +238,7 @@ export default class Glyph {
    * A vector Path object representing the glyph outline.
    * @type {Path}
    */
-  @cache
-  get path() {
+  async getPath(): Promise<Path> {
     // Cache the path so we only decode it once
     // Decoding is actually performed by subclasses
     return this._getPath();
@@ -247,81 +249,89 @@ export default class Glyph {
    * @param {number} size
    * @return {Path}
    */
-  getScaledPath(size: number): Path {
+  async getScaledPath(size: number): Promise<Path> {
     let scale = (1 / this._font.unitsPerEm) * size;
-    return this.path.scale(scale);
+    const path = await this.getPath();
+    return path.scale(scale);
+  }
+
+  /**
+   * The glyph's advance width computed synchronously from font tables.
+   * This does not include variation adjustments which may require async operations.
+   * For variation-aware advance width, use getAdvanceWidth() instead.
+   * @type {number}
+   */
+  @cache
+  get advanceWidth(): number {
+    let advanceWidth = this._getTableMetrics(this._font.hmtx).advance;
+    if (this._font._variationProcessor && this._font.HVAR) {
+      advanceWidth += this._font._variationProcessor.getAdvanceAdjustment(this.id, this._font.HVAR);
+    }
+    return advanceWidth;
   }
 
   /**
    * The glyph's advance width.
    * @type {number}
    */
-  @cache
-  get advanceWidth(): number {
-    return this._getMetrics().advanceWidth;
+  async getAdvanceWidth(): Promise<number> {
+    return (await this._getMetrics()).advanceWidth;
   }
 
   /**
    * The glyph's width.
    * @type {number}
    */
-  @cache
-  get width() {
-    return this._getMetrics().width;
+  async getWidth(): Promise<number> {
+    return (await this._getMetrics()).width;
   }
 
   /**
    * The glyph's height.
    * @type {number}
    */
-  @cache
-  get height() {
-    return this._getMetrics().height;
+  async getHeight(): Promise<number> {
+    return (await this._getMetrics()).height;
   }
 
   /**
    * The glyph's advance height.
    * @type {number}
    */
-  @cache
-  get advanceHeight(): number {
-    return this._getMetrics().advanceHeight;
+  async getAdvanceHeight(): Promise<number> {
+    return (await this._getMetrics()).advanceHeight;
   }
 
   /**
    * The glyph's left side bearing.
    * @type {number}
    */
-  @cache
-  get leftBearing() {
-    return this._getMetrics().leftBearing;
+  async getLeftBearing(): Promise<number> {
+    return (await this._getMetrics()).leftBearing;
   }
 
   /**
    * The glyph's top side bearing.
    * @type {number}
    */
-  @cache
-  get topBearing() {
-    return this._getMetrics().topBearing;
+  async getTopBearing(): Promise<number> {
+    return (await this._getMetrics()).topBearing;
   }
 
   /**
    * The glyph's right side bearing.
    * @type {number}
    */
-  @cache
-  get rightBearing() {
-    return this._getMetrics().rightBearing;
+  async getRightBearing(): Promise<number> {
+    return (await this._getMetrics()).rightBearing;
   }
 
   /**
    * The glyph's bottom side bearing.
    * @type {number}
    */
-  @cache
-  get bottomBearing() {
-    return this._getMetrics().bottomBearing;
+  async getBottomBearing(): Promise<number> {
+    return (await this._getMetrics()).bottomBearing;
   }
 
   get ligatureCaretPositions(): number[] | null {
@@ -376,13 +386,14 @@ export default class Glyph {
    * @param {CanvasRenderingContext2d} ctx
    * @param {number} size
    */
-  render(ctx: CanvasContextLike, size: number): void {
+  async render(ctx: CanvasContextLike, size: number): Promise<void> {
     ctx.save();
 
     let scale = (1 / this._font.head.unitsPerEm) * size;
     ctx.scale(scale, scale);
 
-    let fn = this.path.toFunction();
+    const path = await this.getPath();
+    let fn = path.toFunction();
     fn(ctx);
     ctx.fill();
 
