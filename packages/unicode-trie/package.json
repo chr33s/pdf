@@ -4,6 +4,10 @@
   "description": "Unicode Trie data structure for fast character metadata lookup, ported from ICU",
   "type": "module",
   "sideEffects": false,
+  "files": [
+    "dist/**",
+    "src/**"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

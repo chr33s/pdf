@@ -1,6 +1,0 @@
-node_modules/
-test/
-.gitignore
-.npmignore
-tsconfig*.json
-vitest.config.ts

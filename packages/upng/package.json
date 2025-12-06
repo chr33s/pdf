@@ -5,6 +5,10 @@
   "description": "Small, fast and advanced PNG / APNG encoder and decoder",
   "type": "module",
   "sideEffects": false,
+  "files": [
+    "dist/**",
+    "src/**"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

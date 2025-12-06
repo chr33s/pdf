@@ -4,6 +4,10 @@
   "description": "Declaratively encode and decode binary data",
   "type": "module",
   "sideEffects": false,
+  "files": [
+    "dist/**",
+    "src/**"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

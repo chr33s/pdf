@@ -4,6 +4,10 @@
   "description": "An advanced font engine for Node and the browser",
   "type": "module",
   "sideEffects": false,
+  "files": [
+    "dist/**",
+    "src/**"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

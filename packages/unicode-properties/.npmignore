@@ -1,7 +1,0 @@
-node_modules/
-scripts/
-test/
-.gitignore
-.npmignore
-tsconfig*.json
-vitest.config.ts

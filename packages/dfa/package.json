@@ -4,6 +4,11 @@
   "description": "Deterministic finite automata compiler",
   "type": "module",
   "sideEffects": false,
+  "files": [
+    "dist/**",
+    "dfa.d.ts",
+    "src/**"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

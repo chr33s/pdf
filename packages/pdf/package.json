@@ -6,6 +6,10 @@
   "type": "module",
   "packageManager": "npm@10.9.3+",
   "sideEffects": false,
+  "files": [
+    "dist/**",
+    "src/**"
+  ],
   "contributors": [
     "jerp (https://github.com/jerp)",
     "Greg Bacchus (https://github.com/gregbacchus)",

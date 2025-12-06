@@ -4,6 +4,10 @@
   "description": "Provides fast access to unicode character properties",
   "type": "module",
   "sideEffects": false,
+  "files": [
+    "dist/**",
+    "src/**"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

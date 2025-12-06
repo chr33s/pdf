@@ -4,6 +4,10 @@
   "description": "Metrics for the Standard 14 PDF fonts and their encodings",
   "type": "module",
   "sideEffects": false,
+  "files": [
+    "dist/**",
+    "src/**"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

@@ -1,7 +1,0 @@
-encoding-metrics/
-font-metrics/
-scripts/
-.gitignore
-.npmignore
-tsconfig*.json
-vitest.config.ts
