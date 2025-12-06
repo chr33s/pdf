@@ -43,6 +43,7 @@ jobs:
         with:
           name: build
           path: .
+          include-hidden-files: true
 
   release:
     name: Release
@@ -76,7 +77,7 @@ jobs:
             });
             const latestReleaseTagName = latestRelease.tag_name;
             const latestReleaseVersion = latestReleaseTagName.split("/").at(-1);
-            const body = `changes: [${latestReleaseVersion}...${version}](https://github.com/${owner}/${repo}/compare/${latestReleaseTagName}...${tag_name})`;
+            const body = `changes: [${latestReleaseVersion}...v${version}](https://github.com/${owner}/${repo}/compare/${latestReleaseVersion}...v${version})`;
 
             await github.rest.repos.createRelease({
               body,
@@ -131,3 +132,5 @@ jobs:
           node-version-file: "package.json"
           registry-url: 'https://registry.npmjs.org'
       - run: npm publish --workspace packages/${{ matrix.package }} --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
