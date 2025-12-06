@@ -1,5 +1,9 @@
 name: CI
 
+permissions:
+  contents: read
+  id-token: write
+
 concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: true
@@ -8,6 +12,8 @@ on:
   push:
     branches: [main]
     tags: [v*]
+  release:
+    types: [created]
   workflow_dispatch:
     inputs:
       package:
@@ -20,8 +26,6 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v5
         with:
@@ -40,60 +44,11 @@ jobs:
           name: build
           path: .
 
-  wiki:
-    name: Wiki
-    runs-on: ubuntu-latest
-    needs: [build]
-    if: ${{ github.ref_type == 'tag' }}
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: build
-      - uses: actions/checkout@v5
-        with:
-          repository: ${{github.repository}}.wiki
-          path: ${{github.repository}}.wiki
-      - run: |
-          set -e
-          cd $GITHUB_WORKSPACE/${{github.repository}}.wiki
-          cp -r $GITHUB_WORKSPACE/docs/* .
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add .
-          git diff-index --quiet HEAD || git commit -m "update: sync docs" && git push
-
-  publish:
-    name: Publish
-    runs-on: ubuntu-latest
-    needs: [build]
-    if: ${{ github.ref_type == 'tag' || github.event_name == 'workflow_dispatch' }}
-    permissions:
-      id-token: write
-    strategy:
-          matrix:
-            package: ${{ github.event_name == 'workflow_dispatch' && inputs.package != ''
-              && fromJson(format('["{0}"]', inputs.package))
-              || fromJson('["common","codepoints","dfa","restructure","standard-fonts","unicode-trie","unicode-properties","upng","fontkit","pdf"]') }}
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: build
-      - uses: actions/setup-node@v5
-        with:
-          cache: "npm"
-          node-version-file: "package.json"
-          registry-url: 'https://registry.npmjs.org'
-      - run: npm publish --workspace packages/${{ matrix.package }} --access public --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
   release:
     name: Release
     runs-on: ubuntu-latest
     if: ${{ github.ref_type == 'tag' }}
-    needs: [publish]
+    needs: [build]
     permissions:
       contents: write
       id-token: write
@@ -131,3 +86,48 @@ jobs:
               repo,
               tag_name,
             });
+
+  wiki:
+    name: Wiki
+    runs-on: ubuntu-latest
+    needs: [build]
+    if: ${{ github.event_name == 'release' }}
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: build
+      - uses: actions/checkout@v5
+        with:
+          repository: ${{github.repository}}.wiki
+          path: ${{github.repository}}.wiki
+      - run: |
+          set -e
+          cd $GITHUB_WORKSPACE/${{github.repository}}.wiki
+          cp -r $GITHUB_WORKSPACE/docs/* .
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git diff-index --quiet HEAD || git commit -m "update: sync docs" && git push
+
+  publish:
+    name: Publish
+    runs-on: ubuntu-latest
+    needs: [build]
+    if: ${{ github.event_name == 'release' || github.event_name == 'workflow_dispatch' }}
+    strategy:
+      matrix:
+        package: ${{ github.event_name == 'workflow_dispatch' && inputs.package != ''
+          && fromJson(format('["{0}"]', inputs.package))
+          || fromJson('["common","codepoints","dfa","restructure","standard-fonts","unicode-trie","unicode-properties","upng","fontkit","pdf"]') }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: build
+      - uses: actions/setup-node@v5
+        with:
+          cache: "npm"
+          node-version-file: "package.json"
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm publish --workspace packages/${{ matrix.package }} --access public
