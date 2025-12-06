@@ -1,6 +1,6 @@
 # @chr33s/pdf
 
-This distribution evolves Hopding’s original `pdf` with the SVG work from the Cantoo fork, modern ESM packaging, and up-to-date TypeScript tooling. It lives alongside all supporting dependencies in the `chr33s/pdf` monorepo.
+This distribution evolves Hopding’s original [pdf-lib](https://github.com/Hopding/pdf-lib) with the SVG work from the Cantoo fork, modern ESM packaging, and up-to-date TypeScript tooling. It lives alongside all supporting dependencies in the `chr33s/pdf` monorepo.
 
 Install with: `npm install @chr33s/pdf`
 
