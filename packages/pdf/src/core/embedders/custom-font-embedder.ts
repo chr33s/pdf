@@ -57,7 +57,7 @@ class CustomFontEmbedder {
    */
   async encodeText(text: string): Promise<PDFHexString> {
     const { glyphs } = await this.font.layout(text, this.fontFeatures);
-    const hexCodes = glyphs.map((glyph) => toHexStringOfMinLength(glyph.id, 4));
+    const hexCodes = glyphs.map((glyph: Glyph) => toHexStringOfMinLength(glyph.id, 4));
     return PDFHexString.of(hexCodes.join(""));
   }
 
@@ -224,7 +224,7 @@ class CustomFontEmbedder {
   }
 
   #allGlyphsInFontSortedById = (): Glyph[] => {
-    const glyphs = this.font.characterSet.map((codePoint) =>
+    const glyphs = this.font.characterSet.map((codePoint: number) =>
       this.font.glyphForCodePoint(codePoint),
     );
     return sortedUniq(glyphs.sort(byAscendingId), (g) => g.id);
