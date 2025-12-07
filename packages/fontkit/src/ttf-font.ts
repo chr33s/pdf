@@ -15,6 +15,7 @@ import TTFGlyph from "./glyph/ttf-glyph.js";
 import type GlyphRun from "./layout/glyph-run.js";
 import LayoutEngine from "./layout/layout-engine.js";
 import CFFSubset from "./subset/cff-subset.js";
+import CFF2Subset from "./subset/cff2-subset.js";
 import TTFSubset from "./subset/ttf-subset.js";
 import Directory from "./tables/directory.js";
 import tables from "./tables/index.js";
@@ -603,6 +604,15 @@ class TTFFontBase implements GlyphFontLike {
    * Returns a Subset for this font.
    */
   createSubset() {
+    if (this.directory.tables.CFF2) {
+      if (this.directory.tables.fvar) {
+        throw new Error(
+          "CFF2 variable fonts must be pre-instanced before subsetting. Run e.g. fonttools varLib.instancer Caveat-VariableFont_wght.ttf wght=400 and embed the static result.",
+        );
+      }
+      return new CFF2Subset(this);
+    }
+
     if (this.directory.tables["CFF "]) {
       return new CFFSubset(this);
     }
