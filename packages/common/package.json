@@ -1,6 +1,6 @@
 {
   "name": "@chr33s/pdf-common",
-  "version": "5.0.2",
+  "version": "5.0.3",
   "description": "Common pdf utilities and types",
   "type": "module",
   "sideEffects": false,

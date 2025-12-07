@@ -1,6 +1,6 @@
 {
   "name": "@chr33s/pdf-dfa",
-  "version": "5.0.2",
+  "version": "5.0.3",
   "description": "Deterministic finite automata compiler",
   "type": "module",
   "sideEffects": false,

@@ -1,6 +1,6 @@
 {
   "name": "@chr33s/pdf-fontkit",
-  "version": "5.0.2",
+  "version": "5.0.3",
   "description": "An advanced font engine for Node and the browser",
   "type": "module",
   "sideEffects": false,
@@ -24,16 +24,16 @@
     "typecheck": "tsc --project tsconfig.typecheck.json"
   },
   "dependencies": {
-    "@chr33s/pdf-common": "5.0.2",
-    "@chr33s/pdf-dfa": "5.0.2",
-    "@chr33s/pdf-restructure": "5.0.2",
-    "@chr33s/pdf-unicode-properties": "5.0.2",
-    "@chr33s/pdf-unicode-trie": "5.0.2",
+    "@chr33s/pdf-common": "5.0.3",
+    "@chr33s/pdf-dfa": "5.0.3",
+    "@chr33s/pdf-restructure": "5.0.3",
+    "@chr33s/pdf-unicode-properties": "5.0.3",
+    "@chr33s/pdf-unicode-trie": "5.0.3",
     "clone": "2.1.2",
     "deep-equal": "2.2.3"
   },
   "devDependencies": {
-    "@chr33s/pdf-codepoints": "5.0.2",
+    "@chr33s/pdf-codepoints": "5.0.3",
     "@types/clone": "2.1.4",
     "@types/deep-equal": "1.0.4",
     "@types/node": "24.10.1",
