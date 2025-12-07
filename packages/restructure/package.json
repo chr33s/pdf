@@ -1,6 +1,6 @@
 {
   "name": "@chr33s/pdf-restructure",
-  "version": "5.0.5",
+  "version": "5.0.6",
   "description": "Declaratively encode and decode binary data",
   "type": "module",
   "sideEffects": false,
