@@ -23,7 +23,7 @@ if (!versions.includes(version)) {
 }
 
 const dir = resolve(import.meta.dirname, "..", "./packages");
-for await (const path of await readdir(dir)) {
+for (const path of await readdir(dir)) {
   const file = resolve(dir, path, "package.json");
   const pkg = await import(file, { with: { type: "json" } }).then((mod) => mod.default);
 
