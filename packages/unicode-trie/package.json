@@ -1,6 +1,6 @@
 {
   "name": "@chr33s/pdf-unicode-trie",
-  "version": "5.0.3",
+  "version": "5.0.4",
   "description": "Unicode Trie data structure for fast character metadata lookup, ported from ICU",
   "type": "module",
   "sideEffects": false,
@@ -31,7 +31,7 @@
   "license": "MIT",
   "homepage": "https://github.com/chr33s/pdf",
   "dependencies": {
-    "@chr33s/pdf-common": "5.0.3"
+    "@chr33s/pdf-common": "5.0.4"
   },
   "devDependencies": {
     "@types/node": "24.10.1",
