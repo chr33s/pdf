@@ -4,6 +4,7 @@ import type BBox from "./glyph/b-box.js";
 import type Glyph from "./glyph/glyph.js";
 import type GlyphRun from "./layout/glyph-run.js";
 import type Subset from "./subset/subset.js";
+import type { TypeFeatures } from "./types.js";
 
 type DecodeStream = InstanceType<typeof r.DecodeStream>;
 type VariationSettings = Record<string, number>;
@@ -59,7 +60,11 @@ interface FontInstance {
   getAvailableFeatures(script?: string | null, language?: string | null): string[];
   layout(
     text: string,
-    userFeatures?: string[] | Record<string, boolean> | string,
+    userFeatures?: TypeFeatures | string[] | Record<string, boolean> | string,
+  ): Promise<GlyphRun>;
+  layout(
+    text: string,
+    userFeatures?: TypeFeatures | string[] | Record<string, boolean> | string,
     script?: string | null,
     language?: string | null,
     direction?: string | null,
@@ -77,13 +82,16 @@ type FontConstructor = {
   probe(buffer: Uint8Array): boolean;
 };
 
+export type Font = FontInstance;
+
 export interface FontkitRegistry {
   logErrors: boolean;
   registerFormat(format: FontConstructor): void;
+  create(data: ArrayBuffer | ArrayBufferView | Uint8Array, postscriptName?: string): Promise<Font>;
   create(
     data: ArrayBuffer | ArrayBufferView | Uint8Array,
     postscriptName?: VariationSettings | string,
-  ): Promise<FontInstance>;
+  ): Promise<Font>;
 }
 
 export type { FontInstance };
@@ -120,10 +128,12 @@ export function setInitializer(fn: () => Promise<unknown>): void {
   initFn = fn;
 }
 
-const fontkit: FontkitRegistry & {
+export type Fontkit = FontkitRegistry & {
   defaultLanguage: string;
   setDefaultLanguage: (lang?: string) => void;
-} = {
+};
+
+const fontkit: Fontkit = {
   logErrors: false,
   defaultLanguage: "en",
 

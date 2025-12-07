@@ -245,7 +245,7 @@ export interface Font {
   glyphsForString(string: string): Glyph[];
   layout(
     string: string,
-    features?: TypeFeatures | string[] | Record<string, boolean>,
+    features?: TypeFeatures | string[] | Record<string, boolean> | string,
   ): Promise<GlyphRun>;
   getGlyph(glyphId: number, codePoints?: number[]): Glyph;
   createSubset(): Subset;
@@ -255,5 +255,8 @@ export interface Font {
  * Fontkit registry interface for creating fonts
  */
 export interface Fontkit {
-  create(buffer: Uint8Array | ArrayBuffer, postscriptName?: string): Promise<Font>;
+  create(
+    buffer: Uint8Array | ArrayBuffer | ArrayBufferView,
+    postscriptName?: string,
+  ): Promise<Font>;
 }
