@@ -71,9 +71,6 @@ export default class PDFPage {
    *
    * Create an instance of [[PDFPage]] from an existing leaf node.
    *
-   * @param leafNode The leaf node to be wrapped.
-   * @param ref The unique reference for the page.
-   * @param doc The document to which the page will belong.
    */
   static of = (leafNode: PDFPageLeaf, ref: PDFRef, doc: PDFDocument) =>
     new PDFPage(leafNode, ref, doc);
@@ -85,7 +82,6 @@ export default class PDFPage {
    *
    * Create an instance of [[PDFPage]].
    *
-   * @param doc The document to which the page will belong.
    */
   static create = (doc: PDFDocument) => {
     assertIs(doc, "doc", [[PDFDocument, "PDFDocument"]]);
@@ -135,7 +131,6 @@ export default class PDFPage {
    * page.setRotation(degrees(180))
    * page.setRotation(degrees(270))
    * ```
-   * @param angle The angle to rotate this page.
    */
   setRotation(angle: Rotation): void {
     const degreesAngle = toDegrees(angle);
@@ -189,8 +184,6 @@ export default class PDFPage {
    *   * [[PDFPage.setTrimBox]]
    *   * [[PDFPage.setArtBox]]
    *
-   * @param width The new width of the page.
-   * @param height The new height of the page.
    */
   setSize(width: number, height: number): void {
     assertIs(width, "width", ["number"]);
@@ -233,7 +226,6 @@ export default class PDFPage {
    *
    * This method uses [[PDFPage.setSize]] to set the page's width.
    *
-   * @param width The new width of the page.
    */
   setWidth(width: number): void {
     assertIs(width, "width", ["number"]);
@@ -250,7 +242,6 @@ export default class PDFPage {
    *
    * This method uses [[PDFPage.setSize]] to set the page's height.
    *
-   * @param height The new height of the page.
    */
   setHeight(height: number): void {
     assertIs(height, "height", ["number"]);
@@ -269,10 +260,6 @@ export default class PDFPage {
    *
    * See [[PDFPage.getMediaBox]] for details about what the MediaBox represents.
    *
-   * @param x The x coordinate of the lower left corner of the new MediaBox.
-   * @param y The y coordinate of the lower left corner of the new MediaBox.
-   * @param width The width of the new MediaBox.
-   * @param height The height of the new MediaBox.
    */
   setMediaBox(x: number, y: number, width: number, height: number): void {
     assertIs(x, "x", ["number"]);
@@ -295,10 +282,6 @@ export default class PDFPage {
    *
    * See [[PDFPage.getCropBox]] for details about what the CropBox represents.
    *
-   * @param x The x coordinate of the lower left corner of the new CropBox.
-   * @param y The y coordinate of the lower left corner of the new CropBox.
-   * @param width The width of the new CropBox.
-   * @param height The height of the new CropBox.
    */
   setCropBox(x: number, y: number, width: number, height: number): void {
     assertIs(x, "x", ["number"]);
@@ -321,10 +304,6 @@ export default class PDFPage {
    *
    * See [[PDFPage.getBleedBox]] for details about what the BleedBox represents.
    *
-   * @param x The x coordinate of the lower left corner of the new BleedBox.
-   * @param y The y coordinate of the lower left corner of the new BleedBox.
-   * @param width The width of the new BleedBox.
-   * @param height The height of the new BleedBox.
    */
   setBleedBox(x: number, y: number, width: number, height: number): void {
     assertIs(x, "x", ["number"]);
@@ -347,10 +326,6 @@ export default class PDFPage {
    *
    * See [[PDFPage.getTrimBox]] for details about what the TrimBox represents.
    *
-   * @param x The x coordinate of the lower left corner of the new TrimBox.
-   * @param y The y coordinate of the lower left corner of the new TrimBox.
-   * @param width The width of the new TrimBox.
-   * @param height The height of the new TrimBox.
    */
   setTrimBox(x: number, y: number, width: number, height: number): void {
     assertIs(x, "x", ["number"]);
@@ -373,10 +348,6 @@ export default class PDFPage {
    *
    * See [[PDFPage.getArtBox]] for details about what the ArtBox represents.
    *
-   * @param x The x coordinate of the lower left corner of the new ArtBox.
-   * @param y The y coordinate of the lower left corner of the new ArtBox.
-   * @param width The width of the new ArtBox.
-   * @param height The height of the new ArtBox.
    */
   setArtBox(x: number, y: number, width: number, height: number): void {
     assertIs(x, "x", ["number"]);
@@ -550,8 +521,6 @@ export default class PDFPage {
    * // Now there are 50 units of whitespace to the left and bottom of the page
    * ```
    * See also: [[resetPosition]]
-   * @param x The new position on the x-axis for this page's content.
-   * @param y The new position on the y-axis for this page's content.
    */
   translateContent(x: number, y: number): void {
     assertIs(x, "x", ["number"]);
@@ -577,9 +546,7 @@ export default class PDFPage {
    * page.scale(0.5, 0.5);
    * ```
    *
-   * @param x The factor by which the width for the page should be scaled
    *          (e.g. `0.5` is 50%).
-   * @param y The factor by which the height for the page should be scaled
    *          (e.g. `2.0` is 200%).
    */
   scale(x: number, y: number): void {
@@ -603,9 +570,7 @@ export default class PDFPage {
    * page.scaleContent(0.5, 0.5);
    * ```
    * See also: [[scaleAnnotations]]
-   * @param x The factor by which the x-axis for the content should be scaled
    *          (e.g. `0.5` is 50%).
-   * @param y The factor by which the y-axis for the content should be scaled
    *          (e.g. `2.0` is 200%).
    */
   scaleContent(x: number, y: number): void {
@@ -635,9 +600,7 @@ export default class PDFPage {
    * page.scaleAnnotations(0.5, 0.5);
    * ```
    * See also: [[scaleContent]]
-   * @param x The factor by which the x-axis for the annotations should be
    *          scaled (e.g. `0.5` is 50%).
-   * @param y The factor by which the y-axis for the annotations should be
    *          scaled (e.g. `2.0` is 200%).
    */
   scaleAnnotations(x: number, y: number) {
@@ -694,7 +657,6 @@ export default class PDFPage {
    * page.setFont(timesRomanFont)
    * page.drawText('I will be drawn in Courier', { font: courierFont })
    * ```
-   * @param font The default font to be used when drawing text on this page.
    */
   setFont(font: PDFFont): void {
     // TODO: Reuse image Font name if we've already added this image to Resources.Fonts
@@ -714,7 +676,6 @@ export default class PDFPage {
    * page.setFontSize(36)
    * page.drawText('I will be drawn in size 24', { fontSize: 24 })
    * ```
-   * @param fontSize The default font size to be used when drawing text on this
    *                 page.
    */
   setFontSize(fontSize: number): void {
@@ -735,7 +696,6 @@ export default class PDFPage {
    * page.setFontColor(cmyk(0.4, 0.7, 0.39, 0.15))
    * page.drawText('I will be drawn in gray', { color: grayscale(0.5) })
    * ```
-   * @param fontColor The default font color to be used when drawing text on
    *                  this page.
    */
   setFontColor(fontColor: Color): void {
@@ -756,7 +716,6 @@ export default class PDFPage {
    *   lineHeight: 24
    * })
    * ```
-   * @param lineHeight The default line height to be used when drawing text on
    *                   this page.
    */
   setLineHeight(lineHeight: number): void {
@@ -809,8 +768,6 @@ export default class PDFPage {
    * page.moveTo(25, 25)
    * page.drawText('I will be drawn 25 units up and 25 units to the right')
    * ```
-   * @param x The new default position on the x-axis for this page.
-   * @param y The new default position on the y-axis for this page.
    */
   moveTo(x: number, y: number): void {
     assertIs(x, "x", ["number"]);
@@ -829,7 +786,6 @@ export default class PDFPage {
    * page.moveDown(10)
    * page.drawText('I will be drawn at (50, 40)')
    * ```
-   * @param yDecrease The amount by which the page's default position along the
    *                  y-axis should be decreased.
    */
   moveDown(yDecrease: number): void {
@@ -847,7 +803,6 @@ export default class PDFPage {
    * page.moveUp(10)
    * page.drawText('I will be drawn at (50, 60)')
    * ```
-   * @param yIncrease The amount by which the page's default position along the
    *                  y-axis should be increased.
    */
   moveUp(yIncrease: number): void {
@@ -865,7 +820,6 @@ export default class PDFPage {
    * page.moveLeft(10)
    * page.drawText('I will be drawn at (40, 50)')
    * ```
-   * @param xDecrease The amount by which the page's default position along the
    *                  x-axis should be decreased.
    */
   moveLeft(xDecrease: number): void {
@@ -883,7 +837,6 @@ export default class PDFPage {
    * page.moveRight(10)
    * page.drawText('I will be drawn at (60, 50)')
    * ```
-   * @param xIncrease The amount by which the page's default position along the
    *                  x-axis should be increased.
    */
   moveRight(xIncrease: number): void {
@@ -918,7 +871,6 @@ export default class PDFPage {
    *   popGraphicsState(),
    * )
    * ```
-   * @param operator The operators to be pushed.
    */
   pushOperators(...operator: PDFOperator[]): void {
     assertEachIs(operator, "operator", [[PDFOperator, "PDFOperator"]]);
@@ -960,8 +912,6 @@ export default class PDFPage {
    *   },
    * )
    * ```
-   * @param text The text to be drawn.
-   * @param options The options to be used when drawing the text.
    */
   async drawText(text: string, options: PDFPageDrawTextOptions = {}): Promise<void> {
     assertIs(text, "text", ["string"]);
@@ -1051,8 +1001,6 @@ export default class PDFPage {
    *   opacity: 0.75,
    * })
    * ```
-   * @param image The image to be drawn.
-   * @param options The options to be used when drawing the image.
    */
   drawImage(image: PDFImage, options: PDFPageDrawImageOptions = {}): void {
     // Each call registers a fresh XObject name; deduplication of identical images is not yet implemented.
@@ -1120,8 +1068,6 @@ export default class PDFPage {
    * if both options are given, `width` and `height` take precedence and the
    * corresponding scale variants are ignored.
    *
-   * @param embeddedPage The embedded page to be drawn.
-   * @param options The options to be used when drawing the embedded page.
    */
   drawPage(embeddedPage: PDFEmbeddedPage, options: PDFPageDrawPageOptions = {}): void {
     // Each embedded page gets a fresh XObject name; cross-call deduplication is not yet implemented.
@@ -1208,8 +1154,6 @@ export default class PDFPage {
    *   scale: 0.5,
    * })
    * ```
-   * @param path The SVG path to be drawn.
-   * @param options The options to be used when drawing the SVG path.
    */
   drawSvgPath(path: string, options: PDFPageDrawSVGOptions = {}): void {
     assertIs(path, "path", ["string"]);
@@ -1272,7 +1216,6 @@ export default class PDFPage {
    *   opacity: 0.75,
    * })
    * ```
-   * @param options The options to be used when drawing the line.
    */
   drawLine(options: PDFPageDrawLineOptions): void {
     assertIs(options.start, "options.start", [[Object, "{ x: number, y: number }"]]);
@@ -1335,7 +1278,6 @@ export default class PDFPage {
    *   borderOpacity: 0.75,
    * })
    * ```
-   * @param options The options to be used when drawing the rectangle.
    */
   drawRectangle(options: PDFPageDrawRectangleOptions = {}): void {
     assertOrUndefined(options.x, "options.x", ["number"]);
@@ -1409,7 +1351,6 @@ export default class PDFPage {
    *   borderOpacity: 0.75,
    * })
    * ```
-   * @param options The options to be used when drawing the square.
    */
   drawSquare(options: PDFPageDrawSquareOptions = {}): void {
     const { size } = options;
@@ -1434,7 +1375,6 @@ export default class PDFPage {
    *   borderOpacity: 0.75,
    * })
    * ```
-   * @param options The options to be used when drawing the ellipse.
    */
   drawEllipse(options: PDFPageDrawEllipseOptions = {}): void {
     assertOrUndefined(options.x, "options.x", ["number"]);
@@ -1498,7 +1438,6 @@ export default class PDFPage {
    *   borderOpacity: 0.75,
    * })
    * ```
-   * @param options The options to be used when drawing the ellipse.
    */
   drawCircle(options: PDFPageDrawCircleOptions = {}): void {
     const { size = 100 } = options;
@@ -1536,8 +1475,6 @@ export default class PDFPage {
    * const pdfSvg = await pdfDoc.embedSvg(svg)
    * page.drawSvg(pdfSvg, { x: 25, y: 75 })
    * ```
-   * @param svg The SVG to be drawn.
-   * @param options The options to be used when drawing the SVG.
    */
   async drawSvg(svg: PDFSvg | string, options: PDFPageDrawSVGElementOptions = {}): Promise<void> {
     assertIs(svg, "svg", ["string", [PDFSvg, "PDFSvg"]]);

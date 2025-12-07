@@ -32,9 +32,6 @@ export default class PDFButton extends PDFField {
    *
    * Create an instance of [[PDFButton]] from an existing acroPushButton and ref
    *
-   * @param acroPushButton The underlying `PDFAcroPushButton` for this button.
-   * @param ref The unique reference for this button.
-   * @param doc The document to which this button will belong.
    */
   static of = (acroPushButton: PDFAcroPushButton, ref: PDFRef, doc: PDFDocument) =>
     new PDFButton(acroPushButton, ref, doc);
@@ -58,8 +55,6 @@ export default class PDFButton extends PDFField {
    * button.setImage(pngImage, ImageAlignment.Center)
    * ```
    * This will update the appearances streams for each of this button's widgets.
-   * @param image The image that should be displayed.
-   * @param alignment The alignment of the image.
    */
   setImage(image: PDFImage, alignment = ImageAlignment.Center) {
     const widgets = this.acroField.getWidgets();
@@ -90,7 +85,6 @@ export default class PDFButton extends PDFField {
    * > or that string does not contain a font size (via the `Tf` operator),
    * > then this method will throw an error.
    *
-   * @param fontSize The font size to be used when rendering text in this field.
    */
   setFontSize(fontSize: number) {
     assertPositive(fontSize, "fontSize");
@@ -121,9 +115,6 @@ export default class PDFButton extends PDFField {
    * })
    * ```
    * This will create a new widget for this button field.
-   * @param text The text to be displayed for this button widget.
-   * @param page The page to which this button widget should be added.
-   * @param options The options to be used when adding this button widget.
    */
   async addToPage(
     // TODO: This needs to be optional, e.g. for image buttons
@@ -193,7 +184,6 @@ export default class PDFButton extends PDFField {
    * const button = form.getButton('some.button.field')
    * button.defaultUpdateAppearances(helvetica)
    * ```
-   * @param font The font to be used for creating the appearance streams.
    */
   defaultUpdateAppearances(font: PDFFont) {
     assertIs(font, "font", [[PDFFont, "PDFFont"]]);
@@ -215,8 +205,6 @@ export default class PDFButton extends PDFField {
    *   }
    * })
    * ```
-   * @param font The font to be used for creating the appearance streams.
-   * @param provider Optionally, the appearance provider to be used for
    *                 generating the contents of the appearance streams.
    */
   async updateAppearances(font: PDFFont, provider?: AppearanceProviderFor<PDFButton>) {

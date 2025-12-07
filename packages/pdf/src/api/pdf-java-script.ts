@@ -14,9 +14,6 @@ export default class PDFJavaScript implements Embeddable {
    *
    * Create an instance of [[PDFJavaScript]] from an existing ref and script
    *
-   * @param ref The unique reference for this script.
-   * @param doc The document to which the script will belong.
-   * @param embedder The embedder that will be used to embed the script.
    */
   static of = (ref: PDFRef, doc: PDFDocument, embedder: JavaScriptEmbedder) =>
     new PDFJavaScript(ref, doc, embedder);

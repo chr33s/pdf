@@ -41,9 +41,6 @@ export default class PDFDropdown extends PDFField {
    *
    * Create an instance of [[PDFDropdown]] from an existing acroComboBox and ref
    *
-   * @param acroComboBox The underlying `PDFAcroComboBox` for this dropdown.
-   * @param ref The unique reference for this dropdown.
-   * @param doc The document to which this dropdown will belong.
    */
   static of = (acroComboBox: PDFAcroComboBox, ref: PDFRef, doc: PDFDocument) =>
     new PDFDropdown(acroComboBox, ref, doc);
@@ -108,7 +105,6 @@ export default class PDFDropdown extends PDFField {
    * const dropdown = form.getDropdown('planets.dropdown')
    * dropdown.setOptions(['Earth', 'Mars', 'Pluto', 'Venus'])
    * ```
-   * @param options The options that should be available in this dropdown.
    */
   setOptions(options: string[]) {
     assertIs(options, "options", [Array]);
@@ -128,7 +124,6 @@ export default class PDFDropdown extends PDFField {
    * const dropdown = form.getDropdown('rockets.dropdown')
    * dropdown.addOptions(['Saturn IV', 'Falcon Heavy'])
    * ```
-   * @param options New options that should be available in this dropdown.
    */
   addOptions(options: string | string[]) {
     assertIs(options, "options", ["string", Array]);
@@ -187,8 +182,6 @@ export default class PDFDropdown extends PDFField {
    * > method, as only one will be visible. [[PDFOptionList]] fields are better
    * > suited for displaying multiple selected values.
    *
-   * @param options The options to be selected.
-   * @param merge Whether or not existing selections should be preserved.
    */
   select(options: string | string[], merge = false) {
     assertIs(options, "options", ["string", Array]);
@@ -251,7 +244,6 @@ export default class PDFDropdown extends PDFField {
    * > or that string does not contain a font size (via the `Tf` operator),
    * > then this method will throw an error.
    *
-   * @param fontSize The font size to be used when rendering text in this field.
    */
   setFontSize(fontSize: number) {
     assertPositive(fontSize, "fontSize");
@@ -493,8 +485,6 @@ export default class PDFDropdown extends PDFField {
    * })
    * ```
    * This will create a new widget for this dropdown field.
-   * @param page The page to which this dropdown widget should be added.
-   * @param options The options to be used when adding this dropdown widget.
    */
   async addToPage(page: PDFPage, options?: FieldAppearanceOptions) {
     assertIs(page, "page", [[PDFPage, "PDFPage"]]);
@@ -564,7 +554,6 @@ export default class PDFDropdown extends PDFField {
    * const dropdown = form.getDropdown('some.dropdown.field')
    * dropdown.defaultUpdateAppearances(helvetica)
    * ```
-   * @param font The font to be used for creating the appearance streams.
    */
   defaultUpdateAppearances(font: PDFFont) {
     assertIs(font, "font", [[PDFFont, "PDFFont"]]);
@@ -583,8 +572,6 @@ export default class PDFDropdown extends PDFField {
    *   return drawTextField(...)
    * })
    * ```
-   * @param font The font to be used for creating the appearance streams.
-   * @param provider Optionally, the appearance provider to be used for
    *                 generating the contents of the appearance streams.
    */
   async updateAppearances(font: PDFFont, provider?: AppearanceProviderFor<PDFDropdown>) {

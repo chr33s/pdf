@@ -1,9 +1,9 @@
+import PDFArray from "../objects/pdf-array.js";
 import PDFDict from "../objects/pdf-dict.js";
 import PDFName from "../objects/pdf-name.js";
-import PDFStream from "../objects/pdf-stream.js";
-import PDFArray from "../objects/pdf-array.js";
-import PDFRef from "../objects/pdf-ref.js";
 import PDFNumber from "../objects/pdf-number.js";
+import PDFRef from "../objects/pdf-ref.js";
+import PDFStream from "../objects/pdf-stream.js";
 
 class PDFAnnotation {
   readonly dict: PDFDict;
@@ -70,19 +70,16 @@ class PDFAnnotation {
     throw new Error(`Unexpected N type: ${N?.constructor.name}`);
   }
 
-  /** @param appearance A PDFDict or PDFStream (direct or ref) */
   setNormalAppearance(appearance: PDFRef | PDFDict) {
     const AP = this.ensureAP();
     AP.set(PDFName.of("N"), appearance);
   }
 
-  /** @param appearance A PDFDict or PDFStream (direct or ref) */
   setRolloverAppearance(appearance: PDFRef | PDFDict) {
     const AP = this.ensureAP();
     AP.set(PDFName.of("R"), appearance);
   }
 
-  /** @param appearance A PDFDict or PDFStream (direct or ref) */
   setDownAppearance(appearance: PDFRef | PDFDict) {
     const AP = this.ensureAP();
     AP.set(PDFName.of("D"), appearance);

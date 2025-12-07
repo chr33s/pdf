@@ -144,10 +144,6 @@ export const lineTo = (xPos: number | PDFNumber, yPos: number | PDFNumber) =>
   PDFOperator.of(Ops.LineTo, [asPDFNumber(xPos), asPDFNumber(yPos)]);
 
 /**
- * @param xPos x coordinate for the lower left corner of the rectangle
- * @param yPos y coordinate for the lower left corner of the rectangle
- * @param width width of the rectangle
- * @param height height of the rectangle
  */
 export const rectangle = (
   xPos: number | PDFNumber,
@@ -163,9 +159,6 @@ export const rectangle = (
   ]);
 
 /**
- * @param xPos x coordinate for the lower left corner of the square
- * @param yPos y coordinate for the lower left corner of the square
- * @param size width and height of the square
  */
 export const square = (xPos: number, yPos: number, size: number) =>
   rectangle(xPos, yPos, size, size);
@@ -216,7 +209,6 @@ export const setCharacterSpacing = (spacing: number | PDFNumber) =>
 export const setWordSpacing = (spacing: number | PDFNumber) =>
   PDFOperator.of(Ops.SetWordSpacing, [asPDFNumber(spacing)]);
 
-/** @param squeeze horizontal character spacing */
 export const setCharacterSqueeze = (squeeze: number | PDFNumber) =>
   PDFOperator.of(Ops.SetTextHorizontalScaling, [asPDFNumber(squeeze)]);
 

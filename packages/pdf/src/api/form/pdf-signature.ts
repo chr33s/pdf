@@ -20,9 +20,6 @@ export default class PDFSignature extends PDFField {
    * Create an instance of [[PDFSignature]] from an existing acroSignature and
    * ref
    *
-   * @param acroSignature The underlying `PDFAcroSignature` for this signature.
-   * @param ref The unique reference for this signature.
-   * @param doc The document to which this signature will belong.
    */
   static of = (acroSignature: PDFAcroSignature, ref: PDFRef, doc: PDFDocument) =>
     new PDFSignature(acroSignature, ref, doc);

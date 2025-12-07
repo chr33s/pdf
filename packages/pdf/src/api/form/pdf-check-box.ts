@@ -35,9 +35,6 @@ export default class PDFCheckBox extends PDFField {
    *
    * Create an instance of [[PDFCheckBox]] from an existing acroCheckBox and ref
    *
-   * @param acroCheckBox The underlying `PDFAcroCheckBox` for this check box.
-   * @param ref The unique reference for this check box.
-   * @param doc The document to which this check box will belong.
    */
   static of = (acroCheckBox: PDFAcroCheckBox, ref: PDFRef, doc: PDFDocument) =>
     new PDFCheckBox(acroCheckBox, ref, doc);
@@ -135,8 +132,6 @@ export default class PDFCheckBox extends PDFField {
    * })
    * ```
    * This will create a new widget for this check box field.
-   * @param page The page to which this check box widget should be added.
-   * @param options The options to be used when adding this check box widget.
    */
   async addToPage(page: PDFPage, options?: FieldAppearanceOptions): Promise<void> {
     assertIs(page, "page", [[PDFPage, "PDFPage"]]);
@@ -225,7 +220,6 @@ export default class PDFCheckBox extends PDFField {
    *   }
    * })
    * ```
-   * @param provider Optionally, the appearance provider to be used for
    *                 generating the contents of the appearance streams.
    */
   updateAppearances(provider?: AppearanceProviderFor<PDFCheckBox>) {

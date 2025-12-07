@@ -16,9 +16,6 @@ export default class PDFImage implements Embeddable {
    *
    * Create an instance of [[PDFImage]] from an existing ref and embedder
    *
-   * @param ref The unique reference for this image.
-   * @param doc The document to which the image will belong.
-   * @param embedder The embedder that will be used to embed the image.
    */
   static of = (ref: PDFRef, doc: PDFDocument, embedder: ImageEmbedder) =>
     new PDFImage(ref, doc, embedder);
@@ -72,7 +69,6 @@ export default class PDFImage implements Embeddable {
    * ```
    * This operation is often useful before drawing an image with
    * [[PDFPage.drawImage]] to compute the `width` and `height` options.
-   * @param factor The factor by which this image should be scaled.
    * @returns The width and height of the image after being scaled.
    */
   scale(factor: number) {
@@ -94,8 +90,6 @@ export default class PDFImage implements Embeddable {
    * ```
    * The `width` and `height` parameters can also be thought of as the width
    * and height of a box that the scaled image must fit within.
-   * @param width The bounding box's width.
-   * @param height The bounding box's height.
    * @returns The width and height of the image after being scaled.
    */
   scaleToFit(width: number, height: number) {

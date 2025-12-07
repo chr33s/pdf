@@ -61,8 +61,6 @@ export default class PDFForm {
    *
    * Create an instance of [[PDFForm]] from an existing acroForm and embedder
    *
-   * @param acroForm The underlying `PDFAcroForm` for this form.
-   * @param doc The document to which the form will belong.
    */
   static of = (acroForm: PDFAcroForm, doc: PDFDocument) => new PDFForm(acroForm, doc);
 
@@ -152,7 +150,6 @@ export default class PDFForm {
    * const field = form.getFieldMaybe('Page1.Foo.Bar[0]')
    * if (field) console.log('Field exists!')
    * ```
-   * @param name A fully qualified field name.
    * @returns The field with the specified name, if one exists.
    */
   getFieldMaybe(name: string): PDFField | undefined {
@@ -172,7 +169,6 @@ export default class PDFForm {
    * const field = form.getField('Page1.Foo.Bar[0]')
    * ```
    * If no field exists with the provided name, an error will be thrown.
-   * @param name A fully qualified field name.
    * @returns The field with the specified name.
    */
   getField(name: string): PDFField {
@@ -190,7 +186,6 @@ export default class PDFForm {
    * ```
    * An error will be thrown if no field exists with the provided name, or if
    * the field exists but is not a button.
-   * @param name A fully qualified button name.
    * @returns The button with the specified name.
    */
   getButton(name: string): PDFButton {
@@ -210,7 +205,6 @@ export default class PDFForm {
    * ```
    * An error will be thrown if no field exists with the provided name, or if
    * the field exists but is not a check box.
-   * @param name A fully qualified check box name.
    * @returns The check box with the specified name.
    */
   getCheckBox(name: string): PDFCheckBox {
@@ -231,7 +225,6 @@ export default class PDFForm {
    * ```
    * An error will be thrown if no field exists with the provided name, or if
    * the field exists but is not a dropdown.
-   * @param name A fully qualified dropdown name.
    * @returns The dropdown with the specified name.
    */
   getDropdown(name: string): PDFDropdown {
@@ -252,7 +245,6 @@ export default class PDFForm {
    * ```
    * An error will be thrown if no field exists with the provided name, or if
    * the field exists but is not an option list.
-   * @param name A fully qualified option list name.
    * @returns The option list with the specified name.
    */
   getOptionList(name: string): PDFOptionList {
@@ -273,7 +265,6 @@ export default class PDFForm {
    * ```
    * An error will be thrown if no field exists with the provided name, or if
    * the field exists but is not a radio group.
-   * @param name A fully qualified radio group name.
    * @returns The radio group with the specified name.
    */
   getRadioGroup(name: string): PDFRadioGroup {
@@ -292,7 +283,6 @@ export default class PDFForm {
    * ```
    * An error will be thrown if no field exists with the provided name, or if
    * the field exists but is not a signature.
-   * @param name A fully qualified signature name.
    * @returns The signature with the specified name.
    */
   getSignature(name: string): PDFSignature {
@@ -312,7 +302,6 @@ export default class PDFForm {
    * ```
    * An error will be thrown if no field exists with the provided name, or if
    * the field exists but is not a text field.
-   * @param name A fully qualified text field name.
    * @returns The text field with the specified name.
    */
   getTextField(name: string): PDFTextField {
@@ -335,7 +324,6 @@ export default class PDFForm {
    * button.addToPage('Do Stuff', font, page)
    * ```
    * An error will be thrown if a field already exists with the provided name.
-   * @param name The fully qualified name for the new button.
    * @returns The new button field.
    */
   createButton(name: string): PDFButton {
@@ -365,7 +353,6 @@ export default class PDFForm {
    * checkBox.addToPage(page)
    * ```
    * An error will be thrown if a field already exists with the provided name.
-   * @param name The fully qualified name for the new check box.
    * @returns The new check box field.
    */
   createCheckBox(name: string): PDFCheckBox {
@@ -395,7 +382,6 @@ export default class PDFForm {
    * dropdown.addToPage(font, page)
    * ```
    * An error will be thrown if a field already exists with the provided name.
-   * @param name The fully qualified name for the new dropdown.
    * @returns The new dropdown field.
    */
   createDropdown(name: string): PDFDropdown {
@@ -425,7 +411,6 @@ export default class PDFForm {
    * optionList.addToPage(font, page)
    * ```
    * An error will be thrown if a field already exists with the provided name.
-   * @param name The fully qualified name for the new option list.
    * @returns The new option list field.
    */
   createOptionList(name: string): PDFOptionList {
@@ -456,7 +441,6 @@ export default class PDFForm {
    * radioGroup.addOptionToPage('is-cat', page, { y: 75 })
    * ```
    * An error will be thrown if a field already exists with the provided name.
-   * @param name The fully qualified name for the new radio group.
    * @returns The new radio group field.
    */
   createRadioGroup(name: string): PDFRadioGroup {
@@ -486,7 +470,6 @@ export default class PDFForm {
    * textField.addToPage(font, page)
    * ```
    * An error will be thrown if a field already exists with the provided name.
-   * @param name The fully qualified name for the new radio group.
    * @returns The new radio group field.
    */
   createTextField(name: string): PDFTextField {
@@ -632,7 +615,6 @@ export default class PDFForm {
    * > update appearances automatically if a form was accessed via the
    * > [[PDFDocument.getForm]] method prior to saving.
    *
-   * @param font Optionally, the font to use when creating new appearances.
    */
   async updateFieldAppearances(font?: PDFFont) {
     assertOrUndefined(font, "font", [[PDFFont, "PDFFont"]]);
@@ -657,7 +639,6 @@ export default class PDFForm {
    * const field = form.getField('foo.bar')
    * form.markFieldAsDirty(field.ref)
    * ```
-   * @param fieldRef The reference to the field that should be marked.
    */
   markFieldAsDirty(fieldRef: PDFRef) {
     assertOrUndefined(fieldRef, "fieldRef", [[PDFRef, "PDFRef"]]);
@@ -672,7 +653,6 @@ export default class PDFForm {
    * const field = form.getField('foo.bar')
    * form.markFieldAsClean(field.ref)
    * ```
-   * @param fieldRef The reference to the field that should be marked.
    */
   markFieldAsClean(fieldRef: PDFRef) {
     assertOrUndefined(fieldRef, "fieldRef", [[PDFRef, "PDFRef"]]);
@@ -686,7 +666,6 @@ export default class PDFForm {
    * const field = form.getField('foo.bar')
    * if (form.fieldIsDirty(field.ref)) console.log('Field is dirty')
    * ```
-   * @param fieldRef The reference to the field that should be checked.
    * @returns Whether or not the specified field is dirty.
    */
   fieldIsDirty(fieldRef: PDFRef): boolean {

@@ -15,9 +15,6 @@ export default class PDFEmbeddedPage implements Embeddable {
    *
    * Create an instance of [[PDFEmbeddedPage]] from an existing ref and embedder
    *
-   * @param ref The unique reference for this embedded page.
-   * @param doc The document to which the embedded page will belong.
-   * @param embedder The embedder that will be used to embed the page.
    */
   static of = (ref: PDFRef, doc: PDFDocument, embedder: PDFPageEmbedder) =>
     new PDFEmbeddedPage(ref, doc, embedder);
@@ -63,7 +60,6 @@ export default class PDFEmbeddedPage implements Embeddable {
    * ```
    * This operation is often useful before drawing a page with
    * [[PDFPage.drawPage]] to compute the `width` and `height` options.
-   * @param factor The factor by which this page should be scaled.
    * @returns The width and height of the page after being scaled.
    */
   scale(factor: number) {

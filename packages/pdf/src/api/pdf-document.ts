@@ -148,8 +148,6 @@ export default class PDFDocument {
    *
    * ```
    *
-   * @param pdf The input data containing a PDF document.
-   * @param options The options to be used when loading the document.
    * @returns Resolves with a document loaded from the input.
    */
   static async load(pdf: string | Uint8Array | ArrayBuffer, options: LoadOptions = {}) {
@@ -281,7 +279,6 @@ export default class PDFDocument {
    * pdfDoc.registerFontkit(fontkit)
    * ```
    *
-   * @param fontkit The fontkit instance to be registered.
    */
   registerFontkit(fontkit: Fontkit): void {
     this.#fontkit = fontkit;
@@ -463,8 +460,6 @@ export default class PDFDocument {
    * pdfDoc.setTitle('🥚 The Life of an Egg 🍳', { showInWindowTitleBar: true })
    * ```
    *
-   * @param title The title of this document.
-   * @param options The options to be used when setting the title.
    */
   setTitle(title: string, options?: SetTitleOptions): void {
     assertIs(title, "title", ["string"]);
@@ -484,7 +479,6 @@ export default class PDFDocument {
    * ```js
    * pdfDoc.setAuthor('Humpty Dumpty')
    * ```
-   * @param author The author of this document.
    */
   setAuthor(author: string): void {
     assertIs(author, "author", ["string"]);
@@ -498,7 +492,6 @@ export default class PDFDocument {
    * ```js
    * pdfDoc.setSubject('📘 An Epic Tale of Woe 📖')
    * ```
-   * @param subject The subject of this document.
    */
   setSubject(subject: string): void {
     assertIs(subject, "author", ["string"]);
@@ -512,7 +505,6 @@ export default class PDFDocument {
    * ```js
    * pdfDoc.setKeywords(['eggs', 'wall', 'fall', 'king', 'horses', 'men'])
    * ```
-   * @param keywords An array of keywords associated with this document.
    */
   setKeywords(keywords: string[]): void {
     assertIs(keywords, "keywords", [Array]);
@@ -526,7 +518,6 @@ export default class PDFDocument {
    * ```js
    * pdfDoc.setCreator('PDF App 9000 🤖')
    * ```
-   * @param creator The creator of this document.
    */
   setCreator(creator: string): void {
     assertIs(creator, "creator", ["string"]);
@@ -540,7 +531,6 @@ export default class PDFDocument {
    * ```js
    * pdfDoc.setProducer('PDF App 9000 🤖')
    * ```
-   * @param producer The producer of this document.
    */
   setProducer(producer: string): void {
     assertIs(producer, "creator", ["string"]);
@@ -555,7 +545,6 @@ export default class PDFDocument {
    * pdfDoc.setLanguage('en-us')
    * ```
    *
-   * @param language An RFC 3066 _Language-Tag_ denoting the language of this
    *                 document, or an empty string if the language is unknown.
    */
   setLanguage(language: string): void {
@@ -570,7 +559,6 @@ export default class PDFDocument {
    * ```js
    * pdfDoc.setCreationDate(new Date())
    * ```
-   * @param creationDate The date this document was created.
    */
   setCreationDate(creationDate: Date): void {
     assertIs(creationDate, "creationDate", [[Date, "Date"]]);
@@ -585,7 +573,6 @@ export default class PDFDocument {
    * ```js
    * pdfDoc.setModificationDate(new Date())
    * ```
-   * @param modificationDate The date this document was last modified.
    */
   setModificationDate(modificationDate: Date): void {
     assertIs(modificationDate, "modificationDate", [[Date, "Date"]]);
@@ -664,7 +651,6 @@ export default class PDFDocument {
    * ```
    * Once a page has been removed, it will no longer be rendered at that index
    * in the document.
-   * @param index The index of the page to be removed.
    */
   removePage(index: number): void {
     const pageCount = this.getPageCount();
@@ -702,7 +688,6 @@ export default class PDFDocument {
    * pdfDoc1.addPage(existingPage)
    * ```
    *
-   * @param page Optionally, the desired dimensions or existing page.
    * @returns The newly created (or existing) page.
    */
   addPage(page?: PDFPage | [number, number]): PDFPage {
@@ -738,8 +723,6 @@ export default class PDFDocument {
    * pdfDoc1.insertPage(0, existingPage)
    * ```
    *
-   * @param index The index at which the page should be inserted (zero-based).
-   * @param page Optionally, the desired dimensions or existing page.
    * @returns The newly created (or existing) page.
    */
   insertPage(index: number, page?: PDFPage | [number, number]): PDFPage {
@@ -779,8 +762,6 @@ export default class PDFDocument {
    * pdfDoc.insertPage(0, ninetiethPage)
    * pdfDoc.addPage(firstPage)
    * ```
-   * @param srcDoc The document from which pages should be copied.
-   * @param indices The indices of the pages that should be copied.
    * @returns Resolves with an array of pages copied into this document.
    */
   async copyPages(srcDoc: PDFDocument, indices: number[]): Promise<PDFPage[]> {
@@ -869,8 +850,6 @@ export default class PDFDocument {
    * ```
    * See the [JavaScript for Acrobat API Reference](https://www.adobe.com/content/dam/acom/en/devnet/acrobat/pdfs/js_api_reference.pdf)
    * for details.
-   * @param name The name of the script. Must be unique per document.
-   * @param script The JavaScript to execute.
    */
   addJavaScript(name: string, script: string) {
     assertIs(name, "name", ["string"]);
@@ -934,8 +913,6 @@ export default class PDFDocument {
    * })
    * ```
    *
-   * @param attachment The input data containing the file to be attached.
-   * @param name The name of the file to be attached.
    * @returns Resolves when the attachment is complete.
    */
   async attach(
@@ -1153,8 +1130,6 @@ export default class PDFDocument {
    * const font5 = await pdfDoc.embedFont(ubuntuBytes)
    * ```
    * See also: [[registerFontkit]]
-   * @param font The input data for a font.
-   * @param options The options to be used when embedding the font.
    * @returns Resolves with the embedded font.
    */
   async embedFont(
@@ -1193,8 +1168,6 @@ export default class PDFDocument {
    * import { StandardFonts } from 'pdf'
    * const helveticaFont = await pdfDoc.embedStandardFont(StandardFonts.Helvetica)
    * ```
-   * @param font The standard font to be embedded.
-   * @param customName The name to be used when embedding the font.
    * @returns The embedded font.
    */
   async embedStandardFont(font: StandardFont, customName?: string): Promise<PDFFont> {
@@ -1239,7 +1212,6 @@ export default class PDFDocument {
    * const image4 = await pdfDoc.embedJpg(arrayBuffer)
    * ```
    *
-   * @param jpg The input data for a JPEG image.
    * @returns Resolves with the embedded image.
    */
   async embedJpg(jpg: string | Uint8Array | ArrayBuffer): Promise<PDFImage> {
@@ -1279,7 +1251,6 @@ export default class PDFDocument {
    * const image4 = await pdfDoc.embedPng(arrayBuffer)
    * ```
    *
-   * @param png The input data for a PNG image.
    * @returns Resolves with the embedded image.
    */
   async embedPng(png: string | Uint8Array | ArrayBuffer): Promise<PDFImage> {
@@ -1334,8 +1305,6 @@ export default class PDFDocument {
    *
    * See [[PDFDocument.load]] for examples of the allowed input data formats.
    *
-   * @param pdf The input data containing a PDF document.
-   * @param indices The indices of the pages that should be embedded.
    * @returns Resolves with an array of the embedded pages.
    */
   async embedPdf(
@@ -1375,11 +1344,8 @@ export default class PDFDocument {
    * )
    * ```
    *
-   * @param page The page to be embedded.
-   * @param boundingBox
    * Optionally, an area of the source page that should be embedded
    * (defaults to entire page).
-   * @param transformationMatrix
    * Optionally, a transformation matrix that is always applied to the embedded
    * page anywhere it is drawn.
    * @returns Resolves with the embedded pdf page.
@@ -1412,12 +1378,9 @@ export default class PDFDocument {
    * const embeddedPages = await pdfDoc.embedPages([page1, page2, page3])
    * ```
    *
-   * @param pages
    * The pages to be embedded (they must all share the same context).
-   * @param boundingBoxes
    * Optionally, an array of clipping boundaries - one for each page
    * (defaults to entirety of each page).
-   * @param transformationMatrices
    * Optionally, an array of transformation matrices - one for each page
    * (each page's transformation will apply anywhere it is drawn).
    * @returns Resolves with an array of the embedded pdf pages.
@@ -1498,7 +1461,6 @@ export default class PDFDocument {
    * * Download it as a Blob in the browser
    * * Render it in an `iframe`
    *
-   * @param options The options to be used when saving the document.
    * @returns Resolves with the bytes of the serialized document.
    */
   async save(options: SaveOptions = {}): Promise<Uint8Array> {
@@ -1538,7 +1500,6 @@ export default class PDFDocument {
    * base64DataUri // => 'data:application/pdf;base64,JVBERi0xLjcKJYGBgYEKC...'
    * ```
    *
-   * @param options The options to be used when saving the document.
    * @returns Resolves with a base64 encoded string or data URI of the
    *          serialized document.
    */

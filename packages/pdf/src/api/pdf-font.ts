@@ -17,9 +17,6 @@ export default class PDFFont implements Embeddable {
    *
    * Create an instance of [[PDFFont]] from an existing ref and embedder
    *
-   * @param ref The unique reference for this font.
-   * @param doc The document to which the font will belong.
-   * @param embedder The embedder that will be used to embed the font.
    */
   static of = (ref: PDFRef, doc: PDFDocument, embedder: FontEmbedder) =>
     new PDFFont(ref, doc, embedder);
@@ -58,7 +55,6 @@ export default class PDFFont implements Embeddable {
    *
    * Encodes a string of text in this font.
    *
-   * @param text The text to be encoded.
    * @returns The encoded text as a hex string.
    */
   async encodeText(text: string): Promise<PDFHexString> {
@@ -73,8 +69,6 @@ export default class PDFFont implements Embeddable {
    * ```js
    * const width = font.widthOfTextAtSize('Foo Bar Qux Baz', 36)
    * ```
-   * @param text The string of text to be measured.
-   * @param size The font size to be used for this measurement.
    * @returns The width of the string of text when drawn in this font at the
    *          given size.
    */
@@ -93,8 +87,6 @@ export default class PDFFont implements Embeddable {
    * The `options.descender` value controls whether or not the font's
    * descender is included in the height calculation.
    *
-   * @param size The font size to be used for this measurement.
-   * @param options The options to be used when computing this measurement.
    * @returns The height of this font at the given size.
    */
   heightAtSize(size: number, options?: { descender?: boolean }): number {
@@ -110,7 +102,6 @@ export default class PDFFont implements Embeddable {
    * ```js
    * const fontSize = font.sizeAtHeight(12)
    * ```
-   * @param height The height to be used for this calculation.
    * @returns The font size at which this font is the given height.
    */
   sizeAtHeight(height: number): number {

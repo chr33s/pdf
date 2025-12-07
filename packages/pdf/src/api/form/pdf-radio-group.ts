@@ -46,10 +46,7 @@ export default class PDFRadioGroup extends PDFField {
    * Create an instance of [[PDFOptionList]] from an existing acroRadioButton
    * and ref
    *
-   * @param acroRadioButton The underlying `PDFAcroRadioButton` for this
    *                        radio group.
-   * @param ref The unique reference for this radio group.
-   * @param doc The document to which this radio group will belong.
    */
   static of = (acroRadioButton: PDFAcroRadioButton, ref: PDFRef, doc: PDFDocument) =>
     new PDFRadioGroup(acroRadioButton, ref, doc);
@@ -160,7 +157,6 @@ export default class PDFRadioGroup extends PDFField {
    * streams will display a dot inside the widget of this check box field
    * that represents the selected option.
    *
-   * @param option The option to be selected.
    */
   select(option: string) {
     assertIs(option, "option", ["string"]);
@@ -325,9 +321,6 @@ export default class PDFRadioGroup extends PDFField {
    * radioGroup.addOptionToPage('Dynames', page, { ...options, y: 110 })
    * ```
    * This will create a new radio button widget for this radio group field.
-   * @param option The option that the radio button widget represents.
-   * @param page The page to which the radio button widget should be added.
-   * @param options The options to be used when adding the radio button widget.
    */
   async addOptionToPage(
     option: string,
@@ -424,7 +417,6 @@ export default class PDFRadioGroup extends PDFField {
    *   }
    * })
    * ```
-   * @param provider Optionally, the appearance provider to be used for
    *                 generating the contents of the appearance streams.
    */
   updateAppearances(provider?: AppearanceProviderFor<PDFRadioGroup>) {

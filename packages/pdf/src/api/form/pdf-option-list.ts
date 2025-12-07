@@ -41,9 +41,6 @@ export default class PDFOptionList extends PDFField {
    * Create an instance of [[PDFOptionList]] from an existing acroListBox and
    * ref
    *
-   * @param acroListBox The underlying `PDFAcroListBox` for this option list.
-   * @param ref The unique reference for this option list.
-   * @param doc The document to which this option list will belong.
    */
   static of = (acroListBox: PDFAcroListBox, ref: PDFRef, doc: PDFDocument) =>
     new PDFOptionList(acroListBox, ref, doc);
@@ -121,7 +118,6 @@ export default class PDFOptionList extends PDFField {
    * allows you to generate appearance streams with characters outside the
    * latin alphabet (assuming the custom font supports them).
    *
-   * @param options The options that should be available in this option list.
    */
   setOptions(options: string[]) {
     assertIs(options, "options", [Array]);
@@ -145,7 +141,6 @@ export default class PDFOptionList extends PDFField {
    * ```
    * This method will mark this option list as dirty. See
    * [[PDFOptionList.setOptions]] for more details about what this means.
-   * @param options New options that should be available in this option list.
    */
   addOptions(options: string | string[]) {
     assertIs(options, "options", ["string", Array]);
@@ -180,8 +175,6 @@ export default class PDFOptionList extends PDFField {
    * ```
    * This method will mark this option list as dirty. See
    * [[PDFOptionList.setOptions]] for more details about what this means.
-   * @param options The options to be selected.
-   * @param merge Whether or not existing selections should be preserved.
    */
   select(options: string | string[], merge = false) {
     assertIs(options, "options", ["string", Array]);
@@ -234,7 +227,6 @@ export default class PDFOptionList extends PDFField {
    * const optionList = form.getOptionList('some.optionList.field')
    * optionList.setFontSize(4);
    * ```
-   * @param fontSize The font size to set the font to.
    */
 
   /**
@@ -255,7 +247,6 @@ export default class PDFOptionList extends PDFField {
    * > or that string does not contain a font size (via the `Tf` operator),
    * > then this method will throw an error.
    *
-   * @param fontSize The font size to be used when rendering text in this field.
    */
   setFontSize(fontSize: number) {
     assertPositive(fontSize, "fontSize");
@@ -412,8 +403,6 @@ export default class PDFOptionList extends PDFField {
    * })
    * ```
    * This will create a new widget for this option list field.
-   * @param page The page to which this option list widget should be added.
-   * @param options The options to be used when adding this option list widget.
    */
   async addToPage(page: PDFPage, options?: FieldAppearanceOptions) {
     assertIs(page, "page", [[PDFPage, "PDFPage"]]);
@@ -483,7 +472,6 @@ export default class PDFOptionList extends PDFField {
    * const optionList = form.getOptionList('some.optionList.field')
    * optionList.defaultUpdateAppearances(helvetica)
    * ```
-   * @param font The font to be used for creating the appearance streams.
    */
   defaultUpdateAppearances(font: PDFFont) {
     assertIs(font, "font", [[PDFFont, "PDFFont"]]);
@@ -502,8 +490,6 @@ export default class PDFOptionList extends PDFField {
    *   return drawOptionList(...)
    * })
    * ```
-   * @param font The font to be used for creating the appearance streams.
-   * @param provider Optionally, the appearance provider to be used for
    *                 generating the contents of the appearance streams.
    */
   async updateAppearances(font: PDFFont, provider?: AppearanceProviderFor<PDFOptionList>) {
