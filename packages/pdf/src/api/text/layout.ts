@@ -1,13 +1,12 @@
 import { CombedTextLayoutError } from "../errors.js";
-import PDFFont from "../pdf-font.js";
+import PDFFont, { type EncodedText } from "../pdf-font.js";
 import { TextAlignment } from "./alignment.js";
 
-import { PDFHexString } from "../../core/index.js";
 import { charAtIndex, charSplit, cleanText, lineSplit, mergeLines } from "../../utils/index.js";
 
 export interface TextPosition {
   text: string;
-  encoded: PDFHexString;
+  encoded: EncodedText;
   x: number;
   y: number;
   width: number;
@@ -128,14 +127,14 @@ const splitOutLines = async (
   fontSize: number,
 ): Promise<{
   line: string;
-  encoded: PDFHexString;
+  encoded: EncodedText;
   width: number;
   remainder: string | undefined;
 }> => {
   let lastWhitespaceIdx = input.length;
   while (lastWhitespaceIdx > 0) {
     const line = input.substring(0, lastWhitespaceIdx);
-    const encoded = await font.encodeText(line);
+    const encoded = await font.encodeTextWithPositioning(line);
     const width = await font.widthOfTextAtSize(line, fontSize);
     if (width < maxWidth) {
       const remainder = input.substring(lastWhitespaceIdx) || undefined;
@@ -148,7 +147,7 @@ const splitOutLines = async (
   // within the specified `maxWidth` so we'll just return everything
   return {
     line: input,
-    encoded: await font.encodeText(input),
+    encoded: await font.encodeTextWithPositioning(input),
     width: await font.widthOfTextAtSize(input, fontSize),
     remainder: undefined,
   };
@@ -264,7 +263,7 @@ export const layoutCombedText = async (
   while (cellOffset < cellCount) {
     const [char, charLength] = charAtIndex(line, charOffset);
 
-    const encoded = await font.encodeText(char);
+    const encoded = await font.encodeTextWithPositioning(char);
     const width = await font.widthOfTextAtSize(char, fontSize);
 
     const cellCenter = bounds.x + (cellWidth * cellOffset + cellWidth / 2);
@@ -316,7 +315,7 @@ export const layoutSinglelineText = async (
     fontSize = await computeFontSize([line], font, bounds);
   }
 
-  const encoded = await font.encodeText(line);
+  const encoded = await font.encodeTextWithPositioning(line);
   const width = await font.widthOfTextAtSize(line, fontSize);
   const height = font.heightAtSize(fontSize, { descender: false });
 

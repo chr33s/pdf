@@ -10,6 +10,7 @@ export * from "./pdf-document-options.js";
 export { default as PDFDocument } from "./pdf-document.js";
 export { default as PDFEmbeddedPage } from "./pdf-embedded-page.js";
 export { default as PDFFont } from "./pdf-font.js";
+export type { EncodedText } from "./pdf-font.js";
 export { default as PDFImage } from "./pdf-image.js";
 export { default as PDFJavaScript } from "./pdf-java-script.js";
 export * from "./pdf-page-options.js";

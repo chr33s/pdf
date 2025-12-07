@@ -1,5 +1,6 @@
 import {
   PDFOperatorNames as Ops,
+  PDFArray,
   PDFHexString,
   PDFName,
   PDFNumber,
@@ -194,6 +195,8 @@ export const moveText = (x: number | PDFNumber, y: number | PDFNumber) =>
 /* ==================== Text Showing Operators ==================== */
 
 export const showText = (text: PDFHexString) => PDFOperator.of(Ops.ShowText, [text]);
+
+export const showTextAdjusted = (text: PDFArray) => PDFOperator.of(Ops.ShowTextAdjusted, [text]);
 
 /* ==================== Text State Operators ==================== */
 

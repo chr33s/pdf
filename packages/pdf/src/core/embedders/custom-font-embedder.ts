@@ -57,8 +57,12 @@ class CustomFontEmbedder {
    */
   async encodeText(text: string): Promise<PDFHexString> {
     const { glyphs } = await this.font.layout(text, this.fontFeatures);
-    const hexCodes = glyphs.map((glyph: Glyph) => toHexStringOfMinLength(glyph.id, 4));
+    const hexCodes = this.encodeGlyphs(glyphs).map((glyphId) => toHexStringOfMinLength(glyphId, 4));
     return PDFHexString.of(hexCodes.join(""));
+  }
+
+  encodeGlyphs(glyphs: Glyph[]): number[] {
+    return glyphs.map((glyph) => glyph.id);
   }
 
   // The advanceWidth takes into account kerning automatically, so we don't

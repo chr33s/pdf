@@ -40,7 +40,12 @@ class CustomFontSubsetEmbedder extends CustomFontEmbedder {
 
   async encodeText(text: string): Promise<PDFHexString> {
     const { glyphs } = await this.font.layout(text, this.fontFeatures);
-    const hexCodes: string[] = Array.from({ length: glyphs.length });
+    const hexCodes = this.encodeGlyphs(glyphs).map((glyphId) => toHexStringOfMinLength(glyphId, 4));
+    return PDFHexString.of(hexCodes.join(""));
+  }
+
+  encodeGlyphs(glyphs: Glyph[]): number[] {
+    const encoded: number[] = Array.from({ length: glyphs.length });
 
     for (let idx = 0, len = glyphs.length; idx < len; idx++) {
       const glyph = glyphs[idx];
@@ -49,11 +54,11 @@ class CustomFontSubsetEmbedder extends CustomFontEmbedder {
       this.#glyphs[subsetGlyphId - 1] = glyph;
       this.#glyphIdMap.set(glyph.id, subsetGlyphId);
 
-      hexCodes[idx] = toHexStringOfMinLength(subsetGlyphId, 4);
+      encoded[idx] = subsetGlyphId;
     }
 
     this.glyphCache.invalidate();
-    return PDFHexString.of(hexCodes.join(""));
+    return encoded;
   }
 
   protected isCFF(): boolean {

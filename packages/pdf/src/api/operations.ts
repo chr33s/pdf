@@ -1,4 +1,4 @@
-import { PDFHexString, PDFName, PDFNumber, PDFOperator } from "../core/index.js";
+import { PDFArray, PDFHexString, PDFName, PDFNumber, PDFOperator } from "../core/index.js";
 import type { Space, TransformationMatrix } from "../types/index.js";
 import { identityMatrix } from "../types/matrix.js";
 import { Color, setFillingColor, setStrokingColor } from "./colors.js";
@@ -36,6 +36,7 @@ import {
   setLineWidth,
   setTextRenderingMode,
   showText,
+  showTextAdjusted,
   skewRadians,
   stroke,
   translate,
@@ -75,7 +76,7 @@ const clipSpaces = (spaces: Space[]) => spaces.flatMap(clipSpace);
 const negate = (value: number | PDFNumber): number | PDFNumber =>
   typeof value === "number" ? -value : PDFNumber.of(-value.asNumber());
 
-export const drawText = (line: PDFHexString, options: DrawTextOptions): PDFOperator[] =>
+export const drawText = (line: PDFHexString | PDFArray, options: DrawTextOptions): PDFOperator[] =>
   [
     pushGraphicsState(),
     options.graphicsState && setGraphicsState(options.graphicsState),
@@ -92,7 +93,7 @@ export const drawText = (line: PDFHexString, options: DrawTextOptions): PDFOpera
       options.x,
       options.y,
     ),
-    showText(line),
+    line instanceof PDFArray ? showTextAdjusted(line) : showText(line),
     endText(),
     popGraphicsState(),
   ].filter(Boolean) as PDFOperator[];
@@ -102,7 +103,7 @@ export interface DrawLinesOfTextOptions extends DrawTextOptions {
 }
 
 export const drawLinesOfText = (
-  lines: PDFHexString[],
+  lines: Array<PDFHexString | PDFArray>,
   options: DrawLinesOfTextOptions,
 ): PDFOperator[] => {
   const operators = [
@@ -127,7 +128,8 @@ export const drawLinesOfText = (
   ].filter(Boolean) as PDFOperator[];
 
   for (let idx = 0, len = lines.length; idx < len; idx++) {
-    operators.push(showText(lines[idx]), nextLine());
+    const line = lines[idx];
+    operators.push(line instanceof PDFArray ? showTextAdjusted(line) : showText(line), nextLine());
   }
 
   operators.push(endText(), popGraphicsState());
@@ -579,7 +581,7 @@ export const drawButton = (options: {
   borderWidth: number | PDFNumber;
   color: Color | undefined;
   borderColor: Color | undefined;
-  textLines: { encoded: PDFHexString; x: number; y: number }[];
+  textLines: { encoded: PDFHexString | PDFArray; x: number; y: number }[];
   textColor: Color;
   font: string | PDFName;
   fontSize: number | PDFNumber;
@@ -624,7 +626,7 @@ export interface DrawTextLinesOptions {
 }
 
 export const drawTextLines = (
-  lines: { encoded: PDFHexString; x: number; y: number }[],
+  lines: { encoded: PDFHexString | PDFArray; x: number; y: number }[],
   options: DrawTextLinesOptions,
 ): PDFOperator[] => {
   const operators = [
@@ -643,7 +645,7 @@ export const drawTextLines = (
         x,
         y,
       ),
-      showText(encoded),
+      encoded instanceof PDFArray ? showTextAdjusted(encoded) : showText(encoded),
     );
   }
 
@@ -660,7 +662,7 @@ export const drawTextField = (options: {
   borderWidth: number | PDFNumber;
   color: Color | undefined;
   borderColor: Color | undefined;
-  textLines: { encoded: PDFHexString; x: number; y: number }[];
+  textLines: { encoded: PDFHexString | PDFArray; x: number; y: number }[];
   textColor: Color;
   font: string | PDFName;
   fontSize: number | PDFNumber;
@@ -735,7 +737,7 @@ export const drawOptionList = (options: {
   borderWidth: number | PDFNumber;
   color: Color | undefined;
   borderColor: Color | undefined;
-  textLines: { encoded: PDFHexString; x: number; y: number; height: number }[];
+  textLines: { encoded: PDFHexString | PDFArray; x: number; y: number; height: number }[];
   textColor: Color;
   font: string | PDFName;
   fontSize: number | PDFNumber;

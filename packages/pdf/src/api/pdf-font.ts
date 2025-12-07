@@ -1,7 +1,21 @@
-import { CustomFontEmbedder, PDFHexString, PDFRef, StandardFontEmbedder } from "../core/index.js";
-import { assertIs, assertOrUndefined } from "../utils/index.js";
+import {
+  CustomFontEmbedder,
+  PDFArray,
+  PDFHexString,
+  PDFNumber,
+  PDFRef,
+  StandardFontEmbedder,
+} from "../core/index.js";
+import {
+  assertIs,
+  assertOrUndefined,
+  toHexString,
+  toHexStringOfMinLength,
+} from "../utils/index.js";
 import Embeddable from "./embeddable.js";
 import PDFDocument from "./pdf-document.js";
+
+export type EncodedText = PDFHexString | PDFArray;
 
 type FontEmbedder = CustomFontEmbedder | StandardFontEmbedder;
 
@@ -61,6 +75,22 @@ export default class PDFFont implements Embeddable {
     assertIs(text, "text", ["string"]);
     this.#modified = true;
     return this.#embedder.encodeText(text);
+  }
+
+  /**
+   * Encode a string of text, returning either a simple hex string (when no
+   * kerning adjustments are needed) or a `PDFArray` suitable for the `TJ`
+   * operator when kerning adjustments are required.
+   */
+  async encodeTextWithPositioning(text: string): Promise<EncodedText> {
+    assertIs(text, "text", ["string"]);
+    this.#modified = true;
+
+    if (this.#embedder instanceof StandardFontEmbedder) {
+      return this.#encodeStandardTextWithPositioning(text);
+    }
+
+    return this.#encodeCustomTextWithPositioning(text);
   }
 
   /**
@@ -136,5 +166,84 @@ export default class PDFFont implements Embeddable {
       await this.#embedder.embedIntoContext(this.doc.context, this.ref);
       this.#modified = false;
     }
+  }
+
+  async #encodeCustomTextWithPositioning(text: string): Promise<EncodedText> {
+    const embedder = this.#embedder as CustomFontEmbedder;
+    const run = await embedder.font.layout(text, embedder.fontFeatures);
+
+    const glyphs = run.glyphs;
+    const positions = run.positions ?? [];
+    const glyphIds = embedder.encodeGlyphs(glyphs);
+    const hexCodes = glyphIds.map((id) => toHexStringOfMinLength(id, 4));
+
+    const scale = embedder.scale;
+    const advances = glyphs.map((glyph, idx) => {
+      const position = positions[idx];
+      const xAdvance = position?.xAdvance ?? glyph.advanceWidth;
+      return xAdvance * scale;
+    });
+    const widths = glyphs.map((glyph) => glyph.advanceWidth * scale);
+
+    return this.#encodeWithKerningAdjustments(hexCodes, widths, advances);
+  }
+
+  #encodeStandardTextWithPositioning(text: string): EncodedText {
+    const embedder = this.#embedder as StandardFontEmbedder;
+    const glyphs = embedder.glyphsForString(text);
+    const hexCodes = glyphs.map((glyph) => toHexString(glyph.code));
+
+    const widths = glyphs.map((glyph) => embedder.widthOfGlyph(glyph.name));
+    const advances = glyphs.map((glyph, idx) => {
+      const next = glyphs[idx + 1];
+      const kernAmount = next
+        ? embedder.font.getXAxisKerningForPair(glyph.name, next.name) || 0
+        : 0;
+      return widths[idx] + kernAmount;
+    });
+
+    return this.#encodeWithKerningAdjustments(hexCodes, widths, advances);
+  }
+
+  #encodeWithKerningAdjustments(
+    hexCodes: string[],
+    defaultAdvances: number[],
+    advances: number[],
+  ): EncodedText {
+    if (hexCodes.length === 0) return PDFHexString.of("");
+
+    const adjustments: number[] = Array.from({ length: Math.max(0, hexCodes.length - 1) });
+    let hasAdjustment = false;
+
+    for (let idx = 0, len = adjustments.length; idx < len; idx++) {
+      const adjustment = defaultAdvances[idx] - advances[idx];
+      adjustments[idx] = adjustment;
+      if (Math.abs(adjustment) > 1e-6) hasAdjustment = true;
+    }
+
+    if (!hasAdjustment) {
+      return PDFHexString.of(hexCodes.join(""));
+    }
+
+    const array = PDFArray.withContext(this.doc.context);
+    let buffer = "";
+
+    for (let idx = 0, len = hexCodes.length; idx < len; idx++) {
+      buffer += hexCodes[idx];
+
+      if (idx < adjustments.length && Math.abs(adjustments[idx]) > 1e-6) {
+        if (buffer.length > 0) {
+          array.push(PDFHexString.of(buffer));
+          buffer = "";
+        }
+        array.push(PDFNumber.of(adjustments[idx]));
+      }
+    }
+
+    if (buffer.length > 0) {
+      array.push(PDFHexString.of(buffer));
+    }
+
+    return array;
   }
 }

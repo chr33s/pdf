@@ -57,6 +57,14 @@ class StandardFontEmbedder {
     return PDFHexString.of(hexCodes.join(""));
   }
 
+  glyphsForString(text: string): Glyph[] {
+    return this.#encodeTextAsGlyphs(text);
+  }
+
+  widthOfGlyph(glyphName: string): number {
+    return this.#widthOfGlyph(glyphName);
+  }
+
   widthOfTextAtSize(text: string, size: number): number {
     const glyphs = this.#encodeTextAsGlyphs(text);
     let totalWidth = 0;

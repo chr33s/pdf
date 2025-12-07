@@ -2,7 +2,6 @@ import {
   PDFArray,
   PDFContentStream,
   PDFDict,
-  PDFHexString,
   PDFName,
   PDFOperator,
   PDFPageLeaf,
@@ -942,10 +941,9 @@ export default class PDFPage {
         ? lineSplit(cleanText(text))
         : await breakTextIntoLines(text, wordBreaks, options.maxWidth, textWidth);
 
-    const encodedLines = Array.from({ length: lines.length }) as PDFHexString[];
-    for (let idx = 0, len = lines.length; idx < len; idx++) {
-      encodedLines[idx] = await newFont.encodeText(lines[idx]);
-    }
+    const encodedLines = await Promise.all(
+      lines.map((line) => newFont.encodeTextWithPositioning(line)),
+    );
 
     const graphicsStateKey = this.#maybeEmbedGraphicsState({
       opacity: options.opacity,
