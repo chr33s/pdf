@@ -106,14 +106,14 @@ class TTFFontBase implements GlyphFontLike {
   GPOS?: unknown;
   HVAR?: unknown;
   fvar?: {
-    axis: Array<{
+    axes: Array<{
       axisTag: string;
       minValue: number;
       defaultValue: number;
       maxValue: number;
       name: { en: string };
     }>;
-    instance: Array<{ name: { en: string }; coord: number[] }>;
+    instances: Array<{ name: { en: string }; coordinates: number[] }>;
   } | null;
   CFF2?: unknown;
   CFF?: unknown;
@@ -633,7 +633,7 @@ class TTFFontBase implements GlyphFontLike {
       return res;
     }
 
-    for (let axis of fvar.axis) {
+    for (let axis of fvar.axes) {
       res[axis.axisTag.trim()] = {
         name: axis.name.en,
         min: axis.minValue,
@@ -658,11 +658,11 @@ class TTFFontBase implements GlyphFontLike {
       return res;
     }
 
-    for (let instance of fvar.instance) {
+    for (let instance of fvar.instances) {
       let settings: VariationSettings = {};
-      for (let i = 0; i < fvar.axis.length; i++) {
-        let axis = fvar.axis[i];
-        settings[axis.axisTag.trim()] = instance.coord[i];
+      for (let i = 0; i < fvar.axes.length; i++) {
+        let axis = fvar.axes[i];
+        settings[axis.axisTag.trim()] = instance.coordinates[i];
       }
 
       res[instance.name.en] = settings;
@@ -703,7 +703,7 @@ class TTFFontBase implements GlyphFontLike {
     }
 
     // normalize the coordinates
-    let coords = fvar.axis.map((axis) => {
+    let coords = fvar.axes.map((axis) => {
       let axisTag = axis.axisTag.trim();
       if (axisTag in resolvedSettings) {
         return Math.max(axis.minValue, Math.min(axis.maxValue, resolvedSettings[axisTag]));
@@ -741,7 +741,7 @@ class TTFFontBase implements GlyphFontLike {
     }
 
     if (!variationCoords) {
-      variationCoords = fvar.axis.map((axis) => axis.defaultValue);
+      variationCoords = fvar.axes.map((axis) => axis.defaultValue);
     }
 
     type VariationFontCtorArg = ConstructorParameters<typeof GlyphVariationProcessor>[0];

@@ -20,17 +20,17 @@ type VariationAxis = {
   defaultValue: number;
 };
 
-type AvarCorrespondence = {
-  fromCoord: number;
-  toCoord: number;
+type AxisValueMap = {
+  fromCoordinate: number;
+  toCoordinate: number;
 };
 
-type AvarSegment = {
-  correspondence: AvarCorrespondence[];
+type SegmentMaps = {
+  axisValueMaps: AxisValueMap[];
 };
 
 type AvarTable = {
-  segment: AvarSegment[];
+  axisSegmentMaps: SegmentMaps[];
 };
 
 type VariationRegionAxis = {
@@ -76,9 +76,9 @@ type HVARLike = {
 type GvarTable = {
   glyphCount: number;
   axisCount: number;
-  globalCoordCount: number;
-  globalCoords: number[][];
-  offsets: number[];
+  sharedTupleCount: number;
+  sharedTuplesOffset: number[][];
+  glyphVariationDataOffsets: number[];
 };
 
 type VariationStream = DecodeStream & {
@@ -92,7 +92,7 @@ type VariationStream = DecodeStream & {
 };
 
 type VariationFont = {
-  fvar?: { axis: VariationAxis[] };
+  fvar?: { axes: VariationAxis[] };
   avar?: AvarTable;
   gvar?: GvarTable;
   stream: VariationStream;
@@ -132,7 +132,7 @@ export default class GlyphVariationProcessor implements VariationProcessor {
   }
 
   private normalizeCoords(coords: number[]): number[] {
-    const axes = this.font.fvar?.axis ?? [];
+    const axes = this.font.fvar?.axes ?? [];
     const normalized: number[] = [];
 
     for (let i = 0; i < axes.length; i++) {
@@ -153,16 +153,17 @@ export default class GlyphVariationProcessor implements VariationProcessor {
 
     const avar = this.font.avar;
     if (avar) {
-      for (let i = 0; i < avar.segment.length; i++) {
-        const segment = avar.segment[i];
-        for (let j = 0; j < segment.correspondence.length; j++) {
-          const pair = segment.correspondence[j];
-          if (j >= 1 && normalized[i] < pair.fromCoord) {
-            const prev = segment.correspondence[j - 1];
+      for (let i = 0; i < avar.axisSegmentMaps.length; i++) {
+        const segmentMaps = avar.axisSegmentMaps[i];
+        for (let j = 0; j < segmentMaps.axisValueMaps.length; j++) {
+          const map = segmentMaps.axisValueMaps[j];
+          if (j >= 1 && normalized[i] < map.fromCoordinate) {
+            const prev = segmentMaps.axisValueMaps[j - 1];
             normalized[i] =
-              ((normalized[i] - prev.fromCoord) * (pair.toCoord - prev.toCoord) + Number.EPSILON) /
-                (pair.fromCoord - prev.fromCoord + Number.EPSILON) +
-              prev.toCoord;
+              ((normalized[i] - prev.fromCoordinate) * (map.toCoordinate - prev.toCoordinate) +
+                Number.EPSILON) /
+                (map.fromCoordinate - prev.fromCoordinate + Number.EPSILON) +
+              prev.toCoordinate;
             break;
           }
         }
@@ -182,8 +183,8 @@ export default class GlyphVariationProcessor implements VariationProcessor {
       return;
     }
 
-    const offset = gvar.offsets[gid];
-    if (offset === gvar.offsets[gid + 1]) {
+    const offset = gvar.glyphVariationDataOffsets[gid];
+    if (offset === gvar.glyphVariationDataOffsets[gid + 1]) {
       return;
     }
 
@@ -220,11 +221,11 @@ export default class GlyphVariationProcessor implements VariationProcessor {
         }
       } else {
         const coordIndex = tupleIndex & TUPLE_INDEX_MASK;
-        if (coordIndex >= gvar.globalCoordCount) {
+        if (coordIndex >= gvar.sharedTupleCount) {
           throw new Error("Invalid gvar table");
         }
 
-        tupleCoords = gvar.globalCoords[coordIndex];
+        tupleCoords = gvar.sharedTuplesOffset[coordIndex];
       }
 
       let startCoords: number[] | undefined;

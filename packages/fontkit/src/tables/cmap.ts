@@ -93,7 +93,7 @@ let CmapSubtable = new r.VersionedStruct(r.uint16, {
     language: r.uint32,
     firstCode: r.uint32,
     entryCount: r.uint32,
-    glyphIndices: new r.LazyArray(r.uint16, "numChars"),
+    glyphIndices: new r.LazyArray(r.uint16, "entryCount"),
   },
 
   12: {
