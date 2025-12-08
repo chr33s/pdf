@@ -3,9 +3,6 @@
 	"ignorePatterns": [
 		"**/dist",
 		"apps/deno/**",
-		"packages/brotli/src/*.js",
-		"packages/brotli/src/brotli.d.ts",
-		"packages/brotli/vendor",
 		"packages/dfa/src/grammar.js",
 		"packages/fontkit/src/opentype/shapers/*.js",
 		"packages/unicode-properties/src/*.js"
