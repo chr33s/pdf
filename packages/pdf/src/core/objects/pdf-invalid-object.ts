@@ -1,5 +1,6 @@
 import PDFObject from "./pdf-object.js";
 
+/** Represents an invalid or unparseable PDF object. */
 class PDFInvalidObject extends PDFObject {
   static of = (data: Uint8Array) => new PDFInvalidObject(data);
 

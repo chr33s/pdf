@@ -211,6 +211,7 @@ export class Repeat extends Node {
   }
 }
 
+/** Builds a repetition expression with specified min/max bounds. */
 export function buildRepetition(
   expression: ExpressionNode,
   min = 0,

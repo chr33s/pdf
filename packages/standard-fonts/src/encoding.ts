@@ -55,6 +55,7 @@ class Encoding {
   };
 }
 
+/** Type alias for the Encoding class. */
 export type EncodingType = Encoding;
 
 let encodingsCache: {
@@ -63,6 +64,10 @@ let encodingsCache: {
   WinAnsi: Encoding;
 } | null = null;
 
+/**
+ * Retrieves the available character encodings for PDF standard fonts.
+ * @returns Symbol, ZapfDingbats, and WinAnsi encodings.
+ */
 export const getEncodings = async () => {
   if (encodingsCache) return encodingsCache;
   const mappings = await getAllUnicodeMappings();

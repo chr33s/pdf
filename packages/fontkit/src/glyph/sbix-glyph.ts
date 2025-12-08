@@ -17,6 +17,8 @@ export default class SBIXGlyph extends TTFGlyph {
    * Returns an object representing a glyph image at the given point size.
    * The object has a data property with a Uint8Array containing the actual image data,
    * along with the image type, and origin.
+   * @param {number} size
+   * @return {object}
    */
   getImageForSize(size: number): GlyphImage | null {
     let table: any = null;

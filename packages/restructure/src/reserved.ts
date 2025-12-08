@@ -3,6 +3,7 @@ import type DecodeStream from "./decode-stream.js";
 import type EncodeStream from "./encode-stream.js";
 import { resolveLength, type LengthLike } from "./utils.js";
 
+/** A type for reserved/padding bytes that are skipped during decode. */
 export default class Reserved extends Base<void> {
   public type: any;
   public count: LengthLike | number;

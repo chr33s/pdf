@@ -14,6 +14,9 @@ export default class PDFEmbeddedFile implements Embeddable {
    *
    * Create an instance of [[PDFEmbeddedFile]] from an existing ref and embedder
    *
+   * @param ref The unique reference for this file.
+   * @param doc The document to which the file will belong.
+   * @param embedder The embedder that will be used to embed the file.
    */
   static of = (ref: PDFRef, doc: PDFDocument, embedder: FileEmbedder) =>
     new PDFEmbeddedFile(ref, doc, embedder);

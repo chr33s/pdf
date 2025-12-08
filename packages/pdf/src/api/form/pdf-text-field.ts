@@ -51,6 +51,9 @@ export default class PDFTextField extends PDFField {
    *
    * Create an instance of [[PDFTextField]] from an existing acroText and ref
    *
+   * @param acroText The underlying `PDFAcroText` for this text field.
+   * @param ref The unique reference for this text field.
+   * @param doc The document to which this text field will belong.
    */
   static of = (acroText: PDFAcroText, ref: PDFRef, doc: PDFDocument) =>
     new PDFTextField(acroText, ref, doc);
@@ -138,6 +141,7 @@ export default class PDFTextField extends PDFField {
    * [[PDFTextField.getText]] for more information about rich text fields and
    * their deprecation in PDF 2.0.
    *
+   * @param text The text this field should contain.
    */
   setText(text: string | undefined) {
     assertOrUndefined(text, "text", ["string"]);
@@ -200,6 +204,7 @@ export default class PDFTextField extends PDFField {
    * ```
    * This method will mark this text field as dirty. See
    * [[PDFTextField.setText]] for more details about what this means.
+   * @param alignment The alignment for this text field.
    */
   setAlignment(alignment: TextAlignment) {
     assertIsOneOf(alignment, "alignment", TextAlignment);
@@ -241,6 +246,7 @@ export default class PDFTextField extends PDFField {
    * ```
    * This method will mark this text field as dirty. See
    * [[PDFTextField.setText]] for more details about what this means.
+   * @param maxLength The maximum number of characters allowed in this field, or
    *                  `undefined` to remove the limit.
    */
   setMaxLength(maxLength?: number) {
@@ -282,6 +288,7 @@ export default class PDFTextField extends PDFField {
    * textField.setImage(pngImage)
    * ```
    * This will update the appearances streams for each of this text field's widgets.
+   * @param image The image that should be displayed.
    */
   setImage(image: PDFImage) {
     const fieldAlignment = this.getAlignment();
@@ -320,6 +327,7 @@ export default class PDFTextField extends PDFField {
    * > or that string does not contain a font size (via the `Tf` operator),
    * > then this method will throw an error.
    *
+   * @param fontSize The font size to be used when rendering text in this field.
    */
   setFontSize(fontSize: number) {
     assertPositive(fontSize, "fontSize");
@@ -689,6 +697,8 @@ export default class PDFTextField extends PDFField {
    * })
    * ```
    * This will create a new widget for this text field.
+   * @param page The page to which this text field widget should be added.
+   * @param options The options to be used when adding this text field widget.
    */
   async addToPage(page: PDFPage, options?: FieldAppearanceOptions) {
     assertIs(page, "page", [[PDFPage, "PDFPage"]]);
@@ -758,6 +768,7 @@ export default class PDFTextField extends PDFField {
    * const textField = form.getTextField('some.text.field')
    * textField.defaultUpdateAppearances(helvetica)
    * ```
+   * @param font The font to be used for creating the appearance streams.
    */
   defaultUpdateAppearances(font: PDFFont) {
     assertIs(font, "font", [[PDFFont, "PDFFont"]]);
@@ -776,6 +787,8 @@ export default class PDFTextField extends PDFField {
    *   return drawTextField(...)
    * })
    * ```
+   * @param font The font to be used for creating the appearance streams.
+   * @param provider Optionally, the appearance provider to be used for
    *                 generating the contents of the appearance streams.
    */
   async updateAppearances(font: PDFFont, provider?: AppearanceProviderFor<PDFTextField>) {

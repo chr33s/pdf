@@ -1,3 +1,6 @@
+import { PDFArrayIsNotRectangleError } from "../errors.js";
+import PDFContext from "../pdf-context.js";
+import CharCodes from "../syntax/char-codes.js";
 import PDFBool from "./pdf-bool.js";
 import PDFDict from "./pdf-dict.js";
 import PDFHexString from "./pdf-hex-string.js";
@@ -5,14 +8,12 @@ import PDFName from "./pdf-name.js";
 import PDFNull from "./pdf-null.js";
 import PDFNumber from "./pdf-number.js";
 import PDFObject from "./pdf-object.js";
+import PDFRawStream from "./pdf-raw-stream.js";
 import PDFRef from "./pdf-ref.js";
 import PDFStream from "./pdf-stream.js";
 import PDFString from "./pdf-string.js";
-import PDFContext from "../pdf-context.js";
-import CharCodes from "../syntax/char-codes.js";
-import { PDFArrayIsNotRectangleError } from "../errors.js";
-import PDFRawStream from "./pdf-raw-stream.js";
 
+/** Represents a PDF array object containing a sequence of PDF objects. */
 class PDFArray extends PDFObject {
   static withContext = (context: PDFContext) => new PDFArray(context);
 

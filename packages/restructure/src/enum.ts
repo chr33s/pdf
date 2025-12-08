@@ -2,6 +2,7 @@ import Base from "./base.js";
 import type DecodeStream from "./decode-stream.js";
 import type EncodeStream from "./encode-stream.js";
 
+/** A type for encoding/decoding enumerated values by index. */
 export default class Enum<T = unknown> extends Base<T> {
   public type: any;
   public options: T[];

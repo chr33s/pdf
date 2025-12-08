@@ -70,16 +70,19 @@ class PDFAnnotation {
     throw new Error(`Unexpected N type: ${N?.constructor.name}`);
   }
 
+  /** @param appearance A PDFDict or PDFStream (direct or ref) */
   setNormalAppearance(appearance: PDFRef | PDFDict) {
     const AP = this.ensureAP();
     AP.set(PDFName.of("N"), appearance);
   }
 
+  /** @param appearance A PDFDict or PDFStream (direct or ref) */
   setRolloverAppearance(appearance: PDFRef | PDFDict) {
     const AP = this.ensureAP();
     AP.set(PDFName.of("R"), appearance);
   }
 
+  /** @param appearance A PDFDict or PDFStream (direct or ref) */
   setDownAppearance(appearance: PDFRef | PDFDict) {
     const AP = this.ensureAP();
     AP.set(PDFName.of("D"), appearance);

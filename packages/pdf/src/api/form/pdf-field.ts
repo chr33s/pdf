@@ -409,6 +409,9 @@ export default class PDFField {
    * Create a FormXObject of the supplied image and add it to context.
    * The FormXObject size is calculated based on the widget (including
    * the alignment).
+   * @param widget The widget that should display the image.
+   * @param alignment The alignment of the image.
+   * @param image The image that should be displayed.
    * @returns The ref for the FormXObject that was added to the context.
    */
   protected createImageAppearanceStream(

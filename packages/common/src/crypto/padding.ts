@@ -1,10 +1,12 @@
 import { WordArray } from "./word-array.js";
 
+/** Block padding scheme interface. */
 export interface Padding {
   pad(data: WordArray, blockSize: number): void;
   unpad(data: WordArray): void;
 }
 
+/** PKCS#7 block padding scheme. */
 export const Pkcs7: Padding = {
   pad(data: WordArray, blockSize: number): void {
     const blockSizeBytes = blockSize * 4;
@@ -26,6 +28,7 @@ export const Pkcs7: Padding = {
   },
 };
 
+/** No-operation padding scheme. */
 export const NoPadding: Padding = {
   pad(_data: WordArray, _blockSize: number): void {
     // No padding

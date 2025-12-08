@@ -48,6 +48,7 @@ export default class Path {
   /**
    * Compiles the path to a JavaScript function that can be applied with
    * a graphics context in order to render the path.
+   * @return {string}
    */
   toFunction(): (ctx: Record<string, (...args: number[]) => unknown>) => void {
     return (ctx) => this.commands.forEach((c) => ctx[c.command].apply(ctx, c.args));
@@ -55,6 +56,7 @@ export default class Path {
 
   /**
    * Converts the path to an SVG path data string
+   * @return {string}
    */
   toSVG(): string {
     const cmds = this.commands.map((c) => {
@@ -70,6 +72,7 @@ export default class Path {
    * This is like the bounding box, but it includes all points including
    * control points of bezier segments and is much faster to compute than
    * the real bounding box.
+   * @type {BBox}
    */
   get cbox(): Readonly<BBox> {
     if (!this.#cbox) {
@@ -97,6 +100,7 @@ export default class Path {
   /**
    * Gets the exact bounding box of the path by evaluating curve segments.
    * Slower to compute than the control box, but more accurate.
+   * @type {BBox}
    */
   get bbox(): Readonly<BBox> {
     if (this.#bbox) {
@@ -216,6 +220,8 @@ export default class Path {
 
   /**
    * Applies a mapping function to each point in the path.
+   * @param {function} fn
+   * @return {Path}
    */
   mapPoints(fn: CoordinateMapper): Path {
     const path = new Path();

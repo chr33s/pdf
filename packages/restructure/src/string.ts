@@ -74,6 +74,7 @@ function byteLength(string: string, encoding: string): number {
   }
 }
 
+/** A type for encoding/decoding strings with configurable length and encoding. */
 export default class StringT extends Base<string | Uint8Array> {
   public length?: LengthLike;
   public encoding: EncodingResolver;

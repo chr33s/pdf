@@ -1,10 +1,12 @@
 import { randomBytes } from "node:crypto";
 
+/** String encoder/decoder interface for WordArray conversion. */
 export interface Encoder {
   stringify(wordArray: WordArray): string;
   parse(str: string): WordArray;
 }
 
+/** An array of 32-bit words for cryptographic operations. */
 export class WordArray {
   words: number[];
   sigBytes: number;
@@ -93,6 +95,7 @@ export class WordArray {
   }
 }
 
+/** Hexadecimal string encoder for WordArray. */
 export const Hex: Encoder = {
   stringify(wordArray: WordArray): string {
     const words = wordArray.words;
@@ -120,6 +123,7 @@ export const Hex: Encoder = {
   },
 };
 
+/** Latin-1 string encoder for WordArray. */
 export const Latin1: Encoder = {
   stringify(wordArray: WordArray): string {
     const words = wordArray.words;

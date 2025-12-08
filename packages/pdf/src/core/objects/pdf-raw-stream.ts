@@ -4,6 +4,7 @@ import PDFContext from "../pdf-context.js";
 import PDFDict from "./pdf-dict.js";
 import PDFStream from "./pdf-stream.js";
 
+/** Represents a PDF stream with raw binary content. */
 class PDFRawStream extends PDFStream {
   static of = (dict: PDFDict, contents: Uint8Array, transform?: CipherTransform) =>
     new PDFRawStream(dict, contents, transform);

@@ -1,8 +1,12 @@
+/** Initial state index for the state machine. */
 export const INITIAL_STATE = 1;
+/** Fail state index indicating no valid transition. */
 export const FAIL_STATE = 0;
 
+/** A match result: [start index, end index, captured tags]. */
 export type Match = [start: number, end: number, tags: string[]];
 
+/** Configuration for constructing a StateMachine. */
 export interface StateMachineConfig {
   stateTable: number[][];
   accepting: boolean[];

@@ -13,6 +13,10 @@ type PointerContext = {
   val?: any;
 };
 
+/**
+ * Defines a structured binary format with named fields.
+ * Supports encoding, decoding, and size calculation of complex data structures.
+ */
 export default class Struct<T extends Record<string, any> = Record<string, any>> {
   public process?: (this: T, stream: DecodeStream) => void;
   public preEncode?: (this: T, stream?: EncodeStream) => void;

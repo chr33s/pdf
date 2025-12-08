@@ -59,14 +59,18 @@ const fontNames = {
   ZapfDingbats: "ZapfDingbats",
 } as const;
 
+/** Mapping of font identifiers to their PDF standard font names. */
 export const FontNames = fontNames;
 
+/** PDF standard font name string literal type. */
 export type FontName = (typeof fontNames)[keyof typeof fontNames];
 
+/** Union type of all valid font name inputs for loading fonts. */
 export type IFontNames = FontName | keyof typeof compressedJsonForFontName;
 
 const fontCache: Partial<Record<FontName, Font>> = {};
 
+/** Character metrics from AFM (Adobe Font Metrics) data. */
 export interface ICharMetrics {
   /** Decimal value of default character code (-1 if not encoded) */
   // C: number;
@@ -97,6 +101,10 @@ export interface ICharMetrics {
  */
 export type IKernPair = [string, string, number];
 
+/**
+ * Represents a PDF standard font with metrics and kerning data.
+ * Use `Font.load(fontName)` to obtain an instance.
+ */
 export class Font {
   static load = async (fontName: IFontNames): Promise<Font> => {
     const cachedFont = fontCache[fontName];

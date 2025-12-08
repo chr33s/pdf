@@ -1,9 +1,11 @@
 import { WordArray } from "./word-array.js";
 
+/** Result of an RC4 cipher operation. */
 export interface CipherResult {
   ciphertext: WordArray;
 }
 
+/** RC4 stream cipher interface. */
 export interface RC4Static {
   encrypt(message: WordArray, key: WordArray): CipherResult;
   decrypt(ciphertext: WordArray, key: WordArray): CipherResult;
@@ -57,6 +59,7 @@ function decrypt(ciphertext: WordArray, key: WordArray): CipherResult {
   return encrypt(ciphertext, key);
 }
 
+/** RC4 stream cipher for symmetric encryption and decryption. */
 export const RC4: RC4Static = {
   encrypt,
   decrypt,

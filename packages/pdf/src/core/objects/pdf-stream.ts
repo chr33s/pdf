@@ -1,11 +1,12 @@
 import { MethodNotImplementedError } from "../errors.js";
+import PDFContext from "../pdf-context.js";
+import CharCodes from "../syntax/char-codes.js";
 import PDFDict from "./pdf-dict.js";
 import PDFName from "./pdf-name.js";
 import PDFNumber from "./pdf-number.js";
 import PDFObject from "./pdf-object.js";
-import PDFContext from "../pdf-context.js";
-import CharCodes from "../syntax/char-codes.js";
 
+/** Base class for PDF stream objects with dictionary and content. */
 class PDFStream extends PDFObject {
   readonly dict: PDFDict;
 

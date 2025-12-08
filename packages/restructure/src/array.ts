@@ -6,6 +6,10 @@ import { resolveLength, type LengthLike } from "./utils.js";
 
 type LengthType = "count" | "bytes";
 
+/**
+ * An array type for encoding/decoding sequences of values.
+ * Length can be a fixed number, a type to read, or computed from parent context.
+ */
 export default class ArrayT<T = unknown, TResult = T[]> extends Base<TResult> {
   public type: any;
   public length?: LengthLike;

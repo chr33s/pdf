@@ -24,11 +24,21 @@ async function readAllChunks(stream: ReadableStream<Uint8Array>) {
   return concatUint8Arrays(chunks);
 }
 
+/**
+ * Compresses data using the specified compression format.
+ * @param data The data to compress
+ * @param format Compression format: 'deflate' (default), 'deflate-raw', or 'gzip'
+ */
 export async function deflate(data: Uint8Array, format: CompressionFormat = "deflate") {
   const stream = new Blob([data]).stream().pipeThrough(new CompressionStream(format));
   return readAllChunks(stream);
 }
 
+/**
+ * Decompresses data using the specified compression format.
+ * @param data The compressed data
+ * @param format Compression format: 'deflate' (default), 'deflate-raw', or 'gzip'
+ */
 export async function inflate(data: Uint8Array, format: CompressionFormat = "deflate") {
   const stream = new Blob([data]).stream().pipeThrough(new DecompressionStream(format));
   return readAllChunks(stream);

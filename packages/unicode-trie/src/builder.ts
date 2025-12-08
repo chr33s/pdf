@@ -155,6 +155,10 @@ const equal_int = (a: IntegerArray, s: number, t: number, length: number): boole
   return true;
 };
 
+/**
+ * Builder for creating compressed UnicodeTrie data structures.
+ * Allows setting values for individual code points or ranges before freezing.
+ */
 class UnicodeTrieBuilder {
   #initialValue: number;
   #errorValue: number;

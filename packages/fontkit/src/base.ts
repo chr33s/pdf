@@ -124,6 +124,7 @@ function getNamedFormat(format: FontConstructor): FontConstructor {
 // Lazy initialization function - will be set by index.ts
 let initFn: (() => Promise<unknown>) | null = null;
 
+/** Sets a custom async initializer function for the fontkit registry. */
 export function setInitializer(fn: () => Promise<unknown>): void {
   initFn = fn;
 }
@@ -133,6 +134,10 @@ export type Fontkit = FontkitRegistry & {
   setDefaultLanguage: (lang?: string) => void;
 };
 
+/**
+ * Font loading and creation utilities.
+ * Supports TrueType, OpenType, WOFF, WOFF2, TrueType Collection, and DFont formats.
+ */
 const fontkit: Fontkit = {
   logErrors: false,
   defaultLanguage: "en",

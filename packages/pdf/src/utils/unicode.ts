@@ -3,6 +3,8 @@ import { toHexString } from "./strings.js";
 /**
  * Encodes a string to UTF-8.
  *
+ * @param input The string to be encoded.
+ * @param byteOrderMark Whether or not a byte order marker (BOM) should be added
  *                      to the start of the encoding. (default `true`)
  * @returns A Uint8Array containing the UTF-8 encoding of the input string.
  *
@@ -137,6 +139,8 @@ export const utf8Encode = (input: string, byteOrderMark = true): Uint8Array => {
 /**
  * Encodes a string to UTF-16.
  *
+ * @param input The string to be encoded.
+ * @param byteOrderMark Whether or not a byte order marker (BOM) should be added
  *                      to the start of the encoding. (default `true`)
  * @returns A Uint16Array containing the UTF-16 encoding of the input string.
  *
@@ -228,6 +232,8 @@ export const utf16Encode = (input: string, byteOrderMark = true): Uint16Array =>
  * Basic Multilingual Plane (BMP). Code points inside the BMP are not encoded
  * with surrogate pairs.
  *
+ * @param codePoint The code point to be evaluated.
+ *
  * Reference: https://en.wikipedia.org/wiki/UTF-16#Description
  */
 export const isWithinBMP = (codePoint: number) => codePoint >= 0 && codePoint <= 0xffff;
@@ -235,6 +241,8 @@ export const isWithinBMP = (codePoint: number) => codePoint >= 0 && codePoint <=
 /**
  * Returns `true` if the given `codePoint` is valid and must be represented
  * with a surrogate pair when encoded.
+ *
+ * @param codePoint The code point to be evaluated.
  *
  * Reference: https://en.wikipedia.org/wiki/UTF-16#Description
  */
@@ -265,6 +273,8 @@ const REPLACEMENT = "�".codePointAt(0)!;
  * inserting the replacement character (�) to mark invalid code points
  * and surrogate pairs.
  *
+ * @param input A Uint8Array containing UTF-16 encoded data
+ * @param byteOrderMark Whether or not a byte order marker (BOM) should be read
  *                      at the start of the encoding. (default `true`)
  * @returns The decoded string.
  */
@@ -314,12 +324,16 @@ export const utf16Decode = (input: Uint8Array, byteOrderMark = true): string => 
 /**
  * Returns `true` if the given `codePoint` is a high surrogate.
  *
+ * @param codePoint The code point to be evaluated.
+ *
  * Reference: https://en.wikipedia.org/wiki/UTF-16#Description
  */
 const isHighSurrogate = (codePoint: number) => codePoint >= 0xd800 && codePoint <= 0xdbff;
 
 /**
  * Returns `true` if the given `codePoint` is a low surrogate.
+ *
+ * @param codePoint The code point to be evaluated.
  *
  * Reference: https://en.wikipedia.org/wiki/UTF-16#Description
  */
@@ -328,6 +342,11 @@ const isLowSurrogate = (codePoint: number) => codePoint >= 0xdc00 && codePoint <
 /**
  * Decodes the given utf-16 values first and second using the specified
  * byte order.
+ *
+ * @param first The first byte of the encoding.
+ * @param second The second byte of the encoding.
+ * @param byteOrder The byte order of the encoding.
+ *
  * Reference: https://en.wikipedia.org/wiki/UTF-16#Examples
  */
 const decodeValues = (first: number, second: number, byteOrder: ByteOrder) => {
@@ -345,6 +364,7 @@ const decodeValues = (first: number, second: number, byteOrder: ByteOrder) => {
  *
  * Reference: https://en.wikipedia.org/wiki/Byte_order_mark#UTF-16
  *
+ * @param bytes The byte array to be evaluated.
  */
 // prettier-ignore
 const readBOM = (bytes: Uint8Array): ByteOrder => (

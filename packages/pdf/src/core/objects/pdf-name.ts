@@ -18,6 +18,7 @@ const isRegularChar = (charCode: number) =>
 const ENFORCER = {};
 const pool = new Map<string, PDFName>();
 
+/** Represents a PDF name object (e.g., /Type, /Font). */
 class PDFName extends PDFObject {
   readonly encodedName!: string;
 

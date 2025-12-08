@@ -2,6 +2,7 @@ import Base from "./base.js";
 import type DecodeStream from "./decode-stream.js";
 import type EncodeStream from "./encode-stream.js";
 
+/** A type for encoding/decoding boolean values from numeric types. */
 export default class BooleanT extends Base<boolean> {
   public type: any;
 

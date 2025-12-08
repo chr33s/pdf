@@ -2,6 +2,7 @@ import { copyStringIntoBuffer, numberToString } from "../../utils/index.js";
 
 import PDFObject from "./pdf-object.js";
 
+/** Represents a PDF numeric value (integer or real). */
 class PDFNumber extends PDFObject {
   static of = (value: number) => new PDFNumber(value);
 

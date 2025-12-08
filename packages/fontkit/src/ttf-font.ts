@@ -258,6 +258,7 @@ class TTFFontBase implements GlyphFontLike {
 
   /**
    * The unique PostScript name for this font, e.g. "Helvetica-Bold"
+   * @type {string}
    */
   get postscriptName() {
     return this.getName("postscriptName");
@@ -270,6 +271,7 @@ class TTFFontBase implements GlyphFontLike {
   /**
    * Gets a string from the font's `name` table
    * `lang` is a BCP-47 language code.
+   * @return {string}
    */
   getName(
     key: string,
@@ -293,6 +295,7 @@ class TTFFontBase implements GlyphFontLike {
 
   /**
    * The font's full name, e.g. "Helvetica Bold"
+   * @type {string}
    */
   get fullName() {
     return this.getName("fullName");
@@ -300,6 +303,7 @@ class TTFFontBase implements GlyphFontLike {
 
   /**
    * The font's family name, e.g. "Helvetica"
+   * @type {string}
    */
   get familyName() {
     return this.getName("fontFamily");
@@ -307,6 +311,7 @@ class TTFFontBase implements GlyphFontLike {
 
   /**
    * The font's sub-family, e.g. "Bold".
+   * @type {string}
    */
   get subfamilyName() {
     return this.getName("fontSubfamily");
@@ -314,6 +319,7 @@ class TTFFontBase implements GlyphFontLike {
 
   /**
    * The font's copyright information
+   * @type {string}
    */
   get copyright() {
     return this.getName("copyright");
@@ -321,20 +327,23 @@ class TTFFontBase implements GlyphFontLike {
 
   /**
    * The font's version number
+   * @type {string}
    */
   get version() {
     return this.getName("version");
   }
 
   /**
-   * The font’s [ascender](https://en.wikipedia.org/wiki/Ascender_(typography))
+   * The font's [ascender](https://en.wikipedia.org/wiki/Ascender_(typography))
+   * @type {number}
    */
   get ascent() {
     return this._getMetrics().ascent;
   }
 
   /**
-   * The font’s [descender](https://en.wikipedia.org/wiki/Descender)
+   * The font's [descender](https://en.wikipedia.org/wiki/Descender)
+   * @type {number}
    */
   get descent() {
     return this._getMetrics().descent;
@@ -342,6 +351,7 @@ class TTFFontBase implements GlyphFontLike {
 
   /**
    * The amount of space that should be included between lines
+   * @type {number}
    */
   get lineGap() {
     return this._getMetrics().lineGap;
@@ -349,6 +359,7 @@ class TTFFontBase implements GlyphFontLike {
 
   /**
    * The offset from the normal underline position that should be used
+   * @type {number}
    */
   get underlinePosition() {
     return this.post.underlinePosition;
@@ -356,6 +367,7 @@ class TTFFontBase implements GlyphFontLike {
 
   /**
    * The weight of the underline that should be used
+   * @type {number}
    */
   get underlineThickness() {
     return this.post.underlineThickness;
@@ -363,6 +375,7 @@ class TTFFontBase implements GlyphFontLike {
 
   /**
    * If this is an italic font, the angle the cursor should be drawn at to match the font design
+   * @type {number}
    */
   get italicAngle() {
     return this.post.italicAngle;
@@ -371,6 +384,7 @@ class TTFFontBase implements GlyphFontLike {
   /**
    * The vertical space between adjacent lines (their baselines) of text.
    * See [here](https://en.wikipedia.org/wiki/Leading) for more details.
+   * @type {number}
    */
   get lineHeight() {
     return this._getMetrics().lineHeight;
@@ -379,6 +393,7 @@ class TTFFontBase implements GlyphFontLike {
   /**
    * The height of capital letters above the baseline.
    * See [here](https://en.wikipedia.org/wiki/Cap_height) for more details.
+   * @type {number}
    */
   get capHeight() {
     const os2 = this["OS/2"] as { capHeight?: number } | undefined;
@@ -388,6 +403,7 @@ class TTFFontBase implements GlyphFontLike {
   /**
    * The height of lower case letters in the font.
    * See [here](https://en.wikipedia.org/wiki/X-height) for more details.
+   * @type {number}
    */
   get xHeight() {
     const os2 = this["OS/2"] as { xHeight?: number } | undefined;
@@ -396,20 +412,23 @@ class TTFFontBase implements GlyphFontLike {
 
   /**
    * The number of glyphs in the font.
+   * @type {number}
    */
   get numGlyphs() {
     return this.maxp.numGlyphs;
   }
 
   /**
-   * The size of the font’s internal coordinate grid
+   * The size of the font's internal coordinate grid
+   * @type {number}
    */
   get unitsPerEm() {
     return this.head.unitsPerEm;
   }
 
   /**
-   * The font’s bounding box, i.e. the box that encloses all glyphs in the font.
+   * The font's bounding box, i.e. the box that encloses all glyphs in the font.
+   * @type {BBox}
    */
   @cache
   get bbox() {
@@ -423,6 +442,7 @@ class TTFFontBase implements GlyphFontLike {
 
   /**
    * An array of all of the unicode code points supported by the font.
+   * @type {number[]}
    */
   @cache
   get characterSet(): number[] {
@@ -431,6 +451,8 @@ class TTFFontBase implements GlyphFontLike {
 
   /**
    * Returns whether there is glyph in the font for the given unicode code point.
+   * @param {number} codePoint
+   * @return {boolean}
    */
   hasGlyphForCodePoint(codePoint: number): boolean {
     return !!this._cmapProcessor.lookup(codePoint);
@@ -439,6 +461,8 @@ class TTFFontBase implements GlyphFontLike {
   /**
    * Maps a single unicode code point to a Glyph object.
    * Does not perform any advanced substitutions (there is no context to do so).
+   * @param {number} codePoint
+   * @return {Glyph}
    */
   glyphForCodePoint(codePoint: number): Glyph {
     return this.getGlyph(this._cmapProcessor.lookup(codePoint), [codePoint]);
@@ -449,6 +473,8 @@ class TTFFontBase implements GlyphFontLike {
    * This is only a one-to-one mapping from characters to glyphs.
    * For most uses, you should use font.layout (described below), which
    * provides a much more advanced mapping supporting AAT and OpenType shaping.
+   * @param {string} string
+   * @return {Glyph[]}
    */
   glyphsForString(string: string): Glyph[] {
     let glyphs: Glyph[] = [];
@@ -505,6 +531,12 @@ class TTFFontBase implements GlyphFontLike {
 
   /**
    * Returns a GlyphRun object, which includes an array of Glyphs and GlyphPositions for the given string.
+   * @param {string} string
+   * @param {string[]} [userFeatures]
+   * @param {string} [script]
+   * @param {string} [language]
+   * @param {string} [direction]
+   * @return {GlyphRun}
    */
   async layout(
     string: string,
@@ -532,6 +564,7 @@ class TTFFontBase implements GlyphFontLike {
 
   /**
    * Returns an array of strings that map to the given glyph id.
+   * @param {number} gid - glyph id
    */
   async stringsForGlyph(gid: number): Promise<string[]> {
     return this._layoutEngine.stringsForGlyph(gid);
@@ -542,6 +575,7 @@ class TTFFontBase implements GlyphFontLike {
    * (or mapped AAT tags) supported by the font.
    * The features parameter is an array of OpenType feature tags to be applied in addition to the default set.
    * If this is an AAT font, the OpenType feature tags are mapped to AAT features.
+   * @type {string[]}
    */
   get availableFeatures(): string[] {
     return this._layoutEngine.getAvailableFeatures();
@@ -572,6 +606,9 @@ class TTFFontBase implements GlyphFontLike {
    * Returns a glyph object for the given glyph id.
    * You can pass the array of code points this glyph represents for
    * your use later, and it will be stored in the glyph object.
+   * @param {number} glyph
+   * @param {number[]} characters
+   * @return {Glyph}
    */
   getGlyph(glyph: number, characters: number[] = []): Glyph {
     if (!Number.isFinite(glyph)) {
@@ -602,6 +639,7 @@ class TTFFontBase implements GlyphFontLike {
 
   /**
    * Returns a Subset for this font.
+   * @return {Subset}
    */
   createSubset() {
     if (this.directory.tables.CFF2) {
@@ -624,6 +662,7 @@ class TTFFontBase implements GlyphFontLike {
    * Returns an object describing the available variation axes
    * that this font supports. Keys are setting tags, and values
    * contain the axis name, range, and default value.
+   * @type {object}
    */
   @cache
   get variationAxes(): VariationAxisMap {
@@ -649,6 +688,7 @@ class TTFFontBase implements GlyphFontLike {
    * Returns an object describing the named variation instances
    * that the font designer has specified. Keys are variation names
    * and values are the variation settings for this instance.
+   * @type {object}
    */
   @cache
   get namedVariations(): NamedVariationMap {
@@ -675,6 +715,8 @@ class TTFFontBase implements GlyphFontLike {
    * Returns a new font with the given variation settings applied.
    * Settings can either be an instance name, or an object containing
    * variation tags as specified by the `variationAxes` property.
+   * @param {object} settings
+   * @return {TTFFont}
    */
   getVariation(settings: VariationSettings | string): TTFFontBase {
     if (

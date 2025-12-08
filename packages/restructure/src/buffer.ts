@@ -4,6 +4,7 @@ import type EncodeStream from "./encode-stream.js";
 import { Number as NumberT } from "./number.js";
 import { resolveLength, type LengthLike } from "./utils.js";
 
+/** A type for encoding/decoding raw byte buffers of specified length. */
 export default class BufferT extends Base<Uint8Array> {
   public length: LengthLike;
 

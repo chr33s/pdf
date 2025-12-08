@@ -1,6 +1,7 @@
 import { MethodNotImplementedError } from "../errors.js";
 import PDFContext from "../pdf-context.js";
 
+/** Abstract base class for all PDF objects. */
 class PDFObject {
   clone(_context?: PDFContext): PDFObject {
     throw new MethodNotImplementedError(this.constructor.name, "clone");

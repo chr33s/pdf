@@ -4,6 +4,7 @@ import type EncodeStream from "./encode-stream.js";
 
 type Condition = boolean | ((this: any, parent?: any) => boolean);
 
+/** A type for conditionally encoding/decoding values based on a condition. */
 export default class Optional<T = unknown> extends Base<T | undefined> {
   public type: any;
   public condition: Condition;

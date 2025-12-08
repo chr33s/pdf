@@ -2,6 +2,7 @@ import Base from "./base.js";
 import DecodeStream from "./decode-stream.js";
 import type EncodeStream from "./encode-stream.js";
 
+/** A type for encoding/decoding numeric values with configurable endianness. */
 export class NumberT extends Base<number> {
   #fn: string;
   public type: string;
@@ -63,6 +64,7 @@ export const doublebe = new NumberT("Double", "BE");
 export const doublele = new NumberT("Double", "LE");
 export const double = doublebe;
 
+/** A type for fixed-point decimal numbers stored as integers. */
 export class Fixed extends NumberT {
   readonly #point: number;
 

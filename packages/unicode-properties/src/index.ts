@@ -11,8 +11,11 @@ type UnicodeDataset = {
   eaw: string[];
 };
 
+/** Function that returns a string property value for a given Unicode code point. */
 export type PropertyAccessor = (codePoint: number) => string;
+/** Function that returns a numeric value for a given Unicode code point, or null if none. */
 export type NumericAccessor = (codePoint: number) => number | null;
+/** Function that tests whether a Unicode code point has a specific property. */
 export type PropertyPredicate = (codePoint: number) => boolean;
 
 const decodeBase64 = (encoded: string): Uint8Array => new Uint8Array(base64.decode(encoded));
@@ -26,20 +29,38 @@ const inflateBinary = (encoded: string): Promise<Uint8Array> => inflate(decodeBa
 const log2 = (value: number): number => Math.log2?.(value) ?? Math.log(value) / Math.LN2;
 const bits = (value: number): number => (value > 0 ? (log2(value) + 1) | 0 : 0);
 
+/**
+ * Unicode property lookup API.
+ * Provides efficient access to Unicode categories, scripts, combining classes, and property predicates.
+ */
 export type UnicodePropertiesAPI = {
+  /** Returns the General Category (e.g., "Lu", "Ll", "Nd") for a code point. */
   getCategory: PropertyAccessor;
+  /** Returns the Canonical Combining Class for a code point. */
   getCombiningClass: PropertyAccessor;
+  /** Returns the Script property (e.g., "Latin", "Cyrillic") for a code point. */
   getScript: PropertyAccessor;
+  /** Returns the East Asian Width property (e.g., "W", "N", "A") for a code point. */
   getEastAsianWidth: PropertyAccessor;
+  /** Returns the numeric value of a code point, or null if not a numeric character. */
   getNumericValue: NumericAccessor;
+  /** Tests if the code point is alphabetic (Lu, Ll, Lt, Lm, Lo, or Nl). */
   isAlphabetic: PropertyPredicate;
+  /** Tests if the code point is a decimal digit (Nd). */
   isDigit: PropertyPredicate;
+  /** Tests if the code point is punctuation (Pc, Pd, Pe, Pf, Pi, Po, or Ps). */
   isPunctuation: PropertyPredicate;
+  /** Tests if the code point is lowercase (Ll). */
   isLowerCase: PropertyPredicate;
+  /** Tests if the code point is uppercase (Lu). */
   isUpperCase: PropertyPredicate;
+  /** Tests if the code point is titlecase (Lt). */
   isTitleCase: PropertyPredicate;
+  /** Tests if the code point is whitespace (Zs, Zl, or Zp). */
   isWhiteSpace: PropertyPredicate;
+  /** Tests if the code point is a base form (letters, numbers, or spacing marks). */
   isBaseForm: PropertyPredicate;
+  /** Tests if the code point is a combining mark (Mn, Me, or Mc). */
   isMark: PropertyPredicate;
 };
 
@@ -245,8 +266,12 @@ export function getUnicodeProperties(): UnicodePropertiesAPI {
 }
 
 /**
- * Proxy object that provides sync access to unicode-properties after initialization.
- * Will throw if accessed before createUnicodeProperties() resolves.
+ * Proxy object providing synchronous access to Unicode property lookup functions.
+ * Throws if accessed before {@link createUnicodeProperties} has resolved.
+ * @example
+ * await createUnicodeProperties();
+ * unicode.getCategory(0x41); // "Lu"
+ * unicode.isAlphabetic(0x41); // true
  */
 export const unicode: UnicodePropertiesAPI = new Proxy({} as UnicodePropertiesAPI, {
   get(_target, prop: keyof UnicodePropertiesAPI) {

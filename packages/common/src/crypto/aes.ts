@@ -6,16 +6,19 @@ import type { Padding } from "./padding.js";
 import { Pkcs7 } from "./padding.js";
 import { WordArray } from "./word-array.js";
 
+/** Result of an AES cipher operation. */
 export interface CipherResult {
   ciphertext: WordArray;
 }
 
+/** Options for AES encryption/decryption. */
 export interface AESOptions {
   mode?: Mode;
   padding?: Padding;
   iv?: WordArray;
 }
 
+/** AES cipher interface with encrypt and decrypt methods. */
 export interface AESStatic {
   encrypt(message: WordArray, key: WordArray, options?: AESOptions): CipherResult;
   decrypt(ciphertext: WordArray, key: WordArray, options?: AESOptions): CipherResult;
@@ -85,6 +88,7 @@ function decrypt(ciphertext: WordArray, key: WordArray, options: AESOptions = {}
   };
 }
 
+/** AES cipher for symmetric encryption and decryption. */
 export const AES: AESStatic = {
   encrypt,
   decrypt,

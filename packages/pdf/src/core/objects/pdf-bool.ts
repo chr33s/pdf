@@ -1,9 +1,10 @@
 import { PrivateConstructorError } from "../errors.js";
-import PDFObject from "./pdf-object.js";
 import CharCodes from "../syntax/char-codes.js";
+import PDFObject from "./pdf-object.js";
 
 const ENFORCER = {};
 
+/** Represents a PDF boolean value (true or false). */
 class PDFBool extends PDFObject {
   static readonly True = new PDFBool(ENFORCER, true);
   static readonly False = new PDFBool(ENFORCER, false);

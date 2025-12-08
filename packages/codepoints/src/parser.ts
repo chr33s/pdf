@@ -5,8 +5,10 @@ import { fileURLToPath } from "node:url";
 const moduleDir = dirname(fileURLToPath(import.meta.url));
 const defaultUcdPath = resolve(moduleDir, "..", "data");
 
+/** Range of Unicode code points as [start, end]. */
 export type CodePointRange = [number, number];
 
+/** Complete Unicode code point information from the UCD. */
 export interface CodePoint {
   code: number;
   name: string;
@@ -40,6 +42,7 @@ export interface CodePoint {
   NFKC_QC: number;
 }
 
+/** Array of code points indexed by their numeric value. */
 export type CodePointTable = Array<CodePoint | undefined>;
 
 const COMMENT_PATTERN = /\s*#.*$/;
@@ -186,6 +189,11 @@ function readRawFile(ucdPath: string, filename: string, handler: (parts: string[
   }
 }
 
+/**
+ * Parses the Unicode Character Database files and returns a table of code points.
+ * @param ucdPath Path to the UCD directory (defaults to bundled data)
+ * @returns Array of CodePoint objects indexed by code point value
+ */
 export default function loadCodePoints(ucdPath: string = defaultUcdPath): CodePointTable {
   const codePoints: CodePointTable = [];
 

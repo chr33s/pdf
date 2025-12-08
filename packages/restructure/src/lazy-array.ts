@@ -7,6 +7,7 @@ import { resolveLength } from "./utils.js";
 // Node.js inspect symbol for custom formatting
 const inspectSymbol = Symbol.for("nodejs.util.inspect.custom");
 
+/** A lazily-loaded array that decodes elements on demand. */
 export class LazyArray<T = unknown> {
   #base: number;
   #items: Array<T | undefined> = [];
@@ -59,6 +60,7 @@ export class LazyArray<T = unknown> {
   }
 }
 
+/** A type for encoding/decoding arrays that load elements lazily. */
 export default class LazyArrayT<T = unknown> extends ArrayT<T, LazyArray<T>> {
   decode(stream: DecodeStream, parent?: any): LazyArray<T> {
     const pos = stream.pos;

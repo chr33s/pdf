@@ -1,6 +1,7 @@
 import DecodeStream from "./decode-stream.js";
 import EncodeStream from "./encode-stream.js";
 
+/** Abstract base class for binary type definitions. */
 export default abstract class Base<T = unknown> {
   fromBuffer(buffer: Uint8Array): T {
     const stream = new DecodeStream(buffer);

@@ -14,6 +14,7 @@ const swap32 = (array: Uint8Array): void => {
   }
 };
 
+/** Swaps bytes in a Uint8Array for little-endian 32-bit integer interpretation. */
 export const swap32LE = (array: Uint8Array): void => {
   if (isBigEndian) {
     swap32(array);

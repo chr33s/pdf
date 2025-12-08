@@ -12,6 +12,7 @@ import { InvalidPDFDateStringError } from "../errors.js";
 import CharCodes from "../syntax/char-codes.js";
 import PDFObject from "./pdf-object.js";
 
+/** Represents a PDF hexadecimal string object. */
 class PDFHexString extends PDFObject {
   static of = (value: string) => new PDFHexString(value);
 

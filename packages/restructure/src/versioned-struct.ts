@@ -18,6 +18,7 @@ type PointerContext = {
   val?: any;
 };
 
+/** A struct type with version-dependent field layouts. */
 export default class VersionedStruct extends Struct {
   public type: any;
   public versions: VersionDefinitions;

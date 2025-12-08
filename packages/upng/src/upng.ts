@@ -5,7 +5,15 @@ import { CRC } from "./crc.js";
 import { Inflator } from "./inflator.js";
 import { Quantizer } from "./quantizer.js";
 
+/**
+ * PNG/APNG encoder and decoder.
+ * Supports encoding RGBA images to PNG with optional quantization and animation.
+ */
 export class UPNG {
+  /**
+   * Converts a decoded PNG image to an array of RGBA8 frames.
+   * @param out The decoded PNG image
+   */
   static toRGBA8(out: Image) {
     const w = out.width;
     const h = out.height;
@@ -219,6 +227,10 @@ export class UPNG {
     return bf;
   }
 
+  /**
+   * Decodes PNG/APNG data from a buffer.
+   * @param buff The PNG data buffer
+   */
   static decode(buff: ArrayBuffer) {
     const data = new Uint8Array(buff);
     const rUs = Bin.readUshort.bind(Bin);
@@ -718,6 +730,14 @@ export class UPNG {
     }
   }
 
+  /**
+   * Encodes RGBA8 image data to PNG format.
+   * @param bufs Array of RGBA8 buffers (one per frame for animations)
+   * @param w Image width
+   * @param h Image height
+   * @param cnum Number of colors for quantization (0 for lossless)
+   * @param dels Optional delays for animation frames in ms
+   */
   static async encode(
     bufs: ArrayBuffer[],
     w: number,

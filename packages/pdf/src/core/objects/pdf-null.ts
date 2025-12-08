@@ -1,6 +1,7 @@
-import PDFObject from "./pdf-object.js";
 import CharCodes from "../syntax/char-codes.js";
+import PDFObject from "./pdf-object.js";
 
+/** Represents the PDF null value. */
 class PDFNull extends PDFObject {
   asNull(): null {
     return null;

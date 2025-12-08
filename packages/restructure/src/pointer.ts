@@ -3,8 +3,10 @@ import type DecodeStream from "./decode-stream.js";
 import type EncodeStream from "./encode-stream.js";
 import { PropertyDescriptor } from "./utils.js";
 
+/** Pointer resolution type: local, immediate, parent, or global. */
 export type PointerType = "local" | "immediate" | "parent" | "global";
 
+/** Configuration options for pointer types. */
 export interface PointerOptions {
   type?: PointerType;
   allowNull?: boolean;
@@ -13,6 +15,7 @@ export interface PointerOptions {
   lazy?: boolean;
 }
 
+/** A type for encoding/decoding pointers to other structures. */
 export class Pointer extends Base<any> {
   public options: Required<Omit<PointerOptions, "relativeTo">> & {
     relativeTo?: string | ((ctx: any) => number);
@@ -193,6 +196,7 @@ export class Pointer extends Base<any> {
   }
 }
 
+/** A wrapper for untyped pointer values. */
 export class VoidPointer {
   public type: any;
   public value: any;

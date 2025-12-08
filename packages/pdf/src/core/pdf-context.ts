@@ -43,6 +43,7 @@ interface LiteralConfig {
 const byAscendingObjectNumber = ([a]: [PDFRef, PDFObject], [b]: [PDFRef, PDFObject]) =>
   a.objectNumber - b.objectNumber;
 
+/** Central registry for PDF objects and document structure. */
 class PDFContext {
   isDecrypted = true;
   static create = () => new PDFContext();
@@ -220,6 +221,12 @@ class PDFContext {
   }
 
   /*
+   * @param obj The input PDFObject to convert to a literal.
+   * @param cfg The configuration to be used when converting the object.
+   * @param cfg.deep Recursively call this function on all encountered PDFArray elements and PDFDict values.
+   * @param cfg.literalRef Also convert PDFRef to a (literal) object number.
+   * @param cfg.literalStreamDict Also convert PDFStream to its associated dictionary's (literal) representation.
+   * @param cfg.literalString Also convert PDFString and PDFHexString to a (literal) string value.
    * @returns Resolves with a document loaded from the input.
    */
   getLiteral(obj: PDFArray, cfg?: LiteralConfig): LiteralArray;

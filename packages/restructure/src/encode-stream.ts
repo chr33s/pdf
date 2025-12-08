@@ -3,6 +3,10 @@ import DecodeStream from "./decode-stream.js";
 const textEncoder = new TextEncoder();
 const isBigEndian = new Uint8Array(new Uint16Array([0x1234]).buffer)[0] === 0x12;
 
+/**
+ * A stream for writing binary data with automatic position tracking.
+ * Provides methods for writing various numeric types and structures.
+ */
 export default class EncodeStream {
   public buffer: Uint8Array;
   public view: DataView;

@@ -3,6 +3,7 @@ import { addAll, equal } from "./utils.js";
 
 const END_MARKER = new EndMarker();
 
+/** Represents a state in the deterministic finite automaton. */
 export interface DFAState {
   positions: Set<PositionNode>;
   transitions: Uint16Array;

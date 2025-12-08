@@ -6,11 +6,20 @@ import SymbolTable from "./symbol-table.js";
 
 export type ExternalSymbols = Record<string, number>;
 
+/**
+ * Parses a DFA source grammar into a symbol table.
+ * @param source The DFA source grammar string
+ * @param externalSymbols Optional external symbol mappings
+ */
 export function parse(source: string, externalSymbols: ExternalSymbols = {}): SymbolTable {
   const ast = parseGrammar(source, { nodes });
   return new SymbolTable(ast, externalSymbols);
 }
 
+/**
+ * Builds a StateMachine from a parsed symbol table.
+ * @param symbolTable The parsed symbol table from parse()
+ */
 export function build(symbolTable: SymbolTable): StateMachine {
   const states: DFAState[] = buildDFA(symbolTable.main, symbolTable.size);
 
@@ -23,6 +32,11 @@ export function build(symbolTable: SymbolTable): StateMachine {
   return new StateMachine(config);
 }
 
+/**
+ * Compiles a DFA source grammar directly into a StateMachine.
+ * @param source The DFA source grammar string
+ * @param externalSymbols Optional external symbol mappings
+ */
 export default function compile(
   source: string,
   externalSymbols: ExternalSymbols = {},

@@ -11,6 +11,7 @@ import { InvalidPDFDateStringError } from "../errors.js";
 import CharCodes from "../syntax/char-codes.js";
 import PDFObject from "./pdf-object.js";
 
+/** Represents a PDF literal string object. */
 class PDFString extends PDFObject {
   // The PDF spec allows newlines and parens to appear directly within a literal
   // string. These character _may_ be escaped. But they do not _have_ to be. So

@@ -51,6 +51,7 @@ export default class COLRGlyph extends Glyph {
   /**
    * Returns an array of objects containing the glyph and color for
    * each layer in the composite color glyph.
+   * @type {object[]}
    */
   async getLayers(): Promise<COLRLayer[]> {
     const cpal = this._font.CPAL as { colorRecords: RGBAColor[] };

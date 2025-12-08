@@ -2,6 +2,7 @@ import Base from "./base.js";
 import type DecodeStream from "./decode-stream.js";
 import type EncodeStream from "./encode-stream.js";
 
+/** A type for encoding/decoding bitfield flags as boolean records. */
 export default class Bitfield extends Base<Record<string, boolean>> {
   public type: any;
   public flags: Array<string | null | undefined>;

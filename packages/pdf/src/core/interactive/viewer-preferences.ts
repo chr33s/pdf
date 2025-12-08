@@ -354,6 +354,7 @@ class ViewerPreferences {
   /**
    * Choose whether the PDF reader's toolbars should be hidden while the
    * document is active.
+   * @param hideToolbar `true` if the toolbar should be hidden.
    */
   setHideToolbar(hideToolbar: boolean) {
     const HideToolbar = this.dict.context.obj(hideToolbar);
@@ -363,6 +364,7 @@ class ViewerPreferences {
   /**
    * Choose whether the PDF reader's menu bar should be hidden while the
    * document is active.
+   * @param hideMenubar `true` if the menu bar should be hidden.
    */
   setHideMenubar(hideMenubar: boolean) {
     const HideMenubar = this.dict.context.obj(hideMenubar);
@@ -373,6 +375,7 @@ class ViewerPreferences {
    * Choose whether the PDF reader should hide user interface elements in the
    * document's window (such as scroll bars and navigation controls), leaving
    * only the document's contents displayed.
+   * @param hideWindowUI `true` if the user interface elements should be hidden.
    */
   setHideWindowUI(hideWindowUI: boolean) {
     const HideWindowUI = this.dict.context.obj(hideWindowUI);
@@ -382,6 +385,7 @@ class ViewerPreferences {
   /**
    * Choose whether the PDF reader should resize the document's window to fit
    * the size of the first displayed page.
+   * @param fitWindow `true` if the window should be resized.
    */
   setFitWindow(fitWindow: boolean) {
     const FitWindow = this.dict.context.obj(fitWindow);
@@ -391,6 +395,7 @@ class ViewerPreferences {
   /**
    * Choose whether the PDF reader should position the document's window in the
    * center of the screen.
+   * @param centerWindow `true` if the window should be centered.
    */
   setCenterWindow(centerWindow: boolean) {
     const CenterWindow = this.dict.context.obj(centerWindow);
@@ -401,6 +406,7 @@ class ViewerPreferences {
    * Choose whether the window's title bar should display the document `Title`
    * taken from the document metadata (see [[PDFDocument.setTitle]]). If
    * `false`, the title bar should instead display the PDF filename.
+   * @param displayTitle `true` if the document title should be displayed.
    */
   setDisplayDocTitle(displayTitle: boolean) {
     const DisplayDocTitle = this.dict.context.obj(displayTitle);
@@ -426,6 +432,7 @@ class ViewerPreferences {
    * viewerPrefs.setNonFullScreenPageMode(NonFullScreenPageMode.UseOutlines)
    * ```
    *
+   * @param nonFullScreenPageMode How the document should be displayed upon
    *                              exiting full screen mode.
    */
   setNonFullScreenPageMode(nonFullScreenPageMode: NonFullScreenPageMode) {
@@ -450,6 +457,7 @@ class ViewerPreferences {
    * viewerPrefs.setReadingDirection(ReadingDirection.R2L)
    * ```
    *
+   * @param readingDirection The reading order for text.
    */
   setReadingDirection(readingDirection: ReadingDirection) {
     assertIsOneOf(readingDirection, "readingDirection", ReadingDirection);
@@ -470,6 +478,7 @@ class ViewerPreferences {
    * viewerPrefs.setPrintScaling(PrintScaling.None)
    * ```
    *
+   * @param printScaling The print scaling option.
    */
   setPrintScaling(printScaling: PrintScaling) {
     assertIsOneOf(printScaling, "printScaling", PrintScaling);
@@ -490,6 +499,7 @@ class ViewerPreferences {
    * viewerPrefs.setDuplex(Duplex.DuplexFlipShortEdge)
    * ```
    *
+   * @param duplex The double or single sided printing option.
    */
   setDuplex(duplex: Duplex) {
     assertIsOneOf(duplex, "duplex", Duplex);
@@ -507,6 +517,7 @@ class ViewerPreferences {
    * operating systems that do not provide the ability to pick the input tray
    * by size.
    *
+   * @param pickTrayByPDFSize `true` if the document's page size should be used
    *                          to select the input paper tray.
    */
   setPickTrayByPDFSize(pickTrayByPDFSize: boolean) {
@@ -536,6 +547,7 @@ class ViewerPreferences {
    * ])
    * ```
    *
+   * @param printPageRange An object or array of objects, each with the
    *                       properties `start` and `end`, denoting a range of
    *                       page indices.
    */
@@ -557,6 +569,7 @@ class ViewerPreferences {
   /**
    * Choose the default number of copies to be printed when the print dialog is
    * opened for this file.
+   * @param numCopies The default number of copies.
    */
   setNumCopies(numCopies: number) {
     assertRange(numCopies, "numCopies", 1, Number.MAX_VALUE);

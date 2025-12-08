@@ -1,8 +1,10 @@
 import type DecodeStream from "./decode-stream.js";
 import { NumberT } from "./number.js";
 
+/** Represents a length value: fixed number, property name, function, or number type. */
 export type LengthLike = number | string | ((this: any, parent?: any) => number) | NumberT;
 
+/** Resolves a length value from various sources. */
 export function resolveLength(
   length: LengthLike | undefined,
   stream?: DecodeStream,
@@ -27,6 +29,7 @@ export function resolveLength(
   return resolved;
 }
 
+/** A helper class for defining lazy property descriptors. */
 export class PropertyDescriptor<T = unknown> {
   enumerable = true;
   configurable = true;

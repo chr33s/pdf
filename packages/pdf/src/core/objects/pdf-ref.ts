@@ -5,6 +5,7 @@ import PDFObject from "./pdf-object.js";
 const ENFORCER = {};
 const pool = new Map<string, PDFRef>();
 
+/** Represents an indirect reference to a PDF object. */
 class PDFRef extends PDFObject {
   static of = (objectNumber: number, generationNumber = 0) => {
     const tag = `${objectNumber} ${generationNumber} R`;

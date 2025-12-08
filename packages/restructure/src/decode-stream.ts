@@ -5,6 +5,10 @@ const ENCODING_MAPPING: Record<string, string> = {
   utf16be: "utf-16be",
 };
 
+/**
+ * A stream for reading binary data with automatic position tracking.
+ * Provides methods for reading various numeric types and structures.
+ */
 export default class DecodeStream {
   public static readonly TYPES = {
     UInt8: 1,

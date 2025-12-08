@@ -6,7 +6,6 @@
     "apps": "run () { for pkg in cloudflare-worker node react-native web; do npm --prefix=apps/$pkg run \"$@\" --if-present || return $?; done; }; run \"$@\"",
     "apps:test": "deno --cwd=./apps/deno task test && npm run test --prefix=./apps/cloudflare-worker && npm run test --prefix=./apps/node && npm run test --prefix=./apps/react-native ** npm run test --prefix=./apps/web",
     "check": "oxfmt --check && oxlint --type-aware",
-    "docs": "typedoc",
     "fix": "oxfmt && oxlint --type-aware --fix",
     "test": "docker buildx build --tag pdf . --load",
     "workspace": "run () { for pkg in common codepoints dfa restructure standard-fonts unicode-trie unicode-properties upng fontkit pdf; do npm --workspace=packages/$pkg run \"$@\" --if-present || return $?; done; }; run \"$@\""
@@ -26,9 +25,6 @@
     "oxfmt": "^0.16.0",
     "oxlint": "^1.30.0",
     "oxlint-tsgolint": "^0.8.3",
-    "typedoc": "^0.28.15",
-    "typedoc-github-wiki-theme": "^2.1.0",
-    "typedoc-plugin-markdown": "^4.9.0",
     "typescript": "^5.9.3"
   }
 }

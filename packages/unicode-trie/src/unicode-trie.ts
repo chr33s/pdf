@@ -63,6 +63,10 @@ const toUint8Array = (value: ArrayBufferLike | ArrayBufferView): Uint8Array => {
   return new Uint8Array(value);
 };
 
+/**
+ * A compact read-only data structure for fast Unicode property lookups.
+ * Uses a two-stage trie with Latin-1 linear array optimization.
+ */
 class UnicodeTrie {
   readonly data: Uint32Array;
   readonly highStart: number;

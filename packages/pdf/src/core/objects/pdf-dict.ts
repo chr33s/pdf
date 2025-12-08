@@ -13,6 +13,7 @@ import PDFString from "./pdf-string.js";
 
 export type DictMap = Map<PDFName, PDFObject>;
 
+/** Represents a PDF dictionary object mapping names to PDF objects. */
 class PDFDict extends PDFObject {
   static withContext = (context: PDFContext) => new PDFDict(new Map(), context);
 
