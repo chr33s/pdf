@@ -55,8 +55,8 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "browser": "./dist/index.min.mjs",
-      "import": "./dist/index.js"
+      "import": "./dist/index.js",
+      "browser": "./dist/index.min.mjs"
     },
     "./bundle": {
       "types": "./dist/index.d.ts",
