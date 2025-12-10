@@ -9,7 +9,7 @@ import fontkit from "../packages/fontkit/dist/index.js";
 import type GlyphPosition from "../packages/fontkit/dist/layout/glyph-position.js";
 import type { TypeFeatures } from "../packages/fontkit/dist/types.js";
 
-// node ./scripts/fontkit-inspect.ts --font=./debug-font.ttf --text "Sphinx of black quartz, judge my vow."
+// node ./scripts/fontkit-inspect.ts --font=./scripts/font.ttf --text "Sphinx of black quartz, judge my vow."
 
 export type GlyphDiagnostics = {
   id: number;
@@ -32,6 +32,23 @@ export type FontLayoutDiagnostics = {
   language: string | null;
   direction: string;
   advanceWidth: number;
+  /** Visual metrics for accurate text centering */
+  visualMetrics?: {
+    /** Width of visual content (actual ink) */
+    visualWidth: number;
+    /** Height of visual content */
+    visualHeight: number;
+    /** Empty space before first glyph's ink */
+    leftBearing: number;
+    /** Empty space after last glyph's ink */
+    rightBearing: number;
+    /** Offset to apply for visual centering */
+    visualOffset: { x: number; y: number };
+    /** Visual center point relative to origin */
+    visualCenter: { x: number; y: number };
+    /** Bounding box of actual ink */
+    bbox: { minX: number; minY: number; maxX: number; maxY: number };
+  };
 };
 
 type InspectOptions = {
@@ -102,6 +119,23 @@ export async function inspectFontLayout(options: InspectOptions): Promise<FontLa
         )
       : font.availableFeatures || [];
 
+  // Get visual metrics for accurate centering
+  const metrics = await run.getVisualMetrics();
+  const visualMetrics = {
+    visualWidth: metrics.visualWidth,
+    visualHeight: metrics.visualHeight,
+    leftBearing: metrics.leftBearing,
+    rightBearing: metrics.rightBearing,
+    visualOffset: metrics.visualOffset,
+    visualCenter: metrics.visualCenter,
+    bbox: {
+      minX: metrics.bbox.minX,
+      minY: metrics.bbox.minY,
+      maxX: metrics.bbox.maxX,
+      maxY: metrics.bbox.maxY,
+    },
+  };
+
   return {
     advanceWidth: run.advanceWidth,
     appliedFeatures: run.features,
@@ -116,6 +150,7 @@ export async function inspectFontLayout(options: InspectOptions): Promise<FontLa
     postscriptName: options.postscriptName,
     script: run.script,
     text: options.text,
+    visualMetrics,
   };
 }
 
@@ -140,6 +175,27 @@ function logDiagnostics(diagnostics: FontLayoutDiagnostics): void {
   console.log(`Advance width: ${diagnostics.advanceWidth}`);
   console.log(`Available features: ${diagnostics.availableFeatures.join(", ") || "none"}`);
   console.log(`Applied features: ${Object.keys(diagnostics.appliedFeatures).join(", ") || "none"}`);
+
+  // Visual metrics for centering
+  if (diagnostics.visualMetrics) {
+    const vm = diagnostics.visualMetrics;
+    console.log("Visual metrics (for centering):");
+    console.log(
+      `  Visual width: ${vm.visualWidth.toFixed(2)} (vs advance: ${diagnostics.advanceWidth})`,
+    );
+    console.log(`  Left bearing (LSB): ${vm.leftBearing.toFixed(2)}`);
+    console.log(`  Right bearing (RSB): ${vm.rightBearing.toFixed(2)}`);
+    console.log(
+      `  Visual offset for centering: (${vm.visualOffset.x.toFixed(2)}, ${vm.visualOffset.y.toFixed(2)})`,
+    );
+    console.log(
+      `  Visual center: (${vm.visualCenter.x.toFixed(2)}, ${vm.visualCenter.y.toFixed(2)})`,
+    );
+    console.log(
+      `  Ink bbox: [${vm.bbox.minX.toFixed(2)}, ${vm.bbox.minY.toFixed(2)}, ${vm.bbox.maxX.toFixed(2)}, ${vm.bbox.maxY.toFixed(2)}]`,
+    );
+  }
+
   console.log("Glyph map:");
   diagnostics.glyphs.forEach((glyph, index) => {
     const position = diagnostics.positions[index];

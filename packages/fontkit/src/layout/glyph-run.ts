@@ -133,4 +133,64 @@ export default class GlyphRun {
 
     return bbox;
   }
+
+  /**
+   * Returns visual metrics for the glyph run, useful for accurate text centering.
+   *
+   * The `visualOffset` values represent the difference between the mathematical
+   * center (based on advance widths) and the visual center (based on actual ink).
+   *
+   * To visually center text, subtract `visualOffset.x` from your x position after
+   * mathematical centering, or use `visualCenter.x` directly.
+   *
+   * @returns Visual metrics including bounding box, visual width/height, and offset from advance-based metrics
+   */
+  async getVisualMetrics(): Promise<{
+    /** Bounding box of actual ink/visual content */
+    bbox: BBox;
+    /** Width of visual content (may differ from advanceWidth) */
+    visualWidth: number;
+    /** Height of visual content */
+    visualHeight: number;
+    /** Left side bearing: empty space before first glyph's ink */
+    leftBearing: number;
+    /** Right side bearing: empty space after last glyph's ink */
+    rightBearing: number;
+    /** Offset to apply for visual centering (subtract from x/y after mathematical centering) */
+    visualOffset: { x: number; y: number };
+    /** The visual center point relative to the run's origin */
+    visualCenter: { x: number; y: number };
+  }> {
+    const bbox = await this.getBBox();
+    const advanceWidth = this.advanceWidth;
+    const advanceHeight = this.advanceHeight;
+
+    const visualWidth = bbox.width;
+    const visualHeight = bbox.height;
+
+    // Left bearing is the distance from origin (0) to where ink starts (bbox.minX)
+    const leftBearing = bbox.minX;
+    // Right bearing is the distance from where ink ends to the advance width
+    const rightBearing = advanceWidth - bbox.maxX;
+
+    // Mathematical center is at advanceWidth / 2
+    // Visual center of ink is at (bbox.minX + bbox.maxX) / 2
+    // The offset needed to shift from mathematical to visual center:
+    const visualOffsetX = (leftBearing - rightBearing) / 2;
+    const visualOffsetY = (bbox.minY + bbox.maxY) / 2 - advanceHeight / 2;
+
+    // Visual center relative to origin
+    const visualCenterX = (bbox.minX + bbox.maxX) / 2;
+    const visualCenterY = (bbox.minY + bbox.maxY) / 2;
+
+    return {
+      bbox,
+      visualWidth,
+      visualHeight,
+      leftBearing,
+      rightBearing,
+      visualOffset: { x: visualOffsetX, y: visualOffsetY },
+      visualCenter: { x: visualCenterX, y: visualCenterY },
+    };
+  }
 }
