@@ -1,6 +1,6 @@
 {
   "name": "@chr33s/pdf-monorepo",
-  "version": "5.0.0",
+  "version": "5.0.10",
   "scripts": {
     "all": "run () { for cmd in clean build check test; do npm run workspace -- \"$cmd\" || return $?; done; }; run",
     "apps": "run () { for pkg in cloudflare-worker node react-native web; do npm --prefix=apps/$pkg run \"$@\" --if-present || return $?; done; }; run \"$@\"",
@@ -12,7 +12,7 @@
   },
   "packageManager": "npm@10.0.0+",
   "engines": {
-    "node": "^22.18.0"
+    "node": ">=22.18.0"
   },
   "license": "MIT",
   "private": true,

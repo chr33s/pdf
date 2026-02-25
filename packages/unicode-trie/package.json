@@ -22,7 +22,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/chr33s/pdf.git"
+    "url": "https://github.com/chr33s/pdf",
+    "directory": "packages/unicode-trie"
   },
   "author": "Devon Govett <devongovett@gmail.com>",
   "bugs": {

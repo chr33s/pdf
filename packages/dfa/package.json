@@ -24,7 +24,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/chr33s/pdf.git"
+    "url": "https://github.com/chr33s/pdf",
+    "directory": "packages/dfa"
   },
   "keywords": [
     "state",
