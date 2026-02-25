@@ -1,6 +1,6 @@
 {
   "name": "@chr33s/pdf-monorepo",
-  "version": "5.0.10",
+  "version": "5.0.11",
   "scripts": {
     "all": "run () { for cmd in clean build check test; do npm run workspace -- \"$cmd\" || return $?; done; }; run",
     "apps": "run () { for pkg in cloudflare-worker node react-native web; do npm --prefix=apps/$pkg run \"$@\" --if-present || return $?; done; }; run \"$@\"",
