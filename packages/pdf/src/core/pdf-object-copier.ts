@@ -48,7 +48,7 @@ class PDFObjectCopier {
     : object instanceof PDFStream   ? this.#copyPDFStream(object)
     : object instanceof PDFRef      ? this.#copyPDFIndirectObject(object)
     : object.clone()
-  ) as T;;
+  ) as T;
 
   #copyPDFPage = (originalPage: PDFPageLeaf): PDFPageLeaf => {
     const clonedPage = originalPage.clone();

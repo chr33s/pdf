@@ -4,9 +4,10 @@
   "scripts": {
     "all": "run () { for cmd in clean build check test; do npm run workspace -- \"$cmd\" || return $?; done; }; run",
     "apps": "run () { for pkg in bun cloudflare-worker node react-native web; do npm --prefix=apps/$pkg run \"$@\" --if-present || return $?; done; }; run \"$@\"",
-    "apps:test": "deno --cwd=./apps/deno task test && npm run test --prefix=./apps/bun && npm run test --prefix=./apps/cloudflare-worker && npm run test --prefix=./apps/node && npm run test --prefix=./apps/react-native ** npm run test --prefix=./apps/web",
-    "check": "oxfmt --check && oxlint --type-aware",
-    "fix": "oxfmt && oxlint --type-aware --fix",
+    "apps:install": "run () { for pkg in bun cloudflare-worker node react-native web; do npm install --prefix=apps/$pkg || return $?; done; }; run",
+    "apps:test": "deno task --cwd=./apps/deno test && npm run test --prefix=./apps/bun && npm run test --prefix=./apps/cloudflare-worker && npm run test --prefix=./apps/node && npm run test --prefix=./apps/react-native && npm run test --prefix=./apps/web",
+    "check": "oxfmt --check && oxlint",
+    "fix": "oxfmt && oxlint --fix",
     "test": "docker buildx build --tag pdf . --load",
     "workspace": "run () { for pkg in common codepoints dfa restructure standard-fonts unicode-trie unicode-properties upng fontkit pdf; do npm --workspace=packages/$pkg run \"$@\" --if-present || return $?; done; }; run \"$@\""
   },
@@ -21,10 +22,11 @@
     "packages/*"
   ],
   "devDependencies": {
-    "knip": "^5.70.2",
-    "oxfmt": "^0.16.0",
-    "oxlint": "^1.30.0",
-    "oxlint-tsgolint": "^0.8.3",
-    "typescript": "^5.9.3"
+    "@types/bun": "^1.3.14",
+    "knip": "^6.32.2",
+    "oxfmt": "^0.63.0",
+    "oxlint": "^1.78.0",
+    "oxlint-tsgolint": "^7.0.2001",
+    "typescript": "^7.0.2"
   }
 }

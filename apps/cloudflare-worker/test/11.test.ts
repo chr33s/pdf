@@ -14,11 +14,11 @@ import { assets } from "./assets.js";
 interface Assets {
   images: {
     png: {
-      selfDrive: () => Promise<ArrayBuffer>;
+      selfDrive: () => Promise<Uint8Array>;
     };
   };
   pdfs: {
-    simplePdf2Example: () => Promise<ArrayBuffer>;
+    simplePdf2Example: () => Promise<Uint8Array>;
   };
 }
 

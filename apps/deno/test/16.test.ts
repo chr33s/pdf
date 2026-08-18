@@ -142,8 +142,8 @@ Deno.test("Test 16: Fancy fields with custom appearances", async () => {
     rotate: degrees(0),
   });
 
-  const text = symbol.encodeText("ℑ");
-  const textW = symbol.widthOfTextAtSize("ℑ", 35);
+  const text = await symbol.encodeText("ℑ");
+  const textW = await symbol.widthOfTextAtSize("ℑ", 35);
   const textH = symbol.heightAtSize(35);
   const symbolText = (font: PDFFont) =>
     drawText(text, {

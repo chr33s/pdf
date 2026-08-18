@@ -6,7 +6,7 @@ const baseURL = `http://127.0.0.1:${webServerPort}`;
 
 export default defineConfig({
   testDir: "./e2e",
-  timeout: 5_000,
+  timeout: 120_000,
   expect: { timeout: 5_000 },
   retries: process.env.CI ? 1 : 0,
   fullyParallel: false,

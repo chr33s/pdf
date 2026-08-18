@@ -139,21 +139,21 @@
       .split('')
       .join(' ');
 
-    const addPageWithFonts = (pdfDoc, text, fontSize, gapAmt, fontNames) => {
+    const addPageWithFonts = async (pdfDoc, text, fontSize, gapAmt, fontNames) => {
       const page = pdfDoc.addPage([650, 700]);
 
       page.moveTo(0, 675);
-      fontNames.forEach((fontName) => {
-        const font = pdfDoc.embedStandardFont(fontName);
-        const lines = breakTextIntoLines(text, fontSize, font, 600);
+      for (const fontName of fontNames) {
+        const font = await pdfDoc.embedStandardFont(fontName);
+        const lines = await breakTextIntoLines(text, fontSize, font, 600);
 
-        page.drawText(fontName, {
+        await page.drawText(fontName, {
           font,
           size: fontSize,
-          x: 650 / 2 - font.widthOfTextAtSize(fontName, fontSize) / 2,
+          x: 650 / 2 - (await font.widthOfTextAtSize(fontName, fontSize)) / 2,
         });
         page.moveTo(0, page.getY() - font.heightAtSize(fontSize) - 10);
-        page.drawText(lines.join('\n'), {
+        await page.drawText(lines.join('\n'), {
           font,
           size: fontSize,
           x: 25,
@@ -163,11 +163,11 @@
         page.moveDown(
           (font.heightAtSize(fontSize) + 10) * (lines.length - 1 + gapAmt),
         );
-      });
+      }
     };
 
     // Primitive line break algorithm
-    const breakTextIntoLines = (text, size, font, maxWidth) => {
+    const breakTextIntoLines = async (text, size, font, maxWidth) => {
       const lines = [];
       let textIdx = 0;
       while (textIdx < text.length) {
@@ -180,7 +180,7 @@
             continue;
           }
           const newLine = line + text.charAt(textIdx);
-          if (font.widthOfTextAtSize(newLine, size) > maxWidth) break;
+          if ((await font.widthOfTextAtSize(newLine, size)) > maxWidth) break;
           line = newLine;
           textIdx += 1;
         }
@@ -226,7 +226,7 @@
         header naming the font in use.
       `;
 
-      const descriptionLines = breakTextIntoLines(
+      const descriptionLines = await breakTextIntoLines(
         description,
         16,
         helveticaFont,
@@ -238,7 +238,7 @@
         font: helveticaBoldFont,
         size: 35,
         y: 700 - 100,
-        x: 650 / 2 - helveticaBoldFont.widthOfTextAtSize(title, 35) / 2,
+        x: 650 / 2 - (await helveticaBoldFont.widthOfTextAtSize(title, 35)) / 2,
         lineHeight: 35,
       });
       titlePage.drawText(descriptionLines.join('\n'), {
@@ -250,7 +250,7 @@
       });
 
       // Times Roman
-      addPageWithFonts(pdfDoc, winAnsiString, 18, 0.25, [
+      await addPageWithFonts(pdfDoc, winAnsiString, 18, 0.25, [
         StandardFonts.TimesRoman,
         StandardFonts.TimesRomanBold,
         StandardFonts.TimesRomanItalic,
@@ -258,7 +258,7 @@
       ]);
 
       // Helvetica
-      addPageWithFonts(pdfDoc, winAnsiString, 16.75, 0.4, [
+      await addPageWithFonts(pdfDoc, winAnsiString, 16.75, 0.4, [
         StandardFonts.Helvetica,
         StandardFonts.HelveticaBold,
         StandardFonts.HelveticaOblique,
@@ -266,7 +266,7 @@
       ]);
 
       // Courier
-      addPageWithFonts(pdfDoc, winAnsiString, 14.25, 0.75, [
+      await addPageWithFonts(pdfDoc, winAnsiString, 14.25, 0.75, [
         StandardFonts.Courier,
         StandardFonts.CourierBold,
         StandardFonts.CourierOblique,
@@ -278,7 +278,7 @@
         StandardFonts.ZapfDingbats,
       );
       const zapfDingbatsFontSize = 20;
-      const zapfDingbatsLines = breakTextIntoLines(
+      const zapfDingbatsLines = await breakTextIntoLines(
         zapfDingbatsString,
         zapfDingbatsFontSize,
         zapfDingbatsFont,
@@ -294,10 +294,10 @@
         size: zapfDingbatsFontSize,
         x:
           650 / 2 -
-          helveticaFont.widthOfTextAtSize(
+          (await helveticaFont.widthOfTextAtSize(
             'ZapfDingbats',
             zapfDingbatsFontSize,
-          ) /
+          )) /
             2,
       });
       page.moveDown(zapfDingbatsFont.heightAtSize(zapfDingbatsFontSize) + 10);
@@ -311,7 +311,7 @@
       // Symbol
       const symbolFont = await pdfDoc.embedFont(StandardFonts.Symbol);
       const symbolFontSize = 20;
-      const symbolLines = breakTextIntoLines(
+      const symbolLines = await breakTextIntoLines(
         symbolString,
         symbolFontSize,
         symbolFont,
@@ -324,7 +324,7 @@
         size: symbolFontSize,
         x:
           650 / 2 -
-          helveticaFont.widthOfTextAtSize('Symbol', symbolFontSize) / 2,
+          (await helveticaFont.widthOfTextAtSize('Symbol', symbolFontSize)) / 2,
       });
       page.moveDown(symbolFont.heightAtSize(symbolFontSize) + 10);
       page.drawText(symbolLines.join('\n'), {

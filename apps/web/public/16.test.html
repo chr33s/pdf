@@ -70,16 +70,16 @@
 
       // Text Fields
       const prefix = form.getTextField('Prefix ⚽️');
-      prefix.updateAppearances(ubuntuFont);
+      await prefix.updateAppearances(ubuntuFont);
 
       const firstName = form.getTextField('First Name 🚀');
-      firstName.updateAppearances(ubuntuFont);
+      await firstName.updateAppearances(ubuntuFont);
 
       const middleInitial = form.getTextField('MiddleInitial 🎳');
-      middleInitial.updateAppearances(ubuntuFont);
+      await middleInitial.updateAppearances(ubuntuFont);
 
       const lastName = form.getTextField('LastName 🛩');
-      lastName.updateAppearances(ubuntuFont);
+      await lastName.updateAppearances(ubuntuFont);
 
       // Check Boxes
       const isAFairy = form.getCheckBox('Are You A Fairy? 🌿');
@@ -100,16 +100,16 @@
 
       // Buttons
       const eject = form.getButton('Eject 📼');
-      eject.updateAppearances(ubuntuFont);
+      await eject.updateAppearances(ubuntuFont);
 
       const submit = form.getButton('Submit 📝');
-      submit.updateAppearances(ubuntuFont);
+      await submit.updateAppearances(ubuntuFont);
 
       const play = form.getButton('Play ▶️');
-      play.updateAppearances(ubuntuFont);
+      await play.updateAppearances(ubuntuFont);
 
       const launch = form.getButton('Launch 🚀');
-      launch.updateAppearances(ubuntuFont);
+      await launch.updateAppearances(ubuntuFont);
 
       // Radio Group
       const historicalFigures = form.getRadioGroup('Historical Figures 🐺');
@@ -117,12 +117,12 @@
 
       // Option List
       const planets = form.getOptionList('Which Are Planets? 🌎');
-      planets.updateAppearances(ubuntuFont);
+      await planets.updateAppearances(ubuntuFont);
 
       // Dropdown
       const gundams = form.getDropdown('Choose A Gundam 🤖');
       gundams.select('One Punch Man');
-      gundams.updateAppearances(ubuntuFont);
+      await gundams.updateAppearances(ubuntuFont);
 
       // ===================== Custom Appearance Providers ========================
       const page = pdfDoc.addPage();
@@ -145,19 +145,19 @@
       let y = page.getHeight();
 
       y -= height + 25;
-      btn.addToPage('∑', page, { x, y, width, height, font: symbol });
+      await btn.addToPage('∑', page, { x, y, width, height, font: symbol });
       y -= height + 25;
-      cb.addToPage(page, { x, y, width, height });
+      await cb.addToPage(page, { x, y, width, height });
       y -= height + 25;
-      dd.addToPage(page, { x, y, width, height, font: symbol });
+      await dd.addToPage(page, { x, y, width, height, font: symbol });
       y -= height + 25;
-      ol.addToPage(page, { x, y, width, height, font: symbol });
+      await ol.addToPage(page, { x, y, width, height, font: symbol });
       y -= height + 25;
-      rg.addOptionToPage('bar', page, { x, y, width, height });
+      await rg.addOptionToPage('bar', page, { x, y, width, height });
       y -= height + 25;
-      tf.addToPage(page, { x, y, width, height, font: symbol });
+      await tf.addToPage(page, { x, y, width, height, font: symbol });
       y -= height * 4 + 25;
-      tfFontSize.addToPage(page, {
+      await tfFontSize.addToPage(page, {
         x: x - width * 2,
         y,
         width: width * 5,
@@ -192,8 +192,8 @@
         rotate: degrees(0),
       });
 
-      const text = symbol.encodeText('ℑ');
-      const textW = symbol.widthOfTextAtSize('ℑ', 35);
+      const text = await symbol.encodeText('ℑ');
+      const textW = await symbol.widthOfTextAtSize('ℑ', 35);
       const textH = symbol.heightAtSize(35);
       const symbolText = (font) =>
         drawText(text, {
@@ -211,7 +211,7 @@
         if (!condition) throw new Error(msg || 'Assertion failed');
       };
 
-      btn.updateAppearances(symbol, (field, widget, font) => {
+      await btn.updateAppearances(symbol, (field, widget, font) => {
         assert(field === btn);
         assert(widget instanceof PDFWidgetAnnotation);
         return [...rectangle, ...symbolText(font)];
@@ -224,12 +224,12 @@
           off: [...rectangle, ...circle],
         };
       });
-      dd.updateAppearances(symbol, (field, widget, font) => {
+      await dd.updateAppearances(symbol, (field, widget, font) => {
         assert(field === dd);
         assert(widget instanceof PDFWidgetAnnotation);
         return [...rectangle, ...symbolText(font)];
       });
-      ol.updateAppearances(symbol, (field, widget, font) => {
+      await ol.updateAppearances(symbol, (field, widget, font) => {
         assert(field === ol);
         assert(widget instanceof PDFWidgetAnnotation);
         return [...rectangle, ...symbolText(font)];
@@ -242,7 +242,7 @@
           off: [...rectangle, ...circle],
         };
       });
-      tf.updateAppearances(symbol, (field, widget, font) => {
+      await tf.updateAppearances(symbol, (field, widget, font) => {
         assert(field === tf);
         assert(widget instanceof PDFWidgetAnnotation);
         return [...rectangle, ...symbolText(font)];

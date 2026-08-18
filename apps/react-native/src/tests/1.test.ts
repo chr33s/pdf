@@ -52,7 +52,7 @@ export default async () => {
   const solarizedWhite = rgb(253 / 255, 246 / 255, 227 / 255);
   const solarizedGray = rgb(101 / 255, 123 / 255, 131 / 255);
 
-  const textWidth = ubuntuFont.widthOfTextAtSize(lines[2], fontSize);
+  const textWidth = await ubuntuFont.widthOfTextAtSize(lines[2], fontSize);
 
   for (const page of pdfDoc.getPages()) {
     const { width, height } = page.getSize();

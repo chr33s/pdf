@@ -58,8 +58,10 @@ test.describe("public example pages", () => {
       await expect(runTestButton, `Missing Run Test button on ${fixture}`).toBeVisible();
       await runTestButton.click();
 
+      // most pages render the result from a blob URL, but the pages demoing
+      // `saveAsBase64({ dataUri: true })` hand the iframe a data: URL instead
       const iframe = page.locator("#iframe");
-      await expect(iframe).toHaveAttribute("src", /blob:/, { timeout: 120000 });
+      await expect(iframe).toHaveAttribute("src", /^(blob:|data:)/, { timeout: 120000 });
 
       expect(pageErrors, `Runtime errors on ${fixture}: ${pageErrors.join("; ")}`).toHaveLength(0);
       expect(

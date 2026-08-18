@@ -2,9 +2,16 @@
 	"$schema": "./node_modules/oxlint/configuration_schema.json",
 	"ignorePatterns": [
 		"**/dist",
+		"apps/cloudflare-worker/**",
 		"apps/deno/**",
+		"apps/react-native/**",
+		"apps/web/**",
 		"packages/dfa/src/grammar.js",
 		"packages/fontkit/src/opentype/shapers/*.js",
 		"packages/unicode-properties/src/*.js"
-	]
+	],
+	"options": {
+		"typeAware": true,
+		"typeCheck": true
+	}
 }

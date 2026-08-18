@@ -22,7 +22,7 @@ test("Test 6: Copy pages from multiple PDFs", async () => {
     parseSpeed: ParseSpeeds.Fastest,
   });
 
-  const allDonorPdfBytes: ArrayBuffer[] = [
+  const allDonorPdfBytes: Uint8Array[] = [
     await assets.pdfs.normal(),
     await assets.pdfs.withUpdateSections(),
     await assets.pdfs.linearizedWithObjectStreams(),

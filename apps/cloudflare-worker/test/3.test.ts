@@ -31,7 +31,7 @@ test("Test 3: Standard fonts demo", async () => {
 
     const fontName = fontNameStr as keyof typeof StandardFonts;
     const fontObj = StandardFonts[fontName];
-    const font = pdfDoc.embedStandardFont(fontObj);
+    const font = await pdfDoc.embedStandardFont(fontObj);
 
     middlePage.setFont(font);
 

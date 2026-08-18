@@ -23,7 +23,7 @@ export default async () => {
 
   for (const [idx, fontName] of Object.keys(StandardFonts).entries()) {
     middlePage.moveDown(fontSize);
-    const font = pdfDoc.embedStandardFont(StandardFonts[fontName]);
+    const font = await pdfDoc.embedStandardFont(StandardFonts[fontName]);
     middlePage.setFont(font);
 
     // prettier-ignore

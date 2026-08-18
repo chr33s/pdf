@@ -170,7 +170,7 @@ function decodeAsciiHex(text: string) {
 
 function decodeRunLength(data: Uint8Array) {
   const out = [];
-  for (let i = 0; i < data.length; ) {
+  for (let i = 0; i < data.length;) {
     const length = data[i++];
     if (length === 128) {
       break;

@@ -1668,19 +1668,9 @@ describe("shaping", function () {
     });
 
     describe("shapes Khmer text", function () {
-      testFont(
-        "HB-KHMR-1",
-        "noto-sans/noto-sans-khmer-regular.ttf",
-        "ខ្មែ",
-        "108+588|45+1300|169+0",
-      );
+      testFont("HB-KHMR-1", "noto-sans/noto-sans-khmer-regular.ttf", "ខ្មែ", "108+588|45+1300|169+0");
       testFont("HB-KHMR-2", "noto-sans/noto-sans-khmer-regular.ttf", "ជា", "51+1300|96+588");
-      testFont(
-        "HB-KHMR-3",
-        "noto-sans/noto-sans-khmer-regular.ttf",
-        "ថ្ងៃ",
-        "109+588|60+1300|148+0",
-      );
+      testFont("HB-KHMR-3", "noto-sans/noto-sans-khmer-regular.ttf", "ថ្ងៃ", "109+588|60+1300|148+0");
       testFont("HB-KHMR-4", "noto-sans/noto-sans-khmer-regular.ttf", "មា", "68+1300|96+588");
       testFont("HB-KHMR-5", "noto-sans/noto-sans-khmer-regular.ttf", "ម្ពុ", "68+1300|167+0|177+0");
       testFont("HB-KHMR-6", "noto-sans/noto-sans-khmer-regular.ttf", "រ", "70+588");

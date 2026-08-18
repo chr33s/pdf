@@ -13,11 +13,13 @@ const outputPath = path.join(srcDir, "grammar.js");
 async function buildGrammar(): Promise<void> {
   const grammar = await readFile(grammarPath, "utf8");
 
+  // `output: "source"` makes peggy return the parser source, but its default
+  // export types the result as `string | Parser`.
   const parserSource = peggy.generate(grammar, {
     cache: true,
     output: "source",
     format: "es",
-  });
+  }) as string;
 
   const banner = [
     "// @ts-nocheck",

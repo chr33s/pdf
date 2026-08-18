@@ -36,7 +36,7 @@ export default async () => {
     newPage.setFontSize(fontSize);
 
     const text = "This page was interleaved by pdf!";
-    const textWidth = timesRomanFont.widthOfTextAtSize(text, fontSize);
+    const textWidth = await timesRomanFont.widthOfTextAtSize(text, fontSize);
     const textHeight = timesRomanFont.heightAtSize(fontSize);
 
     await newPage.drawText(text, {

@@ -17,7 +17,7 @@ test("Test 7: PDF with newline whitespace", async () => {
 
   const { width, height } = firstPage.getSize();
   const text = "pdf is awesome!";
-  const textWidth = helveticaFont.widthOfTextAtSize(text, 75);
+  const textWidth = await helveticaFont.widthOfTextAtSize(text, 75);
   firstPage.moveTo(width / 2 - textWidth / 2, height - 100);
   firstPage.setFont(helveticaFont);
   firstPage.setFontSize(75);

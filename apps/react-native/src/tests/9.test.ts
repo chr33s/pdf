@@ -99,13 +99,13 @@ const addPageWithFonts = async (pdfDoc, text, fontSize, gapAmt, fontNames) => {
 
   page.moveTo(0, 675);
   for (const fontName of fontNames) {
-    const font = pdfDoc.embedStandardFont(fontName);
-    const lines = breakTextIntoLines(text, fontSize, font, 600);
+    const font = await pdfDoc.embedStandardFont(fontName);
+    const lines = await breakTextIntoLines(text, fontSize, font, 600);
 
     await page.drawText(fontName, {
       font,
       size: fontSize,
-      x: 650 / 2 - font.widthOfTextAtSize(fontName, fontSize) / 2,
+      x: 650 / 2 - (await font.widthOfTextAtSize(fontName, fontSize)) / 2,
     });
     page.moveTo(0, page.getY() - font.heightAtSize(fontSize) - 10);
     await page.drawText(lines.join("\n"), {
@@ -120,7 +120,7 @@ const addPageWithFonts = async (pdfDoc, text, fontSize, gapAmt, fontNames) => {
 };
 
 // Primitive line break algorithm
-const breakTextIntoLines = (text, size, font, maxWidth) => {
+const breakTextIntoLines = async (text, size, font, maxWidth) => {
   const lines = [];
   let textIdx = 0;
   while (textIdx < text.length) {
@@ -133,7 +133,7 @@ const breakTextIntoLines = (text, size, font, maxWidth) => {
         continue;
       }
       const newLine = line + text.charAt(textIdx);
-      if (font.widthOfTextAtSize(newLine, size) > maxWidth) break;
+      if ((await font.widthOfTextAtSize(newLine, size)) > maxWidth) break;
       line = newLine;
       textIdx += 1;
     }
@@ -175,14 +175,14 @@ export default async () => {
         header naming the font in use.
       `;
 
-  const descriptionLines = breakTextIntoLines(description, 16, helveticaFont, 600);
+  const descriptionLines = await breakTextIntoLines(description, 16, helveticaFont, 600);
 
   const titlePage = pdfDoc.addPage([650, 700]);
   await titlePage.drawText(title, {
     font: helveticaBoldFont,
     size: 35,
     y: 700 - 100,
-    x: 650 / 2 - helveticaBoldFont.widthOfTextAtSize(title, 35) / 2,
+    x: 650 / 2 - (await helveticaBoldFont.widthOfTextAtSize(title, 35)) / 2,
     lineHeight: 35,
   });
   await titlePage.drawText(descriptionLines.join("\n"), {
@@ -220,7 +220,7 @@ export default async () => {
   // ZapfDingbats
   const zapfDingbatsFont = await pdfDoc.embedFont(StandardFonts.ZapfDingbats);
   const zapfDingbatsFontSize = 20;
-  const zapfDingbatsLines = breakTextIntoLines(
+  const zapfDingbatsLines = await breakTextIntoLines(
     zapfDingbatsString,
     zapfDingbatsFontSize,
     zapfDingbatsFont,
@@ -234,7 +234,7 @@ export default async () => {
   await page.drawText("ZapfDingbats", {
     font: helveticaFont,
     size: zapfDingbatsFontSize,
-    x: 650 / 2 - helveticaFont.widthOfTextAtSize("ZapfDingbats", zapfDingbatsFontSize) / 2,
+    x: 650 / 2 - (await helveticaFont.widthOfTextAtSize("ZapfDingbats", zapfDingbatsFontSize)) / 2,
   });
   page.moveDown(zapfDingbatsFont.heightAtSize(zapfDingbatsFontSize) + 10);
   await page.drawText(zapfDingbatsLines.join("\n"), {
@@ -247,13 +247,13 @@ export default async () => {
   // Symbol
   const symbolFont = await pdfDoc.embedFont(StandardFonts.Symbol);
   const symbolFontSize = 20;
-  const symbolLines = breakTextIntoLines(symbolString, symbolFontSize, symbolFont, 600);
+  const symbolLines = await breakTextIntoLines(symbolString, symbolFontSize, symbolFont, 600);
 
   page.moveDown(275);
   await page.drawText("Symbol", {
     font: helveticaFont,
     size: symbolFontSize,
-    x: 650 / 2 - helveticaFont.widthOfTextAtSize("Symbol", symbolFontSize) / 2,
+    x: 650 / 2 - (await helveticaFont.widthOfTextAtSize("Symbol", symbolFontSize)) / 2,
   });
   page.moveDown(symbolFont.heightAtSize(symbolFontSize) + 10);
   await page.drawText(symbolLines.join("\n"), {

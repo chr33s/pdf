@@ -12,9 +12,10 @@
     "erasableSyntaxOnly": true,
     "rewriteRelativeImportExtensions": true,
     "skipLibCheck": true,
+    "types": ["node"],
     "allowSyntheticDefaultImports": true,
     "allowJs": false,
     "forceConsistentCasingInFileNames": true,
   },
-  "exclude": ["**/dist", "**/node_modules" ]
+  "exclude": ["**/dist", "**/node_modules", "apps"]
 }

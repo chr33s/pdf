@@ -77,8 +77,8 @@ export default class OTLayoutEngine {
       this.plan.process(this.GSUBProcessor, this.glyphInfos);
 
       // Map glyph infos back to normal Glyph objects
-      glyphRun.glyphs = await Promise.all(
-        this.glyphInfos.map((glyphInfo) => this.font.getGlyph(glyphInfo.id, glyphInfo.codePoints)),
+      glyphRun.glyphs = this.glyphInfos.map((glyphInfo) =>
+        this.font.getGlyph(glyphInfo.id, glyphInfo.codePoints),
       );
     }
   }

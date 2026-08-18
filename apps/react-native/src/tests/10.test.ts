@@ -2,7 +2,7 @@ import { PDFDocument, StandardFonts, charAtIndex, last } from "@chr33s/pdf";
 import fontkit from "@chr33s/pdf-fontkit";
 
 import { fetchAsset } from "./assets";
-const breakTextIntoLines = (text, size, font, maxWidth) => {
+const breakTextIntoLines = async (text, size, font, maxWidth) => {
   const lines = [];
   let textIdx = 0;
   while (textIdx < text.length) {
@@ -16,7 +16,7 @@ const breakTextIntoLines = (text, size, font, maxWidth) => {
       }
       const [glyph] = charAtIndex(text, textIdx);
       const newLine = line + glyph;
-      if (font.widthOfTextAtSize(newLine, size) > maxWidth) break;
+      if ((await font.widthOfTextAtSize(newLine, size)) > maxWidth) break;
       line = newLine;
       textIdx += glyph.length;
     }
@@ -65,14 +65,14 @@ export default async () => {
         are UTF-8).
       `;
 
-  const descriptionLines = breakTextIntoLines(description, 16, helveticaFont, 600);
+  const descriptionLines = await breakTextIntoLines(description, 16, helveticaFont, 600);
 
   const titlePage = pdfDoc.addPage([650, 700]);
   await titlePage.drawText(title, {
     font: helveticaBoldFont,
     size: 35,
     y: 700 - 100,
-    x: 650 / 2 - helveticaBoldFont.widthOfTextAtSize(title, 35) / 2,
+    x: 650 / 2 - (await helveticaBoldFont.widthOfTextAtSize(title, 35)) / 2,
   });
   await titlePage.drawText(descriptionLines.join("\n"), {
     font: helveticaFont,
@@ -85,7 +85,12 @@ export default async () => {
 
   const sourceHanFontSize = 20;
   const sourceHanString = String.fromCodePoint(...sourceHanFont.getCharacterSet().reverse());
-  const sourceHanLines = breakTextIntoLines(sourceHanString, sourceHanFontSize, sourceHanFont, 600);
+  const sourceHanLines = await breakTextIntoLines(
+    sourceHanString,
+    sourceHanFontSize,
+    sourceHanFont,
+    600,
+  );
   const sourceHanLineGroups = breakLinesIntoGroups(
     sourceHanLines,
     sourceHanFont.heightAtSize(sourceHanFontSize) + 10,

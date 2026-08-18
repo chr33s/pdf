@@ -39,9 +39,9 @@
   "license": "MIT",
   "homepage": "https://github.com/chr33s/pdf",
   "devDependencies": {
-    "@types/node": "24.10.1",
-    "peggy": "5.0.6",
-    "typescript": "5.9.3",
-    "vitest": "4.0.15"
+    "@types/node": "26.2.0",
+    "peggy": "5.1.0",
+    "typescript": "7.0.2",
+    "vitest": "4.1.10"
   }
 }

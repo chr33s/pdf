@@ -45,7 +45,7 @@
     "@chr33s/pdf-common": "5.0.11"
   },
   "devDependencies": {
-    "typescript": "5.9.3",
-    "vitest": "4.0.15"
+    "typescript": "7.0.2",
+    "vitest": "4.1.10"
   }
 }

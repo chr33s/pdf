@@ -27,10 +27,10 @@
   },
   "devDependencies": {
     "@chr33s/pdf-codepoints": "5.0.11",
-    "@types/node": "24.10.1",
-    "@vitest/coverage-v8": "4.0.15",
-    "typescript": "5.9.3",
-    "vitest": "4.0.15"
+    "@types/node": "26.2.0",
+    "@vitest/coverage-v8": "4.1.10",
+    "typescript": "7.0.2",
+    "vitest": "4.1.10"
   },
   "repository": {
     "type": "git",

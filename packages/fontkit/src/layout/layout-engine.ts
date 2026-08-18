@@ -29,6 +29,11 @@ export default class LayoutEngine {
   kernProcessor: KernProcessor | null;
   engine: AdvancedLayoutEngine | null;
 
+  // The advanced layout engines keep per-run state on their instance (shaping plan,
+  // glyph infos, processor state) and clear it in `cleanup()`. Overlapping async
+  // layouts of the same font would clobber each other's state, so runs are queued.
+  #pending: Promise<unknown> = Promise.resolve();
+
   constructor(font: GlyphFontLike) {
     this.font = font;
     this.unicodeLayoutEngine = null;
@@ -44,7 +49,21 @@ export default class LayoutEngine {
     }
   }
 
-  async layout(
+  layout(
+    input: string | Glyph[],
+    features?: string[] | Record<string, boolean> | string,
+    script?: string | null,
+    language?: string | null,
+    direction?: string | null,
+  ): Promise<GlyphRun> {
+    const run = this.#pending.then(() =>
+      this.#layout(input, features, script, language, direction),
+    );
+    this.#pending = run.catch(() => {});
+    return run;
+  }
+
+  async #layout(
     input: string | Glyph[],
     features?: string[] | Record<string, boolean> | string,
     script?: string | null,

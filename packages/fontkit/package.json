@@ -11,8 +11,8 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "browser": "./dist/index.min.mjs"
+      "browser": "./dist/index.min.js",
+      "import": "./dist/index.js"
     },
     "./bundle": {
       "types": "./dist/index.d.ts",
@@ -40,12 +40,12 @@
     "@chr33s/pdf-codepoints": "5.0.11",
     "@types/clone": "2.1.4",
     "@types/deep-equal": "1.0.4",
-    "@types/node": "24.10.1",
-    "@vitest/coverage-v8": "4.0.15",
-    "tsdown": "0.17.0",
-    "typescript": "5.9.3",
-    "unenv": "2.0.0-rc.15",
-    "vitest": "4.0.15"
+    "@types/node": "26.2.0",
+    "@vitest/coverage-v8": "4.1.10",
+    "tsdown": "0.22.14",
+    "typescript": "7.0.2",
+    "unenv": "2.0.0-rc.24",
+    "vitest": "4.1.10"
   },
   "repository": {
     "type": "git",

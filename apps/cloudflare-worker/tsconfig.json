@@ -2,7 +2,8 @@
 	"extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "./dist",
+    "types": ["@cloudflare/vitest-pool-workers", "node"],
   },
-  "include": ["./env.d.ts", "../worker-configuration.d.ts", "**/*.ts"],
+  "include": ["./env.d.ts", "./worker-configuration.d.ts", "**/*.ts"],
   "exclude": ["dist"]
 }

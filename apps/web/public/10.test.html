@@ -45,7 +45,7 @@
       document.getElementById('iframe').src = blobUrl;
     };
 
-    const breakTextIntoLines = (text, size, font, maxWidth) => {
+    const breakTextIntoLines = async (text, size, font, maxWidth) => {
       const lines = [];
       let textIdx = 0;
       while (textIdx < text.length) {
@@ -59,7 +59,7 @@
           }
           const [glyph] = PDFLib.charAtIndex(text, textIdx);
           const newLine = line + glyph;
-          if (font.widthOfTextAtSize(newLine, size) > maxWidth) break;
+          if ((await font.widthOfTextAtSize(newLine, size)) > maxWidth) break;
           line = newLine;
           textIdx += glyph.length;
         }
@@ -115,7 +115,7 @@
         are UTF-8).
       `;
 
-      const descriptionLines = breakTextIntoLines(
+      const descriptionLines = await breakTextIntoLines(
         description,
         16,
         helveticaFont,
@@ -127,7 +127,7 @@
         font: helveticaBoldFont,
         size: 35,
         y: 700 - 100,
-        x: 650 / 2 - helveticaBoldFont.widthOfTextAtSize(title, 35) / 2,
+        x: 650 / 2 - (await helveticaBoldFont.widthOfTextAtSize(title, 35)) / 2,
       });
       titlePage.drawText(descriptionLines.join('\n'), {
         font: helveticaFont,
@@ -142,7 +142,7 @@
       const sourceHanString = String.fromCodePoint(
         ...sourceHanFont.getCharacterSet().reverse(),
       );
-      const sourceHanLines = breakTextIntoLines(
+      const sourceHanLines = await breakTextIntoLines(
         sourceHanString,
         sourceHanFontSize,
         sourceHanFont,

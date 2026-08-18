@@ -61,10 +61,10 @@ test("Test 2: Load PDF with update sections", async () => {
   });
 
   const lastPageText = "This is the last page!";
-  const lastPageTextWidth = helveticaFont.widthOfTextAtSize(lastPageText, 24);
+  const lastPageTextWidth = await helveticaFont.widthOfTextAtSize(lastPageText, 24);
 
   const page1Text = "pdf is awesome!";
-  const page1TextWidth = helveticaFont.widthOfTextAtSize(page1Text, 70);
+  const page1TextWidth = await helveticaFont.widthOfTextAtSize(page1Text, 70);
   page1.setFontSize(70);
   await page1.drawText(page1Text, {
     x: page1.getWidth() / 2 - page1TextWidth / 2 + 45,

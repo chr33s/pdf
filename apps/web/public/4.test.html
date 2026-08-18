@@ -73,7 +73,7 @@
       });
 
       // Interleave new pages between all existing ones
-      pages.forEach((_, idx) => {
+      for (let idx = 0; idx < pages.length; idx++) {
         const newPage = pdfDoc.insertPage(2 * idx + 1, [500, 150]);
 
         const fontSize = 24;
@@ -83,15 +83,15 @@
         newPage.setFontSize(fontSize);
 
         const text = 'This page was interleaved by pdf!';
-        const textWidth = timesRomanFont.widthOfTextAtSize(text, fontSize);
+        const textWidth = await timesRomanFont.widthOfTextAtSize(text, fontSize);
         const textHeight = timesRomanFont.heightAtSize(fontSize);
 
-        newPage.drawText(text, {
+        await newPage.drawText(text, {
           x: width / 2 - textWidth / 2,
           y: height / 2 - textHeight / 2,
           color: rgb(0.7, 0.4, 0.9),
         });
-      });
+      }
 
       const pdfBytes = await pdfDoc.save();
 
