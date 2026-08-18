@@ -672,6 +672,7 @@ export default class PDFDocument {
     assertRange(index, "index", 0, pageCount - 1);
     this.catalog.removeLeafNode(index);
     this.#pageCount = pageCount - 1;
+    this.#pageCache.invalidate();
   }
 
   /**

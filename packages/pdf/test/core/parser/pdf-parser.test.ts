@@ -61,6 +61,29 @@ describe("PDFParser", () => {
     expect(context.lookup(PDFRef.of(1))).toBeInstanceOf(PDFString);
   });
 
+  test("recovers the trailer when the last object is truncated", async () => {
+    const input = [
+      "%PDF-1.7",
+      "1 0 obj",
+      "<< /Type /Catalog /Pages 2 0 R >>",
+      "endobj",
+      "2 0 obj",
+      "<< /Type /Pages /Kids [] /Count 0 >>",
+      "endobj",
+      // this object is never closed - the file was cut short while writing it
+      "3 0 obj",
+      "<< /Type /Halfway",
+      "trailer",
+      "<< /Root 1 0 R /Size 4 >>",
+    ].join("\n");
+
+    const parser = PDFParser.forBytesWithOptions(typedArrayFor(input));
+    const context = await parser.parseDocument();
+
+    expect(context.lookup(PDFRef.of(1))).toBeInstanceOf(PDFDict);
+    expect(context.trailerInfo.Root).toBe(PDFRef.of(1));
+  });
+
   test("handles invalid binary comments after header", async () => {
     const input = mergeIntoTypedArray(
       "%PDF-1.7\n",

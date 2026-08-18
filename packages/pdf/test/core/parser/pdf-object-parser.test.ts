@@ -1,5 +1,7 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, test, vi } from "vitest";
 
+import type { CipherTransformFactory } from "../../../src/core/crypto.js";
+import ByteStream from "../../../src/core/parser/byte-stream.js";
 import PDFPageLeaf from "../../../src/core/structures/pdf-page-leaf.js";
 import {
   mergeIntoTypedArray,
@@ -681,6 +683,52 @@ describe("PDFObjectParser", () => {
       const object3 = parser.parseObject();
       expect(object3).toBeInstanceOf(PDFNumber);
       expect(object3.toString()).toBe("42");
+    });
+  });
+
+  describe("parsing names", () => {
+    test("decodes `#xx` escapes written with lowercase hex digits", () => {
+      expect(parse("/A#4a")).toBe(PDFName.of("AJ"));
+      expect(parse("/A#4A")).toBe(PDFName.of("AJ"));
+      expect(parse("/Identity#2dH")).toBe(PDFName.of("Identity-H"));
+      expect(parse("/Lime#20Green")).toBe(PDFName.of("Lime Green"));
+    });
+  });
+
+  describe("decrypting strings", () => {
+    const cipherFor = (seen: { bytes: Uint8Array[]; strings: string[] }) =>
+      ({
+        createCipherTransform: () => ({
+          decryptBytes: (bytes: Uint8Array) => {
+            seen.bytes.push(bytes);
+            return bytes;
+          },
+          decryptString: (value: string) => {
+            seen.strings.push(value);
+            return value;
+          },
+        }),
+      }) as unknown as CipherTransformFactory;
+
+    test("hands the cipher the unescaped bytes of a literal string", () => {
+      const seen = { bytes: [] as Uint8Array[], strings: [] as string[] };
+      const context = PDFContext.create();
+      const parser = new PDFObjectParser(
+        ByteStream.of(typedArrayFor(String.raw`(a\(b\\c\)d)`)),
+        context,
+        false,
+        cipherFor(seen),
+      );
+
+      const string = parser.parseObject(PDFRef.of(7)) as PDFString;
+
+      // the ciphertext is the string contents, not the escape sequences
+      expect(seen.strings).toEqual([]);
+      expect(seen.bytes).toHaveLength(1);
+      expect(new TextDecoder().decode(seen.bytes[0])).toBe(String.raw`a(b\c)d`);
+
+      // and the plaintext survives the round trip through PDFString
+      expect(new TextDecoder().decode(string.asBytes())).toBe(String.raw`a(b\c)d`);
     });
   });
 });

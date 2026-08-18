@@ -539,20 +539,8 @@ export default class PDFForm {
         try {
           const widget = widgets[j];
           const page = this.#findWidgetPage(widget);
-          const widgetRef = this.#findWidgetAppearanceRef(field, widget);
-
-          const xObjectKey = page.node.newXObject("FlatWidget", widgetRef);
-
-          const rectangle = widget.getRectangle();
-          const operators = [
-            pushGraphicsState(),
-            translate(rectangle.x, rectangle.y),
-            ...rotateInPlace({ ...rectangle, rotation: 0 }),
-            drawObject(xObjectKey),
-            popGraphicsState(),
-          ].filter(Boolean) as PDFOperator[];
-
-          page.pushOperators(...operators);
+          const appearanceRef = this.#findWidgetAppearanceRef(field, widget);
+          this.#flattenWidgetOntoPage(page, widget, appearanceRef);
         } catch (err) {
           console.error(err);
         }
@@ -560,6 +548,10 @@ export default class PDFForm {
 
       this.removeField(field);
     }
+
+    // Widgets carrying /FT on the annotation itself are never reachable through
+    // `AcroForm.Fields`, so the loop above leaves them live and editable.
+    this.#flattenOrphanWidgets();
   }
 
   /**
@@ -715,6 +707,94 @@ export default class PDFForm {
     }
 
     return page;
+  }
+
+  #flattenWidgetOntoPage(page: PDFPage, widget: PDFWidgetAnnotation, appearanceRef: PDFRef): void {
+    const rectangle = widget.getRectangle();
+    const xObjectKey = page.node.newXObject("FlatWidget", appearanceRef);
+
+    const operators = [
+      pushGraphicsState(),
+      translate(rectangle.x, rectangle.y),
+      ...rotateInPlace({ ...rectangle, rotation: 0 }),
+      drawObject(xObjectKey),
+      popGraphicsState(),
+    ].filter(Boolean) as PDFOperator[];
+
+    page.pushOperators(...operators);
+  }
+
+  /**
+   * Flattens widget annotations that carry field properties (`/FT`) directly on
+   * the annotation dict but are not reachable through `AcroForm.Fields`.
+   */
+  #flattenOrphanWidgets(): void {
+    const pages = this.doc.getPages();
+
+    for (let idx = 0, pageCount = pages.length; idx < pageCount; idx++) {
+      const page = pages[idx];
+      const annots = page.node.Annots();
+      if (!annots) continue;
+
+      const annotsToRemove: PDFRef[] = [];
+
+      for (let annotIdx = 0, len = annots.size(); annotIdx < len; annotIdx++) {
+        const annotRef = annots.get(annotIdx);
+        if (!(annotRef instanceof PDFRef)) continue;
+
+        const dict = this.doc.context.lookup(annotRef);
+        if (!(dict instanceof PDFDict)) continue;
+        if (dict.lookup(PDFName.of("Subtype")) !== PDFName.of("Widget")) continue;
+        // Kids inherit /FT from their parent field, so they are not orphans
+        if (!dict.has(PDFName.of("FT"))) continue;
+
+        try {
+          const widget = PDFWidgetAnnotation.fromDict(dict);
+          const appearanceRef = this.#findOrphanWidgetAppearanceRef(widget);
+          this.#flattenWidgetOntoPage(page, widget, appearanceRef);
+          annotsToRemove.push(annotRef);
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      for (let removeIdx = 0, len = annotsToRemove.length; removeIdx < len; removeIdx++) {
+        const ref = annotsToRemove[removeIdx];
+        page.node.removeAnnot(ref);
+        this.doc.context.delete(ref);
+      }
+    }
+  }
+
+  /** Resolves `/AP/N` for an orphaned widget without creating appearances. */
+  #findOrphanWidgetAppearanceRef(widget: PDFWidgetAnnotation): PDFRef {
+    let refOrDict = widget.AP()?.get(PDFName.of("N"));
+
+    if (refOrDict instanceof PDFRef) {
+      const lookedUp = this.doc.context.lookup(refOrDict);
+      if (lookedUp instanceof PDFDict) refOrDict = lookedUp;
+    }
+
+    if (refOrDict instanceof PDFDict) {
+      const value = widget.dict.lookup(PDFName.of("V"));
+      const state =
+        widget.getAppearanceState() ??
+        (value instanceof PDFName ? value : undefined) ??
+        PDFName.of("Off");
+      const ref = refOrDict.get(state) ?? refOrDict.get(PDFName.of("Off"));
+
+      if (!(ref instanceof PDFRef)) {
+        throw new Error("Failed to extract appearance ref for orphaned widget");
+      }
+
+      return ref;
+    }
+
+    if (!(refOrDict instanceof PDFRef)) {
+      throw new Error("Failed to extract appearance ref for orphaned widget");
+    }
+
+    return refOrDict;
   }
 
   #findWidgetAppearanceRef(field: PDFField, widget: PDFWidgetAnnotation): PDFRef {

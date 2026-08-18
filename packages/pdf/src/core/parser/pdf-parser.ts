@@ -6,7 +6,6 @@ import PDFTrailer from "../document/pdf-trailer.js";
 import {
   MissingKeywordError,
   MissingPDFHeaderError,
-  PDFInvalidObjectParsingError,
   ReparseError,
   StalledParserError,
 } from "../errors.js";
@@ -212,7 +211,14 @@ class PDFParser extends PDFObjectParser {
       this.bytes.next();
     }
 
-    if (failed) throw new PDFInvalidObjectParsingError(startPos);
+    // The loop above only exits early once `endobj` matched, so `failed` means
+    // EOF arrived first and the object never closes. Drop it instead of failing
+    // the whole parse, and rewind so a cross reference section or trailer that
+    // follows the truncated object can still be picked up.
+    if (failed) {
+      this.bytes.moveTo(start);
+      return;
+    }
 
     const end = this.bytes.offset() - Keywords.endobj.length;
 

@@ -1,6 +1,7 @@
 import JavaScriptEmbedder from "../core/embedders/java-script-embedder.js";
-import { PDFArray, PDFDict, PDFHexString, PDFName, PDFRef } from "../core/index.js";
+import { PDFDict, PDFHexString, PDFName, PDFRef } from "../core/index.js";
 import Embeddable from "./embeddable.js";
+import { addNameTreeEntry } from "./name-tree.js";
 import PDFDocument from "./pdf-document.js";
 
 /**
@@ -61,13 +62,8 @@ export default class PDFJavaScript implements Embeddable {
       }
       const Javascript = Names.lookup(PDFName.of("JavaScript"), PDFDict);
 
-      if (!Javascript.has(PDFName.of("Names"))) {
-        Javascript.set(PDFName.of("Names"), context.obj([]));
-      }
-      const JSNames = Javascript.lookup(PDFName.of("Names"), PDFArray);
-
-      JSNames.push(PDFHexString.fromText(this.#embedder.scriptName));
-      JSNames.push(ref);
+      // Flat `/Names` only - `/Kids` trees are left alone
+      addNameTreeEntry(Javascript, PDFHexString.fromText(this.#embedder.scriptName), ref);
 
       this.#alreadyEmbedded = true;
     }

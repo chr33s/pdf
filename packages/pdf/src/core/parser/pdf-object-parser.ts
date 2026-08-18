@@ -30,6 +30,26 @@ import { IsWhitespace } from "../syntax/whitespace.js";
 import BaseParser from "./base-parser.js";
 import ByteStream from "./byte-stream.js";
 
+/**
+ * Re-escapes raw bytes so that `PDFString.of(...)` reads them back unchanged
+ * and serializes them as valid literal string syntax.
+ */
+const escapeLiteralString = (bytes: Uint8Array): string => {
+  let escaped = "";
+  for (let idx = 0, len = bytes.length; idx < len; idx++) {
+    const byte = bytes[idx];
+    if (
+      byte === CharCodes.BackSlash ||
+      byte === CharCodes.LeftParen ||
+      byte === CharCodes.RightParen
+    ) {
+      escaped += "\\";
+    }
+    escaped += charFromCode(byte);
+  }
+  return escaped;
+};
+
 // TODO: Throw error if eof is reached before finishing object parse...
 class PDFObjectParser extends BaseParser {
   static forBytes = (bytes: Uint8Array, context: PDFContext, capNumbers?: boolean) =>
@@ -92,7 +112,6 @@ class PDFObjectParser extends BaseParser {
     return PDFNumber.of(firstNum);
   }
 
-  // TODO: Maybe update PDFHexString.of() logic to remove whitespace and validate input?
   protected parseHexString(ref?: PDFRef): PDFHexString {
     let value = "";
 
@@ -148,7 +167,11 @@ class PDFObjectParser extends BaseParser {
             ref.objectNumber,
             ref.generationNumber,
           );
-          actualValue = transformer.decryptString(actualValue);
+          // The ciphertext is the *unescaped* content of the literal string,
+          // so `\(`, `\\` and octal escapes must be resolved before decrypting
+          // and re-applied to the plaintext afterwards.
+          const decrypted = transformer.decryptBytes(PDFString.of(actualValue).asBytes());
+          actualValue = escapeLiteralString(decrypted);
         }
         // Remove the outer parens so they aren't part of the contents
         return PDFString.of(actualValue);
@@ -171,7 +194,12 @@ class PDFObjectParser extends BaseParser {
       this.bytes.next();
     }
 
-    return PDFName.of(name);
+    // `#xx` escapes in PDF syntax are case-insensitive, but `PDFName.of()` only
+    // decodes uppercase digits (names passed in by callers must keep their
+    // literal meaning), so normalize the token before handing it over.
+    return PDFName.of(
+      name.replace(/#([\dA-Fa-f]{2})/g, (_, hex: string) => `#${hex.toUpperCase()}`),
+    );
   }
 
   protected parseArray(ref?: PDFRef): PDFArray {

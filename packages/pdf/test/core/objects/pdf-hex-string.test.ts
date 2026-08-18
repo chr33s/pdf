@@ -36,6 +36,13 @@ describe("PDFHexString", () => {
       ));
     });
 
+    test("ignores white-space between hex digits (PDF spec 7.3.4.3)", () => {
+      const hex = "48 65\n6C\t6C\r6F";
+
+      expect(PDFHexString.of(hex).asBytes()).toEqual(Uint8Array.of(0x48, 0x65, 0x6c, 0x6c, 0x6f));
+      expect(PDFHexString.of(hex).decodeText()).toBe("Hello");
+    });
+
     test("can handle an odd number of hex digits", () => {
       const hex = "6145627300623";
 

@@ -206,6 +206,20 @@ describe("PDFDocument", () => {
       expect(pdfDoc.getPageCount()).toBe(4);
     });
 
+    test("getPages() reflects removals", async () => {
+      const newDoc = await PDFDocument.create();
+      newDoc.addPage();
+      newDoc.addPage();
+      newDoc.addPage();
+      const [, second] = newDoc.getPages();
+
+      newDoc.removePage(1);
+
+      expect(newDoc.getPages().length).toBe(2);
+      expect(newDoc.getPages()).not.toContain(second);
+      expect(newDoc.getPageCount()).toBe(2);
+    });
+
     test("returns 0 for brand new documents", async () => {
       const newDoc = await PDFDocument.create();
       expect(newDoc.getPageCount()).toBe(0);
@@ -581,6 +595,29 @@ describe("PDFDocument", () => {
       const savedDoc2 = await pdfDoc2.save();
 
       expect(savedDoc1).toEqual(savedDoc2);
+    });
+  });
+
+  describe("embedded file name tree", () => {
+    test("stays sorted by name, as the spec requires", async () => {
+      const pdfDoc = await PDFDocument.create({ updateMetadata: false });
+      pdfDoc.addPage();
+
+      await pdfDoc.attach(new Uint8Array([1, 2, 3]), "zebra.bin");
+      await pdfDoc.attach(new Uint8Array([4, 5, 6]), "apple.bin");
+      await pdfDoc.attach(new Uint8Array([7, 8, 9]), "mango.bin");
+      await pdfDoc.flush();
+
+      const Names = pdfDoc.catalog.lookup(PDFName.of("Names"), PDFDict);
+      const EmbeddedFiles = Names.lookup(PDFName.of("EmbeddedFiles"), PDFDict);
+      const EFNames = EmbeddedFiles.lookup(PDFName.of("Names"), PDFArray);
+
+      const fileNames: string[] = [];
+      for (let idx = 0, len = EFNames.size(); idx < len; idx += 2) {
+        fileNames.push(EFNames.lookup(idx, PDFHexString).decodeText());
+      }
+
+      expect(fileNames).toEqual(["apple.bin", "mango.bin", "zebra.bin"]);
     });
   });
 
