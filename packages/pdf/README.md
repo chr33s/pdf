@@ -1123,12 +1123,13 @@ The resulting `out.pdf` file will look like [this PDF](assets/pdfs/examples/embe
 
 The [usage examples](#usage-examples) provide code that is brief and to the point, demonstrating the different features of `pdf`. You can find complete working examples in the [`apps/`](https://github.com/chr33s/pdf/tree/main/apps) directory. These apps are used to do manual testing of `pdf` before every release (in addition to the [automated tests](test/)).
 
-There are currently four apps:
+There are currently five apps:
 
 - [**`node`**](https://github.com/chr33s/pdf/tree/main/apps/node) - contains [tests](https://github.com/chr33s/pdf/tree/main/apps/node/test) for `pdf` in Node environments. These tests are a handy reference when trying to save/load PDFs, fonts, or images with `pdf` from the filesystem. They also allow you to quickly open your PDFs in different viewers (Acrobat, Preview, Foxit, Chrome, Firefox, etc...) to ensure compatibility.
 - [**`web`**](https://github.com/chr33s/pdf/tree/main/apps/web) - contains [tests](https://github.com/chr33s/pdf/tree/main/apps/web/test) for `pdf` in browser environments. These tests are a handy reference when trying to save/load PDFs, fonts, or images with `pdf` in a browser environment.
 - [**`react-native`**](https://github.com/chr33s/pdf/tree/main/apps/react-native) - contains [tests](https://github.com/chr33s/pdf/tree/main/apps/react-native/test) for `pdf` in React Native environments. These tests are a handy reference when trying to save/load PDFs, fonts, or images with `pdf` in a React Native environment.
 - [**`deno`**](https://github.com/chr33s/pdf/tree/main/apps/deno) - contains [tests](https://github.com/chr33s/pdf/tree/main/apps/deno/test) for `pdf` in Deno environments. These tests are a handy reference when trying to save/load PDFs, fonts, or images with `pdf` from the filesystem.
+- [**`bun`**](https://github.com/chr33s/pdf/tree/main/apps/bun) - contains [tests](https://github.com/chr33s/pdf/tree/main/apps/bun/test) for `pdf` in Bun environments. These tests are a handy reference when trying to save/load PDFs, fonts, or images with `pdf` from the filesystem.
 
 ## Installation
 

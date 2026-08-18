@@ -1,0 +1,198 @@
+import {
+  degrees,
+  drawEllipse,
+  drawRectangle,
+  drawText,
+  PDFDocument,
+  PDFFont,
+  PDFWidgetAnnotation,
+  rgb,
+  StandardFonts,
+} from "@chr33s/pdf";
+import { expect, test } from "bun:test";
+import { assets } from "../assets.js";
+
+import fontkit from "@chr33s/pdf-fontkit";
+
+test("Test 16: Fancy fields with custom appearances", async () => {
+  const pdfDoc = await PDFDocument.load(assets.pdfs.fancy_fields);
+
+  pdfDoc.registerFontkit(fontkit);
+  const ubuntuFont = await pdfDoc.embedFont(assets.fonts.ttf["ubuntu-r"]);
+
+  const form = pdfDoc.getForm();
+
+  // Text Fields
+  const prefix = form.getTextField("Prefix ⚽️");
+  await prefix.updateAppearances(ubuntuFont);
+
+  const firstName = form.getTextField("First Name 🚀");
+  await firstName.updateAppearances(ubuntuFont);
+
+  const middleInitial = form.getTextField("MiddleInitial 🎳");
+  await middleInitial.updateAppearances(ubuntuFont);
+
+  const lastName = form.getTextField("LastName 🛩");
+  await lastName.updateAppearances(ubuntuFont);
+
+  // Check Boxes
+  const isAFairy = form.getCheckBox("Are You A Fairy? 🌿");
+  isAFairy.updateAppearances();
+
+  const isPowerLevelOver9000 = form.getCheckBox("Is Your Power Level Over 9000? 💪");
+  isPowerLevelOver9000.updateAppearances();
+
+  const onePunch = form.getCheckBox("Can You Defeat Enemies In One Punch? 👊");
+  onePunch.updateAppearances();
+
+  const everLetMeDown = form.getCheckBox("Will You Ever Let Me Down? ☕️");
+  everLetMeDown.updateAppearances();
+
+  // Buttons
+  const eject = form.getButton("Eject 📼");
+  await eject.updateAppearances(ubuntuFont);
+
+  const submit = form.getButton("Submit 📝");
+  await submit.updateAppearances(ubuntuFont);
+
+  const play = form.getButton("Play ▶️");
+  await play.updateAppearances(ubuntuFont);
+
+  const launch = form.getButton("Launch 🚀");
+  await launch.updateAppearances(ubuntuFont);
+
+  // Radio Group
+  const historicalFigures = form.getRadioGroup("Historical Figures 🐺");
+  historicalFigures.updateAppearances();
+
+  // Option List
+  const planets = form.getOptionList("Which Are Planets? 🌎");
+  await planets.updateAppearances(ubuntuFont);
+
+  // Dropdown
+  const gundams = form.getDropdown("Choose A Gundam 🤖");
+  gundams.select("One Punch Man");
+  await gundams.updateAppearances(ubuntuFont);
+
+  // ===================== Custom Appearance Providers ========================
+  const page = pdfDoc.addPage();
+  const symbol = await pdfDoc.embedFont(StandardFonts.Symbol);
+
+  const btn = form.createButton("custom.button.field");
+  const cb = form.createCheckBox("custom.checkbox.field");
+  const dd = form.createDropdown("custom.dropdown.field");
+  const ol = form.createOptionList("custom.optionlist.field");
+  const rg = form.createRadioGroup("custom.radiogroup.field");
+  const tf = form.createTextField("custom.text.field");
+  const tfFontSize = form.createTextField("custom.text.fieldFontSize");
+
+  dd.addOptions("∑");
+  ol.addOptions("∑");
+
+  const width = 100;
+  const height = 50;
+  const x = page.getWidth() / 2 - width / 2;
+  let y = page.getHeight();
+
+  y -= height + 25;
+  await btn.addToPage("∑", page, { x, y, width, height, font: symbol });
+  y -= height + 25;
+  await cb.addToPage(page, { x, y, width, height });
+  y -= height + 25;
+  await dd.addToPage(page, { x, y, width, height, font: symbol });
+  y -= height + 25;
+  await ol.addToPage(page, { x, y, width, height, font: symbol });
+  y -= height + 25;
+  await rg.addOptionToPage("bar", page, { x, y, width, height });
+  y -= height + 25;
+  await tf.addToPage(page, { x, y, width, height, font: symbol });
+  y -= height * 4 + 25;
+  await tfFontSize.addToPage(page, {
+    x: x - width * 2,
+    y,
+    width: width * 5,
+    height: height * 4,
+    font: ubuntuFont,
+  });
+  tfFontSize.enableMultiline();
+  tfFontSize.setFontSize(71.999);
+  tfFontSize.setText("This text should be huge");
+
+  const rectangle = drawRectangle({
+    x: 0,
+    y: 0,
+    width,
+    height,
+    borderWidth: 2,
+    color: rgb(1, 0.1, 0.75),
+    borderColor: rgb(0, 0.1, 1),
+    rotate: degrees(0),
+    xSkew: degrees(0),
+    ySkew: degrees(0),
+  });
+
+  const circle = drawEllipse({
+    x: 15,
+    y: height - 15,
+    xScale: 15,
+    yScale: 15,
+    borderWidth: 0,
+    color: rgb(0, 0, 0),
+    borderColor: undefined,
+    rotate: degrees(0),
+  });
+
+  const text = await symbol.encodeText("ℑ");
+  const textW = await symbol.widthOfTextAtSize("ℑ", 35);
+  const textH = symbol.heightAtSize(35);
+  const symbolText = (font: PDFFont) =>
+    drawText(text, {
+      x: width / 2 - textW / 2,
+      y: height / 2 - textH / 2 + 10,
+      color: rgb(0, 0, 0),
+      font: font.name,
+      size: 35,
+      rotate: degrees(0),
+      xSkew: degrees(0),
+      ySkew: degrees(0),
+    });
+
+  const assert = (condition: boolean, msg = "") => {
+    if (!condition) throw new Error(msg || "Assertion failed");
+  };
+
+  await btn.updateAppearances(symbol, (field, widget, font) => {
+    assert(field === btn);
+    assert(widget instanceof PDFWidgetAnnotation);
+    return [...rectangle, ...symbolText(font)];
+  });
+  cb.updateAppearances((field, widget) => {
+    assert(field === cb);
+    assert(widget instanceof PDFWidgetAnnotation);
+    return { on: [...rectangle, ...circle], off: [...rectangle, ...circle] };
+  });
+  await dd.updateAppearances(symbol, (field, widget, font) => {
+    assert(field === dd);
+    assert(widget instanceof PDFWidgetAnnotation);
+    return [...rectangle, ...symbolText(font)];
+  });
+  await ol.updateAppearances(symbol, (field, widget, font) => {
+    assert(field === ol);
+    assert(widget instanceof PDFWidgetAnnotation);
+    return [...rectangle, ...symbolText(font)];
+  });
+  rg.updateAppearances((field, widget) => {
+    assert(field === rg);
+    assert(widget instanceof PDFWidgetAnnotation);
+    return { on: [...rectangle, ...circle], off: [...rectangle, ...circle] };
+  });
+  await tf.updateAppearances(symbol, (field, widget, font) => {
+    assert(field === tf);
+    assert(widget instanceof PDFWidgetAnnotation);
+    return [...rectangle, ...symbolText(font)];
+  });
+
+  const pdfBytes = await pdfDoc.save();
+  expect(pdfBytes).toBeInstanceOf(Uint8Array);
+  expect(pdfBytes.length).toBeGreaterThan(0);
+});

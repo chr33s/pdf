@@ -1,0 +1,14 @@
+{
+  "name": "@chr33s/pdf-apps-bun",
+  "type": "module",
+  "scripts": {
+    "test": "bun test --timeout 30000"
+  },
+  "dependencies": {
+    "@chr33s/pdf": "../../packages/pdf",
+    "@chr33s/pdf-fontkit": "../../packages/fontkit"
+  },
+  "devDependencies": {
+    "@types/bun": "1.3.14"
+  }
+}
