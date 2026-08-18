@@ -50,9 +50,9 @@ export default class WOFFFont extends TTFFont {
     const compressionTasks = entries
       .filter((table) => table.compLength < table.length)
       .map(async (table) => {
-        this.stream.pos = table.offset + 2; // skip deflate header
-        const compressedData = this.stream.readBuffer(table.compLength - 2);
-        const decompressed = await inflate(compressedData, "deflate-raw");
+        this.stream.pos = table.offset;
+        const compressedData = this.stream.readBuffer(table.compLength);
+        const decompressed = await inflate(compressedData);
         this._decompressedTables.set(table.tag, decompressed);
       });
 

@@ -39,6 +39,14 @@ describe("fontkit", function () {
     expect(font.constructor.name).toBe("WOFF2Font");
   });
 
+  test("should decompress zlib-wrapped WOFF tables", async () => {
+    const font = await fontkit.open(
+      __dirname + "/data/source-sans-pro/source-sans-pro-regular.woff",
+    );
+
+    expect(font.postscriptName).toBe("SourceSansPro-Regular");
+  });
+
   test("should open fonts lacking PostScript name", async () => {
     const font = await fontkit.open(__dirname + "/data/mada/mada-regular.subset1.ttf");
     expect(font.postscriptName).toBeNull();
