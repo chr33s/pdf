@@ -22,9 +22,13 @@ if (!versions.includes(version)) {
   throw new Error(`Invalid version type: ${String(version)} (allowed: ${versions.join(", ")})`);
 }
 
-const dir = resolve(import.meta.dirname, "..", "./packages");
-for (const path of await readdir(dir)) {
-  const file = resolve(dir, path, "package.json");
+const root = resolve(import.meta.dirname, "..");
+const dir = resolve(root, "./packages");
+const files = [
+  resolve(root, "package.json"),
+  ...(await readdir(dir)).map((path) => resolve(dir, path, "package.json")),
+];
+for (const file of files) {
   const pkg = await import(file, { with: { type: "json" } }).then((mod) => mod.default);
 
   const parts = pkg.version.split(".").map((n: string) => parseInt(n, 10));
