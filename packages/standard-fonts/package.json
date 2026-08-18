@@ -1,6 +1,6 @@
 {
   "name": "@chr33s/pdf-standard-fonts",
-  "version": "5.0.11",
+  "version": "5.1.0",
   "description": "Metrics for the Standard 14 PDF fonts and their encodings",
   "type": "module",
   "sideEffects": false,
@@ -46,7 +46,7 @@
   "license": "MIT",
   "homepage": "https://github.com/chr33s/pdf",
   "dependencies": {
-    "@chr33s/pdf-common": "5.0.11"
+    "@chr33s/pdf-common": "5.1.0"
   },
   "devDependencies": {
     "@types/node": "26.2.0",
