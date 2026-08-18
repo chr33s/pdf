@@ -3,9 +3,12 @@
 packages/common/test/brotli.test.data/** binary eol=lf
 packages/pdf/test/core/streams/data/** binary eol=lf
 packages/pdf/assets/**/* binary eol=lf
+packages/pdf/test/core/parser/data/** binary eol=lf
 
 *.otf binary
 *.ttf binary
+*.ttc binary
+*.dfont binary
 *.woff binary
 *.woff2 binary
 *.pdf binary
@@ -14,3 +17,5 @@ packages/pdf/assets/**/* binary eol=lf
 *.eot binary
 *.jar binary 
 *.bat binary
+*.br binary
+*.keystore binary
