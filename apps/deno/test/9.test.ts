@@ -1,4 +1,4 @@
-import { assert } from "@std/assert";
+import assert from "node:assert";
 
 // @deno-types="../dummy.d.ts"
 import { PDFDocument, PDFFont, StandardFonts, type StandardFont } from "@chr33s/pdf";

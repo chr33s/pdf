@@ -1,15 +1,15 @@
-import { assert } from "@std/assert";
+import assert from "node:assert";
 import { assets } from "../assets.ts";
 
 // @deno-types="../dummy.d.ts"
 import {
-  decodeFromBase64,
   degrees,
   LineCapStyle,
   ParseSpeeds,
   PDFDocument,
   rgb,
   StandardFonts,
+  toUint8Array,
 } from "@chr33s/pdf";
 
 Deno.test("Test 2: Load PDF with update sections", async () => {
@@ -124,7 +124,7 @@ Deno.test("Test 2: Load PDF with update sections", async () => {
 
   const base64Pdf = await pdfDoc.saveAsBase64();
 
-  const pdfBytes = decodeFromBase64(base64Pdf);
+  const pdfBytes = toUint8Array(base64Pdf);
   assert(pdfBytes instanceof Uint8Array);
   assert(pdfBytes.length > 0);
 });

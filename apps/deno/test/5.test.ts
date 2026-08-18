@@ -1,5 +1,5 @@
 import fontkit from "@chr33s/pdf-fontkit";
-import { assert } from "@std/assert";
+import assert from "node:assert";
 import { assets } from "../assets.ts";
 
 // @deno-types="../dummy.d.ts"

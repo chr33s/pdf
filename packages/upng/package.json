@@ -1,7 +1,7 @@
 {
   "name": "@chr33s/pdf-upng",
   "license": "MIT",
-  "version": "5.1.0",
+  "version": "5.1.1",
   "description": "Small, fast and advanced PNG / APNG encoder and decoder",
   "type": "module",
   "sideEffects": false,
@@ -42,7 +42,7 @@
     "conversion"
   ],
   "dependencies": {
-    "@chr33s/pdf-common": "5.1.0"
+    "@chr33s/pdf-common": "5.1.1"
   },
   "devDependencies": {
     "typescript": "7.0.2",
